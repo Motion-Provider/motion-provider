@@ -535,11 +535,9 @@ const animations: AnimationLibraryProps = {
   },
 
   depthPush: {
-    initial: { transform: "translateZ(-200px) scale(0.6)", opacity: 0 },
+    initial: { transform: "translateZ(-200px) scale(0.6)" },
     animate: {
       transform: "translateZ(0px) scale(1)",
-      opacity: 1,
-      transition: { duration: 0.7, ease: "backOut" },
     },
   },
 

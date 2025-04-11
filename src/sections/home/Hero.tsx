@@ -1,24 +1,23 @@
+import { FC } from "react";
+import { cn } from "@/lib/utils";
+import cardsLib from "@/lib/root/cards.lib";
 import { Card } from "@/components/card";
 import { FullScreenModal } from "@/components/fullscreen-permission";
 import { StickyFooter } from "@/components/sticky-footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { SectionProps } from "@/interfaces";
-import cardsLib from "@/lib/root/cards.lib";
-import { cn } from "@/lib/utils";
+import { ReduxCookieProps, SectionProps } from "@/interfaces";
 import { useAnimation } from "@/motion/hooks/use-animation";
 import { useAnimationControl } from "@/motion/hooks/use-animation-control";
 import MotionChain from "@/motion/motion-chain";
-import { AnimationKeys, MotionAnimationProps } from "@/motion/types";
-import getRandomAnimation from "@/motion/utils/getRandomAnimation";
+import { MotionAnimationProps } from "@/motion/types";
 import dynamic from "next/dynamic";
 import { Play } from "lucide-react";
-import { FC } from "react";
 import MotionText from "@/motion/motion-text";
+import { useMobile } from "@/hooks/useMobile";
+import { useSelector } from "react-redux";
 
 const Modal = dynamic(() => Promise.resolve(FullScreenModal), { ssr: false });
-
-const title = String("Motion Provider.").split("");
 
 const cardAnimations = cardsLib.map((_) => ({
   mode: ["filterBlurIn", "fadeUp"],
@@ -27,18 +26,16 @@ const cardAnimations = cardsLib.map((_) => ({
   transition: "smooth",
 })) as MotionAnimationProps[];
 
-const titleAnimations = title.map((_) => ({
-  mode: ["fadeUp", "filterBlurIn", "flash", "bounceY"],
-  transition: "smooth",
-  duration: 1,
-})) as MotionAnimationProps[];
-
 const HomeHero: FC<SectionProps> = ({ className }) => {
+  const cookie = useSelector((state: ReduxCookieProps) => state.activated);
+
   const { control, onReverse } = useAnimationControl();
   const controller = useAnimation(control);
+  const isMobile = useMobile();
 
   return (
     <>
+      {!isMobile && !cookie && <Modal />}
       <Button className="absolute top-24 right-24 " onClick={onReverse}>
         <Play />
       </Button>

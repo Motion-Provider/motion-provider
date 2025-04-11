@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -9,15 +8,16 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "./ui/dialog";
-import { Expand } from "lucide-react";
 import { fontSecondary } from "@/lib/fonts";
 import MotionText from "@/motion/motion-text";
 import { useDispatch } from "react-redux";
 import { setCookie } from "@/redux/slices/cookieSlice";
+import MotionImage from "@/motion/motion-image";
+import { Skeleton } from "./ui/skeleton";
+import { useMobile } from "@/hooks/useMobile";
 
 export const FullScreenModal = () => {
-  const [isFull, setIsFull] = useState<boolean>(false);
-
+  const isMobile = useMobile();
   const dispatch = useDispatch();
 
   const handleFullscreen = async () => {
@@ -32,13 +32,14 @@ export const FullScreenModal = () => {
       } else if ((elem as any).msRequestFullscreen) {
         await (elem as any).msRequestFullscreen();
       }
-      setIsFull(true);
+
       dispatch(setCookie({ activated: true }));
     } catch (err) {
       console.error("Fullscreen request failed:", err);
-      setIsFull(false);
     }
   };
+
+  if (isMobile && !window.document) return null;
 
   return (
     <Dialog defaultOpen modal>
@@ -48,7 +49,6 @@ export const FullScreenModal = () => {
             <div
               className={`w-full flex flex-row gap-2 items-center tracking-tight ${fontSecondary.className}`}
             >
-              <Expand className="size-6" />
               <MotionText
                 animation={{
                   mode: ["fadeUp", "filterBlurIn"],
@@ -57,30 +57,48 @@ export const FullScreenModal = () => {
                 }}
                 config={{
                   duration: 0.25,
-                  mode: "words",
-                  delayLogic: "linear",
+                  mode: "chars",
+                  delayLogic: "chaotic",
                 }}
+                wrapperClassName="items-center justify-center w-full flex"
                 elementType={"span"}
               >
                 Turn On Fullscreen Mode
               </MotionText>
             </div>
           </DialogTitle>
-          <DialogDescription>
-            Our site works best in fullscreen mode
+          <DialogDescription className="flex justify-center mt-8 mb-4 flex-col-reverse items-center">
+            <MotionImage
+              animation={{
+                mode: ["fadeIn", "filterBlurIn"],
+                transition: "cubicSmooth",
+                duration: 0.5,
+              }}
+              config={{
+                duration: 0.75,
+                img: "/fullscreen-modal-icon.png",
+                pieces: 81,
+                delayLogic: "triangle",
+              }}
+              wrapperClassName="size-36"
+              fallback={<Skeleton className="dark size-36 rounded-full" />}
+            />
           </DialogDescription>
         </DialogHeader>
-        <DialogFooter>
-          <DialogTrigger>
+        <DialogFooter className="justify-center flex flex-col gap-1 h-auto">
+          <DialogTrigger className="w-full">
             <Button
               onClick={handleFullscreen}
-              className="cursor-pointer "
-              variant={"outline"}
+              className="w-full "
+              variant="outline"
             >
               Turn on
             </Button>
           </DialogTrigger>
         </DialogFooter>
+        <p className="text-muted-foreground text-xs text-center">
+          Motion Provider's full-screen mode is an experimental feature.
+        </p>
       </DialogContent>
     </Dialog>
   );

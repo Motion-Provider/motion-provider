@@ -26,7 +26,10 @@ const MotionChain: FC<MotionChainProps> = ({
   } = config;
 
   const compute = useMemo(() => {
-    if (isDynamicallyQueued) {
+    if (
+      (isDynamicallyQueued && typeof delayByElement === "undefined") ||
+      typeof customLogic === "undefined"
+    ) {
       return children.map((_, index) => {
         const calculatedDelay = calculateDelay({
           delayLogic,

@@ -1,13 +1,13 @@
-import { cn } from "../lib/utils";
-import { MotionTextProps } from "./types";
-import React, { createElement, FC, useMemo } from "react";
-import getSplittedText from "./utils/getSplittedText";
-import MotionChain from "./motion-chain";
 import {
   MOTION_CHAIN_CONFIG_DEFAULTS,
   MOTION_CONTAINER_CONTROLLER_DEFAULT,
 } from "./lib/defaults.lib";
+import { cn } from "../lib/utils";
+import MotionChain from "./motion-chain";
+import { MotionTextProps } from "./types";
 import logError from "./utils/getErrorLogs";
+import React, { createElement, FC, useMemo } from "react";
+import getSplittedText from "./utils/getSplittedText";
 
 const MotionText: FC<MotionTextProps> = ({
   animation,
@@ -58,7 +58,10 @@ const MotionText: FC<MotionTextProps> = ({
           ...animation,
         }))}
         children={items}
-        config={config}
+        config={{
+          ...config,
+          isDynamicallyQueued: true,
+        }}
         elementType={elementType}
         controller={controller}
       />
