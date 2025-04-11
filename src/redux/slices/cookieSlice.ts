@@ -1,7 +1,9 @@
 import { ReduxCookieProps } from "@/interfaces";
 import { createSlice } from "@reduxjs/toolkit";
 
-const INITIAL_STATE: ReduxCookieProps = false;
+const INITIAL_STATE: ReduxCookieProps = {
+  activated: false,
+};
 
 const cookieSlice = createSlice({
   initialState: INITIAL_STATE,

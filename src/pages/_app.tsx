@@ -1,10 +1,10 @@
-import { fontPrimary, fontSecondary } from "@/lib/fonts";
+import "@/styles/globals.css";
+
 import { cn } from "@/lib/utils";
 import Portal from "@/portals";
 import Layout from "@/providers/layout";
+import { fontPrimary, fontSecondary } from "@/lib/fonts";
 import StoreProvider from "@/providers/store-provider";
-import "@/styles/globals.css";
-import { AnimatePresence } from "motion/react";
 import type { AppProps } from "next/app";
 import { useRouter } from "next/router";
 
@@ -14,9 +14,7 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <StoreProvider>
       <Layout className={cn(fontPrimary.className, fontSecondary.variable)}>
-        <AnimatePresence mode="wait">
-          <Component {...pageProps} />
-        </AnimatePresence>
+        <Component {...pageProps} />
       </Layout>
       <Portal currRoute={router.asPath} />
     </StoreProvider>

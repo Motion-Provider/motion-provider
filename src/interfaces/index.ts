@@ -32,7 +32,9 @@ export interface useIsMobileProps {
 
 /* Redux Interfaces */
 
-export type ReduxCookieProps = boolean;
+export interface ReduxCookieProps {
+  activated: boolean;
+}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /* Utils Interfaces */
