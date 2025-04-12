@@ -1,6 +1,6 @@
-import { SectionProps } from "@/interfaces";
+import { MotionProviderLibraryItemProps, SectionProps } from "@/interfaces";
 import { cn } from "@/lib/utils";
-import { FC, useRef, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { Search } from "./search";
 import MotionText from "@/motion/motion-text";
 import Autoplay from "embla-carousel-autoplay";
@@ -8,28 +8,45 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Card, CardContent } from "@/components/ui/card";
 import libraryLib from "@/lib/learn/library.lib";
 import { ListItem } from "./list-item";
 import MotionChain from "@/motion/motion-chain";
 import { MotionAnimationProps } from "@/motion/types";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { StickyFooter } from "@/components/sticky-footer";
+import { FullscreenAlert } from "@/components/fullscreen-alert";
+import Socials from "@/components/socials";
+import { LearnCarouselItem } from "@/components/learn-carousel-item";
 
-const listItemAnimations = libraryLib.map((_, idx) => ({
-  mode:
-    idx % 2 === 0
-      ? ["filterBlurIn", "fadeRight"]
-      : ["filterBlurIn", "fadeLeft"],
-  duration: 0.5,
-  delay: 0,
-  transition: "smooth",
-})) as MotionAnimationProps[];
-
-export const List: FC<SectionProps> = ({ className }) => {
+export const Home: FC<SectionProps> = ({ className }) => {
+  const [library, setLibrary] =
+    useState<MotionProviderLibraryItemProps[]>(libraryLib);
   const [search, setSearch] = useState<string>("");
   const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: false }));
+
+  const listItemAnimations = library.map((_, idx) => ({
+    mode:
+      idx % 2 === 0
+        ? ["filterBlurIn", "fadeRight"]
+        : ["filterBlurIn", "fadeLeft"],
+    duration: 0.5,
+    delay: 2,
+    transition: "smooth",
+  })) as MotionAnimationProps[];
+
+  useMemo(() => {
+    if (search.length === 0) return setLibrary(libraryLib);
+    return setLibrary(
+      library.filter(
+        (item) =>
+          item.title.toLowerCase().includes(search.toLowerCase()) ||
+          item.desc.toLowerCase().includes(search.toLowerCase())
+      )
+    );
+  }, [search]);
+
   return (
     <section
       className={cn(
@@ -43,7 +60,8 @@ export const List: FC<SectionProps> = ({ className }) => {
             animation={{
               mode: ["filterBlurIn", "textShimmer"],
               transition: "easeIn",
-              delay: 0.5,
+              duration: 0.5,
+              delay: 2,
             }}
             config={{
               duration: 0.25,
@@ -58,47 +76,55 @@ export const List: FC<SectionProps> = ({ className }) => {
           </MotionText>
           <Search handleChange={(e) => setSearch(e)} value={search} />
         </div>
+        <FullscreenAlert />
         <div className="size-full">
-          <div className="h-2/5 w-full relative">
+          <div className="h-[250px] w-full relative py-8">
             <Carousel
               plugins={[plugin.current]}
               className="size-full"
               onMouseEnter={plugin.current.stop}
               onMouseLeave={plugin.current.reset}
             >
-              <CarouselContent className="h-72">
+              <CarouselContent className="h-[250px]">
                 {Array.from({ length: 5 }).map((_, index) => (
-                  <CarouselItem key={index} className="size-full">
-                    <div className="size-full">
-                      <Card className="size-full ">
-                        <CardContent className="flex size-full items-center justify-center ">
-                          <span className="text-4xl font-semibold">
-                            {index + 1}
-                          </span>
-                        </CardContent>
-                      </Card>
-                    </div>
-                  </CarouselItem>
+                  <LearnCarouselItem key={index} />
                 ))}
               </CarouselContent>
             </Carousel>
           </div>
-          <div className="h-3/5 w-full overflow-y-scroll relative flex flex-col gap-4">
+          <div className="w-full bg-gradient-to-r from-[#2b75cffd]/20 to-transparent rounded-xl h-16 mt-14 border dark justify-between flex flex-row gap-2 px-4 items-center">
+            <div className="w-1/2 flex flex-row gap-2 justify-start items-center">
+              <h3 className="font-secondary">
+                Total {library.length} archive found.
+              </h3>
+            </div>
+            <div className="w-1/2 flex flex-row gap-2 justify-end items-center ">
+              <Socials />
+            </div>
+          </div>
+          <ScrollArea className="h-[400px] w-full mt-2 ">
             <MotionChain
               animations={listItemAnimations}
               elementType={"ul"}
               config={{
-                delayLogic: "linear",
-                duration: 0.5,
+                delayLogic: "perlin",
+                duration: 0.25,
+              }}
+              controller={{
+                configView: {
+                  amount: "some",
+                  once: false,
+                },
               }}
             >
-              {libraryLib.map((val, idx) => (
+              {library.map((val, idx) => (
                 <ListItem {...val} key={idx} />
               ))}
             </MotionChain>
-          </div>
+          </ScrollArea>
         </div>
       </div>
+      <StickyFooter className="bottom-4 left-1/2 -translate-x-1/2 absolute w-auto" />
     </section>
   );
 };

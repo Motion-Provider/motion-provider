@@ -25,6 +25,7 @@ const cardAnimations = cardsLib.map((_) => ({
 
 const HomeHero: FC<SectionProps> = ({ className }) => {
   const cookie = useSelector((state: RootState) => state.cookie.activated);
+  const { isFullscreen } = useSelector((state: RootState) => state.fullscreen);
 
   const isMobile = useMobile();
 

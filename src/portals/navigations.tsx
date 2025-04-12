@@ -8,8 +8,7 @@ import { useSelector } from "react-redux";
 
 export const Navigations = () => {
   const router = useRouter();
-  const cookie = useSelector((state: RootState) => state.cookie.activated);
-
+  const { isFullscreen } = useSelector((state: RootState) => state.fullscreen);
   const [visible, setVisible] = useState<boolean>(false);
 
   const handleNextPage = () => router.forward();
@@ -23,7 +22,7 @@ export const Navigations = () => {
     return () => clearTimeout(timeout);
   }, []);
 
-  if (!cookie) return null;
+  if (!isFullscreen) return null;
 
   return (
     <>

@@ -44,6 +44,10 @@ export interface ReduxCookieProps {
 }
 
 export interface ReduxMotionProviderAnimationConnectorProps {}
+
+export interface ReduxFullscreenProps {
+  isFullscreen: boolean;
+}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /* Utils Interfaces */
@@ -81,7 +85,20 @@ export interface MotionProviderLibraryItemProps {
   title: string;
   desc: string;
   link: string;
+  level: MotionProviderLibraryItemLevelProps;
   icon: IconType;
+}
+
+export type MotionProviderLibraryItemLevelProps =
+  | "beginner"
+  | "intermediate"
+  | "advanced";
+
+export interface CarouselItemProps {
+  id: number;
+  title: string;
+  link: string;
+  experience: React.ReactNode;
 }
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/

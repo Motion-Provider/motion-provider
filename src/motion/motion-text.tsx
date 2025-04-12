@@ -56,6 +56,7 @@ const MotionText: FC<MotionTextProps> = ({
       <MotionChain
         animations={str.map((_) => ({
           ...animation,
+          delay: animation.delay || 0,
         }))}
         children={items}
         config={{

@@ -65,7 +65,7 @@ const Container: FC<MotionContainerProps> = ({
     return {
       ...defaultTransition,
       duration: duration || defaultTransition.duration,
-      delay,
+      delay: delay || defaultTransition.delay,
     };
   }, [isAnimationStopped, trigger]);
 

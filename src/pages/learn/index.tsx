@@ -1,4 +1,4 @@
-import { List } from "@/sections/learn/list";
+import { Home } from "@/sections/learn/list";
 import Head from "next/head";
 
 export default function Learn() {
@@ -7,7 +7,7 @@ export default function Learn() {
       <Head>
         <title>Learn | Motion Provider</title>
       </Head>
-      <List />
+      <Home />
     </>
   );
 }
