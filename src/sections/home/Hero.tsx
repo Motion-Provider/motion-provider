@@ -14,8 +14,7 @@ import MotionText from "@/motion/motion-text";
 import { useMobile } from "@/hooks/useMobile";
 import { useSelector } from "react-redux";
 import { RootState } from "@/redux";
-import { Button } from "@/components/ui/button";
-import { Play } from "lucide-react";
+import MotionLink from "@/motion/motion-link";
 
 const cardAnimations = cardsLib.map((_) => ({
   mode: ["filterBlurIn", "fadeUp"],
@@ -46,13 +45,6 @@ const HomeHero: FC<SectionProps> = ({ className }) => {
         className
       )}
     >
-      <Button
-        className="top-24 left-24 "
-        variant={"outline"}
-        onClick={onReverse}
-      >
-        <Play size={24} />
-      </Button>
       {!cookie && <Modal onClick={() => console.log("clicked")} />}
       <div className="h-2/3 w-full justify-center flex items-center flex-col  -mt-12">
         <Badge variant="outline" className="dark mb-4">
@@ -88,7 +80,14 @@ const HomeHero: FC<SectionProps> = ({ className }) => {
           controller={animationController as MotionControllerProps}
         >
           {cardsLib.map((card, index) => (
-            <Card key={index} {...card} onReverse={onReverse} />
+            <MotionLink
+              href={card.link}
+              onReverse={onReverse}
+              timer={2000}
+              className="size-auto flex items-center justify-"
+            >
+              <Card key={index} {...card} />
+            </MotionLink>
           ))}
         </MotionChain>
       </div>

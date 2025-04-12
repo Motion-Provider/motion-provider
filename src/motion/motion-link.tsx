@@ -1,19 +1,27 @@
-import { FC, useCallback } from "react";
+import { FC, useCallback, useState } from "react";
 import { MotionLinkProps } from "./types";
 import { useRouter } from "next/router";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 const MotionLink: FC<MotionLinkProps> = ({
   children,
   href,
   onReverse,
   timer,
+  className,
 }) => {
   const router = useRouter();
+  const [clicked, setClicked] = useState(false);
 
   const handleClick = useCallback(
     (e: React.MouseEvent) => {
       e.preventDefault();
+
+      if (clicked) return;
+
+      setClicked(true);
+
       onReverse?.();
 
       setTimeout(() => {
@@ -22,12 +30,25 @@ const MotionLink: FC<MotionLinkProps> = ({
     },
     [href, onReverse, router, timer]
   );
-
-  return (
-    <Link href={href} passHref legacyBehavior={true}>
-      <a onClick={handleClick} style={{ display: "contents" }}>
+  if (clicked) {
+    return (
+      <div
+        className={cn("cursor-pointer", className)}
+        style={{ display: "contents" }}
+      >
         {children}
-      </a>
+      </div>
+    );
+  }
+  return (
+    <Link
+      href={href}
+      passHref
+      onClick={!clicked ? handleClick : undefined}
+      className={cn("cursor-pointer", className)}
+      style={{ display: "contents" }}
+    >
+      {children}
     </Link>
   );
 };

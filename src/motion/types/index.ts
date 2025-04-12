@@ -112,10 +112,11 @@ export interface MotionMovieProps {
 }
 
 export interface MotionLinkProps {
-  children: React.ReactNode;
-  href: string;
-  onReverse: () => void;
   timer: number;
+  href: string;
+  className?: string;
+  onReverse: () => void;
+  children: React.ReactNode;
 }
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 

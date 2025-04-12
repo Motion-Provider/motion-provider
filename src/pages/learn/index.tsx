@@ -1,7 +1,13 @@
+import { List } from "@/sections/learn/list";
+import Head from "next/head";
+
 export default function Learn() {
   return (
-    <section className="h-screen w-full flex items-center justify-center">
-      Learn
-    </section>
+    <>
+      <Head>
+        <title>Learn | Motion Provider</title>
+      </Head>
+      <List />
+    </>
   );
 }

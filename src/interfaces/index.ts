@@ -8,9 +8,8 @@ import { AnimationKeys } from "../motion/types";
 export interface OverviewCardProps {
   title: string;
   desc: string;
-  link: string;
   className?: string;
-  onReverse: () => void;
+  link: string;
   icon: IconType;
 }
 
@@ -25,6 +24,10 @@ export interface SectionProps {
   className?: string;
 }
 
+export interface LearnSearchProps {
+  handleChange: (e: string) => void;
+  value: string;
+}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /* Hooks Interfaces */
@@ -72,6 +75,13 @@ export interface ProviderLayoutProps {
 export interface RouteItemProps {
   title: string;
   url: string;
+}
+
+export interface MotionProviderLibraryItemProps {
+  title: string;
+  desc: string;
+  link: string;
+  icon: IconType;
 }
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/

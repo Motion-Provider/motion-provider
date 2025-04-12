@@ -37,7 +37,7 @@ export const Navigations = () => {
         <FastForward
           className={`${
             !visible ? "animate-ping" : ""
-          } size-8 group-hover:scale-110 transition-all duration-300`}
+          } size-8 group-hover:scale-110 group-hover:opacity-100 opacity-10 transition-all duration-300`}
         />
       </Button>
       <Button
@@ -50,7 +50,7 @@ export const Navigations = () => {
         <FastForward
           className={`${
             !visible ? "animate-ping" : ""
-          } size-8 group-hover:scale-110 transition-all duration-300`}
+          } size-8 group-hover:scale-110 transition-all duration-300 group-hover:opacity-100 opacity-10`}
         />
       </Button>
     </>

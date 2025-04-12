@@ -3,7 +3,7 @@ import dynamic from "next/dynamic";
 import { createPortal } from "react-dom";
 import { AnimationKeys } from "../motion/types";
 import getGradientCircleAnimation from "@/utils/getGradientCircleAnimation";
-import { PortalInterface, ReduxCookieProps } from "@/interfaces";
+import { PortalInterface } from "@/interfaces";
 import { Circle } from "./circle";
 import { useSelector } from "react-redux";
 import { Navigations } from "./navigations";
