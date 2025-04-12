@@ -15,10 +15,26 @@ import { setCookie } from "@/redux/slices/cookieSlice";
 import MotionImage from "@/motion/motion-image";
 import { Skeleton } from "./ui/skeleton";
 import { useMobile } from "@/hooks/useMobile";
+import { FC, useEffect } from "react";
+import { FullscreenPermissionProps } from "@/interfaces";
 
-export const FullScreenModal = () => {
+export const FullScreenModal: FC<FullscreenPermissionProps> = ({ onClick }) => {
   const isMobile = useMobile();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    document.addEventListener(
+      "fullscreenerror",
+      async () => await handleFullscreen(),
+      {
+        signal: controller.signal,
+      }
+    );
+
+    return () => controller.abort();
+  }, []);
 
   const handleFullscreen = async () => {
     const elem = document.documentElement;
@@ -34,40 +50,44 @@ export const FullScreenModal = () => {
       }
 
       dispatch(setCookie({ activated: true }));
+      onClick();
     } catch (err) {
       console.error("Fullscreen request failed:", err);
     }
   };
 
-  if (isMobile && !window.document) return null;
+  if (isMobile) return null;
 
   return (
-    <Dialog defaultOpen modal>
-      <DialogContent className="dark">
+    <Dialog defaultOpen>
+      <DialogContent
+        className="dark"
+        aria-describedby="fullscreen-modal"
+        suppressHydrationWarning
+      >
         <DialogHeader>
           <DialogTitle>
-            <div
-              className={`w-full flex flex-row gap-2 items-center tracking-tight ${fontSecondary.className}`}
+            <MotionText
+              animation={{
+                mode: ["fadeUp", "filterBlurIn"],
+                transition: "smooth",
+                duration: 0.5,
+              }}
+              config={{
+                duration: 0.25,
+                space: 1,
+                mode: "chars",
+                delayLogic: "chaotic",
+              }}
+              className={`${fontSecondary.className}`}
+              wrapperClassName="items-center justify-center w-full flex tracking-tight "
+              elementType={"span"}
             >
-              <MotionText
-                animation={{
-                  mode: ["fadeUp", "filterBlurIn"],
-                  transition: "smooth",
-                  duration: 0.5,
-                }}
-                config={{
-                  duration: 0.25,
-                  mode: "chars",
-                  delayLogic: "chaotic",
-                }}
-                wrapperClassName="items-center justify-center w-full flex"
-                elementType={"span"}
-              >
-                Turn On Fullscreen Mode
-              </MotionText>
-            </div>
+              Turn On Fullscreen Mode
+            </MotionText>
           </DialogTitle>
-          <DialogDescription className="flex justify-center mt-8 mb-4 flex-col-reverse items-center">
+          <DialogDescription className="sr-only" />
+          <center>
             <MotionImage
               animation={{
                 mode: ["fadeIn", "filterBlurIn"],
@@ -83,21 +103,17 @@ export const FullScreenModal = () => {
               wrapperClassName="size-36"
               fallback={<Skeleton className="dark size-36 rounded-full" />}
             />
-          </DialogDescription>
+          </center>
         </DialogHeader>
         <DialogFooter className="justify-center flex flex-col gap-1 h-auto">
-          <DialogTrigger className="w-full">
-            <Button
-              onClick={handleFullscreen}
-              className="w-full "
-              variant="outline"
-            >
+          <Button variant="outline" className="w-full" asChild>
+            <DialogTrigger className="w-full" onClick={handleFullscreen}>
               Turn on
-            </Button>
-          </DialogTrigger>
+            </DialogTrigger>
+          </Button>
         </DialogFooter>
         <p className="text-muted-foreground text-xs text-center">
-          Motion Provider's full-screen mode is an experimental feature.
+          Experience the real motion of the page.
         </p>
       </DialogContent>
     </Dialog>

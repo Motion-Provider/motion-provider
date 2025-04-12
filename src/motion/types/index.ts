@@ -7,6 +7,7 @@
 // Imports
 
 import { UseInViewOptions } from "motion/react";
+import { LinkProps } from "next/link";
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
@@ -40,7 +41,7 @@ export interface MotionChainConfigProps {
 
 export interface MotionTextConfigProps extends MotionChainConfigProps {
   mode: SplittedTextModes;
-  space?: number;
+  space?: MotionTextConfigSpaceProps;
 }
 
 export interface MotionImageConfigProps extends MotionChainConfigProps {
@@ -110,6 +111,12 @@ export interface MotionMovieProps {
   wrapperClassName?: string;
 }
 
+export interface MotionLinkProps {
+  children: React.ReactNode;
+  href: string;
+  onReverse: () => void;
+  timer: number;
+}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
@@ -196,9 +203,7 @@ export interface UseOutputAnimationMixerProps {
   animate: AnimationObjProps;
 }
 
-export type UseAnimationControlProps = {
-  initial?: Partial<UseAnimationProps>;
-};
+export type UseAnimationControlProps = Partial<UseAnimationProps>;
 
 export interface UseAnimationExitProps {}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
@@ -222,6 +227,7 @@ export type ImageMotionFnTypes = "hover" | "click";
 export type SplittedTextModes = "words" | "chars";
 
 // Numbers
+export type MotionTextConfigSpaceProps = 1 | 2 | 3 | 4 | 5;
 export type ImageMotionPieces =
   | 16
   | 25

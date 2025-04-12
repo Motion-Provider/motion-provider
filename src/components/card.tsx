@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { Card as CardContainer } from "./ui/card";
-import Link from "next/link";
 import { OverviewCardProps } from "@/interfaces";
 import { cn } from "@/lib/utils";
+import MotionLink from "@/motion/motion-link";
 
 export const Card: FC<OverviewCardProps> = (props) => {
-  const { desc, title, link, className } = props;
+  const { desc, title, link, className, onReverse } = props;
 
   return (
     <CardContainer
@@ -14,10 +14,7 @@ export const Card: FC<OverviewCardProps> = (props) => {
         className
       )}
     >
-      <Link
-        href={link}
-        className=" flex flex-row lg:gap-6 gap-2 justify-center items-center lg:px-8 px-4 w-full h-full "
-      >
+      <MotionLink href={link} onReverse={onReverse} timer={2000}>
         <div className="lg:w-16 lg:h-16 w-5 h-5 flex items-center justify-center text-stone-300 group-hover:text-white transition-all duration-300 group-hover:scale-110">
           {<props.icon className="size-7" />}
         </div>
@@ -27,7 +24,7 @@ export const Card: FC<OverviewCardProps> = (props) => {
             {desc}
           </p>
         </div>
-      </Link>
+      </MotionLink>
     </CardContainer>
   );
 };

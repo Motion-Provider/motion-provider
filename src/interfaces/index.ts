@@ -10,9 +10,13 @@ export interface OverviewCardProps {
   desc: string;
   link: string;
   className?: string;
+  onReverse: () => void;
   icon: IconType;
 }
 
+export interface FullscreenPermissionProps {
+  onClick: () => void;
+}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /* Sections Interfaces */
@@ -35,6 +39,8 @@ export interface useIsMobileProps {
 export interface ReduxCookieProps {
   activated: boolean;
 }
+
+export interface ReduxMotionProviderAnimationConnectorProps {}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /* Utils Interfaces */
@@ -76,7 +82,9 @@ export interface PortalInterface {
   currRoute: string;
 }
 
-export interface PortalGradientCircleProps {
+export interface PortalCircleProps {
   mode: AnimationKeys | AnimationKeys[];
 }
+
+export interface PortalNavigationProps {}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/

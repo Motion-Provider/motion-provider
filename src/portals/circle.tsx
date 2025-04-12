@@ -1,8 +1,8 @@
-import { PortalGradientCircleProps } from "@/interfaces";
+import { PortalCircleProps } from "@/interfaces";
 import MotionContainer from "@/motion/motion-container";
 import { FC } from "react";
 
-export const GradientCircle: FC<PortalGradientCircleProps> = ({ mode }) => {
+export const Circle: FC<PortalCircleProps> = ({ mode }) => {
   return (
     <MotionContainer
       animation={{

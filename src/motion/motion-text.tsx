@@ -12,13 +12,13 @@ import getSplittedText from "./utils/getSplittedText";
 const MotionText: FC<MotionTextProps> = ({
   animation,
   children,
-  config = { ...MOTION_CHAIN_CONFIG_DEFAULTS, mode: "chars", space: 2 },
+  config = { ...MOTION_CHAIN_CONFIG_DEFAULTS, mode: "chars" },
   controller = { ...MOTION_CONTAINER_CONTROLLER_DEFAULT },
   elementType,
   className,
   wrapperClassName,
 }) => {
-  const { mode } = config;
+  const { mode, space = 2 } = config;
 
   if (
     typeof children !== "string" ||
@@ -42,7 +42,7 @@ const MotionText: FC<MotionTextProps> = ({
   );
 
   const items = str.map((char, idx) => {
-    if (char === " ") return <span className={cn(`px-1`)} key={idx} />;
+    if (char === " ") return <span className={cn(`px-${space}`)} key={idx} />;
     return (
       <span className={cn(className)} key={idx}>
         {char}
