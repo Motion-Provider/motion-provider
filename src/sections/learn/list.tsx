@@ -1,15 +1,8 @@
 import { MotionProviderLibraryItemProps, SectionProps } from "@/interfaces";
 import { cn } from "@/lib/utils";
-import { FC, useMemo, useRef, useState } from "react";
+import { FC, useMemo, useState } from "react";
 import { Search } from "./search";
 import MotionText from "@/motion/motion-text";
-import Autoplay from "embla-carousel-autoplay";
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-} from "@/components/ui/carousel";
-import { Card, CardContent } from "@/components/ui/card";
 import libraryLib from "@/lib/learn/library.lib";
 import { ListItem } from "./list-item";
 import MotionChain from "@/motion/motion-chain";
@@ -18,13 +11,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { StickyFooter } from "@/components/sticky-footer";
 import { FullscreenAlert } from "@/components/fullscreen-alert";
 import Socials from "@/components/socials";
-import { LearnCarouselItem } from "@/components/learn-carousel-item";
+import LearnCarousel from "@/components/learn-carousel";
 
 export const Home: FC<SectionProps> = ({ className }) => {
   const [library, setLibrary] =
     useState<MotionProviderLibraryItemProps[]>(libraryLib);
   const [search, setSearch] = useState<string>("");
-  const plugin = useRef(Autoplay({ delay: 5000, stopOnInteraction: false }));
 
   const listItemAnimations = library.map((_, idx) => ({
     mode:
@@ -78,25 +70,12 @@ export const Home: FC<SectionProps> = ({ className }) => {
         </div>
         <FullscreenAlert />
         <div className="size-full">
-          <div className="h-[250px] w-full relative py-8">
-            <Carousel
-              plugins={[plugin.current]}
-              className="size-full"
-              onMouseEnter={plugin.current.stop}
-              onMouseLeave={plugin.current.reset}
-            >
-              <CarouselContent className="h-[250px]">
-                {Array.from({ length: 5 }).map((_, index) => (
-                  <LearnCarouselItem key={index} />
-                ))}
-              </CarouselContent>
-            </Carousel>
-          </div>
-          <div className="w-full bg-gradient-to-r from-[#2b75cffd]/20 to-transparent rounded-xl h-16 mt-14 border dark justify-between flex flex-row gap-2 px-4 items-center">
+          <LearnCarousel />
+          <div className="w-full bg-gradient-to-r from-[#2b75cffd]/10 to-transparent rounded-xl h-16 mt-14 border dark justify-between flex flex-row gap-2 px-4 items-center">
             <div className="w-1/2 flex flex-row gap-2 justify-start items-center">
-              <h3 className="font-secondary">
+              <p className="font-secondary text-sm">
                 Total {library.length} archive found.
-              </h3>
+              </p>
             </div>
             <div className="w-1/2 flex flex-row gap-2 justify-end items-center ">
               <Socials />

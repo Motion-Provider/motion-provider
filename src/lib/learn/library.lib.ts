@@ -90,7 +90,7 @@ export default [
   {
     title: "Exit sequencer animations with <MotionLink />",
     icon: Box,
-    desc: "Learn how to use Motion Link to animate your links.",
+    desc: "Learn how to use Motion Link to create exit layout animations useing the CAS and Motion Link.",
     level: "advanced",
     link: "/learn/motion-link",
   },

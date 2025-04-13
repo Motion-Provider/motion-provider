@@ -42,7 +42,13 @@ const MotionText: FC<MotionTextProps> = ({
   );
 
   const items = str.map((char, idx) => {
-    if (char === " ") return <span className={cn(`px-${space}`)} key={idx} />;
+    if (char === " ")
+      return (
+        <span
+          className={cn(space >= 1 ? `px-${space}` : `px-[${space}px]`)}
+          key={idx}
+        />
+      );
     return (
       <span className={cn(className)} key={idx}>
         {char}
@@ -63,7 +69,7 @@ const MotionText: FC<MotionTextProps> = ({
           ...config,
           isDynamicallyQueued: true,
         }}
-        elementType={elementType}
+        elementType={"span"}
         controller={controller}
       />
     ),

@@ -1,0 +1,88 @@
+import { CarouselItemProps } from "@/interfaces";
+
+export default [
+  {
+    id: 1,
+    desc: "Animate everything with Motion Container.",
+    title: "Motion Container",
+    link: "/learn/motion-container",
+    utils: [
+      "Supports animation combinations and sequencing",
+      "20+ transition easings including custom cubic bezier",
+      "Viewport-triggered animations",
+      "Animation reversal and pausing controls",
+      "Type-safe animation mode aand className declarations",
+      "Supports centralized animation system(CAS)",
+    ],
+  },
+  {
+    id: 2,
+    title: "Motion Chain",
+    desc: "Create sequenced animations and trailing functionalities for your components.",
+    link: "/learn/motion-chain",
+    utils: [
+      "Sequenced animation timelines",
+      "16 predefined delay calculation algorithms (linear/exponential/custom/sinusoidal/quantum/etc.)",
+      "Dynamic queue regeneration",
+      "Type-safe animation coordination",
+      "Automatic child-animation matching",
+      "Nested animation support",
+    ],
+  },
+  {
+    id: 3,
+    title: "Motion Image",
+    desc: "Integrate algorithmic animations to your brand new project with <MotionImage />.",
+    link: "/learn/motion-image",
+    utils: [
+      "Fully customizable animation configuration",
+      "Dynamic image fragmentation (1-900+ pieces)",
+      "Interactive hover/click animations",
+      "15+ Recursive animation pattern algorithms",
+      "Custom delay timing functions",
+      "Centralized Animation System (CAS) integration support",
+      "21,840 builtin animation combination variations",
+    ],
+  },
+  {
+    id: 4,
+    title: "Motion Text",
+    desc: "Divide your text into pieces with 2 different mode options and animate them with <MotionText />.",
+    link: "/learn/motion-text",
+    utils: [
+      "Fully customizable animation configuration",
+      "Error support with Motion Debugger",
+      "Dynamic sequenced text motions",
+      "With the power of Tailwind v4 intellisense",
+      "Centralized Animation System (CAS) integration support",
+      "20+ Recursive animation pattern algorithms",
+    ],
+  },
+  {
+    id: 5,
+    title: "Motion Movie",
+    desc: "A dynamic image queuing system with built in animations. It automatically transitions between images using predefined enter and exit animations and supports custom configurations for delays, transitions, and piecewise animations.",
+    link: "/learn/motion-movie",
+    utils: [
+      "Seamless image transitions using customizable enter and exit animations",
+      "Automatic cycling through images",
+      "Customizable animation timings, delay logic, and piecewise effects.",
+      "Optimized rendering through memoization and dynamic imports.",
+      "Supports centralized animation system(CAS)",
+      "21,840+ built-in animation combination variations for your images",
+    ],
+  },
+  {
+    id: 6,
+    title: "Motion Link",
+    desc: "Create single thread level or component level layout exit animations with Motion Link.",
+    link: "/learn/motion-link",
+    utils: [
+      "Powerful layout exit animations with the integration of CAS system",
+      "Create router exit animations with Motion Link",
+      "Built at the top of your Next.js project",
+      "Integrate seemless page transitions with Motion Link",
+      "Control and configure your all Motion Provider animations",
+    ],
+  },
+] as CarouselItemProps[];

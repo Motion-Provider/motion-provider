@@ -6,7 +6,7 @@ import { ArrowRight } from "lucide-react";
 import { FC } from "react";
 
 export const ListItem: FC<MotionProviderLibraryItemProps> = (props) => {
-  const { desc, link, title, level } = props;
+  const { desc, title, level } = props;
 
   return (
     <li className="h-16 w-full items-center justify-center flex flex-row gap-3 border  px-12 rounded-2xl group cursor-pointer my-3 hover:bg-stone-900">

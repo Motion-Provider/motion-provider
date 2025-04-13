@@ -228,7 +228,7 @@ export type ImageMotionFnTypes = "hover" | "click";
 export type SplittedTextModes = "words" | "chars";
 
 // Numbers
-export type MotionTextConfigSpaceProps = 1 | 2 | 3 | 4 | 5;
+export type MotionTextConfigSpaceProps = 0.25 | 0.5 | 0.75 | 1 | 2 | 3 | 4 | 5;
 export type ImageMotionPieces =
   | 16
   | 25

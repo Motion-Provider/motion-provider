@@ -96,9 +96,10 @@ export type MotionProviderLibraryItemLevelProps =
 
 export interface CarouselItemProps {
   id: number;
+  desc: string;
   title: string;
   link: string;
-  experience: React.ReactNode;
+  utils: string[];
 }
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
