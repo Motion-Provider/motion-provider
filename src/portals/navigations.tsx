@@ -29,7 +29,8 @@ export const Navigations = () => {
       <Button
         onClick={handleNextPage}
         className={cn(
-          "z-20 group dark  h-screen lg:w-36 w-20 fixed right-0 bottom-0 rounded-l-full text-white items-center justify-center flex"
+          "z-20 group dark  h-screen lg:w-36 w-20 fixed right-0 bottom-0 rounded-l-full text-white items-center justify-center flex hover:bg-black/20 backdrop-blur-md",
+          !visible ? "animate-caret-blink" : ""
         )}
         variant={"ghost"}
       >
@@ -41,9 +42,10 @@ export const Navigations = () => {
       </Button>
       <Button
         onClick={handlePreviousPage}
-        className={`z-20 group dark  h-screen lg:w-36 w-20 fixed rotate-180 left-0 bottom-0 rounded-l-full text-white items-center justify-center flex ${
+        className={cn(
+          "z-20 group dark  h-screen lg:w-36 w-20 fixed rotate-180 left-0 bottom-0 rounded-l-full text-white items-center hover:bg-black/20 justify-center flex",
           !visible ? "animate-caret-blink" : ""
-        }`}
+        )}
         variant={"ghost"}
       >
         <FastForward

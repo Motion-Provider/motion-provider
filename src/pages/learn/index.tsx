@@ -1,4 +1,4 @@
-import { Home } from "@/sections/learn/list";
+import { Home } from "@/sections/learn/home";
 import Head from "next/head";
 
 export default function Learn() {

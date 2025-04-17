@@ -25,8 +25,6 @@ const cardAnimations = cardsLib.map((_) => ({
 
 const HomeHero: FC<SectionProps> = ({ className }) => {
   const cookie = useSelector((state: RootState) => state.cookie.activated);
-  const { isFullscreen } = useSelector((state: RootState) => state.fullscreen);
-
   const isMobile = useMobile();
 
   const { control, onReverse } = useAnimationControl();
@@ -85,7 +83,7 @@ const HomeHero: FC<SectionProps> = ({ className }) => {
               href={card.link}
               onReverse={onReverse}
               timer={2000}
-              className="size-auto flex items-center justify-"
+              className="size-auto flex items-center"
             >
               <Card key={index} {...card} />
             </MotionLink>

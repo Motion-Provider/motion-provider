@@ -1,5 +1,5 @@
 import { IconType } from "react-icons";
-import { AnimationKeys } from "../motion/types";
+import { AnimationKeys, MotionControllerProps } from "../motion/types";
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
@@ -16,6 +16,27 @@ export interface OverviewCardProps {
 export interface FullscreenPermissionProps {
   onClick: () => void;
 }
+
+export interface LearnCarouselProps {
+  controller: MotionControllerProps;
+}
+
+export interface MotionTubeItemProps {
+  children: React.ReactNode;
+  currentItem: number;
+}
+
+export interface MotionTubeObjectProps {}
+
+export interface LearnListProps {
+  data: LearnListItemProps[];
+  className?: string;
+}
+export interface LearnListItemProps {
+  title: string;
+  desc?: string;
+}
+
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 /* Sections Interfaces */
@@ -27,6 +48,11 @@ export interface SectionProps {
 export interface LearnSearchProps {
   handleChange: (e: string) => void;
   value: string;
+}
+
+export interface WrapperProps {
+  children: React.ReactNode;
+  className?: string;
 }
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
@@ -47,6 +73,10 @@ export interface ReduxMotionProviderAnimationConnectorProps {}
 
 export interface ReduxFullscreenProps {
   isFullscreen: boolean;
+}
+
+export interface ReduxDocumentProps {
+  objectID: number | null;
 }
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
@@ -82,6 +112,7 @@ export interface RouteItemProps {
 }
 
 export interface MotionProviderLibraryItemProps {
+  id: number;
   title: string;
   desc: string;
   link: string;

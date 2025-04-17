@@ -7,9 +7,11 @@ import { Alert, AlertDescription, AlertTitle } from "./ui/alert";
 import { Expand, Terminal } from "lucide-react";
 import { Button } from "./ui/button";
 import { useMobile } from "@/hooks/useMobile";
-import { useEffect } from "react";
+import { FC, useEffect } from "react";
+import { SectionProps } from "@/interfaces";
+import { cn } from "@/lib/utils";
 
-export const FullscreenAlert = () => {
+export const FullscreenAlert: FC<SectionProps> = ({ className }) => {
   const isFullscreen = useFullscreen();
 
   const dispatch = useDispatch();
@@ -57,7 +59,12 @@ export const FullscreenAlert = () => {
 
   return (
     !fullscreenActivated && (
-      <Alert className="ring ring-offset-2 ring-cyan-950/50 ring-offset-cyan-950/20 w-[98.5%] border-none dark bg-cyan-950/20 relative mt-12">
+      <Alert
+        className={cn(
+          "ring ring-offset-2 ring-cyan-950/50 ring-offset-cyan-950/20 w-[98.5%] border-none dark bg-cyan-950/20 relative",
+          className
+        )}
+      >
         <Terminal className="h-4 w-4" />
         <AlertTitle>
           Motion Provider working awesome in full screen mode.

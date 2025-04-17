@@ -2,14 +2,40 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MotionProviderLibraryItemProps } from "@/interfaces";
 import { cn } from "@/lib/utils";
+import MotionContainer from "@/motion/motion-container";
 import { ArrowRight } from "lucide-react";
-import { FC } from "react";
+import { FC, useState } from "react";
 
 export const ListItem: FC<MotionProviderLibraryItemProps> = (props) => {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
   const { desc, title, level } = props;
 
   return (
-    <li className="h-16 w-full items-center justify-center flex flex-row gap-3 border  px-12 rounded-2xl group cursor-pointer my-3 hover:bg-stone-900">
+    <li
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className="h-16 w-full items-center justify-center flex flex-row gap-3 border  px-12 rounded-2xl group cursor-pointer my-3 hover:bg-stone-900 relative"
+    >
+      <MotionContainer
+        animation={{
+          mode: ["typingEffect", "funChickenDance"],
+          transition: "smooth",
+          delay: 0,
+          duration: 0.25,
+        }}
+        elementType={"div"}
+        controller={{
+          trigger: isHovered,
+        }}
+        className={cn(
+          "size-12 rounded-full blur-[150px] absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50",
+          level === "beginner"
+            ? "bg-green-500"
+            : level === "intermediate"
+            ? "bg-yellow-500"
+            : "bg-red-500"
+        )}
+      />
       <props.icon className="size-6" />
       <div className="w-full h-full flex flex-col justify-center items-start px-2">
         <div className="flex gap-2">

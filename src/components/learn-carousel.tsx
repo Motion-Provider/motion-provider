@@ -9,8 +9,9 @@ import {
 import carouselLib from "../lib/learn/carousel.lib";
 import { LearnCarouselItem } from "./learn-carousel-item";
 import { cn } from "../lib/utils";
+import { LearnCarouselProps } from "@/interfaces";
 
-const LearnCarousel: FC = () => {
+const LearnCarousel: FC<LearnCarouselProps> = ({ controller }) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
@@ -45,7 +46,11 @@ const LearnCarousel: FC = () => {
         >
           <CarouselContent className="h-[250px]">
             {carouselLib.map((item, index) => (
-              <LearnCarouselItem key={index} {...item} />
+              <LearnCarouselItem
+                controller={controller}
+                key={index}
+                {...item}
+              />
             ))}
           </CarouselContent>
         </Carousel>

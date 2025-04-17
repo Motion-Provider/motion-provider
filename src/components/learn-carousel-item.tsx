@@ -1,18 +1,19 @@
 import MotionContainer from "@/motion/motion-container";
 import { CarouselItem } from "./ui/carousel";
 import { FC } from "react";
-import { CarouselItemProps } from "@/interfaces";
+import { CarouselItemProps, LearnCarouselProps } from "@/interfaces";
 import { ArrowRight, CheckCheck } from "lucide-react";
 import MotionText from "@/motion/motion-text";
 import MotionChain from "@/motion/motion-chain";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
-export const LearnCarouselItem: FC<CarouselItemProps> = ({
+export const LearnCarouselItem: FC<CarouselItemProps & LearnCarouselProps> = ({
   desc,
   link,
   title,
   utils,
+  controller,
 }) => {
   return (
     <CarouselItem className="w-full h-auto border rounded-xl dark cursor-pointer pointer-events-none">
@@ -26,6 +27,7 @@ export const LearnCarouselItem: FC<CarouselItemProps> = ({
           }}
           elementType={"div"}
           className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2  bg-gradient-to-br from-pink-500 via-15% to-transparent size-60 rounded-full blur-[50px] z-0 "
+          controller={controller}
         />
         <MotionContainer
           animation={{
@@ -36,6 +38,7 @@ export const LearnCarouselItem: FC<CarouselItemProps> = ({
           }}
           elementType={"div"}
           className="absolute bottom-24 left-24 bg-gradient-to-br from-cyan-800  via-15% to-transparent size-60 rounded-full blur-[50px] "
+          controller={controller}
         />
         <MotionContainer
           animation={{
@@ -46,6 +49,7 @@ export const LearnCarouselItem: FC<CarouselItemProps> = ({
           }}
           elementType={"div"}
           className="absolute bottom-0 right-0   bg-gradient-to-br from-emerald-300  via-15% to-transparent size-48 rounded-full blur-[50px]  z-0"
+          controller={controller}
         />
         <div className="size-full z-50 absolute items-center justify-center flex flex-row">
           <div className="w-1/2 h-full flex flex-col items-start justify-center gap-1 px-16 ">
@@ -63,6 +67,7 @@ export const LearnCarouselItem: FC<CarouselItemProps> = ({
               elementType={"p"}
               className="font-bold text-3xl font-secondary "
               children={title}
+              controller={controller}
             />
             <MotionText
               animation={{
@@ -80,6 +85,7 @@ export const LearnCarouselItem: FC<CarouselItemProps> = ({
               }}
               className="-mx-[2px]"
               wrapperClassName="tracking-tighter text-sm  text-stone-400"
+              controller={controller}
             />
             <Link href={link}>
               <Button
@@ -107,6 +113,7 @@ export const LearnCarouselItem: FC<CarouselItemProps> = ({
                 delayLogic: "linear",
               }}
               controller={{
+                ...controller,
                 configView: {
                   amount: "some",
                   once: false,
