@@ -18,7 +18,7 @@ const MotionText: FC<MotionTextProps> = ({
   className,
   wrapperClassName,
 }) => {
-  const { mode, space = 2 } = config;
+  const { mode, space = 0 } = config;
 
   if (
     typeof children !== "string" ||

@@ -18,7 +18,6 @@ import { useMobile } from "@/hooks/useMobile";
 import MotionLink from "@/motion/motion-link";
 
 export const Home: FC<SectionProps> = ({ className }) => {
-  const isMobile = useMobile();
   const { control, onReverse } = useAnimationControl();
   const controller = useAnimation(control);
 

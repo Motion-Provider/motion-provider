@@ -14,7 +14,6 @@ import { LearnCarouselProps } from "@/interfaces";
 const LearnCarousel: FC<LearnCarouselProps> = ({ controller }) => {
   const [api, setApi] = useState<CarouselApi | null>(null);
   const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
   const plugin = useRef(
     Autoplay({ delay: 5000, active: true, stopOnInteraction: false })
   );
@@ -22,7 +21,6 @@ const LearnCarousel: FC<LearnCarouselProps> = ({ controller }) => {
   useEffect(() => {
     if (!api) return;
 
-    setCount(api.scrollSnapList().length);
     setCurrent(api.selectedScrollSnap());
 
     api.on("select", () => {

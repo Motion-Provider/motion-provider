@@ -63,8 +63,9 @@ export const LearnCarouselItem: FC<CarouselItemProps & LearnCarouselProps> = ({
               config={{
                 duration: 0.125,
                 mode: "chars",
+                space: 0,
               }}
-              elementType={"p"}
+              elementType={"h1"}
               className="font-bold text-3xl font-secondary "
               children={title}
               controller={controller}
@@ -81,9 +82,8 @@ export const LearnCarouselItem: FC<CarouselItemProps & LearnCarouselProps> = ({
               config={{
                 duration: 0.125,
                 mode: "words",
-                space: 1,
+                space: 0,
               }}
-              className="-mx-[2px]"
               wrapperClassName="tracking-tighter text-sm  text-stone-400"
               controller={controller}
             />
