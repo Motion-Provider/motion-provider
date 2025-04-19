@@ -6,7 +6,7 @@ import MotionText from "@/motion/motion-text";
 import libraryLib from "@/lib/learn/library.lib";
 import { ListItem } from "./list-item";
 import MotionChain from "@/motion/motion-chain";
-import { MotionAnimationProps, MotionControllerProps } from "@/motion/types";
+import { MotionAnimationProps } from "@/motion/types";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { StickyFooter } from "@/components/sticky-footer";
 import { FullscreenAlert } from "@/components/fullscreen-alert";
@@ -14,7 +14,6 @@ import Socials from "@/components/socials";
 import LearnCarousel from "@/components/learn-carousel";
 import { useAnimationControl } from "@/motion/hooks/use-animation-control";
 import { useAnimation } from "@/motion/hooks/use-animation";
-import { useMobile } from "@/hooks/useMobile";
 import MotionLink from "@/motion/motion-link";
 
 export const Home: FC<SectionProps> = ({ className }) => {

@@ -30,7 +30,7 @@ const MotionTube: FC<SectionProps> = ({ className }) => {
     api?.scrollTo(index);
   };
   return (
-    <section>
+    <section className={className}>
       <div className="h-[250px] relative py-8 cursor-grab">
         <Carousel
           plugins={[plugin.current]}
@@ -40,7 +40,7 @@ const MotionTube: FC<SectionProps> = ({ className }) => {
           onMouseLeave={plugin.current.reset}
         >
           <CarouselContent className="h-[250px] ml-[0.5px]">
-            {carouselLib.map((item, index) => (
+            {carouselLib.map((_, index) => (
               <Item currentItem={current + 1} key={index}>
                 asd
               </Item>

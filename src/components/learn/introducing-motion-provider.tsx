@@ -1,10 +1,10 @@
 import Link from "next/link";
 import { List } from "./list";
-import introducingMotionProviderLib from "@/lib/learn/introducing-motion-provider.lib";
+import { Badge } from "../ui/badge";
 import MotionText from "@/motion/motion-text";
 import MotionImage from "@/motion/motion-image";
 import MotionChain from "@/motion/motion-chain";
-import { Badge } from "../ui/badge";
+import introducingMotionProviderLib from "@/lib/learn/introducing-motion-provider.lib";
 
 interface BlogListItem {
   title: string;
@@ -17,9 +17,9 @@ const data: BlogListItem[] = [
   {
     title: "SaaS SPA App",
     desc: [
-      "✅ Powered by Motion Provider 🚀",
+      "✅ Reversal controlling unit.",
       "✅ Advanced image motioning.",
-      "✅ Advanced composition.",
+      "✅ Advanced compositions.",
       <div className="flex flex-wrap pt-4 gap-2">
         <Badge variant="outline">MotionImage</Badge>
         <Badge variant="outline">MotionQueue</Badge>
@@ -33,7 +33,7 @@ const data: BlogListItem[] = [
   {
     title: "Crypto Landing App",
     desc: [
-      "✅ Powered by Motion Provider 🚀",
+      "✅ 3D smooth animation effects.",
       "✅ Advanced controlling.",
       "✅ Coloured animations.",
       <div className="flex flex-wrap pt-4 gap-2">
@@ -67,6 +67,7 @@ const data: BlogListItem[] = [
     src: "/assets/thumbs/nft-thumb.gif",
     desc: [
       "✅ z-* animations.",
+      "✅ Hover image animations.",
       "✅ Synchronized animations.",
       "✅ Layout animations.",
       <div className="flex flex-wrap pt-4 gap-2">
@@ -80,9 +81,12 @@ const data: BlogListItem[] = [
 ];
 export const IntroducingMotionProvider = () => {
   return (
-    <section className=" w-full h-auto mt-6">
-      <h2 className="font-bold text-3xl py-4" id="entrance">
-        Introducing Motion Provider
+    <section className=" w-full h-auto mt-6" id="introducing-motion-provider">
+      <h2
+        className="font-bold capitalize text-3xl pb-4"
+        id="what-is-motion-provider"
+      >
+        What is Motion Provider?
       </h2>
       <p className="text-stone-400  tracking-tight">
         Motion Provider is an <b>open-source</b>, <b>animation design</b>{" "}
@@ -156,7 +160,7 @@ export const IntroducingMotionProvider = () => {
           delayLogic: "triangle",
         }}
         elementType={"p"}
-        wrapperClassName="text-stone-400 py-12 tracking-tighter font-secondary text-4xl "
+        wrapperClassName="text-stone-400 py-12 tracking-tighter font-secondary text-4xl z-0"
       >
         How you have developed your portfolio?
       </MotionText>
@@ -188,8 +192,8 @@ export const IntroducingMotionProvider = () => {
             delayLogic: "linear",
           }}
           elementType="div"
-          animations={Array.from({ length: 4 }).map((_) => ({
-            mode: ["fadeRight"],
+          animations={Array.from({ length: 4 }).map((_, idx) => ({
+            mode: [idx % 2 === 0 ? "fadeUp" : "fadeDown"],
             duration: 1,
             transition: "smooth",
           }))}

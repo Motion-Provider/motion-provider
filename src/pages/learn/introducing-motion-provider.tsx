@@ -1,14 +1,9 @@
 import { FullscreenAlert } from "@/components/fullscreen-alert";
-import dynamic from "next/dynamic";
 import { Navigation } from "@/sections/learn/navigation";
 import Wrapper from "@/sections/learn/wrapper";
 import { IntroducingMotionProvider as Home } from "@/components/learn/introducing-motion-provider";
-
+import Header from "@/sections/learn/header";
 import Head from "next/head";
-
-const Header = dynamic(() => import("@/sections/learn/header"), {
-  ssr: false,
-});
 
 export default function IntroducingMotionProvider() {
   return (
