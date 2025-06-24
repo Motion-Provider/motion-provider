@@ -3,6 +3,7 @@ import React, { FC, useEffect, useMemo, useState } from "react";
 import { AnimationKeys, MotionMovieProps } from "./types/index";
 import logError from "./utils/getErrorLogs";
 import MotionImage from "./motion-image";
+
 const MotionMovie: FC<MotionMovieProps> = ({
   animations,
   config,

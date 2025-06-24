@@ -1,4 +1,9 @@
-import { AnimationObjProps, TransitionConfig } from "./types";
+import {
+  AnimationKeys,
+  AnimationObjProps,
+  TransitionConfig,
+  TransitionKeys,
+} from "./types";
 import { cn } from "../lib/utils";
 import transitions from "./lib/transitions.lib";
 import { motion, useInView } from "motion/react";
@@ -6,28 +11,31 @@ import React, { FC, useId, useMemo, useRef } from "react";
 import { useAnimationMixer } from "./hooks/use-animation-mixer";
 import animations from "./lib/animate.lib";
 import { MotionContainerProps } from "./types";
-import {
-  MOTION_PROVIDER_DEFAULTS as defaults,
-  MOTION_CONTAINER_ANIMATION_DEFAULT,
-  MOTION_CONTAINER_CONTROLLER_DEFAULT,
-} from "./lib/defaults.lib";
 import logError from "./utils/getErrorLogs";
 
 const MotionContainer: FC<MotionContainerProps> = ({
-  animation = { ...MOTION_CONTAINER_ANIMATION_DEFAULT },
-  controller = { ...MOTION_CONTAINER_CONTROLLER_DEFAULT },
+  animation = {
+    mode: ["opacity"] as AnimationKeys[],
+    transition: "smooth" as TransitionKeys,
+    delay: 0,
+    duration: 0.5,
+  },
+  controller = {
+    configView: {
+      once: false,
+      amount: 0.5,
+    },
+    isAnimationStopped: false,
+    reverse: false,
+    trigger: false,
+  } as MotionContainerProps["controller"],
   children,
-  elementType = defaults.MOTION_CONTAINER_ELEMENT_TYPE_DEFAULT,
+  elementType = "div",
   className,
 }) => {
-  const {
-    mode,
-    transition,
-    delay,
-    duration = defaults.MOTION_CONTAINER_DURATION_DEFAULT,
-  } = animation;
+  const { mode, transition, delay, duration = 0.5 } = animation;
 
-  const { configView, isAnimationStopped, trigger, reverse } = controller;
+  const { configView, isAnimationStopped, trigger, reverse } = controller!;
   const ref = useRef<HTMLElement | null>(null);
   const isInView = useInView(ref, configView);
   const id = useId();
@@ -102,7 +110,7 @@ const MotionContainer: FC<MotionContainerProps> = ({
   return React.createElement(
     MotionElement,
     {
-      className: cn("mc", className),
+      className: cn(`motion-container`, className),
       ref,
       key: id,
       initial: initialState,

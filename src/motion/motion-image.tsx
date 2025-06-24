@@ -1,7 +1,3 @@
-import {
-  MOTION_IMAGE_ANIMATION_DEFAULT,
-  MOTION_IMAGE_CONFIG_DEFAULT,
-} from "./lib/defaults.lib";
 import { cn } from "../lib/utils";
 import logError from "./utils/getErrorLogs";
 import { MotionImageProps } from "./types";
@@ -10,8 +6,21 @@ import MotionContainer from "./motion-container";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const MotionImage: FC<MotionImageProps> = ({
-  animation = { ...MOTION_IMAGE_ANIMATION_DEFAULT },
-  config = { ...MOTION_IMAGE_CONFIG_DEFAULT },
+  animation = {
+    mode: ["opacity"],
+    transition: "smooth",
+    delay: 0,
+    duration: 0.5,
+  },
+  config = {
+    duration: 3,
+    pieces: 121,
+    img: undefined,
+    customLogic: undefined,
+    delayByElement: undefined,
+    delayLogic: undefined,
+    fn: undefined,
+  },
   controller,
   className,
   fallback = <div className="size-full absolute animate-pulse bg-stone-800" />,

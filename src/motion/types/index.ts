@@ -46,7 +46,7 @@ export interface MotionTextConfigProps extends MotionChainConfigProps {
 export interface MotionImageConfigProps extends MotionChainConfigProps {
   pieces: ImageMotionPieces;
   fn?: ImageMotionFnTypes;
-  img: string;
+  img?: string;
 }
 
 export interface MotionMovieAnimationsProps

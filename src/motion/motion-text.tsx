@@ -1,19 +1,31 @@
-import {
-  MOTION_CHAIN_CONFIG_DEFAULTS,
-  MOTION_CONTAINER_CONTROLLER_DEFAULT,
-} from "./lib/defaults.lib";
 import { cn } from "../lib/utils";
 import MotionChain from "./motion-chain";
 import { MotionTextProps } from "./types";
 import logError from "./utils/getErrorLogs";
 import React, { createElement, FC, useMemo } from "react";
 import getSplittedText from "./utils/getSplittedText";
+import { UseInViewOptions } from "motion/react";
 
 const MotionText: FC<MotionTextProps> = ({
   animation,
   children,
-  config = { ...MOTION_CHAIN_CONFIG_DEFAULTS, mode: "chars" },
-  controller = { ...MOTION_CONTAINER_CONTROLLER_DEFAULT },
+  config = {
+    mode: "chars",
+    duration: 0.5,
+    delayLogic: "linear",
+    delayByElement: undefined,
+    isDynamicallyQueued: undefined,
+    customLogic: undefined,
+  },
+  controller = {
+    configView: {
+      once: true,
+      amount: 0.5,
+    } as UseInViewOptions,
+    isAnimationStopped: false,
+    reverse: false,
+    trigger: false,
+  },
   elementType,
   className,
   wrapperClassName,

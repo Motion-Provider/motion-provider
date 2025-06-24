@@ -4,7 +4,6 @@ import {
   UseAnimationStateProps,
   UseAnimationActionTypes,
 } from "../types";
-import { MOTION_PROVIDER_DEFAULTS } from "../lib/defaults.lib";
 
 const initialState: UseAnimationStateProps = {
   isAnimationStopped: false,
@@ -39,7 +38,7 @@ export const useAnimation = ({
   reverseAnimation = false,
 }: UseAnimationProps): UseAnimationStateProps => {
   const [state, dispatch] = useReducer(animationReducer, initialState);
-  const recallDuration = MOTION_PROVIDER_DEFAULTS.MOTION_RECALL_TIMEOUT_DEFAULT;
+  const recallDuration = 500;
 
   useEffect(() => {
     let timeout: ReturnType<typeof setTimeout>;

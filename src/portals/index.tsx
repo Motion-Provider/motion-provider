@@ -10,7 +10,7 @@ import { Navigations } from "./navigations";
 import { RootState } from "@/redux";
 
 const P: FC<PortalInterface> = ({ currRoute }) => {
-  const cookie = useSelector((state: RootState) => state.cookie.activated);
+  const { activated } = useSelector((state: RootState) => state.cookie);
 
   if (!currRoute) return null;
 
@@ -27,7 +27,7 @@ const P: FC<PortalInterface> = ({ currRoute }) => {
   return createPortal(
     <>
       <Circle mode={animation} />
-      {cookie && <Navigations />}
+      {activated && <Navigations />}
     </>,
     document.body
   );
