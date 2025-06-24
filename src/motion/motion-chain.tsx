@@ -1,30 +1,18 @@
-import { cn } from "../lib/utils";
 import { MotionChainProps } from "./types";
 import { Children, FC, useMemo } from "react";
 import { calculateDelay } from "./utils/calculateDelay";
+import { cn } from "@/lib/utils";
+import {
+  MOTION_CHAIN_CONFIG_DEFAULTS,
+  MOTION_CHAIN_CONTROLLER_DEFAULTS,
+} from "./lib/defaults.lib";
 import logError from "./utils/getErrorLogs";
 import MotionContainer from "./motion-container";
-import { UseInViewOptions } from "motion/react";
 
 const MotionChain: FC<MotionChainProps> = ({
   animations,
-  config = {
-    children: [],
-    delayByElement: undefined,
-    isDynamicallyQueued: undefined,
-    customLogic: undefined,
-    delayLogic: "linear",
-    duration: 0.5,
-  },
-  controller = {
-    configView: {
-      once: true,
-      amount: 0.5,
-    } as UseInViewOptions,
-    isAnimationStopped: false,
-    reverse: false,
-    trigger: false,
-  },
+  config = { ...MOTION_CHAIN_CONFIG_DEFAULTS },
+  controller = { ...MOTION_CHAIN_CONTROLLER_DEFAULTS },
   children,
   elementType = "div",
   className,
@@ -34,7 +22,7 @@ const MotionChain: FC<MotionChainProps> = ({
     isDynamicallyQueued,
     customLogic,
     delayLogic = "linear",
-    duration = 0.5,
+    duration = MOTION_CHAIN_CONFIG_DEFAULTS.duration,
   } = config;
 
   const compute = useMemo(() => {

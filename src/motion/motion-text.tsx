@@ -17,15 +17,7 @@ const MotionText: FC<MotionTextProps> = ({
     isDynamicallyQueued: undefined,
     customLogic: undefined,
   },
-  controller = {
-    configView: {
-      once: true,
-      amount: 0.5,
-    } as UseInViewOptions,
-    isAnimationStopped: false,
-    reverse: false,
-    trigger: false,
-  },
+  controller,
   elementType,
   className,
   wrapperClassName,
