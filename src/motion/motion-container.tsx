@@ -2,10 +2,9 @@ import { AnimationObjProps, TransitionConfig } from "./types";
 import { cn } from "../lib/utils";
 import transitions from "./lib/transitions.lib";
 import { motion, useInView } from "motion/react";
-import React, { FC, memo, useId, useMemo, useRef } from "react";
+import React, { FC, useId, useMemo, useRef } from "react";
 import { useAnimationMixer } from "./hooks/use-animation-mixer";
 import animations from "./lib/animate.lib";
-import dynamic from "next/dynamic";
 import { MotionContainerProps } from "./types";
 import {
   MOTION_PROVIDER_DEFAULTS as defaults,
@@ -14,7 +13,7 @@ import {
 } from "./lib/defaults.lib";
 import logError from "./utils/getErrorLogs";
 
-const Container: FC<MotionContainerProps> = ({
+const MotionContainer: FC<MotionContainerProps> = ({
   animation = { ...MOTION_CONTAINER_ANIMATION_DEFAULT },
   controller = { ...MOTION_CONTAINER_CONTROLLER_DEFAULT },
   children,
@@ -88,8 +87,20 @@ const Container: FC<MotionContainerProps> = ({
     return initial;
   }, [isAnimationStopped, initial]);
 
+  const MotionElement = motion[
+    elementType as keyof typeof motion
+  ] as React.ElementType;
+
+  if (!MotionElement) {
+    logError({
+      error: `Invalid motion elementType: '${elementType}'`,
+      mod: "error",
+      src: "MotionContainer",
+    });
+    return null;
+  }
   return React.createElement(
-    motion[elementType as keyof typeof motion] as React.ElementType,
+    MotionElement,
     {
       className: cn("mc", className),
       ref,
@@ -101,10 +112,5 @@ const Container: FC<MotionContainerProps> = ({
     children
   );
 };
-
-const MotionContainer = dynamic(
-  () => Promise.resolve(memo(Container as typeof Container)),
-  { ssr: false }
-);
 
 export default MotionContainer;

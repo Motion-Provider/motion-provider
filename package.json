@@ -19,7 +19,7 @@
     "embla-carousel-react": "^8.6.0",
     "lucide-react": "^0.487.0",
     "motion": "^12.6.3",
-    "next": "15.3.0",
+    "next": "^15.3.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
