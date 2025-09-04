@@ -10,7 +10,6 @@ import {
   TransitionKeys,
 } from "../types";
 import { createElement } from "react";
-import { cn } from "@/lib/utils";
 
 const MOTION_CONTAINER_DELAY_DEFAULT = 0 as number,
   MOTION_CONTAINER_DURATION_DEFAULT = 0.5 as number,
@@ -28,7 +27,7 @@ const MOTION_CONTAINER_DELAY_DEFAULT = 0 as number,
   MOTION_CHAIN_ELEMENT_TYPE_DEFAULT = "div" as React.ElementType,
   MOTION_IMAGE_PIECES_DEFAULT = 121 as ImageMotionPieces,
   MOTION_IMAGE_FALLBACK_DEFAULT = createElement("div", {
-    className: cn("w-full h-full absolute bg-stone-950 animate-pulse"),
+    className: "w-full h-full absolute bg-stone-950 animate-pulse",
   }),
   MOTION_IMAGE_ANIMATION_DURATION_DEFAULT = 3 as number,
   MOTION_IMAGE_TRANSITION_DEFAULT = "smooth" as TransitionKeys,
@@ -46,7 +45,7 @@ const MOTION_CONTAINER_DELAY_DEFAULT = 0 as number,
   } as UseInViewOptions,
   MOTION_MOVIE_DELAY_LOGIC_DEFAULT = "sinusoidal" as DelayLogic,
   MOTION_MOVIE_FALLBACK_DEFAULT = createElement("div", {
-    className: cn("w-full h-full absolute bg-stone-950 animate-pulse"),
+    className: "w-full h-full absolute bg-stone-950 animate-pulse",
   }),
   MOTION_MOVIE_TOTAL_DELAY_DEFAULT = 0 as number,
   MOTION_MOVIE_TRANSITION_DEFAULT = "smooth" as TransitionKeys,

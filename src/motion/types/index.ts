@@ -6,11 +6,11 @@
 
 // Imports
 
-import { UseInViewOptions } from "motion/react";
+import { EasingDefinition, UseInViewOptions } from "motion/react";
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-// Core Interfaces
+// Cores
 
 export interface MotionControllerProps {
   configView?: UseInViewOptions;
@@ -28,7 +28,7 @@ export interface MotionAnimationProps {
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-// Core Config Interfaces
+// Configs
 
 export interface MotionChainConfigProps {
   delayByElement?: number;
@@ -57,7 +57,7 @@ export interface MotionMovieAnimationsProps
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-// Core Component Interfaces
+// Core Components
 
 export interface MotionContainerProps {
   controller?: MotionControllerProps;
@@ -119,13 +119,7 @@ export interface MotionLinkProps {
 }
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-/*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
-
-// Motion Provider Component Interfaces
-
-/*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
-
-// Motion Provider Utils Interfaces
+// Utils
 
 export interface CalculateDelayProps {
   delayLogic: DelayLogic;
@@ -140,7 +134,7 @@ export interface GetRandomAnimationProps {
 }
 
 export interface GetErrorLogsProps {
-  error: string;
+  msg: string;
   src: MotionComponentSources | MotionHooksSources | MotionUtilsSources;
   mod: "error" | "warn";
 }
@@ -153,7 +147,7 @@ export type GetSplittedTextOutputProps = string[];
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-// Lib Interfaces
+// Libs
 
 export interface AnimationLibraryProps {
   [key: string]: {
@@ -162,15 +156,19 @@ export interface AnimationLibraryProps {
   };
 }
 
+export type AnimationModule = {
+  initial: AnimationObjProps;
+  animate: AnimationObjProps;
+};
 export interface TransitionConfig {
   duration?: number;
-  ease?: string | number[];
+  ease?: EasingDefinition | number[];
   delay?: number;
 }
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-// Hook Interfaces
+// Hooks
 
 export interface UseAnimationProps {
   stopAnimation: boolean;
@@ -190,11 +188,11 @@ export type UseAnimationActionTypes =
   | { type: "UPDATE"; payload: { reverseAnimation: boolean } };
 
 export interface AnimationObjProps {
-  [key: string]: any;
+  [key: string]: unknown;
 }
 
 export interface UseAnimationMixerProps {
-  animations: AnimationLibraryProps[] | AnimationLibraryProps;
+  animations: AnimationModule[] | AnimationModule;
   reverse?: boolean;
 }
 
@@ -205,18 +203,17 @@ export interface UseOutputAnimationMixerProps {
 
 export type UseAnimationControlProps = Partial<UseAnimationProps>;
 
-export interface UseAnimationExitProps {}
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
-// Namespace Types
+// Namespaces
 
-// Strings
 export type MotionComponentSources =
   | "MotionContainer"
   | "MotionImage"
   | "MotionMovie"
   | "MotionChain"
-  | "MotionText";
+  | "MotionText"
+  | "CoreMotion";
 export type MotionHooksSources = "useAnimationMixer" | "useAnimation";
 export type MotionUtilsSources =
   | "getSplittedText"
@@ -226,8 +223,10 @@ export type MotionEngineType = "container" | "text" | "queue";
 export type ImageMotionFnTypes = "hover" | "click";
 export type SplittedTextModes = "words" | "chars";
 
-// Numbers
 export type MotionTextConfigSpaceProps = number | string;
+
+// Number unions
+
 export type ImageMotionPieces =
   | 16
   | 25
@@ -247,7 +246,8 @@ export type ImageMotionPieces =
   | 361
   | 400;
 
-// Datasets
+// string-set unions
+
 export type DelayLogic =
   | "linear"
   | "exponential"
@@ -361,9 +361,10 @@ export type TransitionKeys =
   | "none"
   | "default"
   | "smooth"
+  | "linear"
   | "easeIn"
   | "easeOut"
-  | "linear"
+  | "easeInOut"
   | "cubicSmooth"
   | "cubicFastStart"
   | "cubicFastEnd"
@@ -379,4 +380,20 @@ export type TransitionKeys =
   | "delayedElastic"
   | "fadeSlide"
   | "fadeScale"
-  | "fadeRotate";
+  | "fadeRotate"
+  | "gentle"
+  | "snappy"
+  | "pop"
+  | "float"
+  | "hover"
+  | "bounceSoft"
+  | "bounceHard"
+  | "linger"
+  | "rush"
+  | "elasticSoft"
+  | "elasticHard"
+  | "springy"
+  | "sudden"
+  | "smoothFast"
+  | "overshoot"
+  | "settle";
