@@ -1,4 +1,3 @@
-import HomeHero from "@/sections/home/Hero";
 import Head from "next/head";
 import React from "react";
 
@@ -8,7 +7,7 @@ export default function Home() {
       <Head>
         <title>Motion Provider</title>
       </Head>
-      <HomeHero />
+      <h1>Motion Provider</h1>
     </>
   );
 }
