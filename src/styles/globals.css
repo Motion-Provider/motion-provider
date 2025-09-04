@@ -131,28 +131,3 @@ body {
 ::-webkit-scrollbar {
   display: none;
 }
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-}
-
-.portal-navigations {
-  animation: portal-navigations 1.25s ease-out both;
-}
-
-@keyframes portal-navigations {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.2);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
