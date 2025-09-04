@@ -1,23 +1,19 @@
-import { useMemo } from "react";
 import {
   AnimationObjProps,
   UseAnimationMixerProps,
   UseOutputAnimationMixerProps,
 } from "../types";
-import logError from "../utils/getErrorLogs";
+import { useMemo } from "react";
 
 export const useAnimationMixer = ({
   animations: a,
   reverse,
-}: UseAnimationMixerProps): UseOutputAnimationMixerProps => {
-  const combinedAnimations = useMemo(() => {
-    if (!Array.isArray(a) || a.length === 0) {
-      logError({
-        error: "Animations should be a non-empty array.",
-        src: "useAnimationMixer",
-        mod: "warn",
-      });
-      return { initial: {}, animate: {} };
+}: UseAnimationMixerProps): UseOutputAnimationMixerProps =>
+  useMemo(() => {
+    if (!Array.isArray(a)) {
+      return reverse
+        ? { initial: a.animate, animate: a.initial }
+        : { initial: a.initial, animate: a.animate };
     }
 
     const mergedInitial = a.reduce(
@@ -33,6 +29,3 @@ export const useAnimationMixer = ({
       ? { initial: mergedAnimate, animate: mergedInitial }
       : { initial: mergedInitial, animate: mergedAnimate };
   }, [a, reverse]);
-
-  return combinedAnimations;
-};
