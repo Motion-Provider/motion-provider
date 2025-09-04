@@ -2,7 +2,6 @@ import { FC, useCallback, useState } from "react";
 import { MotionLinkProps } from "./types";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 const MotionLink: FC<MotionLinkProps> = ({
   children,
@@ -33,7 +32,7 @@ const MotionLink: FC<MotionLinkProps> = ({
   if (clicked) {
     return (
       <div
-        className={cn("cursor-pointer", className)}
+        className={`cursor-pointer ${className}`}
         style={{ display: "contents" }}
       >
         {children}
@@ -45,7 +44,7 @@ const MotionLink: FC<MotionLinkProps> = ({
       href={href}
       passHref
       onClick={!clicked ? handleClick : undefined}
-      className={cn("cursor-pointer", className)}
+      className={`cursor-pointer ${className}`}
       style={{ display: "contents" }}
     >
       {children}

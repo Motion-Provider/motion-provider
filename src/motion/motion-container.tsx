@@ -1,6 +1,5 @@
 import { AnimationObjProps, TransitionConfig } from "./types";
 import transitions from "./lib/transitions.lib";
-import { cn } from "@/lib/utils";
 import { motion, useInView } from "motion/react";
 import React, { FC, useId, useMemo, useRef } from "react";
 import { useAnimationMixer } from "./hooks/use-animation-mixer";
@@ -107,7 +106,7 @@ const MotionContainer: FC<MotionContainerProps> = ({
   return React.createElement(
     MotionElement,
     {
-      className: cn("mc", className),
+      className,
       ref,
       key: id,
       initial: initialState,

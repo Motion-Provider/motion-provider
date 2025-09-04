@@ -1,4 +1,3 @@
-import { cn } from "../lib/utils";
 import logError from "./utils/getErrorLogs";
 import { MotionImageProps } from "./types";
 import { calculateDelay } from "./utils/calculateDelay";
@@ -170,7 +169,7 @@ const MotionImage: FC<MotionImageProps> = ({
                 : controller?.trigger ?? true,
             }}
             elementType="div"
-            className={cn(className)}
+            className={className}
           >
             {piece}
           </MotionContainer>
@@ -181,11 +180,8 @@ const MotionImage: FC<MotionImageProps> = ({
 
   return (
     <div
-      className={cn(
-        "relative w-full",
-        motionFn && "cursor-pointer",
-        wrapperClassName
-      )}
+      className={`relative w-full
+        ${motionFn && "cursor-pointer"} ${wrapperClassName}`}
     >
       <div
         ref={gridRef}

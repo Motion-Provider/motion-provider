@@ -1,4 +1,3 @@
-import { cn } from "../lib/utils";
 import React, { FC, useEffect, useMemo, useState } from "react";
 import { AnimationKeys, MotionMovieProps } from "./types/index";
 import logError from "./utils/getErrorLogs";
@@ -93,7 +92,7 @@ const MotionMovie: FC<MotionMovieProps> = ({
 
   return useMemo(
     () => (
-      <div className={cn("overflow-hidden h-full w-full", wrapperClassName)}>
+      <div className={`overflow-hidden h-full w-full ${wrapperClassName}`}>
         <MotionImage
           animation={{
             ...animations,
@@ -104,7 +103,7 @@ const MotionMovie: FC<MotionMovieProps> = ({
             img: images[currImgIdx],
             duration,
           }}
-          className={cn(className)}
+          className={className}
           controller={controller}
         />
       </div>

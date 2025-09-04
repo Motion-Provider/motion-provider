@@ -1,10 +1,8 @@
-import { cn } from "../lib/utils";
 import MotionChain from "./motion-chain";
 import { MotionTextProps } from "./types";
 import logError from "./utils/getErrorLogs";
 import React, { createElement, FC, useMemo } from "react";
 import getSplittedText from "./utils/getSplittedText";
-import { UseInViewOptions } from "motion/react";
 
 const MotionText: FC<MotionTextProps> = ({
   animation,
@@ -52,7 +50,7 @@ const MotionText: FC<MotionTextProps> = ({
     return (
       <span
         key={idx}
-        className={cn(className)}
+        className={className}
         style={{
           display: "inline-block",
           marginRight: unit,
@@ -64,7 +62,7 @@ const MotionText: FC<MotionTextProps> = ({
   });
 
   return createElement(elementType as React.ElementType, {
-    className: cn("flex flex-wrap", wrapperClassName),
+    className: `flex flex-wrap ${wrapperClassName}`,
     children: (
       <MotionChain
         animations={str.map((_) => ({
