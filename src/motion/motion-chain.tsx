@@ -54,14 +54,21 @@ const MotionChain: FC<MotionChainProps> = ({
           customLogic,
         }),
     }));
-  }, [animations, children, delayLogic, delayByElement, duration, customLogic]);
+  }, [
+    animations,
+    children,
+    delayLogic,
+    delayByElement,
+    duration,
+    customLogic,
+    isDynamicallyQueued,
+  ]);
 
   const childItem = useMemo(() => Children.toArray(children), [children]);
 
   if (animations.length !== children.length) {
     logError({
-      error:
-        "The number of animations must match the number of children, returning null.",
+      msg: "The number of animations must match the number of children, returning null.",
       mod: "warn",
       src: "MotionChain",
     });
