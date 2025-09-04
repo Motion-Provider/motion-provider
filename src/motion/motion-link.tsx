@@ -1,7 +1,7 @@
-import { FC, useCallback, useState } from "react";
-import { MotionLinkProps } from "./types";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
+import { MotionLinkProps } from "./types";
+import { FC, useCallback, useState } from "react";
 
 const MotionLink: FC<MotionLinkProps> = ({
   children,

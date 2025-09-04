@@ -1,7 +1,8 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
-import { AnimationKeys, MotionMovieProps } from "./types/index";
-import logError from "./utils/getErrorLogs";
+import { cn } from "./lib/utils";
 import MotionImage from "./motion-image";
+import logError from "./utils/getErrorLogs";
+import { AnimationKeys, MotionMovieProps } from "./types";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 
 const MotionMovie: FC<MotionMovieProps> = ({
   animations,
@@ -12,43 +13,34 @@ const MotionMovie: FC<MotionMovieProps> = ({
   className,
 }) => {
   const { enter, exit, transition, duration = 0.5 } = animations;
-  const { animationDuration, images, pieces, delayLogic, fn } = config;
+  const { animationDuration = 2, images = [] } = config;
 
-  if (images.length === 0) {
+  if (!Array.isArray(images) || images.length === 0) {
     logError({
       error:
         "Images should be a non-empty array, returning fallback component.",
       mod: "error",
       src: "MotionMovie",
     });
-    return fallback;
+    return <>{fallback ?? null}</>;
   }
-  if (
-    typeof enter === "undefined" ||
-    !Array.isArray(enter) ||
-    enter.length === 0
-  ) {
+  if (!Array.isArray(enter) || enter.length === 0) {
     logError({
       error:
         "Enter animations should be a non-empty array, returning fallback component.",
       mod: "error",
       src: "MotionMovie",
     });
-    return fallback;
+    return <>{fallback ?? null}</>;
   }
-
-  if (
-    typeof exit === "undefined" ||
-    !Array.isArray(exit) ||
-    exit.length === 0
-  ) {
+  if (!Array.isArray(exit) || exit.length === 0) {
     logError({
       error:
         "Exit animations should be a non-empty array, returning fallback component.",
       mod: "error",
       src: "MotionMovie",
     });
-    return fallback;
+    return <>{fallback ?? null}</>;
   }
 
   if (animationDuration <= duration) {
@@ -59,25 +51,43 @@ const MotionMovie: FC<MotionMovieProps> = ({
       src: "MotionMovie",
     });
   }
-  const [time, setTime] = useState<number>(0);
+
   const [currImgIdx, setCurrImgIdx] = useState<number>(0);
   const [animation, setAnimation] = useState<AnimationKeys[] | AnimationKeys>(
     enter
   );
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTime((prevTime) => prevTime + 1);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  const tickRef = useRef<number>(0);
+  const intervalRef = useRef<number | null>(null);
+  const exitTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
-    if (images.length > 0) {
-      const trigger = time % (animationDuration * 2);
+    images.forEach((src) => {
+      const img = new Image();
+      img.src = src;
+    });
+  }, [images.join("|")]);
 
-      const halfDuration = animationDuration;
+  useEffect(() => {
+    if (intervalRef.current) {
+      window.clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
+    if (exitTimeoutRef.current) {
+      window.clearTimeout(exitTimeoutRef.current);
+      exitTimeoutRef.current = null;
+    }
+
+    tickRef.current = 0;
+    setAnimation(enter);
+
+    intervalRef.current = window.setInterval(() => {
+      tickRef.current += 1;
+
+      const cycle = Math.max(1, Math.round(animationDuration * 2));
+      const trigger = tickRef.current % cycle;
+
+      const halfDuration = Math.round(animationDuration);
 
       if (trigger === 0) {
         setCurrImgIdx((prev) => (prev + 1) % images.length);
@@ -85,41 +95,48 @@ const MotionMovie: FC<MotionMovieProps> = ({
       }
 
       if (trigger === halfDuration) {
-        setTimeout(() => setAnimation(exit), (animationDuration / 2) * 1000);
+        if (exitTimeoutRef.current) {
+          window.clearTimeout(exitTimeoutRef.current);
+        }
+        const halfDelayMs = Math.round((animationDuration / 2) * 1000);
+        exitTimeoutRef.current = window.setTimeout(() => {
+          setAnimation(exit);
+        }, halfDelayMs);
       }
-    }
-  }, [time, images, animationDuration, enter, exit]);
+    }, 1000);
 
-  return useMemo(
-    () => (
-      <div className={`overflow-hidden h-full w-full ${wrapperClassName}`}>
-        <MotionImage
-          animation={{
-            ...animations,
-            mode: animation,
-          }}
-          config={{
-            ...config,
-            img: images[currImgIdx],
-            duration,
-          }}
-          className={className}
-          controller={controller}
-        />
-      </div>
-    ),
-    [
-      currImgIdx,
-      animation,
-      images,
-      wrapperClassName,
-      pieces,
-      enter,
-      delayLogic,
-      fn,
-      transition,
-      fallback,
-    ]
+    return () => {
+      if (intervalRef.current) {
+        window.clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      if (exitTimeoutRef.current) {
+        window.clearTimeout(exitTimeoutRef.current);
+        exitTimeoutRef.current = null;
+      }
+    };
+  }, [images.length, animationDuration, enter.join("|"), exit.join("|")]);
+
+  const motionImageAnimation = useMemo(
+    () => ({ transition, duration, mode: animation }),
+    [transition, duration, animation]
+  );
+
+  const motionImageConfig = useMemo(
+    () => ({ ...config, img: images[currImgIdx], duration }),
+    [config, images[currImgIdx], duration]
+  );
+
+  return (
+    <div className={cn("overflow-hidden", wrapperClassName)}>
+      <MotionImage
+        animation={motionImageAnimation}
+        config={motionImageConfig}
+        wrapperClassName={wrapperClassName}
+        className={cn(className)}
+        controller={controller}
+      />
+    </div>
   );
 };
 

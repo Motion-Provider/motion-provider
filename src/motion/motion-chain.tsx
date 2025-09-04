@@ -1,12 +1,13 @@
-import { MotionChainProps } from "./types";
-import { Children, FC, useMemo } from "react";
-import { calculateDelay } from "./utils/calculateDelay";
 import {
   MOTION_CHAIN_CONFIG_DEFAULTS,
   MOTION_CHAIN_CONTROLLER_DEFAULTS,
 } from "./lib/defaults.lib";
+import { cn } from "./lib/utils";
+import { MotionChainProps } from "./types";
 import logError from "./utils/getErrorLogs";
+import { Children, FC, useMemo } from "react";
 import MotionContainer from "./motion-container";
+import { calculateDelay } from "./utils/calculateDelay";
 
 const MotionChain: FC<MotionChainProps> = ({
   animations,
@@ -75,7 +76,7 @@ const MotionChain: FC<MotionChainProps> = ({
           animation={animation}
           controller={controller}
           elementType={elementType}
-          className={className}
+          className={cn(className)}
         >
           {childItem[index]}
         </MotionContainer>

@@ -1,7 +1,8 @@
-import logError from "./utils/getErrorLogs";
+import { cn } from "./lib/utils";
 import { MotionImageProps } from "./types";
-import { calculateDelay } from "./utils/calculateDelay";
+import logError from "./utils/getErrorLogs";
 import MotionContainer from "./motion-container";
+import { calculateDelay } from "./utils/calculateDelay";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const MotionImage: FC<MotionImageProps> = ({
@@ -169,7 +170,7 @@ const MotionImage: FC<MotionImageProps> = ({
                 : controller?.trigger ?? true,
             }}
             elementType="div"
-            className={className}
+            className={cn(className)}
           >
             {piece}
           </MotionContainer>
@@ -180,8 +181,11 @@ const MotionImage: FC<MotionImageProps> = ({
 
   return (
     <div
-      className={`relative w-full
-        ${motionFn && "cursor-pointer"} ${wrapperClassName}`}
+      className={cn(
+        "relative w-full",
+        motionFn && "cursor-pointer",
+        wrapperClassName
+      )}
     >
       <div
         ref={gridRef}

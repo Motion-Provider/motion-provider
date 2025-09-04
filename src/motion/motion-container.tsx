@@ -1,16 +1,16 @@
-import { AnimationObjProps, TransitionConfig } from "./types";
-import transitions from "./lib/transitions.lib";
-import { motion, useInView } from "motion/react";
-import React, { FC, useId, useMemo, useRef } from "react";
-import { useAnimationMixer } from "./hooks/use-animation-mixer";
-import animations from "./lib/animate.lib";
-import { MotionContainerProps } from "./types";
 import {
   MOTION_PROVIDER_DEFAULTS as defaults,
   MOTION_CONTAINER_ANIMATION_DEFAULT,
   MOTION_CONTAINER_CONTROLLER_DEFAULT,
 } from "./lib/defaults.lib";
+import animations from "./lib/animate.lib";
 import logError from "./utils/getErrorLogs";
+import { MotionContainerProps } from "./types";
+import transitions from "./lib/transitions.lib";
+import { motion, useInView } from "motion/react";
+import React, { FC, useId, useMemo, useRef } from "react";
+import { AnimationObjProps, TransitionConfig } from "./types";
+import { useAnimationMixer } from "./hooks/use-animation-mixer";
 
 const MotionContainer: FC<MotionContainerProps> = ({
   animation = { ...MOTION_CONTAINER_ANIMATION_DEFAULT },
