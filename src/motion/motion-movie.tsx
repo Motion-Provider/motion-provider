@@ -15,43 +15,6 @@ const MotionMovie: FC<MotionMovieProps> = ({
   const { enter, exit, transition, duration = 0.5 } = animations;
   const { animationDuration = 2, images = [] } = config;
 
-  if (!Array.isArray(images) || images.length === 0) {
-    logError({
-      error:
-        "Images should be a non-empty array, returning fallback component.",
-      mod: "error",
-      src: "MotionMovie",
-    });
-    return <>{fallback ?? null}</>;
-  }
-  if (!Array.isArray(enter) || enter.length === 0) {
-    logError({
-      error:
-        "Enter animations should be a non-empty array, returning fallback component.",
-      mod: "error",
-      src: "MotionMovie",
-    });
-    return <>{fallback ?? null}</>;
-  }
-  if (!Array.isArray(exit) || exit.length === 0) {
-    logError({
-      error:
-        "Exit animations should be a non-empty array, returning fallback component.",
-      mod: "error",
-      src: "MotionMovie",
-    });
-    return <>{fallback ?? null}</>;
-  }
-
-  if (animationDuration <= duration) {
-    logError({
-      mod: "warn",
-      error:
-        "Animation duration should be greater than transition duration for optimum results.",
-      src: "MotionMovie",
-    });
-  }
-
   const [currImgIdx, setCurrImgIdx] = useState<number>(0);
   const [animation, setAnimation] = useState<AnimationKeys[] | AnimationKeys>(
     enter
@@ -61,12 +24,20 @@ const MotionMovie: FC<MotionMovieProps> = ({
   const intervalRef = useRef<number | null>(null);
   const exitTimeoutRef = useRef<number | null>(null);
 
+  if (animationDuration <= duration) {
+    logError({
+      mod: "warn",
+      msg: "Animation duration should be greater than transition duration for optimum results.",
+      src: "MotionMovie",
+    });
+  }
+
   useEffect(() => {
     images.forEach((src) => {
       const img = new Image();
       img.src = src;
     });
-  }, [images.join("|")]);
+  }, [images]);
 
   useEffect(() => {
     if (intervalRef.current) {
@@ -115,7 +86,7 @@ const MotionMovie: FC<MotionMovieProps> = ({
         exitTimeoutRef.current = null;
       }
     };
-  }, [images.length, animationDuration, enter.join("|"), exit.join("|")]);
+  }, [images.length, animationDuration, enter, exit]);
 
   const motionImageAnimation = useMemo(
     () => ({ transition, duration, mode: animation }),
@@ -124,9 +95,33 @@ const MotionMovie: FC<MotionMovieProps> = ({
 
   const motionImageConfig = useMemo(
     () => ({ ...config, img: images[currImgIdx], duration }),
-    [config, images[currImgIdx], duration]
+    [config, images, currImgIdx, duration]
   );
 
+  if (!Array.isArray(images) || images.length === 0) {
+    logError({
+      msg: "Images should be a non-empty array, returning fallback component.",
+      mod: "error",
+      src: "MotionMovie",
+    });
+    return <>{fallback ?? null}</>;
+  }
+  if (!Array.isArray(enter) || enter.length === 0) {
+    logError({
+      msg: "Enter animations should be a non-empty array, returning fallback component.",
+      mod: "error",
+      src: "MotionMovie",
+    });
+    return <>{fallback ?? null}</>;
+  }
+  if (!Array.isArray(exit) || exit.length === 0) {
+    logError({
+      msg: "Exit animations should be a non-empty array, returning fallback component.",
+      mod: "error",
+      src: "MotionMovie",
+    });
+    return <>{fallback ?? null}</>;
+  }
   return (
     <div className={cn("overflow-hidden", wrapperClassName)}>
       <MotionImage

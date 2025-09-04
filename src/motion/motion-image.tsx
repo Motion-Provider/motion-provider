@@ -7,7 +7,7 @@ import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const MotionImage: FC<MotionImageProps> = ({
   animation = {
-    mode: ["opacity"],
+    mode: "opacity",
     transition: "smooth",
     delay: 0,
     duration: 0.5,
@@ -26,6 +26,11 @@ const MotionImage: FC<MotionImageProps> = ({
   fallback = <div className="size-full absolute animate-pulse bg-stone-800" />,
   wrapperClassName,
 }) => {
+  const [isImageLoaded, setIsImageLoaded] = useState(false);
+  const [triggers, setTriggers] = useState<Record<number, boolean>>({});
+  const gridRef = useRef<HTMLDivElement | null>(null);
+  const rafRef = useRef<number>(0);
+
   const {
     img: imageUrl,
     pieces,
@@ -35,38 +40,17 @@ const MotionImage: FC<MotionImageProps> = ({
     delayLogic = "sinusoidal",
     delayByElement,
   } = config;
-  const [isImageLoaded, setIsImageLoaded] = useState(false);
-  const [triggers, setTriggers] = useState<Record<number, boolean>>({});
-  const gridRef = useRef<HTMLDivElement | null>(null);
-  const rafRef = useRef<number>(0);
-
-  if (!imageUrl) {
-    logError({
-      error: "No image url provided, returning null.",
-      mod: "error",
-      src: "MotionImage",
-    });
-
-    return null;
-  }
-  if (pieces <= 0 || Math.sqrt(pieces) % 1 !== 0) {
-    logError({
-      error:
-        "Non-squared number of pieces or less/equal than/to 0 provided, returning null.",
-      mod: "error",
-      src: "MotionImage",
-    });
-    return null;
-  }
-  if (typeof animation.mode === "undefined" || animation.mode.length === 0) {
-    logError({
-      error: "No animation mode provided, returning default animation.",
-      mod: "warn",
-      src: "MotionImage",
-    });
-  }
 
   useEffect(() => {
+    if (!imageUrl) {
+      logError({
+        msg: "No image url provided, returning null.",
+        mod: "error",
+        src: "MotionImage",
+      });
+
+      return;
+    }
     const img = new Image();
     img.src = imageUrl;
     img.onload = () => setIsImageLoaded(true);
@@ -77,8 +61,8 @@ const MotionImage: FC<MotionImageProps> = ({
     };
   }, [imageUrl]);
 
-  const columns = useMemo(() => Math.ceil(Math.sqrt(pieces)), [pieces]);
-  const rows = useMemo(() => Math.ceil(pieces / columns), [pieces, columns]);
+  const columns = useMemo(() => Math.sqrt(pieces), [pieces]);
+  const rows = useMemo(() => pieces / columns, [pieces, columns]);
 
   const handleGridInteraction = useCallback(
     (e: React.MouseEvent) => {
@@ -176,8 +160,45 @@ const MotionImage: FC<MotionImageProps> = ({
           </MotionContainer>
         );
       }),
-    [gridPieces, animation, config, controller, duration, motionFn, triggers]
+    [
+      gridPieces,
+      animation,
+      controller,
+      duration,
+      motionFn,
+      triggers,
+      className,
+      delayByElement,
+      delayLogic,
+      customLogic,
+    ]
   );
+
+  if (!imageUrl) {
+    logError({
+      msg: "No image url provided, returning null.",
+      mod: "error",
+      src: "MotionImage",
+    });
+    return null;
+  }
+
+  if (pieces <= 0 || Math.sqrt(pieces) % 1 !== 0) {
+    logError({
+      msg: "Non-squared number of pieces or less/equal than/to 0 provided, returning null.",
+      mod: "error",
+      src: "MotionImage",
+    });
+    return null;
+  }
+
+  if (!animation.mode || animation.mode.length === 0) {
+    logError({
+      msg: "No animation mode provided, returning default animation.",
+      mod: "warn",
+      src: "MotionImage",
+    });
+  }
 
   return (
     <div

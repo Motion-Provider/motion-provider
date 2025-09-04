@@ -23,22 +23,10 @@ const MotionText: FC<MotionTextProps> = ({
 }) => {
   const { mode, space = 0 } = config;
 
-  if (
-    typeof children !== "string" ||
-    (typeof children === "string" && children.length === 0)
-  ) {
-    logError({
-      error: "Children should be a string and not empty, returning null",
-      src: "MotionText",
-      mod: "error",
-    });
-    return null;
-  }
-
   const str = useMemo(
     () =>
       getSplittedText({
-        text: children,
+        text: children as string,
         mode,
       }),
     [children, mode]
@@ -62,24 +50,38 @@ const MotionText: FC<MotionTextProps> = ({
     );
   });
 
-  return createElement(elementType as React.ElementType, {
-    className: cn("flex flex-wrap", wrapperClassName),
-    children: (
-      <MotionChain
-        animations={str.map((_) => ({
-          ...animation,
-          delay: animation.delay || 0,
-        }))}
-        children={items}
-        config={{
-          ...config,
-          isDynamicallyQueued: true,
-        }}
-        elementType="span"
-        controller={controller}
-      />
-    ),
-  });
+  if (
+    typeof children !== "string" ||
+    (typeof children === "string" && children.length === 0)
+  ) {
+    logError({
+      msg: "Children should be a string and not empty, returning null",
+      src: "MotionText",
+      mod: "error",
+    });
+    return null;
+  }
+
+  return createElement(
+    elementType as React.ElementType,
+    {
+      className: cn("flex flex-wrap", wrapperClassName),
+    },
+    <MotionChain
+      animations={str.map(() => ({
+        ...animation,
+        delay: animation.delay || 0,
+      }))}
+      config={{
+        ...config,
+        isDynamicallyQueued: true,
+      }}
+      elementType="span"
+      controller={controller}
+    >
+      {items}
+    </MotionChain>
+  );
 };
 
 export default MotionText;

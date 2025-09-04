@@ -27,7 +27,7 @@ const MotionLink: FC<MotionLinkProps> = ({
         router.push(href);
       }, timer);
     },
-    [href, onReverse, router, timer]
+    [href, onReverse, router, timer, clicked]
   );
   if (clicked) {
     return (
