@@ -8,6 +8,39 @@ import { useAnimationMixer } from "./hooks/use-animation-mixer";
 import transitions from "./constants/transitions";
 import animations from "./constants/animations";
 
+/**
+ * @description
+ * The MotionContainer component is a powerful wrapper that
+ * provides out-of-the-box animation support for any element
+ * you picked.
+ *
+ * @example
+ *  <MotionContainer
+ *    elementType="div"
+ *    animation={{
+ *      mode: ["fadeIn", "filterBlurIn"],
+ *      transition: "smooth",
+ *      duration: 1,
+ *    }}
+ *    className="your-css-classes-goes-here"
+ *  >
+ *    <MyChildComponent />
+ *  </MotionContainer>
+ *
+ * @param {MotionContainerProps} props The component props.
+ * @typedef {Object} MotionContainerProps
+ * @param {AnimationKeys | AnimationKeys[]} animation.mode - animation mode(s)
+ * @param {TransitionKeys} animation.transition - animation transition type
+ * @param {number | undefined} [animation.delay] - animation delay
+ * @param {number} [animation.duration] - animation duration
+ * @param {Partial<ControllerProps>} [controller] - animation controller
+ * @param {React.ReactNode} children - children node
+ * @param {React.ElementType} [elementType] - element type
+ * @param {string} [className] - className
+ * @param {React.HTMLAttributes<HTMLElement>} [props] - additional props
+ *
+ * @returns {React.ReactElement} The rendered component.
+ */
 const MotionContainer: FC<MotionContainerProps> = ({
   animation = defaults.MotionContainer.animation,
   controller = { ...defaults.MotionContainer.controller },
