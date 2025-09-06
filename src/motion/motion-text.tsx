@@ -1,3 +1,4 @@
+import defaults from "./constants/defaults";
 import { cn } from "./lib/utils";
 import MotionChain from "./motion-chain";
 import { MotionTextProps } from "./types";
@@ -8,21 +9,14 @@ import React, { createElement, FC, useMemo } from "react";
 const MotionText: FC<MotionTextProps> = ({
   animation,
   children,
-  config = {
-    mode: "chars",
-    duration: 0.5,
-    delayLogic: "linear",
-    delayByElement: undefined,
-    isDynamicallyQueued: undefined,
-    customLogic: undefined,
-  },
+  config = defaults.MotionText.config,
   controller,
   elementType,
   className,
   wrapperClassName,
   ...props
 }) => {
-  const { mode, space = 0 } = config;
+  const { mode, space } = config;
   const str = useMemo(
     () =>
       getSplittedText({
@@ -74,17 +68,14 @@ const MotionText: FC<MotionTextProps> = ({
   return createElement(
     elementType as React.ElementType,
     {
-      className: cn("flex flex-wrap", wrapperClassName),
+      className: cn("flex flex-wrap ", wrapperClassName),
     },
     <MotionChain
       animations={str.map(() => ({
         ...animation,
         delay: animation.delay || 0,
       }))}
-      config={{
-        ...config,
-        isDynamicallyQueued: true,
-      }}
+      config={config}
       elementType="span"
       controller={controller}
       {...props}
