@@ -7,6 +7,7 @@
 // Imports
 
 import { EasingDefinition, UseInViewOptions } from "motion/react";
+import { HTMLAttributes } from "react";
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
@@ -32,7 +33,6 @@ export interface MotionAnimationProps {
 
 export interface MotionChainConfigProps {
   delayByElement?: number;
-  isDynamicallyQueued?: boolean;
   delayLogic?: DelayLogic;
   customLogic?: (index: number) => number;
   duration: number;
@@ -49,6 +49,14 @@ export interface MotionImageConfigProps extends MotionChainConfigProps {
   img?: string;
 }
 
+type MotionMovieConfigProps = Omit<
+  MotionImageConfigProps,
+  "duration" | "img"
+> & {
+  images: string[];
+  animationDuration: number;
+};
+
 export interface MotionMovieAnimationsProps
   extends Omit<MotionAnimationProps, "mode"> {
   enter: AnimationKeys[] | AnimationKeys;
@@ -59,52 +67,44 @@ export interface MotionMovieAnimationsProps
 
 // Core Components
 
-export interface MotionContainerProps {
-  controller?: MotionControllerProps;
+type GeneralHTMLAttributes = Omit<HTMLAttributes<HTMLElement>, "children">;
+
+export interface MotionContainerProps extends GeneralHTMLAttributes {
   animation: MotionAnimationProps;
+  elementType: React.ElementType;
   children?: React.ReactNode;
-  className?: string;
-  elementType: React.ElementType;
+  controller?: MotionControllerProps;
 }
 
-export interface MotionChainProps {
-  controller?: MotionControllerProps;
+export interface MotionChainProps extends GeneralHTMLAttributes {
   animations: MotionAnimationProps[];
-  config: MotionChainConfigProps;
-  children: React.ReactNode[];
-  className?: string;
   elementType: React.ElementType;
+  children: React.ReactNode[];
+  config: MotionChainConfigProps;
+  controller?: MotionControllerProps;
 }
 
-export interface MotionTextProps {
+export interface MotionTextProps extends GeneralHTMLAttributes {
   animation: MotionAnimationProps;
-  config: MotionTextConfigProps;
-  controller?: MotionControllerProps;
   elementType: React.ElementType;
+  config: MotionTextConfigProps;
   children: React.ReactNode;
-  className?: string;
+  controller?: MotionControllerProps;
   wrapperClassName?: string;
 }
 
-export interface MotionImageProps {
+export interface MotionImageProps extends GeneralHTMLAttributes {
   animation: MotionAnimationProps;
-  className?: string;
   fallback?: React.ReactNode;
   wrapperClassName?: string;
-  config: Omit<MotionImageConfigProps, "isDynamicallyQueued">;
+  config: MotionImageConfigProps;
   controller?: MotionControllerProps;
 }
 
-export interface MotionMovieProps {
+export interface MotionMovieProps extends GeneralHTMLAttributes {
   animations: MotionMovieAnimationsProps;
   controller?: MotionControllerProps;
-  config: Omit<
-    MotionImageConfigProps,
-    "isDynamicallyQueued" | "duration" | "img"
-  > & {
-    images: string[];
-    animationDuration: number;
-  };
+  config: MotionMovieConfigProps;
   fallback?: React.ReactNode;
   className?: string;
   wrapperClassName?: string;
@@ -117,12 +117,13 @@ export interface MotionLinkProps {
   onReverse: () => void;
   children: React.ReactNode;
 }
+
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
 // Utils
 
 export interface CalculateDelayProps {
-  delayLogic: DelayLogic;
+  delayLogic: DelayLogic | undefined;
   index: number;
   baseDuration: number;
   customLogic?: (index: number) => number;
@@ -165,6 +166,23 @@ export interface TransitionConfig {
   ease?: EasingDefinition | number[];
   delay?: number;
 }
+/*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
+
+// Defaults
+
+type ComponentPropsMap = {
+  MotionContainer: MotionContainerProps;
+  MotionChain: MotionChainProps;
+  MotionImage: MotionImageProps;
+  MotionText: MotionTextProps;
+  MotionLink: MotionLinkProps;
+  MotionMovie: MotionMovieProps;
+  CoreMotion: Record<string, unknown>;
+};
+
+export type MotionDefaultsProps = {
+  [K in keyof ComponentPropsMap]?: Partial<ComponentPropsMap[K]>;
+};
 
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
