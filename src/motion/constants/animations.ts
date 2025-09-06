@@ -1,12 +1,10 @@
 ﻿import { AnimationLibraryProps } from "../types";
 
 export default {
-  /* ------------------- Default Animation(s) ------------------ */
   default: {
     initial: {},
     animate: {},
   },
-  //Never remove opacity from this lib otherwise it will break the logic
   opacity: {
     initial: { opacity: 0 },
     animate: { opacity: 1 },
@@ -15,7 +13,8 @@ export default {
     initial: { rotate: 0 },
     animate: { rotate: -360 },
   },
-  /* ------------------- Slide Animations ------------------ */
+
+  // slides
 
   slideDown: {
     initial: { y: "-100%" },
@@ -34,7 +33,7 @@ export default {
     initial: { y: "100%" },
   },
 
-  /* ------------------- Staggered Animations ------------------ */
+  // staggered
 
   staggeredIn: {
     initial: { x: "-50%" },
@@ -49,7 +48,7 @@ export default {
     },
   },
 
-  /* ------------------- Fade Animations ------------------ */
+  // Fade
 
   fadeIn: {
     initial: { opacity: 0 },
@@ -88,7 +87,7 @@ export default {
     },
   },
 
-  /* ------------------- Zoom & Scale Animations ------------------ */
+  // Zoom & Scale
 
   scaleZoomIn: {
     initial: { scale: 0.8 },
@@ -105,7 +104,7 @@ export default {
     },
   },
 
-  /* ------------------- Rotate Animations ------------------ */
+  // Rotate
 
   rotateIn: {
     initial: { rotate: -90 },
@@ -148,7 +147,7 @@ export default {
     },
   },
 
-  /* ------------------- Bounce Animations ------------------ */
+  // Bounce
 
   bounceY: {
     initial: { y: 0 },
@@ -182,44 +181,46 @@ export default {
     },
   },
 
-  /* ------------------- Burak's special Animations ------------------ */
+  // Skew
 
-  burakHeartbeat: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.2, 1],
-    },
-  },
-  burakRubberBand: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.25, 0.75, 1.15, 0.95, 1],
-    },
-  },
-  burakWobble: {
-    initial: { x: 0, rotate: 0 },
-    animate: {
-      x: [0, -20, 15, -10, 5, 0],
-      rotate: [0, -5, 3, -3, 0],
-    },
-  },
-  burakPulse: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.05, 1],
-    },
-  },
-
-  /* ------------------- Skew Animations ------------------ */
-
-  skewX: {
+  skewX45: {
     initial: { skewX: 30 },
     animate: {
       skewX: 0,
     },
   },
+  skewX90: {
+    initial: { skewX: 90 },
+    animate: {
+      skewX: 0,
+    },
+  },
+  skewX180: {
+    initial: { skewX: 180 },
+    animate: {
+      skewX: 0,
+    },
+  },
+  skewY45: {
+    initial: { skewY: 30 },
+    animate: {
+      skewY: 0,
+    },
+  },
+  skewY90: {
+    initial: { skewY: 90 },
+    animate: {
+      skewY: 0,
+    },
+  },
+  skewY180: {
+    initial: { skewY: 180 },
+    animate: {
+      skewY: 0,
+    },
+  },
 
-  /* ------------------- Custom Animations ------------------ */
+  // Custom
 
   textShimmer: {
     initial: { opacity: 0 },
@@ -251,14 +252,31 @@ export default {
       rotate: [0, 15, -15, 15, -15, 0],
     },
   },
-
-  /**
-   *   Animations like Joe Biden(alien)
-   *   no need for second animation object
-   *   into mode property of <ViewAnimationsContainer />
-   *
-   */
-
+  heartbeat: {
+    initial: { scale: 1 },
+    animate: {
+      scale: [1, 1.2, 1],
+    },
+  },
+  heartbeatRubber: {
+    initial: { scale: 1 },
+    animate: {
+      scale: [1, 1.25, 0.75, 1.15, 0.95, 1],
+    },
+  },
+  wobble: {
+    initial: { x: 0, rotate: 0 },
+    animate: {
+      x: [0, -20, 15, -10, 5, 0],
+      rotate: [0, -5, 3, -3, 0],
+    },
+  },
+  pulse: {
+    initial: { scale: 1 },
+    animate: {
+      scale: [1, 1.05, 1],
+    },
+  },
   funChickenDance: {
     initial: { rotate: 0, x: 0 },
     animate: {
@@ -357,7 +375,7 @@ export default {
     },
   },
 
-  /* ------------------- Filter Animations ------------------ */
+  // filters
 
   filterBlurIn: {
     initial: { filter: "blur(10px)" },
@@ -400,24 +418,28 @@ export default {
     animate: { filter: "sepia(100%)" },
   },
 
-  /* ------------------- 3D Translate Animations ------------------ */
+  // 3D Translate
 
   translate3dIn: {
     initial: { transform: "translate3d(-100px, -100px, -100px)" },
     animate: { transform: "translate3d(0px, 0px, 0px)" },
   },
+
   translate3dOut: {
     initial: { transform: "translate3d(0px, 0px, 0px)" },
     animate: { transform: "translate3d(100px, 100px, 100px)" },
   },
+
   translate3dRotate: {
     initial: { transform: "translate3d(-50px, -50px, -50px) rotate(0deg)" },
     animate: { transform: "translate3d(0px, 0px, 0px) rotate(360deg)" },
   },
+
   translate3dZoom: {
     initial: { transform: "translate3d(-50px, 0px, -100px) scale(0.5)" },
     animate: { transform: "translate3d(0px, 0px, 0px) scale(1)" },
   },
+
   translate3dBounce: {
     initial: { transform: "translate3d(0px, 0px, 0px)" },
     animate: {
@@ -429,6 +451,7 @@ export default {
       ],
     },
   },
+
   translate3dWave: {
     initial: { transform: "translate3d(0px, 0px, 0px)" },
     animate: {
@@ -440,6 +463,7 @@ export default {
       ],
     },
   },
+
   translate3dZigZag: {
     initial: { transform: "translate3d(0px, 0px, 0px)" },
     animate: {
@@ -451,7 +475,8 @@ export default {
       ],
     },
   },
-  /* ------------------- Motion Provider V2.0 New Animations! ------------------ */
+
+  // Mixed animations
 
   drift: {
     initial: { x: 0, y: 0 },
@@ -552,48 +577,6 @@ export default {
       x: [0, 40, 0, -40, 0],
       y: [0, 40, 80, 40, 0],
       rotate: [0, 180, 360, 540, 720],
-    },
-  },
-
-  /* ------------------- Add Your Custom Animation(s) Here ------------------ */
-
-  moveToRightBottom: {
-    initial: { x: 0, y: 0 },
-    animate: {
-      x: "calc(100vw - 96px)",
-      y: "calc(100vh - 96px)",
-    },
-  },
-
-  moveToRightTop: {
-    initial: { x: 0, y: 0 },
-    animate: {
-      x: "calc(100vw - 96px)",
-      y: "0px",
-    },
-  },
-
-  moveToLeftBottom: {
-    initial: { x: 0, y: 0 },
-    animate: {
-      x: 0,
-      y: "calc(100vh - 96px)",
-    },
-  },
-
-  moveToLeftTop: {
-    initial: { x: 0, y: 0 },
-    animate: {
-      x: -120,
-      y: -120,
-    },
-  },
-
-  moveToTopCenter: {
-    initial: { x: 0, y: 0 },
-    animate: {
-      x: "calc(50vw - 96px)",
-      y: -120,
     },
   },
 } as const satisfies AnimationLibraryProps;
