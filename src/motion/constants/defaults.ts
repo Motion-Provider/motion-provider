@@ -26,7 +26,6 @@ export default {
       duration: 0.5,
       customLogic: undefined,
       delayLogic: "linear",
-      delayByElement: undefined,
     },
   },
   MotionImage: {
@@ -35,7 +34,6 @@ export default {
       pieces: 64,
       delayLogic: "sinusoidal",
       customLogic: undefined,
-      delayByElement: undefined,
       img: undefined,
       fn: undefined,
     },
@@ -51,7 +49,7 @@ export default {
     config: {
       duration: 0.5,
       mode: "chars",
-      space: 2,
+      space: 0,
       delayLogic: "linear",
     },
   },

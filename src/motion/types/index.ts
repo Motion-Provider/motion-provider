@@ -32,7 +32,6 @@ export interface MotionAnimationProps {
 // Configs
 
 export interface MotionChainConfigProps {
-  delayByElement?: number;
   delayLogic?: DelayLogic;
   customLogic?: (index: number) => number;
   duration: number;
