@@ -1,30 +1,19 @@
 import { cn } from "./lib/utils";
 import { MotionImageProps } from "./types";
+import defaults from "./constants/defaults";
 import logError from "./utils/getErrorLogs";
 import MotionContainer from "./motion-container";
 import { calculateDelay } from "./utils/calculateDelay";
 import { FC, useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 const MotionImage: FC<MotionImageProps> = ({
-  animation = {
-    mode: "opacity",
-    transition: "smooth",
-    delay: 0,
-    duration: 0.5,
-  },
-  config = {
-    duration: 3,
-    pieces: 121,
-    img: undefined,
-    customLogic: undefined,
-    delayByElement: undefined,
-    delayLogic: undefined,
-    fn: undefined,
-  },
+  animation,
+  config = defaults.MotionImage.config,
   controller,
   className,
-  fallback = <div className="size-full absolute animate-pulse bg-stone-800" />,
+  fallback = defaults.MotionImage.fallback,
   wrapperClassName,
+  ...props
 }) => {
   const [isImageLoaded, setIsImageLoaded] = useState(false);
   const [triggers, setTriggers] = useState<Record<number, boolean>>({});
@@ -155,6 +144,7 @@ const MotionImage: FC<MotionImageProps> = ({
             }}
             elementType="div"
             className={cn(className)}
+            {...props}
           >
             {piece}
           </MotionContainer>
@@ -171,6 +161,7 @@ const MotionImage: FC<MotionImageProps> = ({
       delayByElement,
       delayLogic,
       customLogic,
+      props,
     ]
   );
 

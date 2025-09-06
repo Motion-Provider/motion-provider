@@ -1,7 +1,4 @@
-import {
-  MOTION_CHAIN_CONFIG_DEFAULTS,
-  MOTION_CHAIN_CONTROLLER_DEFAULTS,
-} from "./lib/defaults.lib";
+import defaults from "./constants/defaults";
 import { cn } from "./lib/utils";
 import { MotionChainProps } from "./types";
 import logError from "./utils/getErrorLogs";
@@ -11,23 +8,18 @@ import { calculateDelay } from "./utils/calculateDelay";
 
 const MotionChain: FC<MotionChainProps> = ({
   animations,
-  config = { ...MOTION_CHAIN_CONFIG_DEFAULTS },
-  controller = { ...MOTION_CHAIN_CONTROLLER_DEFAULTS },
+  config = defaults.MotionChain.config,
+  controller = { ...defaults.MotionChain.controller },
   children,
-  elementType = "div",
+  elementType = defaults.MotionChain.elementType,
   className,
+  ...props
 }) => {
-  const {
-    delayByElement,
-    isDynamicallyQueued,
-    customLogic,
-    delayLogic = "linear",
-    duration = MOTION_CHAIN_CONFIG_DEFAULTS.duration,
-  } = config;
+  const { delayByElement, customLogic, delayLogic, duration } = config;
 
   const compute = useMemo(() => {
     if (
-      (isDynamicallyQueued && typeof delayByElement === "undefined") ||
+      typeof delayByElement === "undefined" ||
       typeof customLogic === "undefined"
     ) {
       return children.map((_, index) => {
@@ -54,15 +46,7 @@ const MotionChain: FC<MotionChainProps> = ({
           customLogic,
         }),
     }));
-  }, [
-    animations,
-    children,
-    delayLogic,
-    delayByElement,
-    duration,
-    customLogic,
-    isDynamicallyQueued,
-  ]);
+  }, [animations, children, delayLogic, delayByElement, duration, customLogic]);
 
   const childItem = useMemo(() => Children.toArray(children), [children]);
 
@@ -84,6 +68,7 @@ const MotionChain: FC<MotionChainProps> = ({
           controller={controller}
           elementType={elementType}
           className={cn(className)}
+          {...props}
         >
           {childItem[index]}
         </MotionContainer>

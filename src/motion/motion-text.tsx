@@ -20,9 +20,9 @@ const MotionText: FC<MotionTextProps> = ({
   elementType,
   className,
   wrapperClassName,
+  ...props
 }) => {
   const { mode, space = 0 } = config;
-
   const str = useMemo(
     () =>
       getSplittedText({
@@ -62,6 +62,15 @@ const MotionText: FC<MotionTextProps> = ({
     return null;
   }
 
+  if (!elementType) {
+    logError({
+      msg: "elementType prop is required, returning null",
+      src: "MotionText",
+      mod: "error",
+    });
+    return null;
+  }
+
   return createElement(
     elementType as React.ElementType,
     {
@@ -78,6 +87,7 @@ const MotionText: FC<MotionTextProps> = ({
       }}
       elementType="span"
       controller={controller}
+      {...props}
     >
       {items}
     </MotionChain>

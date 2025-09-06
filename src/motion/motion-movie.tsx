@@ -3,17 +3,19 @@ import MotionImage from "./motion-image";
 import logError from "./utils/getErrorLogs";
 import { AnimationKeys, MotionMovieProps } from "./types";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import defaults from "./constants/defaults";
 
 const MotionMovie: FC<MotionMovieProps> = ({
   animations,
-  config,
+  config = defaults.MotionMovie.config,
   controller,
-  fallback,
+  fallback = defaults.MotionMovie.fallback,
   wrapperClassName,
   className,
+  ...props
 }) => {
   const { enter, exit, transition, duration = 0.5 } = animations;
-  const { animationDuration = 2, images = [] } = config;
+  const { animationDuration, images } = config;
 
   const [currImgIdx, setCurrImgIdx] = useState<number>(0);
   const [animation, setAnimation] = useState<AnimationKeys[] | AnimationKeys>(
@@ -130,6 +132,7 @@ const MotionMovie: FC<MotionMovieProps> = ({
         wrapperClassName={wrapperClassName}
         className={cn(className)}
         controller={controller}
+        {...props}
       />
     </div>
   );
