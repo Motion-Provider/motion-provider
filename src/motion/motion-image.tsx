@@ -27,7 +27,6 @@ const MotionImage: FC<MotionImageProps> = ({
     duration,
     customLogic,
     delayLogic = "sinusoidal",
-    delayByElement,
   } = config;
 
   useEffect(() => {
@@ -116,54 +115,56 @@ const MotionImage: FC<MotionImageProps> = ({
     [pieces, columns, rows, imageUrl]
   );
 
-  const childrenWithControllers = useMemo(
-    () =>
-      gridPieces.map((piece, index) => {
-        const pieceDelay =
-          delayByElement ??
-          calculateDelay({
-            delayLogic: delayLogic,
-            index,
-            baseDuration: duration,
-            customLogic: customLogic,
-          });
+  const childrenWithControllers = useMemo(() => {
+    const checkRegisteredDelay =
+      typeof animation.delay !== "undefined" &&
+      animation.delay &&
+      typeof animation.delay === "number";
 
-        return (
-          <MotionContainer
-            key={index}
-            animation={{
-              ...animation,
-              delay: pieceDelay,
-              duration,
-            }}
-            controller={{
-              ...controller,
-              trigger: motionFn
-                ? !!triggers[index]
-                : controller?.trigger ?? true,
-            }}
-            elementType="div"
-            className={cn(className)}
-            {...props}
-          >
-            {piece}
-          </MotionContainer>
-        );
-      }),
-    [
-      gridPieces,
-      animation,
-      controller,
-      duration,
-      motionFn,
-      triggers,
-      className,
-      delayByElement,
-      delayLogic,
-      customLogic,
-      props,
-    ]
-  );
+    return gridPieces.map((piece, index) => {
+      const pieceDelay = calculateDelay({
+        delayLogic: delayLogic,
+        index,
+        baseDuration: duration,
+        customLogic: customLogic,
+      });
+
+      const delayTotal = checkRegisteredDelay
+        ? Number(animation.delay! + pieceDelay)
+        : pieceDelay;
+
+      return (
+        <MotionContainer
+          key={index}
+          animation={{
+            ...animation,
+            delay: delayTotal,
+            duration,
+          }}
+          controller={{
+            ...controller,
+            trigger: motionFn ? !!triggers[index] : controller?.trigger ?? true,
+          }}
+          elementType="div"
+          className={cn(className)}
+          {...props}
+        >
+          {piece}
+        </MotionContainer>
+      );
+    });
+  }, [
+    gridPieces,
+    animation,
+    controller,
+    duration,
+    motionFn,
+    triggers,
+    className,
+    delayLogic,
+    customLogic,
+    props,
+  ]);
 
   if (!imageUrl) {
     logError({
