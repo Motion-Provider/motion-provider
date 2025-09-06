@@ -1,4 +1,4 @@
-﻿import { TransitionConfig, TransitionKeys } from "../types";
+﻿import { Transitions } from "../types";
 
 export default {
   default: { duration: 1, ease: "easeInOut" }, // never remove or you die!
@@ -56,4 +56,4 @@ export default {
 
   // util
   none: { duration: 0, ease: "linear" },
-} as const satisfies { [key: string | TransitionKeys]: TransitionConfig };
+} as const satisfies Transitions;
