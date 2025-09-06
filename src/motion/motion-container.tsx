@@ -1,8 +1,4 @@
-import {
-  MOTION_PROVIDER_DEFAULTS as defaults,
-  MOTION_CONTAINER_ANIMATION_DEFAULT,
-  MOTION_CONTAINER_CONTROLLER_DEFAULT,
-} from "./lib/defaults.lib";
+import defaults from "./constants/defaults";
 import logError from "./utils/getErrorLogs";
 import { AnimationKeys, AnimationModule, MotionContainerProps } from "./types";
 import { motion, useInView } from "motion/react";
@@ -13,18 +9,14 @@ import transitions from "./constants/transitions";
 import animations from "./constants/animations";
 
 const MotionContainer: FC<MotionContainerProps> = ({
-  animation = { ...MOTION_CONTAINER_ANIMATION_DEFAULT },
-  controller = { ...MOTION_CONTAINER_CONTROLLER_DEFAULT },
+  animation = defaults.MotionContainer.animation,
+  controller = { ...defaults.MotionContainer.controller },
   children,
-  elementType = defaults.MOTION_CONTAINER_ELEMENT_TYPE_DEFAULT,
+  elementType = defaults.MotionContainer.elementType,
   className,
+  ...props
 }) => {
-  const {
-    mode,
-    transition,
-    delay,
-    duration = defaults.MOTION_CONTAINER_DURATION_DEFAULT,
-  } = animation;
+  const { mode, transition, delay, duration } = animation;
 
   const {
     configView = { once: true, amount: 0.5 },
@@ -61,8 +53,7 @@ const MotionContainer: FC<MotionContainerProps> = ({
   }, [delay, duration, isAnimationStopped, transition]);
 
   const animationState = useMemo(() => {
-    if (isAnimationStopped)
-      return { ...animations["opacity"].animate, ...animate };
+    if (isAnimationStopped) return animate;
 
     if (typeof trigger !== "undefined") return trigger ? animate : initial;
 
@@ -70,8 +61,7 @@ const MotionContainer: FC<MotionContainerProps> = ({
   }, [isAnimationStopped, isInView, initial, animate, trigger]);
 
   const initialState = useMemo(() => {
-    if (isAnimationStopped)
-      return { ...animations["opacity"].initial, ...initial };
+    if (isAnimationStopped) return initial;
 
     return initial;
   }, [isAnimationStopped, initial]);
@@ -106,6 +96,7 @@ const MotionContainer: FC<MotionContainerProps> = ({
       initial: initialState,
       animate: animationState,
       transition: transitionConfig,
+      ...props,
     },
     children
   );
