@@ -1,6 +1,8 @@
 {
   "name": "motion-provider",
   "version": "0.2.1",
+  "license": "MIT",
+  "spdx-license-identifier": "MIT",
   "private": true,
   "scripts": {
     "dev": "next dev -p 8703 --turbopack",
