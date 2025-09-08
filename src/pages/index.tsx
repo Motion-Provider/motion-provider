@@ -1,6 +1,5 @@
 import Head from "next/head";
-import React from "react";
-import { motion as m } from "motion/react";
+import React, { useState } from "react";
 
 export default function Home() {
   const { onReverse, control } = useAnimationControl();
@@ -12,27 +11,8 @@ export default function Home() {
         <title>Motion Provider</title>
       </Head>
       <main className="flex flex-col items-center justify-center gap-6 h-auto overflow-y-scroll w-full mx-auto max-w-5xl p-8 border-x border-lime-400 relative">
-        <m.div
-          transition={{
-            ease: "backIn",
-          }}
-        ></m.div>
-        <MotionText_04973a
-          isAnimationStopped={isAnimationStopped}
-          reverse={reverse}
-        />
-        <MotionContainer_a7035b
-          isAnimationStopped={isAnimationStopped}
-          reverse={reverse}
-        />
-        <MotionChain_fff588
-          isAnimationStopped={isAnimationStopped}
-          reverse={reverse}
-        />
-        <MotionImage_4cdbe0
-          isAnimationStopped={isAnimationStopped}
-          reverse={reverse}
-        />
+        {/* <MotionMovie_0c0921 />
+        <MotionText_04973a />
         <div className="fixed bottom-4 w-60 h-24 border border-lime-400 flex flex-row gap-4 items-center justify-between bg-white rounded-2xl z-[9999]">
           <button
             className="w-1/2 h-full bg-lime-400 cursor-pointer"
@@ -40,7 +20,7 @@ export default function Home() {
           >
             Reverse
           </button>
-        </div>
+        </div> */}
       </main>
     </>
   );
@@ -52,9 +32,8 @@ engine and matches with the current state
 of the animation. You can copy&paste, 
 ready-to-use in seconds!
 */
-import MotionContainer from "@/motion/motion-container";
 
-export function MotionContainer_a7035b({
+export function MotionImage_222bed({
   reverse,
   isAnimationStopped,
 }: {
@@ -62,19 +41,29 @@ export function MotionContainer_a7035b({
   isAnimationStopped: boolean;
 }) {
   return (
-    <MotionContainer
-      elementType="div"
-      animation={{
-        mode: "fadeDown",
-        transition: "smooth",
-        duration: 1,
-      }}
-      controller={{
-        reverse,
-        isAnimationStopped,
-      }}
-      className="size-24 rounded-lg bg-lime-400"
-    />
+    <>
+      <MotionImage
+        animation={{
+          mode: ["flipCard", "fadeIn"],
+          transition: "sudden",
+          duration: 5,
+        }}
+        config={{
+          duration: 2,
+          img: "https://images.unsplash.com/photo-1486848538113-ce1a4923fbc5?q=80&w=749&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          delayLogic: "bounce",
+          pieces: 64,
+        }}
+        controller={{
+          isAnimationStopped,
+          reverse,
+        }}
+        wrapperClassName="size-[500px] rounded-lg overflow-hidden"
+        fallback={
+          <div className="size-96 animate-pulse bg-stone-800 rounded-lg" />
+        }
+      />
+    </>
   );
 }
 
@@ -88,18 +77,18 @@ ready-to-use in seconds!
 import MotionChain from "@/motion/motion-chain";
 import { MotionAnimationProps } from "@/motion/types";
 
-const items = Array.from({ length: 5 }, (_, i) => (
+const items = Array.from({ length: 240 }, (_, i) => (
   <div
     className="size-12 my-1 rounded-2xl bg-stone-700 text-white grid place-items-center"
-    key={i}
+    key={i + 1}
   >
     {i + 1}
   </div>
 ));
 const animations = items.map(() => ({
   mode: ["scaleZoomIn", "fadeIn"],
-  transition: "cubicBounce",
-  duration: 2.5,
+  transition: "springy",
+  delay: 1,
 })) as MotionAnimationProps[];
 
 export function MotionChain_fff588({
@@ -109,21 +98,21 @@ export function MotionChain_fff588({
   reverse: boolean;
   isAnimationStopped: boolean;
 }) {
+  const [trigger, setTrigger] = useState(false);
+
   return (
-    <MotionChain
-      animations={animations}
-      controller={{
-        isAnimationStopped,
-        reverse,
-      }}
-      config={{
-        duration: 0.15,
-        delayLogic: "linear",
-      }}
-      elementType="div"
-    >
-      {items}
-    </MotionChain>
+    <div className="flex flex-wrap gap-2 w-full h-[500px] overflow-y-scroll">
+      <MotionChain
+        animations={animations}
+        config={{
+          duration: 0.15,
+          delayLogic: "linear",
+        }}
+        elementType="div"
+      >
+        {items}
+      </MotionChain>
+    </div>
   );
 }
 
@@ -146,7 +135,7 @@ export function MotionImage_4cdbe0({
     <MotionImage
       animation={{
         mode: ["flip3D", "rotateSwing"],
-        transition: "cubicElastic",
+        transition: "gentle",
         duration: 1,
       }}
       config={{
@@ -164,6 +153,7 @@ export function MotionImage_4cdbe0({
       fallback={
         <div className="size-96 animate-pulse bg-stone-800 rounded-lg" />
       }
+      onClick={() => alert("click")}
     />
   );
 }
@@ -217,35 +207,86 @@ import MotionText from "@/motion/motion-text";
 import { useAnimationControl } from "@/motion/hooks/use-animation-control";
 import { useAnimation } from "@/motion/hooks/use-animation";
 
-export function MotionText_04973a({
-  reverse,
-  isAnimationStopped,
-}: {
-  reverse: boolean;
-  isAnimationStopped: boolean;
-}) {
+export function MotionText_04973a() {
+  const [trigger, setTrigger] = useState(false);
+
   return (
-    <MotionText
-      elementType="p"
-      animation={{
-        mode: ["fadeUp", "filterBlurIn"],
+    <div
+      className="relative"
+      // onMouseEnter={() => setTrigger(true)}
+      // onMouseLeave={() => setTrigger(false)}
+    >
+      <MotionText
+        elementType="p"
+        animation={{
+          mode: ["fadeUp"],
+          transition: "snappy",
+          duration: 1,
+        }}
+        config={{
+          duration: 0.24,
+          mode: "words",
+          delayLogic: "chaotic",
+        }}
+        controller={{
+          isAnimationStopped: true,
+        }}
+      >
+        Tempor proident nisi deserunt dolore. Eu deserunt labore sunt et
+        ullamco. Magna id Lorem labore ipsum adipisicing. Non laboris aliquip
+        cillum excepteur dolore dolore sint et adipisicing pariatur voluptate.
+        Eu ex anim aute aliqua pariatur. Id dolore esse velit aliqua deserunt.
+        Reprehenderit incididunt qui eiusmod tempor reprehenderit amet cupidatat
+        occaecat culpa esse incididunt deserunt. Nulla sit quis consequat
+        ullamco est qui sint reprehenderit anim id do laborum officia. Nulla
+        deserunt tempor fugiat incididunt. Dolore labore adipisicing est in. Id
+        ex fugiat nulla Lorem quis. Non in labore irure ad ad nisi laborum.
+        Magna id Lorem labore ipsum adipisicing. Non laboris aliquip cillum
+        excepteur dolore dolore sint et adipisicing pariatur voluptate. Eu ex
+        anim aute aliqua pariatur. Id dolore esse velit aliqua deserunt.
+        Reprehenderit incididunt qui eiusmod tempor reprehenderit amet cupidatat
+        occaecat culpa esse incididunt deserunt. Nulla sit quis consequat
+        ullamco est qui sint reprehenderit anim id do incididunt. Dolore labore
+        adipisicing est in. Id ex fugiat nulla Lorem quis. Non in labore irure
+        ad ad nisi laborum.
+      </MotionText>
+    </div>
+  );
+}
+
+/*
+This code is generated by the playground 
+engine and matches with the current state 
+of the animation. You can copy&paste, 
+ready-to-use in seconds!
+*/
+import MotionMovie from "@/motion/motion-movie";
+
+export function MotionMovie_0c0921() {
+  const images = [
+    "https://images.unsplash.com/photo-1755097441290-408c244d0c8f?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://plus.unsplash.com/premium_photo-1755105194454-21564954e25e?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+  ];
+
+  return (
+    <MotionMovie
+      animations={{
+        enter: ["filterBlurIn", "fadeIn"],
+        exit: ["fadeOut"],
         transition: "smooth",
         duration: 1,
       }}
       config={{
-        duration: 0.12,
-        mode: "chars",
-        delayLogic: "linear",
+        pieces: 64,
+        images: images,
+        animationDuration: 5,
+        delayLogic: "sinusoidal",
       }}
-      controller={{
-        isAnimationStopped,
-        reverse,
-      }}
-    >
-      Tempor proident nisi deserunt dolore. Eu deserunt labore sunt et ullamco.
-      Magna id Lorem labore ipsum adipisicing. Non laboris aliquip cillum
-      excepteur dolore dolore sint et adipisicing pariatur voluptate. Eu ex anim
-      aute aliqua pariatur.
-    </MotionText>
+      wrapperClassName="size-[500px] z-50 rounded-lg absolute"
+      className="size-full"
+      fallback={
+        <div className="size-96 animate-pulse bg-stone-800 rounded-lg" />
+      }
+    />
   );
 }
