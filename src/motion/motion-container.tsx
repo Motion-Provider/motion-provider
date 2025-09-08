@@ -10,11 +10,14 @@ import animations from "./constants/animations";
 
 /**
  * @description
- * The MotionContainer component is a powerful wrapper that
+ * The MotionContainer component is a powerful MP wrapper that
  * provides out-of-the-box animation support for any element
- * you picked.
+ * you picked and mandatoryly used across MP components. Basically
+ * everything you need to make the web better :) And quick reminder,
+ * the other MP components are built on top of MotionContainer.
  *
  * @example
+ *
  *  <MotionContainer
  *    elementType="div"
  *    animation={{
@@ -22,7 +25,7 @@ import animations from "./constants/animations";
  *      transition: "smooth",
  *      duration: 1,
  *    }}
- *    className="your-css-classes-goes-here"
+ *    className="your-css-goes-here"
  *  >
  *    <MyChildComponent />
  *  </MotionContainer>

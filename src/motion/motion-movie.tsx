@@ -5,6 +5,54 @@ import { AnimationKeys, MotionMovieProps } from "./types";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import defaults from "./constants/defaults";
 
+/**
+ * @description
+ * MotionMovie plays a sequence of images (like a simple movie) by rendering
+ * a `MotionImage` for the currently active frame and cycling through `images`
+ * using `animationDuration`. Each frame is animated using the provided
+ * `animations.enter` and `animations.exit` arrays.
+ *
+ * Key behaviours:
+ * - Preloads `config.images` on mount.
+ * - Cycles frames on an interval derived from `animationDuration`.
+ * - Triggers `enter` animations at frame change and `exit` animations at mid-cycle.
+ * - Warns if `animationDuration <= transition duration` for sub-optimal timing.
+ * - Falls back to `fallback` component when `images`, `enter`, or `exit` are invalid.
+ *
+ * @example
+ * const images = ["PATH_TO_IMAGE_1", "PATH_TO_IMAGE_2"];
+ *
+ *  <MotionMovie
+ *    animations={{
+ *      enter: ["filterBlurIn", "fadeIn"],
+ *      exit: ["fadeOut"],
+ *      transition: "smooth",
+ *      duration: 1,
+ *    }}
+ *    images={images}
+ *    config={{
+ *      pieces: 64,
+ *      images: images,
+ *      animationDuration: 5,
+ *      delayLogic: "sinusoidal",
+ *    }}
+ *    wrapperClassName="size-[500px] z-50 rounded-lg absolute"
+ *    className="size-full"
+ *    fallback={<div className="size-96 animate-pulse bg-stone-800 rounded-lg" />}
+ *  />
+ * );
+ *
+ * @param {MotionMovieProps} props The component props.
+ * @param {MotionMovieAnimationsProps} props.animations - Enter/exit animation sets and shared transition settings. `enter` and `exit` must be non-empty arrays.
+ * @param {MotionMovieConfigProps} [props.config] - Movie config: `images` (string[]), `animationDuration` (seconds), plus any inherited motion-image config.
+ * @param {MotionControllerProps} [props.controller] - Centralized controller (see `MotionControllerProps` for `trigger`, `reverse`, `isAnimationStopped`, `configView`).
+ * @param {React.ReactNode} [props.fallback] - Fallback node returned when validation fails (defaults from defaults.MotionMovie.fallback).
+ * @param {string} [props.wrapperClassName] - ClassName applied to the outer wrapper (overflow-hidden container).
+ * @param {string} [props.className] - ClassName forwarded to the inner MotionImage / MotionImage pieces.
+ * @param {...React.HTMLAttributes<HTMLElement>} [props] - Additional HTML attributes forwarded to the underlying MotionImage / MotionImage pieces.
+ *
+ * @returns {React.ReactElement | null} A wrapper containing a `MotionImage` for the current frame, or the fallback/`null` on invalid input.
+ */
 const MotionMovie: FC<MotionMovieProps> = ({
   animations,
   config = defaults.MotionMovie.config,

@@ -6,6 +6,45 @@ import logError from "./utils/getErrorLogs";
 import getSplittedText from "./utils/getSplittedText";
 import React, { createElement, FC, useMemo } from "react";
 
+/**
+ * @description
+ * MotionText splits a string into inline elements (words or characters)
+ * and renders them as a sequenced animation chain via `MotionChain`.
+ *
+ * It converts the provided `children` string into a list of items using
+ * `getSplittedText` and maps each item to a `MotionChain` animation entry.
+ * Use MotionText when you want character- or word-level animated typography
+ * with centralized controller support.
+ *
+ * @example
+ * <MotionText
+ *    elementType="p"
+ *    animation={{
+ *      mode: ["filterBlurIn","fadeDown"],
+ *      transition: "smooth",
+ *      duration: 1,
+ *    }}
+ *    config={{
+ *      duration: 0.12,
+ *      mode: "chars",
+ *      delayLogic: "linear",
+ *    }}
+ *  >
+ *    Hello World!
+ *  </MotionText>
+ *
+ * @param {MotionTextProps} props The component props.
+ * @param {MotionAnimationProps} props.animation - Animation config applied to each split item (supports `mode`, `transition`, `delay`, `duration`).
+ * @param {React.ReactNode} props.children - **Must be a non-empty string**. MotionText will log an error and return `null` for non-string or empty values.
+ * @param {MotionTextConfigProps} [props.config] - Splitting and sequencing config: `mode` ("words" | "chars"), optional `space` between items, and chain timing.
+ * @param {MotionControllerProps} [props.controller] - Centralized animation controller (see `MotionControllerProps`).
+ * @param {React.ElementType} props.elementType - Element type used as the wrapper for the text (required; MotionText will log an error and return `null` if omitted).
+ * @param {string} [props.className] - ClassName applied to each split item (span).
+ * @param {string} [props.wrapperClassName] - ClassName applied to the outer wrapper element.
+ * @param {...React.HTMLAttributes<HTMLElement>} [props] - Additional HTML attributes forwarded to the inner MotionChain / wrapper.
+ *
+ * @returns {React.ReactElement | null} A wrapped element containing an animated `MotionChain` of split text items, or `null` on invalid input.
+ */
 const MotionText: FC<MotionTextProps> = ({
   animation,
   children,
