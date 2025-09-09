@@ -1,5 +1,7 @@
 import { EasingDefinition, UseInViewOptions } from "motion/react";
 import { HTMLAttributes } from "react";
+import { AnimationKeys } from "../constants/animations";
+import { TransitionKeys } from "../constants/transitions";
 
 export interface MotionControllerProps {
   /**
@@ -840,7 +842,7 @@ export type GetSplittedTextOutputProps = string[];
 // Constants
 
 export interface AnimationLibraryProps {
-  [key: string | AnimationKeys]: {
+  [key: string]: {
     initial: AnimationObjProps;
     animate: AnimationObjProps;
   };
@@ -854,8 +856,8 @@ export interface TransitionConfig {
   ease?: EasingDefinition | number[];
   delay?: number;
 }
-export interface Transitions {
-  [key: string | TransitionKeys]: TransitionConfig;
+export interface TransitionsLib {
+  [key: string]: TransitionConfig;
 }
 /*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+*+**/
 
@@ -975,134 +977,3 @@ export type DelayLogic =
   | "bounce"
   | "spiral"
   | "quantum";
-
-export type AnimationKeys =
-  | "opacity"
-  | "slideDown"
-  | "slideLeft"
-  | "slideRight"
-  | "slideUp"
-  | "staggeredIn"
-  | "staggeredOut"
-  | "fadeIn"
-  | "fadeOut"
-  | "fadeUp"
-  | "fadeDown"
-  | "fadeLeft"
-  | "fadeRight"
-  | "scaleZoomIn"
-  | "scaleZoomOut"
-  | "scaleGrowShrink"
-  | "rotateIn"
-  | "rotateOut"
-  | "rotateFlipX"
-  | "rotateFlipY"
-  | "rotateSwing"
-  | "rotateClockwise"
-  | "rotateRoll"
-  | "rotating360"
-  | "bounceY"
-  | "bounceX"
-  | "rotateBounce"
-  | "elasticBounce"
-  | "bounceInOut"
-  | "heartbeat"
-  | "heartbeatRubber"
-  | "wobble"
-  | "pulse"
-  | "skewX45"
-  | "skewX90"
-  | "skewX180"
-  | "skewY45"
-  | "skewY90"
-  | "skewY180"
-  | "textShimmer"
-  | "swingHorizontal"
-  | "flash"
-  | "hoverEffect"
-  | "wave"
-  | "funChickenDance"
-  | "funJellyFish"
-  | "funRocketBoost"
-  | "funDizzyLizard"
-  | "funBlobMorph"
-  | "funMoonWalk"
-  | "funPeekABoo"
-  | "funSnailTrail"
-  | "funPopcornPop"
-  | "funYoYoSpin"
-  | "funWarpDrive"
-  | "funSpringFling"
-  | "funTwinkleToes"
-  | "funGhostFloat"
-  | "filterBlurIn"
-  | "filterBlurOut"
-  | "filterBrightnessFade"
-  | "filterContrastShift"
-  | "filterGrayscaleFade"
-  | "filterHueRotate"
-  | "filterInvertColors"
-  | "filterSaturateIncrease"
-  | "filterSepiaTone"
-  | "translate3dIn"
-  | "translate3dOut"
-  | "translate3dRotate"
-  | "translate3dZoom"
-  | "translate3dBounce"
-  | "translate3dWave"
-  | "translate3dZigZag"
-  | "spin"
-  | "drift"
-  | "glitch"
-  | "slideBounce"
-  | "flipCard"
-  | "jitter"
-  | "flip3D"
-  | "neonGlow"
-  | "typingEffect"
-  | "pathMotion"
-  | "jellyTwist"
-  | "depthPush"
-  | "colorShift"
-  | "orbitRotation";
-
-export type TransitionKeys =
-  | "none"
-  | "default"
-  | "smooth"
-  | "linear"
-  | "easeIn"
-  | "easeOut"
-  | "easeInOut"
-  | "cubicSmooth"
-  | "cubicFastStart"
-  | "cubicFastEnd"
-  | "cubicBounce"
-  | "cubicElastic"
-  | "slowSmooth"
-  | "slowCubic"
-  | "slowElastic"
-  | "quickEaseInOut"
-  | "quickBounce"
-  | "delayedSmooth"
-  | "delayedCubic"
-  | "delayedElastic"
-  | "fadeSlide"
-  | "fadeScale"
-  | "fadeRotate"
-  | "gentle"
-  | "snappy"
-  | "pop"
-  | "float"
-  | "hover"
-  | "bounceSoft"
-  | "bounceHard"
-  | "linger"
-  | "rush"
-  | "elasticSoft"
-  | "elasticHard"
-  | "springy"
-  | "sudden"
-  | "smoothFast"
-  | "overshoot"
-  | "settle";
