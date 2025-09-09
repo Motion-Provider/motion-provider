@@ -1,6 +1,6 @@
 ﻿import { AnimationLibraryProps } from "../types";
 
-export default {
+const animations = {
   default: {
     initial: {},
     animate: {},
@@ -580,3 +580,6 @@ export default {
     },
   },
 } as const satisfies AnimationLibraryProps;
+
+export default animations;
+export type AnimationKeys = keyof typeof animations;
