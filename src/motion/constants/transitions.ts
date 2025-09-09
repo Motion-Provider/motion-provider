@@ -1,6 +1,6 @@
-﻿import { Transitions } from "../types";
+﻿import { TransitionsLib } from "../types";
 
-export default {
+const transitions = {
   default: { duration: 1, ease: "easeInOut" }, // never remove or you die!
 
   // core
@@ -18,18 +18,7 @@ export default {
   cubicElastic: { duration: 0.8, ease: [0.47, 1.64, 0.41, 0.8] },
 
   // slow
-  slowSmooth: { duration: 1.5, ease: "easeInOut" },
   slowCubic: { duration: 1.5, ease: [0.17, 0.55, 0.55, 1] },
-  slowElastic: { duration: 2.0, ease: [0.47, 1.64, 0.41, 0.8] },
-
-  // quick
-  quickEaseInOut: { duration: 0.3, ease: "easeInOut" },
-  quickBounce: { duration: 0.28, ease: [0.68, -0.55, 0.265, 1.55] },
-
-  // delayed
-  delayedSmooth: { duration: 0.6, ease: "easeInOut" },
-  delayedCubic: { duration: 0.6, ease: [0.17, 0.55, 0.55, 1] },
-  delayedElastic: { duration: 0.8, ease: [0.47, 1.64, 0.41, 0.8] },
 
   // semantic
   fadeSlide: { duration: 0.7, ease: "circOut" },
@@ -41,7 +30,6 @@ export default {
   snappy: { duration: 0.35, ease: [0.33, 1.2, 0.67, 1] },
   pop: { duration: 0.42, ease: [0.34, 1.56, 0.64, 1] },
   float: { duration: 1.1, ease: [0.2, 1, 0.2, 1] },
-  hover: { duration: 0.28, ease: [0.25, 0.46, 0.45, 0.94] },
   bounceSoft: { duration: 0.7, ease: [0.25, 0.8, 0.3, 1.2] },
   bounceHard: { duration: 0.5, ease: [0.68, -0.6, 0.32, 1.6] },
   linger: { duration: 1.3, ease: [0.17, 0.67, 0.6, 1] },
@@ -53,7 +41,7 @@ export default {
   smoothFast: { duration: 0.45, ease: [0.08, 0.95, 0.15, 1] },
   overshoot: { duration: 0.7, ease: "backInOut" },
   settle: { duration: 1.1, ease: "circInOut" },
+} as const satisfies TransitionsLib;
 
-  // util
-  none: { duration: 0, ease: "linear" },
-} as const satisfies Transitions;
+export default transitions;
+export type TransitionKeys = keyof typeof transitions;
