@@ -1,9 +1,10 @@
 import { cn } from "./lib/utils";
 import MotionImage from "./motion-image";
 import logError from "./utils/getErrorLogs";
-import { AnimationKeys, MotionMovieProps } from "./types";
+import { MotionMovieProps } from "./types";
 import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import defaults from "./constants/defaults";
+import { AnimationKeys } from "./constants/animations";
 
 /**
  * @description

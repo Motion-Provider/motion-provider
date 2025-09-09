@@ -1,12 +1,13 @@
 import defaults from "./constants/defaults";
 import logError from "./utils/getErrorLogs";
-import { AnimationKeys, AnimationModule, MotionContainerProps } from "./types";
+import { AnimationModule, MotionContainerProps } from "./types";
 import { motion, useInView } from "motion/react";
 import React, { FC, useMemo, useRef } from "react";
 import { TransitionConfig } from "./types";
 import { useAnimationMixer } from "./hooks/use-animation-mixer";
 import transitions from "./constants/transitions";
 import animations from "./constants/animations";
+import { AnimationKeys } from "./constants/animations";
 
 /**
  * @description
