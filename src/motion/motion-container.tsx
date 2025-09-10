@@ -139,11 +139,6 @@ const MotionContainer: FC<MotionContainerProps> = ({
   );
 };
 
-const blankAnimationObj = {
-  initial: {},
-  animate: {},
-};
-
 function getAnimationsToMix(
   mode: AnimationKeys[] | AnimationKeys
 ): AnimationModule[] | AnimationModule {
@@ -192,7 +187,10 @@ ${allModes.map((k) => `${k}\n`).join("- ")}
 `,
           src: "CoreMotion",
         });
-        return blankAnimationObj;
+        return {
+          initial: {},
+          animate: {},
+        };
       }
 
       return animations[mode];
