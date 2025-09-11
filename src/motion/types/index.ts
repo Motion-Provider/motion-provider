@@ -2,6 +2,7 @@ import { EasingDefinition, UseInViewOptions } from "motion/react";
 import { HTMLAttributes } from "react";
 import { AnimationKeys } from "../constants/animations";
 import { TransitionKeys } from "../constants/transitions";
+import { DelayLogic } from "../constants/delays";
 
 export interface MotionControllerProps {
   /**
@@ -956,24 +957,3 @@ export type ImageMotionPieces =
   | 324
   | 361
   | 400;
-
-// string-set unions
-
-export type DelayLogic =
-  | "linear"
-  | "exponential"
-  | "sinusoidal"
-  | "custom"
-  | "square"
-  | "triangle"
-  | "sawtooth"
-  | "cosine"
-  | "fibonacci"
-  | "chaos"
-  | "pendulum"
-  | "perlin"
-  | "chaotic"
-  | "cumulative"
-  | "bounce"
-  | "spiral"
-  | "quantum";
