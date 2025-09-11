@@ -16,7 +16,6 @@
   "quantum",
   "jitter",
   "shuffle",
-  "bezier",
   "wave",
   "pingpong",
   "harmonic",
