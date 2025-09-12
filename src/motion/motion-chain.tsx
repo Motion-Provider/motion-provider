@@ -57,6 +57,8 @@ const MotionChain: FC<MotionChainProps> = ({
 }) => {
   const { customLogic, delayLogic, duration } = config;
 
+  const childItem = useMemo(() => Children.toArray(children), [children]);
+
   const compute = useMemo(() => {
     const checkRegisteredDelay = animations.some(
       (animation) =>
@@ -73,9 +75,8 @@ const MotionChain: FC<MotionChainProps> = ({
           baseDuration: duration,
           customLogic,
         });
-
         const delayTotal = !checkRegisteredDelay
-          ? animations[index].delay! + calculatedDelay
+          ? (animations[index].delay || 0) + calculatedDelay
           : calculatedDelay;
 
         return {
@@ -101,8 +102,6 @@ const MotionChain: FC<MotionChainProps> = ({
       };
     });
   }, [animations, children, delayLogic, duration, customLogic]);
-
-  const childItem = useMemo(() => Children.toArray(children), [children]);
 
   if (animations.length !== children.length) {
     logError({
