@@ -8,6 +8,7 @@ import { useAnimationMixer } from "./hooks/use-animation-mixer";
 import transitions from "./constants/transitions";
 import animations from "./constants/animations";
 import { AnimationKeys } from "./constants/animations";
+import { cn } from "./lib/utils";
 
 /**
  * @description
@@ -128,7 +129,7 @@ const MotionContainer: FC<MotionContainerProps> = ({
   return React.createElement(
     MotionElement,
     {
-      className,
+      className: cn(className, "will-change-auto"),
       ref,
       initial: initialState,
       animate: animationState,
