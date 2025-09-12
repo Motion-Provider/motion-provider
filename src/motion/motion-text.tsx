@@ -56,7 +56,8 @@ const MotionText: FC<MotionTextProps> = ({
   ...props
 }) => {
   const { mode, space } = config;
-  const str = useMemo(
+
+  const tokens = useMemo(
     () =>
       getSplittedText({
         text: children as string,
@@ -64,31 +65,18 @@ const MotionText: FC<MotionTextProps> = ({
       }),
     [children, mode]
   );
-
   const unit = typeof space === "number" ? `${space}px` : space;
+  const itemClassName = cn(className, "inline-block align-baseline");
 
-  const items = str.map((char, idx) => {
-    const isSpace = char === " ";
-    return (
-      <span
-        key={idx}
-        className={cn(className)}
-        style={{
-          display: "inline-block",
-          marginRight: unit,
-        }}
-      >
-        {isSpace ? "\u00A0" : char}
-      </span>
-    );
-  });
+  const itemStyle = {
+    display: "inline-block",
+    whiteSpace: "pre",
+    marginRight: unit ?? undefined,
+  } as React.CSSProperties;
 
-  if (
-    typeof children !== "string" ||
-    (typeof children === "string" && children.length === 0)
-  ) {
+  if (typeof children !== "string" || children.length === 0) {
     logError({
-      msg: "Children should be a string and not empty, returning null",
+      msg: "Children should be a non-empty string, returning null",
       src: "MotionText",
       mod: "error",
     });
@@ -107,19 +95,18 @@ const MotionText: FC<MotionTextProps> = ({
   return createElement(
     elementType as React.ElementType,
     {
-      className: cn("flex flex-wrap ", wrapperClassName),
+      className: cn("flex flex-wrap", wrapperClassName),
     },
     <MotionChain
-      animations={str.map(() => ({
-        ...animation,
-        delay: animation.delay || 0,
-      }))}
+      animations={tokens.map(() => animation)}
       config={config}
       elementType="span"
       controller={controller}
+      className={itemClassName}
+      style={itemStyle}
       {...props}
     >
-      {items}
+      {tokens.map((tok) => (tok === " " ? "\u00A0" : tok))}
     </MotionChain>
   );
 };
