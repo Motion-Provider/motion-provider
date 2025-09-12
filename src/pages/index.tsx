@@ -26,10 +26,6 @@ const inter = Inter({
   weight: ["100", "200", "300", "400", "500", "600"],
 });
 
-interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-}
-
 /* data */
 
 const cards = [
@@ -84,10 +80,6 @@ export default function Home() {
   );
 }
 
-const Card: FC<CardProps> = ({ children, ...props }) => (
-  <div {...props}>{children}</div>
-);
-
 /** Layout--- */
 
 const PageLayout: FC<{ children: React.ReactNode; className?: string }> = ({
@@ -122,13 +114,17 @@ const PageLayout: FC<{ children: React.ReactNode; className?: string }> = ({
   </main>
 );
 
-/* Meta */
-
 /* Components */
 
 const Banner = () => (
   <aside className="top-0 fixed w-full h-10 bg-gradient-to-b from-transparent to-muted-foreground/10 border-b border-muted-foreground/10 shadow-2xs rounded-b-2xl grid place-items-center lg:text-sm text-xs tracking-tight font-mono z-50">
-    <p>An open source component orchestration — now in beta 🚀</p>
+    <p>
+      An open source component orchestration —{" "}
+      <b>
+        Now in <i>BETA</i>
+      </b>{" "}
+      🚀
+    </p>
   </aside>
 );
 
@@ -165,13 +161,12 @@ const Header = () => {
           duration: 0.12,
           delayLogic: "sinusoidal",
         }}
-        wrapperClassName="text-muted-foreground lg:max-w-2xl max-w-sm text-center tracking-tight lg:text-base text-sm"
+        wrapperClassName="text-muted-foreground lg:max-w-2xl max-w-sm items-center justify-center text-center tracking-tight lg:text-base text-sm"
       >
         Animate your React apps with Motion Provider. No vendor-lock-like
         copy-paste fluff. Performance-first rendering, intuitive APIs, and
         seamless developer experience.
       </MotionText>
-      <p></p>
     </header>
   );
 };
@@ -198,87 +193,95 @@ const CardWrapper = () => {
         )}
       >
         {(cards as typeof cards).map((card, i) => (
-          <Card
+          <Link
             key={i}
-            className={cn(
-              "absolute size-full flex flex-col items-start justify-center px-8 transition-all duration-200 ease-in-out cursor-pointer overflow-hidden",
-              i === 0 && "border-r border-muted-foreground/20",
-              i === 1 && "border-t border-r border-muted-foreground/20",
-              i === 2 && "border-b border-muted-foreground/20"
-            )}
-            onMouseEnter={() => setTrigger(i)}
-            onMouseLeave={() => setTrigger(null)}
+            target="_blank"
+            href={`https://motionprovider.dev/${card.title
+              .toLowerCase()
+              .split(" ")
+              .join("-")}`}
           >
-            <div className="absolute inset-0 bg-black/80 z-0 backdrop-blur-xs" />
-            <MotionImage
-              animation={{
-                mode: ["fadeIn", "rotateClockwise"],
-                transition: "smooth",
-                duration: 3,
-              }}
-              config={{
-                duration: 2,
-                pieces: 64,
-                delayLogic: "pendulum",
-                img: card.img,
-              }}
-              wrapperClassName="h-[500px] w-full -z-10 absolute inset-0"
-              controller={{
-                trigger: trigger === i,
-              }}
-            />
-            <div className="flex flex-row gap-2">
-              <Image
-                alt={card.ico.split("/").join(" ")}
-                src={card.ico}
-                className="invert"
-                height={20}
-                width={20}
-              />
-              <h3 className="tracking-tighter text-xl z-50">{card.title}</h3>
-            </div>
-            {trigger === i ? (
-              <MotionText
-                elementType="p"
-                wrapperClassName="text-muted-foreground group text-xs z-50 tracking-tight"
+            <div
+              className={cn(
+                "absolute size-full flex flex-col items-start justify-center px-8 transition-all duration-200 ease-in-out cursor-pointer overflow-hidden",
+                i === 0 && "border-r border-muted-foreground/20",
+                i === 1 && "border-t border-r border-muted-foreground/20",
+                i === 2 && "border-b border-muted-foreground/20"
+              )}
+              onMouseEnter={() => setTrigger(i)}
+              onMouseLeave={() => setTrigger(null)}
+            >
+              <div className="absolute inset-0 bg-black/80 z-0 backdrop-blur-xs" />
+              <MotionImage
                 animation={{
-                  mode: ["fadeUp", "depthPush", "textShimmer"],
-                  transition: "gentle",
-                  duration: 1,
+                  mode: ["fadeIn", "rotateClockwise"],
+                  transition: "smooth",
+                  duration: 3,
                 }}
                 config={{
-                  duration: 0.03,
-                  mode: "chars",
-                  delayLogic: "linear",
+                  duration: 2,
+                  pieces: 64,
+                  delayLogic: "pendulum",
+                  img: card.img,
                 }}
-              >
-                {card.description}
-              </MotionText>
-            ) : (
-              <MotionContainer
-                animation={{
-                  mode: "fadeIn",
-                  transition: "smooth",
-                  duration: 1,
+                wrapperClassName="h-[500px] w-full -z-10 absolute inset-0"
+                controller={{
+                  trigger: trigger === i,
                 }}
-                elementType="div"
-                className="flex w-full h-auto flex-col gap-2 z-50 mt-2"
-              >
-                {Array.from({ length: 3 }).map((_, i) => {
-                  const w = i === 0 ? "w-1/3" : i === 1 ? "w-2/3" : "w-full";
-                  return (
-                    <div
-                      key={i}
-                      className={cn(
-                        "h-2 rounded-sm bg-muted-foreground/10 w-auto",
-                        w
-                      )}
-                    />
-                  );
-                })}
-              </MotionContainer>
-            )}
-          </Card>
+              />
+              <div className="flex flex-row gap-2">
+                <Image
+                  alt={card.ico.split("/").join(" ")}
+                  src={card.ico}
+                  className="invert"
+                  height={20}
+                  width={20}
+                />
+                <h3 className="tracking-tighter text-xl z-50">{card.title}</h3>
+              </div>
+              {trigger === i ? (
+                <MotionText
+                  elementType="p"
+                  wrapperClassName="text-muted-foreground group text-xs z-50 tracking-tight"
+                  animation={{
+                    mode: ["fadeUp", "textShimmer", "rotateFlipX"],
+                    transition: "gentle",
+                    duration: 1,
+                  }}
+                  config={{
+                    duration: 0.03,
+                    mode: "chars",
+                    delayLogic: "linear",
+                  }}
+                >
+                  {card.description}
+                </MotionText>
+              ) : (
+                <MotionContainer
+                  animation={{
+                    mode: "fadeIn",
+                    transition: "smooth",
+                    duration: 1,
+                  }}
+                  elementType="div"
+                  className="flex w-full h-auto flex-col gap-2 z-50 mt-2"
+                >
+                  {Array.from({ length: 3 }).map((_, i) => {
+                    const w = i === 0 ? "w-1/3" : i === 1 ? "w-2/3" : "w-full";
+                    return (
+                      <div
+                        key={i}
+                        className={cn(
+                          "h-2 rounded-sm bg-muted-foreground/10 w-auto",
+                          w
+                        )}
+                      />
+                    );
+                  })}
+                </MotionContainer>
+              )}
+            </div>
+          </Link>
         ))}
       </MotionChain>
     </div>
@@ -286,12 +289,7 @@ const CardWrapper = () => {
 };
 
 const Footer = () => {
-  const [mounted, setMounted] = useState(false);
   const year = new Date().getFullYear();
-
-  useEffect(() => setMounted(true), []);
-
-  if (!mounted) return null;
   return (
     <footer className="fixed bottom-8 text-muted-foreground text-xs text-center w-full md:w-auto z-50">
       ©{year} Motion Provider —{" "}
@@ -381,18 +379,12 @@ const TextMatrix = memo(function TextMatrix() {
       className="h-screen w-full -z-10 inset-0 fixed overflow-hidden"
     >
       <MotionChain
-        // animations={matrix.map(() => ({
-        //   mode: ["filterBlurIn", "fadeUp"],
-        //   transition: "bounceSoft",
-        //   delay: 2.5,
-        //   duration: 1,
-        // }))}
         animations={matrix.map(({ key }) => {
           const isAnimation = Object.keys(animations).includes(key);
 
           return {
             mode: [
-              "fadeIn",
+              "fadeUp",
               isAnimation ? (key as AnimationKeys) : "filterBlurIn",
             ],
             transition: !isAnimation ? (key as TransitionKeys) : "bounceSoft",
@@ -410,14 +402,12 @@ const TextMatrix = memo(function TextMatrix() {
         {matrix.map(({ key, xy }) => {
           const [x, y] = xy;
           const transform = `translate3d(${x}px, ${y}px, 0)`;
-          const fontSize = Math.floor(Math.random() * 20);
 
           return (
             <span
               key={key}
               className="font-bold tracking-tight text-muted-foreground/20 rounded-2xl"
               style={{
-                fontSize: `${fontSize}px`,
                 position: "absolute",
                 top: 0,
                 left: 0,
