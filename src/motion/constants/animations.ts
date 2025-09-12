@@ -20,6 +20,10 @@ const animations = {
     initial: { y: "-100%" },
     animate: { y: 0 },
   },
+  slideUp: {
+    initial: { y: "100%" },
+    animate: { y: 0 },
+  },
   slideLeft: {
     initial: { x: "100%" },
     animate: { x: 0 },
@@ -27,25 +31,6 @@ const animations = {
   slideRight: {
     initial: { x: "-100%" },
     animate: { x: 0 },
-  },
-  slideUp: {
-    animate: { y: 0 },
-    initial: { y: "100%" },
-  },
-
-  // staggered
-
-  staggeredIn: {
-    initial: { x: "-50%" },
-    animate: {
-      x: 0,
-    },
-  },
-  staggeredOut: {
-    initial: { x: "-50%" },
-    animate: {
-      x: 0,
-    },
   },
 
   // Fade
@@ -97,12 +82,6 @@ const animations = {
     initial: { scale: 1.2 },
     animate: { scale: 1 },
   },
-  scaleGrowShrink: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.2, 1],
-    },
-  },
 
   // Rotate
 
@@ -121,12 +100,6 @@ const animations = {
   rotateFlipY: {
     initial: { rotateY: -180 },
     animate: { rotateY: 0 },
-  },
-  rotateSwing: {
-    initial: { rotate: 0 },
-    animate: {
-      rotate: [15, -10, 5, -5, 0],
-    },
   },
   rotateClockwise: {
     initial: { rotate: -45 },
@@ -147,231 +120,30 @@ const animations = {
     },
   },
 
-  // Bounce
-
-  bounceY: {
-    initial: { y: 0 },
-    animate: {
-      y: [0, -20, 10, -10, 5, 0],
-    },
-  },
-  bounceX: {
-    initial: { x: 0 },
-    animate: {
-      x: [-10, 10, -10, 10, -5, 5, 0],
-    },
-  },
-  rotateBounce: {
-    initial: { rotate: -90, y: 0 },
-    animate: {
-      rotate: [0, 15, -10, 5, 0],
-      y: [0, -20, 10, -10, 0],
-    },
-  },
-  elasticBounce: {
-    initial: { y: 0 },
-    animate: {
-      y: [0, -30, 20, -15, 5, 0],
-    },
-  },
-  bounceInOut: {
-    initial: { y: 0 },
-    animate: {
-      y: [0, -40, 20, -10, 0],
-    },
-  },
-
   // Skew
 
-  skewX45: {
+  skewX30: {
     initial: { skewX: 30 },
     animate: {
       skewX: 0,
     },
   },
-  skewX90: {
-    initial: { skewX: 90 },
+  skewX45: {
+    initial: { skewX: 45 },
     animate: {
       skewX: 0,
     },
   },
-  skewX180: {
-    initial: { skewX: 180 },
-    animate: {
-      skewX: 0,
-    },
-  },
-  skewY45: {
+  skewY30: {
     initial: { skewY: 30 },
     animate: {
       skewY: 0,
     },
   },
-  skewY90: {
-    initial: { skewY: 90 },
+  skewY45: {
+    initial: { skewY: 45 },
     animate: {
       skewY: 0,
-    },
-  },
-  skewY180: {
-    initial: { skewY: 180 },
-    animate: {
-      skewY: 0,
-    },
-  },
-
-  // Custom
-
-  textShimmer: {
-    initial: { opacity: 0 },
-    animate: {
-      opacity: [0, 1, 0, 0, 1],
-    },
-  },
-  swingHorizontal: {
-    initial: { x: 0 },
-    animate: {
-      x: [0, -10, 10, -5, 5, 0],
-    },
-  },
-  flash: {
-    initial: { opacity: 1 },
-    animate: {
-      opacity: [1, 0, 1],
-    },
-  },
-  hoverEffect: {
-    initial: { scale: 1 },
-    animate: {
-      scale: 1.1,
-    },
-  },
-  wave: {
-    initial: { rotate: 0 },
-    animate: {
-      rotate: [0, 15, -15, 15, -15, 0],
-    },
-  },
-  heartbeat: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.2, 1],
-    },
-  },
-  heartbeatRubber: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.25, 0.75, 1.15, 0.95, 1],
-    },
-  },
-  wobble: {
-    initial: { x: 0, rotate: 0 },
-    animate: {
-      x: [0, -20, 15, -10, 5, 0],
-      rotate: [0, -5, 3, -3, 0],
-    },
-  },
-  pulse: {
-    initial: { scale: 1 },
-    animate: {
-      scale: [1, 1.05, 1],
-    },
-  },
-  funChickenDance: {
-    initial: { rotate: 0, x: 0 },
-    animate: {
-      rotate: [0, 10, -10, 10, -10, 0],
-      x: [0, 5, -5, 5, -5, 0],
-    },
-  },
-  funJellyFish: {
-    initial: { scale: 1, y: 0 },
-    animate: {
-      scale: [1, 1.2, 0.8, 1.1, 0.9, 1],
-      y: [0, -10, 10, -5, 5, 0],
-    },
-  },
-  funRocketBoost: {
-    initial: { y: 50, opacity: 0 },
-    animate: {
-      y: [50, 0, -10, 0],
-      opacity: 1,
-    },
-  },
-  funDizzyLizard: {
-    initial: { rotate: 0, scale: 1 },
-    animate: {
-      rotate: [0, 360, 720, 1080, 1440],
-      scale: [1, 1.2, 0.8, 1],
-    },
-  },
-  funBlobMorph: {
-    initial: { scale: 1, borderRadius: "0%" },
-    animate: {
-      scale: [1, 1.2, 0.8, 1],
-      borderRadius: ["0%", "50%", "25%", "50%", "0%"],
-    },
-  },
-  funMoonWalk: {
-    initial: { x: 0, opacity: 1 },
-    animate: {
-      x: [0, -10, 20, -30, 40, 0],
-      opacity: [1, 0.8, 0.6, 0.4, 0.2, 1],
-    },
-  },
-  funPeekABoo: {
-    initial: { scale: 1, opacity: 0 },
-    animate: {
-      scale: [1, 1.5, 0.5, 1],
-      opacity: [0, 1, 0, 1],
-    },
-  },
-  funSnailTrail: {
-    initial: { x: "-100%", opacity: 0 },
-    animate: {
-      x: ["-100%", "-50%", "-25%", "-10%", "0%"],
-      opacity: [0, 0.3, 0.5, 0.8, 1],
-    },
-  },
-  funPopcornPop: {
-    initial: { y: 0, scale: 1 },
-    animate: {
-      y: [0, -20, 10, -5, 2, 0],
-      scale: [1, 1.1, 1.2, 0.9, 1.05, 1],
-    },
-  },
-  funYoYoSpin: {
-    initial: { rotate: 0, y: 0 },
-    animate: {
-      rotate: [0, 360, -360, 360],
-      y: [0, -10, 20, -10, 0],
-    },
-  },
-  funWarpDrive: {
-    initial: { scale: 0.5, opacity: 0 },
-    animate: {
-      scale: [0.5, 1.5, 0.7, 1],
-      opacity: [0, 0.5, 1, 1],
-    },
-  },
-  funSpringFling: {
-    initial: { y: 0 },
-    animate: {
-      y: [0, -50, 25, -12, 6, 0],
-    },
-  },
-  funTwinkleToes: {
-    initial: { scale: 1, opacity: 0 },
-    animate: {
-      scale: [1, 1.2, 0.8, 1],
-      opacity: [0, 0.5, 0.8, 1],
-    },
-  },
-  funGhostFloat: {
-    initial: { y: 20, opacity: 0 },
-    animate: {
-      y: [20, 10, 5, 0, -5, -10, 0],
-      opacity: [0, 0.3, 0.6, 0.9, 1],
     },
   },
 
@@ -440,86 +212,255 @@ const animations = {
     animate: { transform: "translate3d(0px, 0px, 0px) scale(1)" },
   },
 
-  translate3dBounce: {
-    initial: { transform: "translate3d(0px, 0px, 0px)" },
+  // transforms
+
+  transformRevealLeft: {
+    initial: {
+      transform: "scaleX(0.0) translateX(8%)",
+      transformOrigin: "left center",
+    },
     animate: {
-      transform: [
-        "translate3d(0px, 0px, 0px)",
-        "translate3d(0px, -30px, 0px)",
-        "translate3d(0px, 15px, 0px)",
-        "translate3d(0px, 0px, 0px)",
+      transform: "scaleX(1) translateX(0%)",
+      transformOrigin: "left center",
+    },
+  },
+  transformRevealRight: {
+    initial: {
+      transform: "scaleX(0.0) translateX(-8%)",
+      transformOrigin: "right center",
+    },
+    animate: {
+      transform: "scaleX(1) translateX(0%)",
+      transformOrigin: "right center",
+    },
+  },
+  transformRevealDown: {
+    initial: {
+      transform: "scaleY(0) translateY(8%)",
+      transformOrigin: "top center",
+    },
+    animate: {
+      transform: "scaleY(1) translateY(0%)",
+      transformOrigin: "top center",
+    },
+  },
+  transformClipTriangle: {
+    initial: {
+      clipPath: "polygon(50% 0, 50% 0, 50% 0)",
+      transform: "scale(0.94) rotate(-4deg)",
+    },
+    animate: {
+      clipPath: [
+        "polygon(50% 0, 50% 0, 50% 0)",
+        "polygon(50% 0, 85% 100%, 15% 100%)",
       ],
+      transform: ["scale(0.94) rotate(-4deg)", "scale(1) rotate(0deg)"],
     },
   },
-
-  translate3dWave: {
-    initial: { transform: "translate3d(0px, 0px, 0px)" },
+  transformClipSquare: {
+    initial: {
+      clipPath: "inset(50% 50% 50% 50%)",
+      transform: "scale(0.96)",
+    },
     animate: {
-      transform: [
-        "translate3d(0px, 0px, 0px)",
-        "translate3d(10px, 0px, 10px)",
-        "translate3d(-10px, 0px, -10px)",
-        "translate3d(0px, 0px, 0px)",
+      clipPath: [
+        "inset(50% 50% 50% 50%)",
+        "inset(12% 12% 12% 12%)",
+        "inset(0% 0% 0% 0%)",
       ],
+      transform: ["scale(0.96)", "scale(1.01)", "scale(1)"],
     },
   },
-
-  translate3dZigZag: {
-    initial: { transform: "translate3d(0px, 0px, 0px)" },
+  transformClipStar: {
+    initial: {
+      clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%)",
+      transform: "scale(0.92) rotate(-8deg)",
+    },
     animate: {
-      transform: [
-        "translate3d(0px, 0px, 0px)",
-        "translate3d(20px, -10px, 10px)",
-        "translate3d(-20px, 10px, -10px)",
-        "translate3d(0px, 0px, 0px)",
+      clipPath: [
+        "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%, 50% 50%)",
+        "polygon(50% 0, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 72%, 21% 91%, 32% 57%, 2% 35%, 39% 35%)",
       ],
+      transform: ["scale(0.92) rotate(-8deg)", "scale(1) rotate(0deg)"],
     },
   },
-
-  // Mixed animations
-
-  drift: {
-    initial: { x: 0, y: 0 },
+  transformClipDiamond: {
+    initial: {
+      clipPath: "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)",
+      transform: "scale(0.96)",
+    },
     animate: {
-      x: [0, 10, 0, -10, 0],
-      y: [0, -5, 0, 5, 0],
+      clipPath: [
+        "polygon(50% 50%, 50% 50%, 50% 50%, 50% 50%)",
+        "polygon(50% 0, 100% 50%, 50% 100%, 0% 50%)",
+      ],
+      transform: ["scale(0.96)", "scale(1)"],
     },
   },
-
-  glitch: {
-    initial: { x: 0, opacity: 1 },
+  transformClipPentagon: {
+    initial: {
+      clipPath: "polygon(50% 0, 50% 0, 50% 0, 50% 0, 50% 0)",
+      transform: "scale(0.92) rotate(-6deg)",
+    },
     animate: {
-      x: [0, 5, -5, 5, -5, 0],
-      opacity: [1, 0.9, 0.9, 0.8, 0.9, 1],
+      clipPath: [
+        "polygon(50% 0, 50% 0, 50% 0, 50% 0, 50% 0)",
+        "polygon(50% 0, 85% 35%, 70% 85%, 30% 85%, 15% 35%)",
+      ],
+      transform: ["scale(0.92) rotate(-6deg)", "scale(1) rotate(0deg)"],
     },
   },
-
-  slideBounce: {
-    initial: { x: "100%" },
-    animate: { x: ["100%", "50%", "40%", "50%", "0%"] },
-  },
-
-  flipCard: {
-    initial: { rotateY: 0 },
-    animate: { rotateY: [0, 90, 180, 270, 360] },
-  },
-
-  jitter: {
-    initial: { x: 0, y: 0 },
+  transformClipVShaped: {
+    initial: {
+      clipPath: "polygon(50% 50%, 50% 50%, 50% 50%)",
+      transform: "scale(0.96) rotate(-6deg)",
+    },
     animate: {
-      x: [0, 2, -2, 2, -2, 0],
-      y: [0, -2, 2, -2, 2, 0],
+      clipPath: [
+        "polygon(50% 50%, 50% 50%, 50% 50%)",
+        "polygon(10% 0%, 50% 50%, 90% 0%, 90% 100%, 50% 50%, 10% 100%)",
+      ],
+      transform: ["scale(0.96) rotate(-6deg)", "scale(1) rotate(0deg)"],
+    },
+  },
+  transformTextGlow: {
+    initial: {
+      transform: "translateX(6%)",
+      textShadow: "0 0 0px rgba(255,255,255,0)",
+      filter: "hue-rotate(0deg) blur(2px)",
+    },
+    animate: {
+      transform: ["translateX(6%)", "translateX(0%)"],
+      textShadow: [
+        "0 0 0px rgba(255,255,255,0)",
+        "0 0 12px rgba(255,220,180,0.9), 0 0 30px rgba(255,160,200,0.6)",
+        "0 0 4px rgba(255,255,255,0.4)",
+      ],
+      filter: ["hue-rotate(-8deg) blur(3px)", "hue-rotate(6deg) blur(0px)"],
+    },
+  },
+  transformTextGradient: {
+    initial: {
+      backgroundImage:
+        "linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.12) 45%, rgba(255,255,255,0) 65%)",
+      backgroundSize: "200% 100%",
+      backgroundPosition: "100% 50%",
+      transform: "translateX(4%)",
+    },
+    animate: {
+      backgroundPosition: ["100% 50%", "0% 50%"],
+      transform: ["translateX(4%)", "translateX(0%)"],
+    },
+  },
+  transformMaskLeft: {
+    initial: {
+      clipPath: "polygon(100% 0, 100% 0, 100% 100%, 100% 100%)",
+      transform: "skewX(10deg) translateX(5%)",
+    },
+    animate: {
+      clipPath: "polygon(0 0, 100% 0, 100% 100%, 0% 100%)",
+      transform: "skewX(0deg) translateX(0%)",
+    },
+  },
+  transformMaskRight: {
+    initial: {
+      clipPath: "polygon(0 0, 0 0, 0 100%, 0 100%)",
+      transform: "skewX(-10deg) translateX(-5%)",
+    },
+    animate: {
+      clipPath: "polygon(100% 0, 0 0, 0 100%, 100% 100%)",
+      transform: "skewX(0deg) translateX(0%)",
+    },
+  },
+  transformMaskDown: {
+    initial: {
+      clipPath: "polygon(0 0, 100% 0, 100% 0, 0 0)",
+      transform: "skewY(10deg) translateY(5%)",
+    },
+    animate: {
+      clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+      transform: "skewY(0deg) translateY(0%)",
+    },
+  },
+  transformMaskGradient: {
+    initial: {
+      maskImage: "linear-gradient(90deg, transparent 0%, rgba(0,0,0,1) 30%)",
+      maskPosition: "100% 50%",
+      maskSize: "200% 100%",
+      transform: "translateX(4%)",
+    },
+    animate: {
+      maskPosition: "0% 50%",
+      transform: "translateX(0%)",
     },
   },
 
-  flip3D: {
-    initial: { rotateY: -180, opacity: 0, perspective: 1000 },
+  // clips
+
+  clipPop: {
+    initial: {
+      clipPath: "circle(0% at 50% 50%)",
+    },
     animate: {
-      rotateY: 0,
-      opacity: 1,
-      perspective: 1000,
+      clipPath: "circle(150% at 50% 50%)",
     },
   },
+  clipDown: {
+    initial: {
+      clipPath: "inset(0 0 100% 0)",
+    },
+    animate: {
+      clipPath: "inset(0 0 0% 0)",
+    },
+  },
+  clipUp: {
+    initial: {
+      clipPath: "inset(100% 0 0 0)",
+    },
+    animate: {
+      clipPath: "inset(0 0 0 0)",
+    },
+  },
+  clipCircle: {
+    initial: {
+      clipPath: "circle(0% at 10% 50%)",
+    },
+    animate: {
+      clipPath: "circle(120% at 50% 50%)",
+    },
+  },
+
+  // masks
+
+  maskGradient: {
+    initial: {
+      maskImage:
+        "linear-gradient(90deg, rgba(0,0,0,0) 0%, rgba(0,0,0,0.9) 30%)",
+      maskSize: "200% 100%",
+      maskPosition: "100% 50%",
+      transform: "translateX(3%)",
+    },
+    animate: {
+      maskPosition: "0% 50%",
+      transform: "translateX(0%)",
+    },
+  },
+  maskGradientPerforate: {
+    initial: {
+      maskImage:
+        "radial-gradient(circle, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 41%)",
+      maskSize: "8% 8%",
+      maskPosition: "120% 50%",
+      transform: "translateX(4%)",
+    },
+    animate: {
+      maskPosition: "0% 50%",
+      maskSize: ["8% 8%", "6% 6%"],
+      transform: "translateX(0%)",
+    },
+  },
+
+  // custom
 
   neonGlow: {
     initial: { textShadow: "0 0 0px #fff" },
@@ -531,7 +472,6 @@ const animations = {
       ],
     },
   },
-
   typingEffect: {
     initial: { width: 0, opacity: 0 },
     animate: {
@@ -539,45 +479,46 @@ const animations = {
       opacity: 1,
     },
   },
-
-  pathMotion: {
-    initial: { x: 0, y: 0 },
-    animate: {
-      x: [0, 40, -30, 20, -10, 0],
-      y: [0, 20, -15, 10, -5, 0],
-    },
-  },
-
-  jellyTwist: {
-    initial: { skewX: 0, skewY: 0, scale: 1 },
-    animate: {
-      skewX: [0, 15, -10, 5, 0],
-      skewY: [0, -8, 4, -2, 0],
-      scale: [1, 1.08, 0.95, 1.03, 1],
-    },
-  },
-
-  depthPush: {
-    initial: { transform: "translateZ(-200px) scale(0.6)" },
-    animate: {
-      transform: "translateZ(0px) scale(1)",
-    },
-  },
-
   colorShift: {
     initial: { backgroundColor: "#ff0000" },
     animate: {
       backgroundColor: ["#ff0000", "#00ff88", "#0066ff", "#ff0000"],
     },
   },
-
-  orbitRotation: {
-    initial: { x: 0, y: 0, rotate: 0 },
+  textShimmer: {
+    initial: { opacity: 0 },
     animate: {
-      x: [0, 40, 0, -40, 0],
-      y: [0, 40, 80, 40, 0],
-      rotate: [0, 180, 360, 540, 720],
+      opacity: [0, 1, 0, 0, 1],
     },
+  },
+  flash: {
+    initial: { opacity: 1 },
+    animate: {
+      opacity: [1, 0, 1],
+    },
+  },
+  hover: {
+    initial: { scale: 1 },
+    animate: {
+      scale: 1.1,
+    },
+  },
+  heartbeat: {
+    initial: { scale: 1 },
+    animate: {
+      scale: [1, 1.2, 1],
+    },
+  },
+  snailTrail: {
+    initial: { x: "-100%", opacity: 0 },
+    animate: {
+      x: ["-100%", "-50%", "-25%", "-10%", "0%"],
+      opacity: [0, 0.3, 0.5, 0.8, 1],
+    },
+  },
+  microWobble: {
+    initial: { rotate: 0, scale: 0.995 },
+    animate: { rotate: 2, scale: 1.005 },
   },
 } as const satisfies AnimationLibraryProps;
 
