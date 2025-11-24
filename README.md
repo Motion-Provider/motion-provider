@@ -1,4 +1,4 @@
-<h1 align="center"> <img width="35" height="35" alt="Motion logo" src="./public/logo.webp" /><br />Motion Provider</h1>
+<h1 align="center"> <img width="50" height="50" alt="Motion logo" src="./public/logo.webp" /><br />Motion Provider</h1>
 <h3 align="center">
   A React open-source animation library<br />for rapid motion design.
 </h3>
