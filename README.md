@@ -21,7 +21,7 @@ npm i motion-provider
 
 1. [The Background](#the-background)
 2. [Why Use Motion Provider?](#why-use-motion-provider)
-3. [Installation & Prerequisites](#installation--pre--requirements)
+3. [Installation & Prerequisites](#installation--prerequisites)
 4. [Animate in seconds(literally) with the Playground but how?](#animate-in-seconds--literally--with-the-playgrounds-but-how)
 5. [Examples](#examples)
 6. [Documentation & APIs](#documentation--apis)
@@ -35,30 +35,36 @@ As you might know, too many copy-and-paste-ready UI libraries have come out rece
 
 ### Why Use Motion Provider?
 
-#### Because the front-end has to be unique.
+🔹**Because the front-end has to be unique.**
 
-- **Result I:** _69+ pre-defined diversity of animations(fade, slide, rotate, zoom & scale, filter..)_ to play with — all in constant, O(n) complexity. Pretty enough to animate the web.
-- **Result II:** _30+ pre-defined transitions(linear, ease, circ, custom and more)_ — carefully selected and curated transition configs for your next desired app.
-- **Result III:** _22+ pre-defined delaying algorithms(linear, sinusoidal, chaotic, quantum.. + custom configs)_ for seamless and beautiful effects.
-- **The big picture**: _46,200_ animation combination possibilities!
-- **Future plans**: Installable via npx/npm community-driven animation packs.
+- 69+ pre-defined diversity of animations(fade, slide, rotate, zoom & scale, filter..) to play with — all in constant, O(n) complexity. Pretty enough to animate the web.
+- 30+ pre-defined transitions(linear, ease, circ, custom and more) — carefully selected and curated transition configs for your next desired app.
+- 22+ pre-defined delaying algorithms(linear, sinusoidal, chaotic, quantum.. + custom configs) for seamless and beautiful effects.
 
-#### Because creating a harmony within a cohesive whole attracts users and keeps them engaged for longer in your app.
+🔹**Because creating a harmony within a cohesive whole attracts users and keeps them engaged for longer in your app.**
 
-- **Result I:** Introducing **CAS(Centralized animation system)** allowing you to wire up all your animated components and create progressive enter/exit effects — you users will ❤️ it!
-- **Result II:**: Integrate **CAS** to your next app only with two hooks which are `useAnimation()` and `useAnimationControl()` — _in total, gzipped size is < 1kb(893b)._
-- **Result III:** Observe play/puase effect of the animation before you implement it to your app with [the playground](https://motionprovider.dev).
-- **The Big Picture:** I genuinely see a higher customer retention with seamless UX in the big picture. Say goodbye to boring, stale landing pages!
-- **Future plans**: Automate page enter/exit and switch effects with `MotionLink` _without compromising CLS/INP_.
+- Introducing **CAS(Centralized animation system)** allowing you to wire up all your animated components and create progressive enter/exit effects — you users will ❤️ it!
+- Integrate **CAS** to your next app only with two hooks which are `useAnimation()` and `useAnimationControl()` — _in total, gzipped size is < 1kb(893b)._
+- Observe play/puase effect of the animation before you implement it to your app with [the playground](https://motionprovider.dev).
 
-#### Because a scalable app requires type-safety.
+🔹**Because a scalable app requires type-safety.**
 
-- **Result I:** Ensure you're not left out with E2E **type-safety with TypeScript**.
-- **Result II:** Throws an application error in case of doing something wrong.
-- **The Big Picture:** Junior/mid/senior, no matter how experienced you are — `CTRL+SPACE` is the key of magic. Need a magician to use them.
-- **Future plans**: An customizable `motion.config.ts` file to maximize flexibility for your next app.
+- Ensure you're not left out with E2E **type-safety with TypeScript**.
+- Throws an application error in case of doing something wrong.
 
-### Installation & Pre-requirements
+✅ The big picture
+
+- 46,200 animation combination possibilities!
+- I genuinely see a higher customer retention with seamless UX in the big picture. Say goodbye to boring, stale landing pages!
+- Junior/mid/senior, no matter how experienced you are — `CTRL+SPACE` is the key of magic. Need a magician to use them 🧙‍♂️
+
+✅ Future plans
+
+- Installable via npx/npm community-driven animation packs.
+- Automate page enter/exit and switch effects with `MotionLink` _without compromising CLS/INP_.
+- A customizable `motion.config.ts` file to maximize flexibility for your next app.
+
+### Installation
 
 Install via:
 
@@ -84,7 +90,7 @@ cd nextjs-starter
 npm install
 ```
 
-#### rerequisites
+#### Prerequisites
 
 - Node 18+
 - React 18+
@@ -95,7 +101,7 @@ npm install
 
 I break down the steps one by one so that you can enforce animations lightning-fast:
 
-#### Step 1 — Setup
+#### Step 1️⃣ — **Setup**
 
 Ensure that your React node is ready to be animated or at least plan the outcome in mind by considering:
 
@@ -105,7 +111,7 @@ Ensure that your React node is ready to be animated or at least plan the outcome
 
 After finding the answers to the questions, you can move on to step two.
 
-#### Step 2 — Imagination
+#### Step 2️⃣ — **Imagination**
 
 Regarding to the type of element you want animate/create-and-animate:
 
@@ -115,17 +121,17 @@ Regarding to the type of element you want animate/create-and-animate:
 - If it is a group of elements [visit this link](https://motionprovider.dev/motion-container)
 - If it is a group of images [visit this link](https://motionprovider.dev/motion-movie)
 
-#### Step 3 — Configuration
+#### Step 3️⃣ — **Configuration**
 
 Adjust as you like. Play with the buttons, slides. Preview the animation looking before applying it. Stuck? Out of ideas? Roll the dice, increase the 'complexity' value in settings to combine more animations at once — considering the app FPS ofc.
 
 And once you're done, copy the dynamically generated code snippet of your desired animation for your next app.
 
-#### Step 4 — Implementation
+#### Step 4️⃣ — **Implementation**
 
 If you haven't installed the package yet, first install via `npm i motion-provider`. Then go back to your component. Paste the copied snippet, adjust by wiring up the staff, DONE ✅
 
-#### Step 5 — Repeat
+#### Step 5️⃣ — **Repeat**
 
 If the current animation doesn't meet your expectations(very rare), you have the option to restart this cycle from step 3.
 
