@@ -1,4 +1,4 @@
-<h1 align="center"> <img width="50" height="50" alt="Motion logo" src="./public/logo.webp" /><br />Motion Provider (Beta)</h1>
+<h1 align="center"> <img width="50" height="50" alt="Motion logo" src="./public/logo.png" /><br />Motion Provider (Beta)</h1>
 <h3 align="center">
   An open-source React animation library<br />for rapid development.
 </h3>
@@ -11,8 +11,8 @@
 
 _Introducing Motion Provider_ with first-class pre-defined APIs and full type-safety that allows you to animate the DOM; not hours, not minutes, **in seconds**! When my client asks me if I used too much AI to create those beautiful animations in the project I delivered earlier than expected, _I say no more_ 🎉🥳
 
-Thanks to the [Motion Playground](https://motionprovider.dev) engine, which allows you to configure and **play with animations visually** and use them with a single click in your next application.
-
 ```bash
 npm i motion-provider
 ```
+
+> This project is under active major development and is not ready for production use.
