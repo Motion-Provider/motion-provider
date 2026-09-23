@@ -1,0 +1,27 @@
+{
+	"$schema": "https://biomejs.dev/schemas/2.5.14/schema.json",
+	"extends": "//",
+	"files": {
+		"includes": ["**", "!node_modules", "!.next", "!dist", "!build"]
+	},
+	"css": {
+		"parser": {
+			"tailwindDirectives": true
+		}
+	},
+	"linter": {
+		"domains": {
+			"next": "recommended",
+			"react": "recommended"
+		},
+		"enabled": true,
+		"rules": {
+			"style": {
+				"noNonNullAssertion": "off"
+			},
+			"a11y": {
+				"useMediaCaption": "off"
+			}
+		}
+	}
+}

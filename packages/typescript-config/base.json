@@ -5,6 +5,7 @@
     "declarationMap": true,
     "esModuleInterop": true,
     "incremental": false,
+    "allowJs": true,
     "isolatedModules": true,
     "lib": ["ESNext", "DOM", "DOM.Iterable"],
     "module": "NodeNext",
@@ -14,6 +15,7 @@
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
+    "noEmit": true,
     "target": "esnext"
   }
 }
