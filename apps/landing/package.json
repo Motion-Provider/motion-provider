@@ -11,7 +11,8 @@
 	"dependencies": {
 		"next": "16.3.6",
 		"react": "19.2.8",
-		"react-dom": "19.2.8"
+		"react-dom": "19.2.8",
+		"@motion/ui": "*"
 	},
 	"devDependencies": {
 		"@repo/typescript-config": "*",

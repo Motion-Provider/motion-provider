@@ -1,0 +1,15 @@
+{
+	"name": "scripts",
+	"version": "1.0.0",
+	"description": "test scripts for motion-provider.",
+	"main": "index.js",
+	"type": "module",
+	"scripts": {
+		"size": "node src/size.mjs",
+		"demo": "node src/demo.mjs"
+	},
+	"devDependencies": {
+		"@repo/typescript-config": "*",
+		"typescript": "^7.0.2"
+	}
+}

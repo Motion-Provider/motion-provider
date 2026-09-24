@@ -1,0 +1,11 @@
+{
+	"name": "motion-provider tests",
+	"private": true,
+	"scripts": {
+		"test:browser": "node tests/browser/run.mjs",
+		"test:compiler": "node scripts/check-compiler.mjs"
+	},
+	"devDependencies": {
+		"@repo/typescript-config": "*"
+	}
+}

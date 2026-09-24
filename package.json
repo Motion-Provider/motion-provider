@@ -1,5 +1,5 @@
 {
-	"name": "motion-provider",
+	"name": "motion-provider-turborepo",
 	"private": true,
 	"scripts": {
 		"build": "turbo run build",
@@ -11,7 +11,7 @@
 	"devDependencies": {
 		"@biomejs/biome": "2.5.14",
 		"turbo": "^2.11.2",
-		"typescript": "7.0.2"
+		"typescript": "^7.0.2"
 	},
 	"engines": {
 		"node": ">=24"
@@ -24,6 +24,8 @@
 	},
 	"workspaces": [
 		"apps/*",
-		"packages/*"
+		"packages/*",
+		"scripts/*",
+		"tests/*"
 	]
 }

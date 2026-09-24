@@ -1,4 +1,4 @@
-import { Button } from "@repo/ui/button";
+import { Button } from "@motion/ui/button";
 import { Geist, Geist_Mono } from "next/font/google";
 import Image from "next/image";
 

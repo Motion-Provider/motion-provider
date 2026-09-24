@@ -1,4 +1,3 @@
-import { Button } from "@repo/ui/button";
 import Image, { type ImageProps } from "next/image";
 import styles from "./page.module.css";
 
