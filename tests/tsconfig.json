@@ -1,6 +1,6 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": "@repo/typescript-config/base.json",
+	"extends": "@motion/typescript-config/base.json",
 	"include": ["browser", "core"],
 	"exclude": ["node_modules", "dist"]
 }

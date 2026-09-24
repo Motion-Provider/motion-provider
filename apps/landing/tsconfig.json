@@ -1,7 +1,6 @@
 {
-	"extends": "@repo/typescript-config/nextjs.json",
+	"extends": "@motion/typescript-config/nextjs.json",
 	"compilerOptions": {
-		"strictNullChecks": true,
 		"paths": {
 			"@/*": ["./src/*"]
 		}

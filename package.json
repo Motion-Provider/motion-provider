@@ -27,5 +27,8 @@
 		"packages/*",
 		"scripts/*",
 		"tests/*"
-	]
+	],
+	"allowScripts": {
+		"esbuild@0.28.0": true
+	}
 }

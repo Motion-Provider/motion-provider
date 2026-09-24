@@ -1,23 +1,31 @@
 {
 	"name": "@motion/ui",
 	"version": "1.0.0",
-	"private": true,
+	"private": false,
+	"type": "module",
+	"sideEffects": false,
 	"exports": {
-		"./*": "./src/*"
+		"./*": {
+			"types": "./src/*.tsx",
+			"import": "./src/*.tsx",
+			"default": "./src/*.tsx"
+		}
 	},
 	"scripts": {
 		"generate:component": "turbo gen react-component",
 		"check-types": "tsc --noEmit"
 	},
+	"peerDependencies": {
+		"react": "19.2.8",
+		"react-dom": "19.2.8"
+	},
 	"devDependencies": {
-		"@repo/typescript-config": "*",
+		"@motion/typescript-config": "*",
 		"@types/node": "26.4.1",
 		"@types/react": "19.2.18",
 		"@types/react-dom": "19.2.5",
-		"typescript": "^7.0.2"
-	},
-	"dependencies": {
 		"react": "19.2.8",
-		"react-dom": "19.2.8"
+		"react-dom": "19.2.8",
+		"typescript": "^7.0.2"
 	}
 }

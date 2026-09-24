@@ -1,10 +1,8 @@
 {
 	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": "@repo/typescript-config/react-library.json",
+	"extends": "@motion/typescript-config/react-library.json",
 	"compilerOptions": {
-		"outDir": "dist",
-		"rootDir": "src",
-		"strictNullChecks": true,
+		"strictNullChecks": true
 	},
 	"include": ["src/**/*.ts", "src/**/*.tsx"],
 	"exclude": ["node_modules", "dist"]

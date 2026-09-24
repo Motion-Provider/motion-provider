@@ -1,13 +1,5 @@
 {
-	"extends": "@repo/typescript-config/nextjs.json",
-	"compilerOptions": {
-		"plugins": [
-			{
-				"name": "next"
-			}
-		],
-		"strictNullChecks": true
-	},
+	"extends": "@motion/typescript-config/nextjs.json",
 	"include": [
 		"**/*.ts",
 		"**/*.tsx",

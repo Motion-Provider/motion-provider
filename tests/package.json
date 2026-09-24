@@ -6,6 +6,6 @@
 		"test:compiler": "node scripts/check-compiler.mjs"
 	},
 	"devDependencies": {
-		"@repo/typescript-config": "*"
+		"@motion/typescript-config": "*"
 	}
 }

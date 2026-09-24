@@ -84,10 +84,8 @@
 	},
 	"devDependencies": {
 		"typescript": "^7.0.2",
-		"react": "19.2.6",
-		"react-dom": "19.2.6",
-		"@types/react": "19.2.14",
-		"@types/react-dom": "19.2.3",
+		"react": "19.2.8",
+		"react-dom": "19.2.8",
 		"esbuild": "0.28.0"
 	},
 	"license": "MIT"

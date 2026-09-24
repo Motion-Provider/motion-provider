@@ -1,3 +1,4 @@
+import { Button } from "@motion/ui/button";
 import Image, { type ImageProps } from "next/image";
 import styles from "./page.module.css";
 
@@ -36,7 +37,7 @@ export default function Home() {
 					</li>
 					<li>Save and see your changes instantly.</li>
 				</ol>
-
+				<Button appName="docs">Hello from docs</Button>
 				<div className={styles.ctas}>
 					<a
 						className={styles.primary}
