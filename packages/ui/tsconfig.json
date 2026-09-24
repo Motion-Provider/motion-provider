@@ -1,9 +1,0 @@
-{
-	"$schema": "https://json.schemastore.org/tsconfig",
-	"extends": "@motion/typescript-config/react-library.json",
-	"compilerOptions": {
-		"strictNullChecks": true
-	},
-	"include": ["src/**/*.ts", "src/**/*.tsx"],
-	"exclude": ["node_modules", "dist"]
-}

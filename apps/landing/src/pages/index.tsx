@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 export default function Home() {
 	return (
 		<div
-			className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen items-center justify-center font-sans bg-black`}
+			className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen items-center justify-center font-sans`}
 		>
 			<Motion definition={fadeIn} elementType="div">
 				<Chip color="success" variant="soft">

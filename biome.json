@@ -11,12 +11,17 @@
 	},
 	"formatter": {
 		"enabled": true,
-		"indentStyle": "tab"
+		"indentStyle": "tab",
+		"includes": ["**/*.js", "**/*.jsx", "**/*.ts", "**/*.tsx"]
 	},
 	"linter": {
 		"enabled": true,
 		"rules": {
 			"preset": "recommended"
+		},
+		"domains": {
+			"next": "recommended",
+			"react": "recommended"
 		}
 	},
 	"javascript": {
