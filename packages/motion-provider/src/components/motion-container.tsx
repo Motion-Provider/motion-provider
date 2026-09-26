@@ -10,11 +10,11 @@ import { Motion } from "./motion.js";
  * Use controller.trigger for state-driven playback or controller.scroll for scrubbing.
  */
 export const MotionContainer = forwardRef<
-	HTMLElement | SVGElement,
-	MotionContainerProps
+  HTMLElement | SVGElement,
+  MotionContainerProps
 >(function MotionContainer({ animation, ...props }, ref) {
-	const { definition, timing } = resolveAnimation(animation);
-	return (
-		<Motion {...props} definition={definition} timing={timing} ref={ref} />
-	);
+  const { definition, timing } = resolveAnimation(animation);
+  return (
+    <Motion {...props} definition={definition} timing={timing} ref={ref} />
+  );
 });

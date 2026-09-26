@@ -11,54 +11,54 @@ import type { MotionProps } from "../types.js";
  * Intrinsic HTML/SVG tags only; refs and standard attributes are forwarded to the animated node.
  */
 export const Motion = forwardRef<HTMLElement | SVGElement, MotionProps>(
-	function Motion(
-		{
-			definition,
-			timing,
-			controller,
-			elementType = "div",
-			reducedMotion,
-			onMotionError,
-			onMotionComplete,
-			children,
-			...dom
-		},
-		forwardedRef,
-	) {
-		invariant(
-			typeof elementType === "string" &&
-				/^[a-z][a-zA-Z0-9-]*$/.test(elementType),
-			"INVALID_ELEMENT",
-			"elementType must be an intrinsic HTML/SVG tag.",
-		);
+  function Motion(
+    {
+      definition,
+      timing,
+      controller,
+      elementType = "div",
+      reducedMotion,
+      onMotionError,
+      onMotionComplete,
+      children,
+      ...dom
+    },
+    forwardedRef,
+  ) {
+    invariant(
+      typeof elementType === "string" &&
+        /^[a-z][a-zA-Z0-9-]*$/.test(elementType),
+      "INVALID_ELEMENT",
+      "elementType must be an intrinsic HTML/SVG tag.",
+    );
 
-		const ref = useRef<HTMLElement | SVGElement | null>(null);
-		const setRef = useCallback(
-			(node: HTMLElement | SVGElement | null) => {
-				ref.current = node;
-				if (typeof forwardedRef === "function") forwardedRef(node);
-				else if (forwardedRef) forwardedRef.current = node;
-			},
-			[forwardedRef],
-		);
+    const ref = useRef<HTMLElement | SVGElement | null>(null);
+    const setRef = useCallback(
+      (node: HTMLElement | SVGElement | null) => {
+        ref.current = node;
+        if (typeof forwardedRef === "function") forwardedRef(node);
+        else if (forwardedRef) forwardedRef.current = node;
+      },
+      [forwardedRef],
+    );
 
-		useMotion(ref, {
-			definition,
-			timing,
-			controller,
-			elementType,
-			reducedMotion,
-			onMotionError,
-			onMotionComplete,
-		});
+    useMotion(ref, {
+      definition,
+      timing,
+      controller,
+      elementType,
+      reducedMotion,
+      onMotionError,
+      onMotionComplete,
+    });
 
-		return createElement(
-			elementType,
-			{
-				...dom,
-				ref: setRef,
-			},
-			children,
-		);
-	},
+    return createElement(
+      elementType,
+      {
+        ...dom,
+        ref: setRef,
+      },
+      children,
+    );
+  },
 );

@@ -1,33 +1,34 @@
 {
-	"json.schemaDownload.trustedDomains": {
-		"https://www.schemastore.org/": true,
-		"https://json.schemastore.org/": true,
-		"https://json-schema.org/": true,
-		"https://developer.microsoft.com/json-schemas/": true,
-		"https://turborepo.dev/": true
-	},
-	"editor.formatOnSave": true,
-	"editor.codeActionsOnSave": {
-		"source.organizeImports": "explicit",
-		"source.organizeImports.biome": "explicit",
-		"source.sortImports": "always",
-		"source.addMissingImports.ts": "explicit",
-		"source.removeUnusedImports": "explicit",
-		"source.biome": "always",
-		"source.fixAll": "explicit",
-		"quickfix.biome": "explicit"
-	},
-	"editor.defaultFormatter": "biomejs.biome",
-	"[javascript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[javascriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[typescript]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	},
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "biomejs.biome"
-	}
+  "js/ts.tsdk.path": "node_modules\\typescript\\lib",
+  "js/ts.experimental.useTsgo": true,
+
+  "json.schemaDownload.trustedDomains": {
+    "https://www.schemastore.org/": true,
+    "https://json.schemastore.org/": true,
+    "https://json-schema.org/": true,
+    "https://developer.microsoft.com/json-schemas/": true,
+    "https://turborepo.dev/": true
+  },
+
+  "editor.formatOnSave": true,
+
+  "editor.codeActionsOnSave": {
+    "source.organizeImports.biome": "explicit",
+    "source.fixAll.biome": "explicit"
+  },
+
+  "editor.defaultFormatter": "biomejs.biome",
+
+  "[javascript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "biomejs.biome"
+  }
 }

@@ -1,27 +1,185 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-:root {
-	--background: #ffffff;
-	--foreground: #171717;
+:root,
+.light,
+.default,
+[data-theme="light"],
+[data-theme="default"] {
+  --accent: oklch(74.28% 0.1618 40.24);
+  --accent-foreground: oklch(15% 0.03 40.24);
+  --background: oklch(97.02% 0.006 40.24);
+  --border: oklch(90.00% 0.006 40.24);
+  --danger: oklch(65.32% 0.2356 0.11);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(94.00% 0.006 40.24);
+  --default-foreground: oklch(21.03% 0.0059 40.24);
+  --field-background: oklch(100.00% 0.003 40.24);
+  --field-border: transparent;
+  --field-foreground: oklch(21.03% 0.006 40.24);
+  --field-placeholder: oklch(55.17% 0.012 40.24);
+  --focus: oklch(74.28% 0.1618 40.24);
+  --foreground: oklch(21.03% 0.006 40.24);
+  --muted: oklch(55.17% 0.012 40.24);
+  --overlay: oklch(100.00% 0.0018 40.24);
+  --overlay-foreground: oklch(21.03% 0.006 40.24);
+  --scrollbar: oklch(87.10% 0.006 40.24);
+  --segment: oklch(100.00% 0.006 40.24);
+  --segment-foreground: oklch(21.03% 0.006 40.24);
+  --separator: oklch(92.00% 0.006 40.24);
+  --success: oklch(73.29% 0.1958 125.18);
+  --success-foreground: oklch(21.03% 0.0059 125.18);
+  --surface: oklch(100.00% 0.003 40.24);
+  --surface-foreground: oklch(21.03% 0.006 40.24);
+  --surface-secondary: oklch(95.24% 0.0048 40.24);
+  --surface-secondary-foreground: oklch(21.03% 0.006 40.24);
+  --surface-tertiary: oklch(93.73% 0.0048 40.24);
+  --surface-tertiary-foreground: oklch(21.03% 0.006 40.24);
+  --warning: oklch(78.19% 0.1604 46.7);
+  --warning-foreground: oklch(21.03% 0.0059 46.7);
+
+  --radius: 0.25rem;
+  --field-radius: 0.75rem;
+
+  --glass-surface: oklch(97.02% 0.006 40.24 / 0.55);
+  --glass-surface-strong: oklch(100.00% 0.003 40.24 / 0.75);
+  --glass-border: oklch(90.00% 0.006 40.24 / 0.4);
+  --glass-shadow: oklch(21.03% 0.006 40.24 / 0.12);
+  --glass-blur: 16px;
+  --glass-saturation: 140%;
+}
+
+.dark,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --accent: oklch(74.28% 0.1618 40.24);
+  --accent-foreground: oklch(15% 0.03 40.24);
+  --background: oklch(12.00% 0.006 40.24);
+  --border: oklch(28.00% 0.006 40.24);
+  --danger: oklch(59.40% 0.1991 359);
+  --danger-foreground: oklch(99.11% 0 0);
+  --default: oklch(27.40% 0.006 40.24);
+  --default-foreground: oklch(99.11% 0 0);
+  --field-background: oklch(21.03% 0.012 40.24);
+  --field-border: transparent;
+  --field-foreground: oklch(99.11% 0.006 40.24);
+  --field-placeholder: oklch(70.50% 0.012 40.24);
+  --focus: oklch(74.28% 0.1618 40.24);
+  --foreground: oklch(99.11% 0.006 40.24);
+  --muted: oklch(70.50% 0.012 40.24);
+  --overlay: oklch(21.03% 0.012 40.24);
+  --overlay-foreground: oklch(99.11% 0.006 40.24);
+  --scrollbar: oklch(70.50% 0.006 40.24);
+  --segment: oklch(39.64% 0.006 40.24);
+  --segment-foreground: oklch(99.11% 0.006 40.24);
+  --separator: oklch(25.00% 0.006 40.24);
+  --success: oklch(73.29% 0.1958 125.18);
+  --success-foreground: oklch(21.03% 0.0059 125.18);
+  --surface: oklch(21.03% 0.012 40.24);
+  --surface-foreground: oklch(99.11% 0.006 40.24);
+  --surface-secondary: oklch(25.70% 0.009 40.24);
+  --surface-secondary-foreground: oklch(99.11% 0.006 40.24);
+  --surface-tertiary: oklch(27.21% 0.009 40.24);
+  --surface-tertiary-foreground: oklch(99.11% 0.006 40.24);
+  --warning: oklch(82.03% 0.1405 50.71);
+  --warning-foreground: oklch(21.03% 0.0059 50.71);
+
+  /* Glass Tones — DNF */
+  --glass-surface: oklch(21.03% 0.012 40.24 / 0.45);
+  --glass-surface-strong: oklch(27.40% 0.006 40.24 / 0.65);
+  --glass-border: oklch(28.00% 0.006 40.24 / 0.5);
+  --glass-shadow: oklch(0% 0 0 / 0.4);
+  --glass-blur: 16px;
+  --glass-saturation: 160%;
 }
 
 @theme inline {
-	--color-background: var(--background);
-	--color-foreground: var(--foreground);
-	--font-sans: var(--font-geist-sans);
-	--font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-	:root {
-		--background: #0a0a0a;
-		--foreground: #ededed;
-	}
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-glass-surface: var(--glass-surface);
+  --color-glass-surface-strong: var(--glass-surface-strong);
+  --color-glass-border: var(--glass-border);
+  --font-primary: var(--font-primary);
+  --font-secondary: var(--font-secondary);
 }
 
 body {
-	background: var(--background);
-	color: var(--foreground);
-	font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+
+.glass {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+}
+
+.glass-strong {
+  background: var(--glass-surface-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+}
+
+@supports not (
+    (backdrop-filter: blur(1px)) or
+    (-webkit-backdrop-filter: blur(1px))
+  ) {
+  .glass,
+  .glass-strong {
+    background: var(--surface);
+  }
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-custom::-webkit-scrollbar {
+  width: 6px;
+  z-index: 999;
+}
+
+.scrollbar-custom::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.scrollbar-custom::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 3px;
+}
+
+.scrollbar-thick::-webkit-scrollbar {
+  width: 10px;
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.scrollbar-dark::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.scrollbar-hidden::-webkit-scrollbar {
+  display: none;
 }

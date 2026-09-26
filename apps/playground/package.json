@@ -8,13 +8,13 @@
     "build": "next build",
     "start": "next start"
   },
-	"dependencies": {
-		"next": "16.3.6",
-		"react": "19.2.8",
-		"react-dom": "19.2.8",
-		"@heroui/react": "^3.2.6",
-		"@heroui/styles": "^3.2.6"
-	},
+  "dependencies": {
+    "next": "16.3.6",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "@heroui/react": "^3.2.6",
+    "@heroui/styles": "^3.2.6"
+  },
   "devDependencies": {
     "@motion/typescript-config": "*",
     "@tailwindcss/postcss": "^4",

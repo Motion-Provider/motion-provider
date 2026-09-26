@@ -6,16 +6,16 @@ export { MotionLink } from "./components/motion-link.js";
 export { MotionMovie } from "./components/motion-movie.js";
 export { MotionText } from "./components/motion-text.js";
 export {
-	createMotionConfig,
-	createMotionGetter,
-	createMotionRegistry,
-	getMotionAnimation,
+  createMotionConfig,
+  createMotionGetter,
+  createMotionRegistry,
+  getMotionAnimation,
 } from "./config.js";
 export { useReducedMotion } from "./hooks/use-reduced-motion.js";
 export {
-	useAnimation,
-	useAnimationControl,
-	useAnimationMixer,
-	useController,
+  useAnimation,
+  useAnimationControl,
+  useAnimationMixer,
+  useController,
 } from "./hooks.js";
 export type * from "./types.js";

@@ -12,57 +12,57 @@ import { MotionContainer } from "./motion-container.js";
  * Stagger offsets are added independently to every item's explicit delay, including zero.
  */
 export function MotionChain({
-	animations,
-	animation,
-	config = {},
-	children,
-	controller,
-	elementType = "div",
-	...props
+  animations,
+  animation,
+  config = {},
+  children,
+  controller,
+  elementType = "div",
+  ...props
 }: MotionChainProps) {
-	const items = Children.toArray(children);
+  const items = Children.toArray(children);
 
-	invariant(
-		items.length > 0,
-		"CHAIN_EMPTY",
-		"Provide at least one child to MotionChain.",
-	);
-	invariant(
-		!!animation !== !!animations,
-		"CHAIN_ANIMATION",
-		"Provide exactly one of animation or animations.",
-	);
-	invariant(
-		!animations || animations.length === items.length,
-		"CHAIN_LENGTH",
-		`Expected ${items.length} animations; received ${animations?.length}.`,
-	);
+  invariant(
+    items.length > 0,
+    "CHAIN_EMPTY",
+    "Provide at least one child to MotionChain.",
+  );
+  invariant(
+    !!animation !== !!animations,
+    "CHAIN_ANIMATION",
+    "Provide exactly one of animation or animations.",
+  );
+  invariant(
+    !animations || animations.length === items.length,
+    "CHAIN_LENGTH",
+    `Expected ${items.length} animations; received ${animations?.length}.`,
+  );
 
-	const offsets = calculateDelays(items.length, {
-		...config,
-		baseDuration: config.duration ?? 0.1,
-		delayLogic: config.customLogic ? "custom" : config.delayLogic,
-	});
+  const offsets = calculateDelays(items.length, {
+    ...config,
+    baseDuration: config.duration ?? 0.1,
+    delayLogic: config.customLogic ? "custom" : config.delayLogic,
+  });
 
-	return items.map((child, index) => {
-		const spec = animations?.[index] ?? (animation as MotionAnimationProps);
-		return (
-			<MotionContainer
-				{...props}
-				key={isValidElement(child) ? child.key : index}
-				elementType={elementType}
-				animation={{
-					...spec,
-					delay: (spec.delay ?? 0) + (offsets[index] ?? 0),
-				}}
-				controller={
-					controller ?? {
-						trigger: true,
-					}
-				}
-			>
-				{child}
-			</MotionContainer>
-		);
-	});
+  return items.map((child, index) => {
+    const spec = animations?.[index] ?? (animation as MotionAnimationProps);
+    return (
+      <MotionContainer
+        {...props}
+        key={isValidElement(child) ? child.key : index}
+        elementType={elementType}
+        animation={{
+          ...spec,
+          delay: (spec.delay ?? 0) + (offsets[index] ?? 0),
+        }}
+        controller={
+          controller ?? {
+            trigger: true,
+          }
+        }
+      >
+        {child}
+      </MotionContainer>
+    );
+  });
 }

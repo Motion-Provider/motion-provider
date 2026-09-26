@@ -1,14 +1,14 @@
 {
-	"name": "scripts",
-	"version": "1.0.0",
-	"description": "test scripts for motion-provider.",
-	"type": "module",
-	"scripts": {
-		"size": "node src/size.mjs",
-		"demo": "node src/demo.mjs"
-	},
-	"devDependencies": {
-		"@motion/typescript-config": "*",
-		"typescript": "^7.0.2"
-	}
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "test scripts for motion-provider.",
+  "type": "module",
+  "scripts": {
+    "size": "node src/size.mjs",
+    "demo": "node src/demo.mjs"
+  },
+  "devDependencies": {
+    "@motion/typescript-config": "*",
+    "typescript": "^7.0.2"
+  }
 }

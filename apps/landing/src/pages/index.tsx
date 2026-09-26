@@ -1,28 +1,41 @@
-import { Chip } from "@heroui/react";
-import { Motion } from "motion-provider";
-import { fadeIn } from "motion-provider/presets";
-import { Geist, Geist_Mono } from "next/font/google";
+import { ContainerWrapper } from "@/components/container";
+import { fontPrimary, fontSecondary } from "@/lib/fonts";
+import { cn } from "@/lib/utils";
 
-const geistSans = Geist({
-	variable: "--font-geist-sans",
-	subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-	variable: "--font-geist-mono",
-	subsets: ["latin"],
-});
+import HeroSection from "@/sections/hero-section";
 
 export default function Home() {
-	return (
-		<div
-			className={`${geistSans.variable} ${geistMono.variable} flex min-h-screen items-center justify-center font-sans`}
-		>
-			<Motion definition={fadeIn} elementType="div">
-				<Chip color="success" variant="soft">
-					Motion Provider
-				</Chip>
-			</Motion>
-		</div>
-	);
+  return (
+    <ContainerWrapper
+      as="div"
+      width="screen"
+      radius="none"
+      surface="glass"
+      frame={{
+        sides: ["bottom", "left", "right", "top"],
+      }}
+      grid={{
+        axis: "horizontal",
+        size: 132,
+        opacity: 0.8,
+        lineWidth: 1,
+        className: "pointer-events-none",
+      }}
+      scales={{
+        sides: ["left", "right"],
+        size: 8,
+        thickness: 48,
+        opacity: 0.9,
+        orientation: "diagonal",
+      }}
+      className={cn(
+        fontPrimary.variable,
+        fontSecondary.variable,
+        "font-primary mx-auto w-360",
+      )}
+      innerClassName="relative grid min-h-dvh w-full min-w-0 place-items-center"
+    >
+      <HeroSection />
+    </ContainerWrapper>
+  );
 }

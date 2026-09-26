@@ -1,35 +1,35 @@
 {
-	"name": "motion-provider-turborepo",
-	"private": true,
-	"scripts": {
-		"build": "turbo run build",
-		"dev": "turbo run dev",
-		"format": "biome format --write .",
-		"lint": "biome lint .",
-		"check": "biome check --write ."
-	},
-	"devDependencies": {
-		"@biomejs/biome": "2.5.14",
-		"esbuild": "^0.28.1",
-		"turbo": "^2.11.2",
-		"typescript": "^7.0.2"
-	},
-	"engines": {
-		"node": ">=24"
-	},
-	"devEngines": {
-		"packageManager": {
-			"name": "npm",
-			"version": "12.1.0"
-		}
-	},
-	"workspaces": [
-		"apps/*",
-		"packages/*",
-		"scripts/*",
-		"tests/*"
-	],
-	"allowScripts": {
-		"esbuild@0.28.0": true
-	}
+  "name": "motion-provider-turborepo",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "format": "biome format --write .",
+    "lint": "biome lint .",
+    "check": "biome check --write ."
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.14",
+    "esbuild": "^0.28.1",
+    "turbo": "^2.11.2",
+    "typescript": "^7.0.2"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "12.1.0"
+    }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "scripts/*",
+    "tests/*"
+  ],
+  "allowScripts": {
+    "esbuild@0.28.0": true
+  }
 }
