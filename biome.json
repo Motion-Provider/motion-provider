@@ -24,7 +24,13 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "preset": "recommended"
+      "preset": "recommended",
+      "correctness": {
+        "noUnusedImports": {
+          "fix": "safe",
+          "level": "on"
+        }
+      }
     },
     "domains": {
       "next": "recommended",

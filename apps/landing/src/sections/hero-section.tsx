@@ -1,23 +1,11 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { CopyIcon, PlayIcon } from "lucide-react";
-import { useAnimationControl } from "motion-provider";
 import { Circle } from "@/components/circle";
 
 export default function HeroSection() {
-  const controls = useAnimationControl();
-
-  function handleClick() {
-    const status = controls.getSnapshot();
-    if (status === "play") {
-      controls.reverse();
-    }
-    if (status === "reverse" || !status) {
-      controls.play();
-    }
-  }
   return (
-    <main className="max-w-7xl place-items-center-safe grid w-full mx-auto max-h-screen relative">
-      <Circle controls={controls} />
+    <main className="flex items-center-safe justify-center-safe flex-col h-screen relative overflow-y-clip">
+      <Circle />
       <Chip
         variant="soft"
         color="accent"
@@ -28,14 +16,12 @@ export default function HeroSection() {
       </Chip>
       <h1 className="max-w-5xl text-balance text-6xl font-bold leading-[0.95] tracking-tighter text-foreground sm:text-7xl lg:text-8xl inline-flex items-center selection:bg-transparent">
         M
-        <PlayIcon
-          className="size-20 stroke-4 -mx-1.25 cursor-pointer"
-          onClick={handleClick}
-        />
+        <PlayIcon className="size-20 stroke-4 -mx-1.25 cursor-pointer" />
         tion Provider
       </h1>
-      <p className="mt-4 max-w-xl text-center text-balance tracking-tight text-md  text-muted">
-        Preset-driven React animations powered by the Web Animations API.
+      <p className="mt-4 max-w-155 text-center text-balance tracking-tight text-md text-muted">
+        Preset-driven animation engine for the web powered by the Web Animations
+        API.
       </p>
       <div className="mt-4">
         <Button

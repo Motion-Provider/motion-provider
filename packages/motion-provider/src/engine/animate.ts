@@ -85,7 +85,7 @@ export function animateElement(
     if (!reduced && typeof element.animate === "function") {
       for (const frames of compileTracks(compiled)) {
         const effect = element.animate(frames, timing);
-        // Attach immediately, cancellation during Strict Mode must never reject unobserved.
+
         void effect.finished.catch(() => {});
 
         effects.push(effect);

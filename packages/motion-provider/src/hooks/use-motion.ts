@@ -15,6 +15,7 @@ import type {
   Timing,
 } from "../types.js";
 import { useLatest } from "./use-latest.js";
+
 /** Attach effects after commit; cleanup owns every animation, observer, and scroll subscription. */
 export function useMotion(
   ref: RefObject<HTMLElement | SVGElement | null>,
@@ -66,6 +67,7 @@ export function useMotion(
 
   const hasScroll = !!scroll,
     reducedMotion = props.reducedMotion;
+
   useEffect(() => {
     if (!ref.current) return;
     const animation = animateElement(ref.current, spec.definition, {
