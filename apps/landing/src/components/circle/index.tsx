@@ -1,11 +1,6 @@
-﻿"use client";
-
-import {
-  type MotionAnimationProps,
-  MotionChain,
-  useController,
-} from "motion-provider";
+﻿import { type MotionAnimationProps, MotionChain } from "motion-provider";
 import { cn } from "@/lib/utils";
+import { useCircle } from "@/providers/circle.provider";
 import config from "./config";
 
 const { beginRadius, endRadius, holeRadius } = config;
@@ -29,10 +24,8 @@ function getTriangleItems(jobsCount: number) {
 function getTrianglePoints(cx: number, cy: number, radius: number) {
   return Array.from({ length: 3 }, (_, i) => {
     const angle = ((i * 120 - 90) * Math.PI) / 180;
-
     const x = cx + radius * Math.cos(angle);
     const y = cy + radius * Math.sin(angle);
-
     return `${x},${y}`;
   }).join(" ");
 }
@@ -47,65 +40,43 @@ const animations: readonly MotionAnimationProps[] = items.map((_, i) => ({
 }));
 
 export function Circle() {
-  const controls = useController();
-
-  function handleToggle() {
-    const snapshot = controls.getSnapshot();
-
-    if (snapshot === "play" || !snapshot) return controls.reverse();
-
-    return controls.play();
-  }
+  const { controller, svgRef } = useCircle();
 
   return (
-    <>
-      <button
-        onClick={handleToggle}
-        className="absolute top-24 z-999"
-        type="button"
-      >
-        toggle
-      </button>
-
-      <div
-        className="absolute size-lvw flex items-center-safe justify-center-safe pointer-events-none -z-20"
-        style={{ perspective: "520px", perspectiveOrigin: "50% 60%" }}
-      >
-        <div className="inset-0 z-10 absolute size-full bg-linear-to-b from-transparent to-background/50" />
-
-        <div className="relative size-full flex items-center-safe justify-center-safe transform-[rotateX(36deg)] transform-3d overflow-hidden">
-          {/* biome-ignore lint/a11y/noSvgWithoutTitle: dynamic svg */}
-          <svg
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-            className="size-full z-30 pointer-events-auto"
+    <div
+      className="absolute size-full pointer-events-none -mt-36"
+      style={{ perspective: "520px", perspectiveOrigin: "50% 60%" }}
+    >
+      <div className="relative size-full flex items-center-safe justify-center-safe transform-[rotateX(40deg)] transform-3d">
+        {/* biome-ignore lint/a11y/noSvgWithoutTitle: dynamic svg */}
+        <svg
+          ref={svgRef}
+          viewBox="0 0 100 100"
+          xmlns="http://www.w3.org/2000/svg"
+          className="size-full z-30 pointer-events-none"
+        >
+          <MotionChain
+            animations={animations}
+            config={{ duration: STAGGER_S, delayLogic: "linear" }}
+            controller={controller}
+            elementType="g"
           >
-            <MotionChain
-              animations={animations}
-              config={{ duration: STAGGER_S, delayLogic: "linear" }}
-              controller={{
-                controls,
-                trigger: true,
-              }}
-              elementType="g"
-            >
-              {items.map(({ radius, id }) => (
-                <polygon
-                  key={id}
-                  points={getTrianglePoints(cx, cy, radius - rSub)}
-                  className={cn(
-                    "z-30",
-                    id % 2 === 0 ? "text-accent/25" : "text-accent/50",
-                  )}
-                  stroke="currentColor"
-                  fill="none"
-                  strokeWidth={strokeWidth}
-                />
-              ))}
-            </MotionChain>
-          </svg>
-        </div>
+            {items.map(({ radius, id }) => (
+              <polygon
+                key={id}
+                points={getTrianglePoints(cx, cy, radius - rSub)}
+                className={cn(
+                  "z-30",
+                  id % 2 === 0 ? "text-accent/25" : "text-accent/50",
+                )}
+                stroke="currentColor"
+                fill="none"
+                strokeWidth={strokeWidth}
+              />
+            ))}
+          </MotionChain>
+        </svg>
       </div>
-    </>
+    </div>
   );
 }

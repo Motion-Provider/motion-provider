@@ -185,7 +185,6 @@ export function ContainerWrapper<T extends React.ElementType = "div">({
         className,
       )}
     >
-      {/* Decorative rails */}
       {scales !== false &&
         scaleSides.map((side) => {
           const thickness = scales.thickness ?? 32;
@@ -254,7 +253,7 @@ export function ContainerWrapper<T extends React.ElementType = "div">({
         )}
       >
         {grid !== false && <GridLines {...grid} />}
-        <div className="relative z-10">{children}</div>
+        {children}
       </div>
     </Component>
   );
