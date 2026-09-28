@@ -20,8 +20,8 @@ export default function HeroSection() {
         tion Provider
       </h1>
       <p className="mt-4 max-w-155 text-center text-balance tracking-tight text-md text-muted">
-        Preset-driven animation engine for the web powered by the Web Animations
-        API.
+        Preset-driven animation engine for the web, powered by the Web
+        Animations API.
       </p>
       <div className="mt-4">
         <Button

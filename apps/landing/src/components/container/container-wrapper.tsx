@@ -14,6 +14,9 @@ type ContainerWidth =
   | "2xl"
   | "3xl"
   | "4xl"
+  | "5xl"
+  | "6xl"
+  | "7xl"
   | "screen";
 
 type ContainerRadius = "none" | "sm" | "md" | "lg" | "xl" | "2xl" | "3xl";
@@ -27,9 +30,9 @@ const widthClasses: Record<ContainerWidth, string> = {
   "2xl": "max-w-2xl",
   "3xl": "max-w-3xl",
   "4xl": "max-w-4xl",
-
-  // Deliberately larger than Tailwind's default max-w-7xl.
-  // This is very close to the ~1536px visual frame in the screenshot.
+  "5xl": "max-w-5xl",
+  "6xl": "max-w-6xl",
+  "7xl": "max-w-7xl",
   screen: "max-w-[1536px]",
 };
 
