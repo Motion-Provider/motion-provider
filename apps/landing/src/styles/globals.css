@@ -101,6 +101,7 @@
   --color-glass-border: var(--glass-border);
   --font-primary: var(--font-primary);
   --font-secondary: var(--font-secondary);
+  --font-annotation: var(--font-annotation);
 }
 
 body {

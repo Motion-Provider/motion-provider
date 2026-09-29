@@ -4,7 +4,6 @@ import {
   createContext,
   type RefObject,
   useContext,
-  useMemo,
   useRef,
   useState,
 } from "react";
@@ -97,7 +96,7 @@ export function CircleProvider({ children }: { children: React.ReactNode }) {
 
   const controller = useController();
   const svgRef = useRef<SVGSVGElement>(null);
-  const progress = useMemo(() => createProgressStore(svgRef), []);
+  const progress = createProgressStore(svgRef);
 
   return (
     <CircleContext.Provider

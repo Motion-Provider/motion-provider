@@ -1,4 +1,4 @@
-﻿import { Geist_Mono, Sora } from "next/font/google";
+﻿import { Caveat, Geist_Mono, Sora } from "next/font/google";
 
 const fontPrimary = Sora({
   variable: "--font-primary",
@@ -13,4 +13,10 @@ const fontSecondary = Geist_Mono({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
 });
 
-export { fontPrimary, fontSecondary };
+const fontAnnotation = Caveat({
+  variable: "--font-annotation",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+export { fontAnnotation, fontPrimary, fontSecondary };

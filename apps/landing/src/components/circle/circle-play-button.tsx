@@ -1,5 +1,5 @@
 ﻿import { PauseIcon, PlayIcon } from "lucide-react";
-import { MotionContainer } from "motion-provider";
+import { type ControlAction, MotionContainer } from "motion-provider";
 import { useEffect, useSyncExternalStore } from "react";
 import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
@@ -9,7 +9,7 @@ const iconClassName =
 
 export function CirclePlayButton() {
   const { controller } = useCircle();
-  const animationState = useSyncExternalStore(
+  const animationState = useSyncExternalStore<ControlAction | undefined>(
     controller.subscribe,
     controller.getSnapshot,
     controller.getSnapshot,

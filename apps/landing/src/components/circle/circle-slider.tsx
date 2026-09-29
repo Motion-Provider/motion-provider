@@ -1,11 +1,9 @@
-﻿// components/circle-slider.tsx
-"use client";
-
-import { Label, Slider } from "@heroui/react";
+﻿import { Label, Slider } from "@heroui/react";
 import { useSyncExternalStore } from "react";
+import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
 
-export function CircleSlider() {
+export function CircleSlider({ className }: { className?: string }) {
   const { controller, progress } = useCircle();
 
   const value = useSyncExternalStore(
@@ -20,7 +18,12 @@ export function CircleSlider() {
   }
 
   return (
-    <div className="flex h-64 items-center justify-center absolute top-24 right-24 font-secondary">
+    <div
+      className={cn(
+        "flex h-64 items-center justify-center absolute top-8 right-8 font-secondary",
+        className,
+      )}
+    >
       <Slider
         className="h-full"
         value={Math.round(value * 100)}
@@ -30,9 +33,9 @@ export function CircleSlider() {
         maxValue={100}
         step={1}
       >
-        <Label>Seek</Label>
-        <Slider.Output />
-        <Slider.Track>
+        <Label className="text-muted">Seek</Label>
+        <Slider.Output className="text-muted" />
+        <Slider.Track className="bg-glass-surface">
           <Slider.Fill />
           <Slider.Thumb />
         </Slider.Track>

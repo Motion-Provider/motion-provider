@@ -1,7 +1,9 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { CopyIcon } from "lucide-react";
 import { Circle } from "@/components/circle";
+import { CircleAnnotation } from "@/components/circle/circle-annotation";
 import { CirclePlayButton } from "@/components/circle/circle-play-button";
+import { CircleProgress } from "@/components/circle/circle-progress";
 import { CircleSlider } from "@/components/circle/circle-slider";
 import { ContainerWrapper } from "@/components/container";
 import { CircleProvider } from "@/providers/circle.provider";
@@ -32,7 +34,7 @@ export default function HeroSection() {
     >
       <CircleProvider>
         <Circle />
-        <CircleSlider />
+        <CircleSlider className="top-12 right-12" />
         <div className="items-center flex flex-col px-4 relative -mt-16">
           <Chip
             variant="soft"
@@ -44,8 +46,13 @@ export default function HeroSection() {
           </Chip>
           <h1 className="max-w-5xl text-balance text-6xl font-bold leading-[0.95] tracking-tighter text-foreground sm:text-7xl lg:text-8xl inline-flex items-center selection:bg-transparent">
             M
-            <CirclePlayButton />
-            tion Provider
+            <span className="relative inline-flex items-center">
+              <CirclePlayButton />
+              <CircleAnnotation />
+            </span>
+            tion Pr
+            <CircleProgress className="shrink-0" />
+            vider
           </h1>
           <p className="mt-4 max-w-155 text-center text-balance tracking-tight text-md text-muted">
             Preset-driven animation engine for the web, powered by the Web
