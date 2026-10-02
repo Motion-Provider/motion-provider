@@ -20,7 +20,7 @@ export function CircleSlider({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex h-64 items-center justify-center absolute font-secondary",
+        "flex h-64 items-center justify-center font-secondary",
         className,
       )}
     >

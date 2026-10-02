@@ -2,6 +2,7 @@
 import { CopyIcon } from "lucide-react";
 import { Circle } from "@/components/circle";
 import { CircleAnnotation } from "@/components/circle/circle-annotation";
+import { CircleCodeSnippet } from "@/components/circle/circle-code-snippet";
 import { CirclePlayButton } from "@/components/circle/circle-play-button";
 import { CircleProgress } from "@/components/circle/circle-progress";
 import { CircleSelect } from "@/components/circle/circle-select";
@@ -35,9 +36,12 @@ export default function HeroSection() {
     >
       <CircleProvider>
         <Circle />
-        <CircleSlider className="top-12 right-16 perspective-distant will-change-transform" />
-        <CircleSelect className="absolute top-12 -translate-x-1/2 right-1/2 z-50" />
-        <div className="items-center flex flex-col px-4 relative -mt-16">
+        <CircleCodeSnippet className="z-50 rounded-3xl top-12 left-24 absolute" />
+        <div className="top-12 right-16 absolute flex gap-8">
+          <CircleSelect className="z-50" />
+          <CircleSlider className="perspective-distant will-change-transform" />
+        </div>
+        <div className="items-center flex flex-col px-4 relative -mt-16 z-50">
           <Chip
             variant="soft"
             color="accent"

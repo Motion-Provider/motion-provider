@@ -41,12 +41,26 @@
   --radius: 0.25rem;
   --field-radius: 0.75rem;
 
+  /* Glass Tones */
   --glass-surface: oklch(97.02% 0.006 40.24 / 0.55);
   --glass-surface-strong: oklch(100.00% 0.003 40.24 / 0.75);
   --glass-border: oklch(90.00% 0.006 40.24 / 0.4);
   --glass-shadow: oklch(21.03% 0.006 40.24 / 0.12);
   --glass-blur: 16px;
   --glass-saturation: 140%;
+
+  /* Syntax Highlighter */
+  --syntax-bg: var(--surface-secondary);
+  --syntax-plain: var(--surface-foreground);
+  --syntax-comment: oklch(52% 0.012 40.24);
+  --syntax-punctuation: oklch(48% 0.012 40.24);
+  --syntax-keyword: oklch(50% 0.21 0.11);
+  --syntax-string: oklch(46% 0.13 125.18);
+  --syntax-function: oklch(52% 0.15 40.24);
+  --syntax-type: oklch(50% 0.12 46.7);
+  --syntax-constant: oklch(48% 0.17 20);
+  --syntax-attr: oklch(54% 0.14 40.24);
+  --syntax-regex: oklch(50% 0.15 70);
 }
 
 .dark,
@@ -84,13 +98,26 @@
   --warning: oklch(82.03% 0.1405 50.71);
   --warning-foreground: oklch(21.03% 0.0059 50.71);
 
-  /* Glass Tones — DNF */
+  /* Glass Tones */
   --glass-surface: oklch(21.03% 0.012 40.24 / 0.45);
   --glass-surface-strong: oklch(27.40% 0.006 40.24 / 0.65);
   --glass-border: oklch(28.00% 0.006 40.24 / 0.5);
   --glass-shadow: oklch(0% 0 0 / 0.4);
   --glass-blur: 16px;
   --glass-saturation: 160%;
+
+  /* Syntax Highlighter */
+  --syntax-bg: var(--glass-surface);
+  --syntax-plain: var(--surface-foreground);
+  --syntax-comment: var(--muted);
+  --syntax-punctuation: oklch(78% 0.012 40.24);
+  --syntax-keyword: var(--danger);
+  --syntax-string: var(--success);
+  --syntax-function: var(--accent);
+  --syntax-type: var(--warning);
+  --syntax-constant: oklch(78% 0.14 20);
+  --syntax-attr: oklch(80% 0.13 40.24);
+  --syntax-regex: oklch(82% 0.12 70);
 }
 
 @theme inline {

@@ -44,6 +44,7 @@ export function CircleSelect({ className }: { className?: string }) {
       aria-labelledby="Select an animation preset"
       value={currentAvatar}
       selectionMode="single"
+      defaultOpen
       onChange={handleValueChange}
     >
       <Select.Trigger className="bg-glass-surface">
@@ -70,7 +71,7 @@ export function CircleSelect({ className }: { className?: string }) {
         </Select.Value>
         <Select.Indicator />
       </Select.Trigger>
-      <Select.Popover className={"bg-glass-surface backdrop-blur-xl"}>
+      <Select.Popover className="bg-glass-surface backdrop-blur-xl h-48">
         <ListBox>
           {avatars.map((avatar) => (
             <ListBoxItem {...avatar} key={avatar.id} />
@@ -115,7 +116,7 @@ const ListBoxItem = ({
       textValue={title}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className=" data-[focused=true]:bg-accent/10"
+      className="data-[focused=true]:bg-accent/10"
     >
       <MotionContainer
         animation={{
