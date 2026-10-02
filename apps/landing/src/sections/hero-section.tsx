@@ -36,7 +36,7 @@ export default function HeroSection() {
       <CircleProvider>
         <Circle />
         <CircleSlider className="top-12 right-16 perspective-distant will-change-transform" />
-        <CircleSelect className="absolute top-12 translate-x-1/2 left-1/2 z-50" />
+        <CircleSelect className="absolute top-12 -translate-x-1/2 right-1/2 z-50" />
         <div className="items-center flex flex-col px-4 relative -mt-16">
           <Chip
             variant="soft"
