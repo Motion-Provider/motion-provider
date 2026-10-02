@@ -1,46 +1,35 @@
 ﻿import { type MotionAnimationProps, MotionChain } from "motion-provider";
-import { cn } from "@/lib/utils";
+import { useMemo } from "react";
 import { useCircle } from "@/providers/circle.provider";
-import config from "./config";
+import config from "../../constants/circle.config";
+import { CircleItem } from "./circle-item";
 
-const { beginRadius, endRadius, holeRadius } = config;
-const { cx, cy, rSub, strokeWidth } = config.identity;
+const { beginRadius, endRadius, holeRadius, count } = config;
+const {
+  duration: animationDuration,
+  staggerDuration: animationStaggerDuration,
+} = config.animation;
 
-const COUNT = 12;
-const STAGGER_S = 0.24;
-const FADE_S = 2.5;
+const items = Array.from({ length: count }, (_, i) => {
+  const t = i / (count - 1);
 
-function getTriangleItems(jobsCount: number) {
-  return Array.from({ length: jobsCount }, (_, i) => {
-    const t = i / (jobsCount - 1);
-
-    return {
-      radius: holeRadius + (beginRadius + t * (endRadius - beginRadius)),
-      id: i + 1,
-    };
-  });
-}
-
-function getTrianglePoints(cx: number, cy: number, radius: number) {
-  return Array.from({ length: 3 }, (_, i) => {
-    const angle = ((i * 120 - 90) * Math.PI) / 180;
-    const x = cx + radius * Math.cos(angle);
-    const y = cy + radius * Math.sin(angle);
-    return `${x},${y}`;
-  }).join(" ");
-}
-
-const items = getTriangleItems(COUNT);
-
-const animations: readonly MotionAnimationProps[] = items.map((_, i) => ({
-  mode: ["fadeDown", "rotateFlipX"],
-  transition: "bounceSoft",
-  duration: FADE_S,
-  endDelay: (COUNT - 1 - i) * STAGGER_S,
-}));
+  return {
+    radius: holeRadius + (beginRadius + t * (endRadius - beginRadius)),
+    id: i + 1,
+  };
+});
 
 export function Circle() {
-  const { controller, svgRef } = useCircle();
+  const { controller, svgRef, animations, transition } = useCircle();
+
+  const animationConfig: readonly MotionAnimationProps[] = useMemo(() => {
+    return items.map((_, i) => ({
+      mode: animations,
+      transition: transition,
+      duration: animationDuration,
+      endDelay: (count - 1 - i) * animationStaggerDuration,
+    }));
+  }, [animations, transition]);
 
   return (
     <div
@@ -56,23 +45,17 @@ export function Circle() {
           className="size-full z-30 pointer-events-none"
         >
           <MotionChain
-            animations={animations}
-            config={{ duration: STAGGER_S, delayLogic: "linear" }}
+            animations={animationConfig}
+            config={{
+              duration: animationStaggerDuration,
+              delayLogic: "linear",
+            }}
             controller={controller}
             elementType="g"
+            key={animations.join(",")}
           >
-            {items.map(({ radius, id }) => (
-              <polygon
-                key={id}
-                points={getTrianglePoints(cx, cy, radius - rSub)}
-                className={cn(
-                  "z-30",
-                  id % 2 === 0 ? "text-accent/25" : "text-accent/50",
-                )}
-                stroke="currentColor"
-                fill="none"
-                strokeWidth={strokeWidth}
-              />
+            {items.map(({ ...props }) => (
+              <CircleItem key={props.id} {...props} />
             ))}
           </MotionChain>
         </svg>

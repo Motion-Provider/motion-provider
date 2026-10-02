@@ -36,8 +36,8 @@ export function CirclePlayButton() {
       <MotionContainer
         animation={{
           mode: ["fadeIn", "filterBlurIn"],
-          delay: 0.2,
-          transition: "gentle",
+          delay: 0.25,
+          transition: "slowCubic",
         }}
         key={animationState}
       >

@@ -4,6 +4,7 @@ import { Circle } from "@/components/circle";
 import { CircleAnnotation } from "@/components/circle/circle-annotation";
 import { CirclePlayButton } from "@/components/circle/circle-play-button";
 import { CircleProgress } from "@/components/circle/circle-progress";
+import { CircleSelect } from "@/components/circle/circle-select";
 import { CircleSlider } from "@/components/circle/circle-slider";
 import { ContainerWrapper } from "@/components/container";
 import { CircleProvider } from "@/providers/circle.provider";
@@ -34,7 +35,8 @@ export default function HeroSection() {
     >
       <CircleProvider>
         <Circle />
-        <CircleSlider className="top-12 right-12" />
+        <CircleSlider className="top-12 right-16 perspective-distant will-change-transform" />
+        <CircleSelect className="absolute top-12 translate-x-1/2 left-1/2 z-50" />
         <div className="items-center flex flex-col px-4 relative -mt-16">
           <Chip
             variant="soft"

@@ -20,12 +20,12 @@ export function CircleSlider({ className }: { className?: string }) {
   return (
     <div
       className={cn(
-        "flex h-64 items-center justify-center absolute top-8 right-8 font-secondary",
+        "flex h-64 items-center justify-center absolute font-secondary",
         className,
       )}
     >
       <Slider
-        className="h-full"
+        className="h-full translate-z-32 rotate-x-32 skew-2"
         value={Math.round(value * 100)}
         onChange={handleSeekChange}
         orientation="vertical"
@@ -34,11 +34,11 @@ export function CircleSlider({ className }: { className?: string }) {
         step={1}
       >
         <Label className="text-muted">Seek</Label>
-        <Slider.Output className="text-muted" />
         <Slider.Track className="bg-glass-surface">
           <Slider.Fill />
           <Slider.Thumb />
         </Slider.Track>
+        <Slider.Output className="text-muted" />
       </Slider>
     </div>
   );

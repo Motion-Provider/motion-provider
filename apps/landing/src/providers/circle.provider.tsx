@@ -1,4 +1,8 @@
-﻿import type { AnimationController, DelayLogic } from "motion-provider";
+﻿import type {
+  AnimationController,
+  AnimationKeys,
+  TransitionKeys,
+} from "motion-provider";
 import { useController } from "motion-provider";
 import {
   createContext,
@@ -9,7 +13,7 @@ import {
 } from "react";
 import type { SetStateProps } from "@/types";
 
-export interface ProgressStore {
+interface ProgressStore {
   subscribe(listener: () => void): () => void;
   getSnapshot(): number;
   getServerSnapshot(): number;
@@ -28,12 +32,14 @@ function createProgressStore(
 
   const read = (): number => {
     const sample = svgRef.current?.getAnimations({ subtree: true })[0];
+
     const timing = sample?.effect?.getComputedTiming();
     if (!timing) return progress;
 
     const iterations = Number.isFinite(timing.iterations)
       ? Number(timing.iterations)
       : 1;
+
     const total =
       Number(timing.delay ?? 0) +
       Number(timing.duration ?? 0) * iterations +
@@ -73,13 +79,13 @@ function createProgressStore(
 }
 
 export interface CircleContextProps {
-  itemsCount: number;
   controller: AnimationController;
-  delayLogic: DelayLogic;
   progress: ProgressStore;
   svgRef: RefObject<SVGSVGElement | null>;
-  setItemsCount: SetStateProps<number>;
-  setDelayLogic: SetStateProps<DelayLogic>;
+  animations: AnimationKeys[];
+  setAnimations: SetStateProps<AnimationKeys[]>;
+  transition: TransitionKeys;
+  setTransition: SetStateProps<TransitionKeys>;
 }
 
 const CircleContext = createContext<CircleContextProps | undefined>(undefined);
@@ -91,27 +97,32 @@ function useCircle() {
 }
 
 export function CircleProvider({ children }: { children: React.ReactNode }) {
-  const [itemsCount, setItemsCount] = useState<number>(12);
-  const [delayLogic, setDelayLogic] = useState<DelayLogic>("linear");
+  const svgRef = useRef<SVGSVGElement>(null);
+
+  const [transition, setTransition] = useState<TransitionKeys>("bounceSoft");
+  const [animations, setAnimations] = useState<AnimationKeys[]>([
+    "fadeDown",
+    "rotateFlipX",
+  ]);
 
   const controller = useController();
-  const svgRef = useRef<SVGSVGElement>(null);
+
   const progress = createProgressStore(svgRef);
 
   return (
-    <CircleContext.Provider
+    <CircleContext
       value={{
         controller,
-        delayLogic,
-        itemsCount,
         progress,
         svgRef,
-        setDelayLogic,
-        setItemsCount,
+        animations,
+        setAnimations,
+        transition,
+        setTransition,
       }}
     >
       {children}
-    </CircleContext.Provider>
+    </CircleContext>
   );
 }
 export { useCircle, useContext };
