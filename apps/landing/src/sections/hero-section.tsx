@@ -31,12 +31,12 @@ export default function HeroSection() {
         opacity: 0.9,
         orientation: "diagonal",
       }}
-      className="lg:w-[calc(100vw-6rem)] h-screen my-16"
+      className="lg:w-[calc(100vw-6rem)] h-screen"
       innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center"
     >
       <CircleProvider>
         <Circle />
-        <CircleCodeSnippet className="z-50 rounded-3xl top-12 left-24 absolute" />
+        <CircleCodeSnippet className="z-50 top-16 left-24 absolute" />
         <div className="top-12 right-16 absolute flex gap-8">
           <CircleSelect className="z-50" />
           <CircleSlider className="perspective-distant will-change-transform" />
