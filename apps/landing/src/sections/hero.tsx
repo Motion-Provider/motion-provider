@@ -16,7 +16,7 @@ export default function HeroSection() {
       as="main"
       width="screen"
       radius="none"
-      surface="glass"
+      surface="none"
       grid={{
         axis: "horizontal",
         size: 100,
@@ -25,14 +25,14 @@ export default function HeroSection() {
         className: "pointer-events-none",
       }}
       scales={{
-        sides: ["left", "right", "bottom"],
+        sides: ["left", "right"],
         size: 8,
         thickness: 48,
         opacity: 0.9,
         orientation: "diagonal",
       }}
       className="lg:w-[calc(100vw-6rem)] h-screen"
-      innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center"
+      innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center mt-16 z-20"
     >
       <CircleProvider>
         <Circle />

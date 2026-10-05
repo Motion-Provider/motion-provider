@@ -99,7 +99,7 @@ export interface ContainerWrapperProps<T extends React.ElementType = "div"> {
   /**
    * Controls the outer frame borders.
    */
-  frame?: false | ContainerFrameOptions;
+  frame?: ContainerFrameOptions;
 
   /**
    * Controls repeating grid lines inside the frame.
@@ -150,9 +150,7 @@ export function ContainerWrapper<T extends React.ElementType = "div">({
   as,
   children,
   width = "screen",
-  frame = {
-    sides: ["top", "right", "bottom", "left"],
-  },
+  frame,
   grid = false,
   scales = {
     sides: ["left", "right"],
@@ -165,9 +163,6 @@ export function ContainerWrapper<T extends React.ElementType = "div">({
   ...props
 }: Props<T>) {
   const Component = (as ?? "div") as React.ElementType;
-
-  const frameSides =
-    frame === false ? [] : (frame.sides ?? ["top", "right", "bottom", "left"]);
 
   const scaleSides =
     scales === false ? [] : (scales.sides ?? ["left", "right"]);
@@ -247,7 +242,8 @@ export function ContainerWrapper<T extends React.ElementType = "div">({
           radiusClasses[radius],
           surfaceClasses[surface],
           clip && "overflow-hidden",
-          frameSides.map((side) => sideBorderClasses[side]),
+          frame?.sides?.map((side) => sideBorderClasses[side]),
+          frame?.className,
           "border-border/45",
           innerClassName,
         )}
