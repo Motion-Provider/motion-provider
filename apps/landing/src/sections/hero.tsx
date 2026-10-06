@@ -12,66 +12,68 @@ import { CircleProvider } from "@/providers/circle.provider";
 
 export default function HeroSection() {
   return (
-    <ContainerWrapper<"main">
-      as="main"
-      width="screen"
-      radius="none"
-      surface="none"
-      grid={{
-        axis: "horizontal",
-        size: 100,
-        opacity: 0.8,
-        lineWidth: 1,
-        className: "pointer-events-none",
-      }}
-      scales={{
-        sides: ["left", "right"],
-        size: 8,
-        thickness: 48,
-        opacity: 0.9,
-        orientation: "diagonal",
-      }}
-      className="lg:w-[calc(100vw-6rem)] h-screen"
-      innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center mt-16 z-20"
-    >
-      <CircleProvider>
-        <Circle />
-        <CircleCodeSnippet className="z-50 top-16 left-24 absolute" />
-        <div className="top-12 right-16 absolute flex gap-8">
-          <CircleSelect className="z-50" />
-          <CircleSlider className="perspective-distant will-change-transform" />
-        </div>
-        <div className="items-center flex flex-col px-4 relative -mt-16 z-50">
-          <Chip
-            variant="soft"
-            color="accent"
-            size="sm"
-            className="glass border-glass-border mb-6"
-          >
-            🚀 v1.0 — Preset-driven WAAPI animations
-          </Chip>
-          <h1 className="max-w-5xl text-balance text-6xl font-bold leading-[0.95] tracking-tighter text-foreground sm:text-7xl lg:text-8xl inline-flex items-center selection:bg-transparent">
-            M
-            <span className="relative inline-flex items-center">
-              <CirclePlayButton />
-              <CircleAnnotation />
-            </span>
-            tion Pr
-            <CircleProgress className="shrink-0" />
-            vider
-          </h1>
-          <p className="mt-4 max-w-155 text-center text-balance tracking-tight text-md text-muted">
-            Preset-driven animation engine for the web, powered by the Web
-            Animations API.
-          </p>
-          <Button
-            variant="primary"
-            className="rounded-full px-6 font-secondary gap-3 mt-4"
-          >
-            npm i motion-provider <CopyIcon className="size-4" />
-          </Button>
-        </div>
-      </CircleProvider>
-    </ContainerWrapper>
+    <div className="w-full h-screen overflow-x-clip gird place-items-center-safe">
+      <ContainerWrapper<"main">
+        as="main"
+        width="screen"
+        radius="none"
+        surface="none"
+        grid={{
+          axis: "horizontal",
+          size: 100,
+          opacity: 0.8,
+          lineWidth: 1,
+          className: "pointer-events-none",
+        }}
+        scales={{
+          sides: ["left", "right"],
+          size: 8,
+          thickness: 48,
+          opacity: 0.9,
+          orientation: "diagonal",
+        }}
+        className="h-full lg:w-[calc(100vw-6rem)] "
+        innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center mt-16 z-20"
+      >
+        <CircleProvider>
+          <Circle />
+          <CircleCodeSnippet className="z-50 top-16 left-24 absolute" />
+          <div className="top-12 right-16 absolute flex gap-8">
+            <CircleSelect className="z-50" />
+            <CircleSlider className="perspective-distant will-change-transform" />
+          </div>
+          <div className="items-center flex flex-col px-4 relative -mt-16 z-50">
+            <Chip
+              variant="soft"
+              color="accent"
+              size="sm"
+              className="glass border-glass-border mb-6"
+            >
+              🚀 v1.0 — Preset-driven WAAPI animations
+            </Chip>
+            <h1 className="max-w-5xl text-balance text-6xl font-bold leading-[0.95] tracking-tighter text-foreground sm:text-7xl lg:text-8xl inline-flex items-center selection:bg-transparent">
+              M
+              <span className="relative inline-flex items-center">
+                <CirclePlayButton />
+                <CircleAnnotation />
+              </span>
+              tion Pr
+              <CircleProgress className="shrink-0" />
+              vider
+            </h1>
+            <p className="mt-4 max-w-155 text-center text-balance tracking-tight text-md text-muted">
+              Preset-driven animation engine for the web, powered by the Web
+              Animations API.
+            </p>
+            <Button
+              variant="primary"
+              className="rounded-full px-6 font-secondary gap-3 mt-4"
+            >
+              npm i motion-provider <CopyIcon className="size-4" />
+            </Button>
+          </div>
+        </CircleProvider>
+      </ContainerWrapper>
+    </div>
   );
 }

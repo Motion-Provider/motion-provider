@@ -7,15 +7,15 @@ export default function TrustSignals() {
   return (
     <section
       className={cn(
-        "w-full max-w-7xl h-18 bg-surface/50 relative",
+        "w-full max-w-7xl h-18 relative",
         "justify-self-center grid grid-cols-5 grid-flow-col",
-        "gap-2 overflow-hidden rounded-b-2xl",
+        "overflow-hidden rounded-b-2xl",
       )}
     >
+      <div className="absolute top-0 left-0 size-full bg-linear-to-t from-transparent to-background" />
       <MotionChain
         animation={{
           mode: ["fadeDown", "filterBlurIn"],
-          delay: 0.5,
           transition: "bounceSoft",
           duration: 1.5,
         }}
@@ -28,7 +28,7 @@ export default function TrustSignals() {
       >
         {data.map((item) => (
           <SignalCard
-            className="size-full border-border-tertiary/50 z-10"
+            className="size-full border-border-tertiary/50 z-10 hover:bg-surface/50"
             key={item.id}
             {...item}
           />

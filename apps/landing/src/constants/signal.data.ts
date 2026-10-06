@@ -7,8 +7,8 @@
 export default [
   {
     id: 1,
-    title: "Human First Design",
-    desc: "We do want you to enjoy animating web.",
+    title: "Human-first motion",
+    desc: "We want you to enjoy animating the web, not automate it.",
   },
   {
     id: 2,

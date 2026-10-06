@@ -244,7 +244,7 @@ export function ContainerWrapper<T extends React.ElementType = "div">({
           clip && "overflow-hidden",
           frame?.sides?.map((side) => sideBorderClasses[side]),
           frame?.className,
-          "border-border/45",
+          frame?.sides && "border-border/45",
           innerClassName,
         )}
       >
