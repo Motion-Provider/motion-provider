@@ -1,4 +1,4 @@
-﻿import { MotionChain } from "motion-provider";
+﻿import { MotionChain, useAnimation } from "motion-provider";
 import { SignalCard } from "@/components/signal-card";
 import data from "@/constants/signal.data";
 import { cn } from "@/lib/utils";
