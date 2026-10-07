@@ -1,5 +1,5 @@
 ﻿import { ContainerWrapper } from "@/components/container";
-import { cn } from "@/lib/utils";
+import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
 
 export default function Showcase() {
   return (
@@ -17,13 +17,6 @@ export default function Showcase() {
           width="none"
           radius="none"
           surface="glass"
-          grid={{
-            axis: "both",
-            size: 100,
-            opacity: 1,
-            lineWidth: 1,
-            className: "pointer-events-none",
-          }}
           scales={{
             sides: ["right", "bottom", "left", "top"],
             size: 8,
@@ -32,19 +25,9 @@ export default function Showcase() {
             orientation: "diagonal",
           }}
           className="size-full flex flex-row"
-          innerClassName="size-full relative flex overflow-clip items-center-safe justify-center-safe p-2 gap-2"
+          innerClassName="size-full relative flex overflow-clip items-center-safe justify-center-safe"
         >
-          <div
-            className={cn(
-              "w-5/12 h-full justify-items-center grid grid-cols-3 grid-rows-3",
-              "*:even:bg-glass-surface/20 *:even:hover:bg-glass-surface *:odd:bg-background-secondary/20 *:odd:hover:bg-background-secondary",
-              "rounded-2xl overflow-hidden",
-            )}
-          >
-            {[...Array(9)].map((_, i) => (
-              <div key={i} className="size-full backdrop-blur-xl" />
-            ))}
-          </div>
+          <ShowcaseExplorer />
           <div className="w-7/12 h-full border flex">
             <div className="w-7/12 border-r"></div>
             <div className="w-5/12"></div>
