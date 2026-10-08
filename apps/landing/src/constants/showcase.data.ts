@@ -86,7 +86,7 @@ export default [
     type: "lib",
     title: "createMotionRegistry()",
     tagline: "It's just woow",
-    imgSrc: "/assets/backgrounds/motion-container.webp",
+    imgSrc: "/assets/backgrounds/motion-registry.webp",
     desc: "Defines reusable props which allows you to keep your workflow so-called organized",
     Component: MotionContainerDemo,
     snippet: `import { createMotionConfig } from "@/motion/config";
@@ -131,7 +131,7 @@ export default createMotionConfig({
     tagline: "Lighten up version of the container.",
     desc: "Unopinionated wrapper that feels eased. Best for lightweight and simple animations.",
     Component: MotionContainerDemo,
-    imgSrc: "/assets/backgrounds/motion-container.webp",
+    imgSrc: "/assets/backgrounds/motion-motion.webp",
     snippet: `<MotionContainer animation={{ mode: "rotateClockwise" }}>
   <Badge />
 </MotionContainer>`,
@@ -144,7 +144,7 @@ export default createMotionConfig({
     tagline: "One hook to control all animations.",
     desc: "Introducing the controlled animation system which allows you to control the animation lifecycle with a line of code.",
     Component: MotionContainerDemo,
-    imgSrc: "/assets/backgrounds/motion-container.webp",
+    imgSrc: "/assets/backgrounds/motion-hooks.webp",
     snippet: `import { useController } from "motion-provider/hooks";
 
 const controller = useController();`,

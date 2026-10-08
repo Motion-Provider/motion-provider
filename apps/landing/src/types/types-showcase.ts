@@ -17,3 +17,5 @@ export interface ShowcaseItem {
   snippet: string;
   Component: ShowcaseComponent;
 }
+
+export type ShowcaseSelected = ShowcaseItem["id"] | null;

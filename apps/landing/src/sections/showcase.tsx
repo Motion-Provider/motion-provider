@@ -1,5 +1,7 @@
 ﻿import { ContainerWrapper } from "@/components/container";
 import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
+import { ShowcasePreview } from "@/components/showcase/showcase-preview";
+import { ShowcaseProvider } from "@/providers/showcase.provider";
 
 export default function Showcase() {
   return (
@@ -27,11 +29,15 @@ export default function Showcase() {
           className="size-full flex flex-row"
           innerClassName="size-full relative flex overflow-clip items-center-safe justify-center-safe"
         >
-          <ShowcaseExplorer />
-          <div className="w-7/12 h-full border flex">
-            <div className="w-7/12 border-r"></div>
-            <div className="w-5/12"></div>
-          </div>
+          <ShowcaseProvider>
+            <ShowcaseExplorer />
+            <div className="w-7/12 h-full flex">
+              <div className="w-7/12 grid place-items-center overflow-hidden relative">
+                <ShowcasePreview />
+              </div>
+              <div className="w-5/12"></div>
+            </div>
+          </ShowcaseProvider>
         </ContainerWrapper>
       </div>
     </section>

@@ -8,12 +8,12 @@ export default [
   {
     id: 1,
     title: "Human-first motion",
-    desc: "We want you to enjoy animating the web, not automate it.",
+    desc: "We want YOU to enjoy animating the web, not the automated ones.",
   },
   {
     id: 2,
     title: "No Dependencies",
-    desc: "Built solely on top of WAAPI.",
+    desc: "Built solely on top of WAAPI, 0 deps.",
   },
   {
     id: 3,
