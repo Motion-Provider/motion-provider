@@ -1,15 +1,13 @@
-﻿import MotionContainerDemo from "@/components/showcase/demo/motion-container.demo";
-import type { ShowcaseItem } from "@/types/types-showcase";
+﻿import type { ShowcaseItem } from "@/types/types-showcase";
 
 export default [
   {
-    id: "container",
+    id: "motion-container.demo",
     slot: 0,
     type: "component",
     title: "<MotionContainer />",
     tagline: "Wrap anything. It animates on view.",
     desc: "A viewport-triggered wrapper. Drop it around any element, pick a preset, ship.",
-    Component: MotionContainerDemo,
     imgSrc: "/assets/backgrounds/motion-container.webp",
     snippet: `import { MotionContainer } from "motion-provider";
 <MotionContainer animation={{ mode: "fadeIn" }}>
@@ -17,13 +15,12 @@ export default [
 </MotionContainer>`,
   },
   {
-    id: "text",
+    id: "motion-text.demo",
     slot: 1,
     type: "component",
     title: "<MotionText />",
     tagline: "Split. Stagger. Reveal.",
     desc: "Breaks text into pieces and staggers a preset across them. Headlines stop being static, they're more like — ALIVE.",
-    Component: MotionContainerDemo,
     imgSrc: "/assets/backgrounds/motion-text.webp",
     snippet: `import { MotionText } from "motion-provider";
 
@@ -32,14 +29,13 @@ export default [
 </MotionText>`,
   },
   {
-    id: "link",
+    id: "motion-link.demo",
     slot: 2,
     type: "component",
     title: "<MotionLink />",
     tagline: "Click. Hover. Tap.",
     desc: "Mollit do do non sit do anim consequat dolor quis minim laboris consectetur ad ex.",
     imgSrc: "/assets/backgrounds/motion-link.webp",
-    Component: MotionContainerDemo,
     snippet: `import { MotionLink } from "motion-provider";
 
 <MotionLink href="/" animation={{ mode: "filterBlurIn" }}>
@@ -47,13 +43,12 @@ export default [
 </MotionLink>`,
   },
   {
-    id: "image",
+    id: "motion-image.demo",
     slot: 3,
     type: "component",
     title: "<MotionImage />",
     tagline: "One image. Hundreds of pieces.",
     desc: "Fragments an image into a grid of tiles and animates each piece independently using deterministic algorithms.",
-    Component: MotionContainerDemo,
     imgSrc: "/assets/backgrounds/motion-image.webp",
     snippet: `import { MotionImage } from "motion-provider";
 
@@ -64,13 +59,12 @@ export default [
 />`,
   },
   {
-    id: "chain",
+    id: "motion-chain.demo",
     slot: 5,
     type: "component",
     title: "<MotionChain />",
     tagline: "Sequence without timelines.",
     desc: "Animates a group of elements or nodes in sequence. Auto-detects the order & timing.",
-    Component: MotionContainerDemo,
     imgSrc: "/assets/backgrounds/motion-chain.webp",
     snippet: `import { MotionChain } from "motion-provider";
 
@@ -81,14 +75,13 @@ export default [
 </MotionChain>`,
   },
   {
-    id: "registry",
+    id: "motion-registry.demo",
     slot: 6,
     type: "lib",
     title: "createMotionRegistry()",
     tagline: "It's just woow",
     imgSrc: "/assets/backgrounds/motion-registry.webp",
     desc: "Defines reusable props which allows you to keep your workflow so-called organized",
-    Component: MotionContainerDemo,
     snippet: `import { createMotionConfig } from "@/motion/config";
 
 export default createMotionConfig({
@@ -111,7 +104,7 @@ export default createMotionConfig({
       elementType: "p",
       animation: {
         mode: ["fadeIn", "filterBlurIn"],
-        transition: "gentle",asd
+        transition: "gentle",
         delay: 1.5,
         duration: 1.5,
       },
@@ -124,26 +117,24 @@ export default createMotionConfig({
 });`,
   },
   {
-    id: "motion",
+    id: "motion-motion.demo",
     slot: 7,
     type: "component",
     title: "<Motion />",
     tagline: "Lighten up version of the container.",
     desc: "Unopinionated wrapper that feels eased. Best for lightweight and simple animations.",
-    Component: MotionContainerDemo,
     imgSrc: "/assets/backgrounds/motion-motion.webp",
     snippet: `<MotionContainer animation={{ mode: "rotateClockwise" }}>
   <Badge />
 </MotionContainer>`,
   },
   {
-    id: "hooks",
+    id: "motion-hooks.demo",
     slot: 8,
     type: "hook",
     title: "The hooks",
     tagline: "One hook to control all animations.",
     desc: "Introducing the controlled animation system which allows you to control the animation lifecycle with a line of code.",
-    Component: MotionContainerDemo,
     imgSrc: "/assets/backgrounds/motion-hooks.webp",
     snippet: `import { useController } from "motion-provider/hooks";
 

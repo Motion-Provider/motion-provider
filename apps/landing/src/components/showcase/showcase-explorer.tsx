@@ -66,19 +66,20 @@ function Cell({
     setSelected(id);
   }
 
+  const isSelected = selected === id;
+
   return (
     <button
       type="button"
       className={cn(
-        "relative size-full border-accent/50",
-        "border-t border-l group cursor-pointer",
-        "active:scale-95 transition-all will-change-auto",
+        "relative size-full border-accent/50 will-change-auto",
+        "border-t border-l group cursor-pointer active:border",
+        "active:scale-95 transition-all",
         slot >= 5 && "border-b",
         TARGET_SLOT_SET.has(slot) && "border-r",
         slot === 1 && "border-b",
+        isSelected && "border-accent",
       )}
-      onMouseDown={handleSelect}
-      onMouseEnter={handleSelect}
       onClick={handleSelect}
     >
       <CountDigit
@@ -86,10 +87,16 @@ function Cell({
         className={cn(
           "z-50 absolute bottom-1.5 right-1.5 text-default text-shadow-accent",
           "group-hover:text-accent",
-          selected === id && "text-accent",
+          isSelected && "text-accent",
         )}
       />
-      <div className="bg-linear-to-b group-hover:from-accent/30 from-surface/30 to-black absolute top-0 left-0 size-full z-0 transition-colors duration-150" />
+      <div
+        className={cn(
+          "bg-linear-to-b group-hover:from-accent/30 from-surface/30 to-black",
+          "absolute top-0 left-0 size-full z-0 transition-colors duration-150",
+          isSelected && "from-accent/30",
+        )}
+      />
       {imgSrc && (
         <Image
           alt={title}
@@ -109,6 +116,7 @@ function Cell({
             "border-0.5 border-accent bg-accent/15 tracking-tight",
             "group-hover:bg-accent-hover group-hover:text-accent-foreground transition-colors duration-150",
             title.length >= 20 ? "text-[10px]" : "text-xs",
+            isSelected && "bg-accent-hover text-accent-foreground",
           )}
         >
           {title}
