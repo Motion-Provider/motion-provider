@@ -30,7 +30,7 @@ export default [
   },
   {
     id: "motion-link.demo",
-    slot: 2,
+    slot: 5,
     type: "component",
     title: "<MotionLink />",
     tagline: "Click. Hover. Tap.",
@@ -60,7 +60,7 @@ export default [
   },
   {
     id: "motion-chain.demo",
-    slot: 5,
+    slot: 2,
     type: "component",
     title: "<MotionChain />",
     tagline: "Sequence without timelines.",

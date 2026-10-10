@@ -17,7 +17,7 @@ export function ShowcaseExplorer() {
   return (
     <div
       className={cn(
-        "overflow-hidden relative",
+        "overflow-hidden relative rounded-3xl group/grid",
         "w-5/12 h-full justify-items-center grid",
         "grid-cols-3 grid-rows-3",
       )}
@@ -41,8 +41,8 @@ export function ShowcaseExplorer() {
             <Scales
               orientation="diagonal"
               lineWidth={1}
-              opacity={1}
-              color="rgba(255, 132, 87, 0.499)"
+              opacity={0.25}
+              color="var(--color-accent)"
             />
           </div>
         ),
@@ -51,7 +51,10 @@ export function ShowcaseExplorer() {
   );
 }
 
-const TARGET_SLOT_SET: ReadonlySet<number> = new Set<number>([2, 3, 5, 8]);
+const TARGET_BORDER_L: ReadonlySet<number> = new Set<number>([2, 5, 8]);
+const TARGET_BORDER_R: ReadonlySet<number> = new Set<number>([0, 3, 6]);
+const TARGET_BORDER_T: ReadonlySet<number> = new Set<number>([3, 5, 7]);
+const TARGET_BORDER_B: ReadonlySet<number> = new Set<number>([1, 3, 5]);
 
 function Cell({
   id,
@@ -72,12 +75,13 @@ function Cell({
     <button
       type="button"
       className={cn(
-        "relative size-full border-accent/50 will-change-auto",
-        "border-t border-l group cursor-pointer active:border",
-        "active:scale-95 transition-all",
-        slot >= 5 && "border-b",
-        TARGET_SLOT_SET.has(slot) && "border-r",
-        slot === 1 && "border-b",
+        "relative size-full will-change-auto cursor-pointer",
+        "group group-hover/grid:opacity-50 hover:opacity-100",
+        "active:scale-95 transition-all border-accent",
+        TARGET_BORDER_L.has(slot) && "border-l",
+        TARGET_BORDER_R.has(slot) && "border-r",
+        TARGET_BORDER_T.has(slot) && "border-t",
+        TARGET_BORDER_B.has(slot) && "border-b",
         isSelected && "border-accent",
       )}
       onClick={handleSelect}
@@ -86,8 +90,8 @@ function Cell({
         digit={slot + 1}
         className={cn(
           "z-50 absolute bottom-1.5 right-1.5 text-default text-shadow-accent",
-          "group-hover:text-accent",
-          isSelected && "text-accent",
+          "group-hover:text-accent ",
+          isSelected && "text-accent scale-150 transition-all duration-150",
         )}
       />
       <div
