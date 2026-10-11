@@ -33,11 +33,11 @@ export function ShowcaseComponent() {
         )}
       >
         <Suspense key={selected} fallback={<Spinner size="lg" />}>
-          <Demo className="" controller={controller} />
+          <Demo controller={controller} className="mb-8" />
         </Suspense>
       </ErrorBoundary>
       <Button
-        className="absolute top-4 right-4 rounded-full"
+        className="absolute top-6 right-6 rounded-full z-50"
         variant="primary"
         size="md"
         onClick={handleReset}

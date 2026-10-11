@@ -17,8 +17,8 @@ export function ShowcaseExplorer() {
   return (
     <div
       className={cn(
-        "overflow-hidden relative rounded-3xl group/grid",
-        "w-5/12 h-full justify-items-center grid",
+        "overflow-hidden relative rounded-l-3xl group/grid",
+        "w-5/12 h-full justify-items-center grid border-r border-border",
         "grid-cols-3 grid-rows-3",
       )}
     >
@@ -90,8 +90,8 @@ function Cell({
         digit={slot + 1}
         className={cn(
           "z-50 absolute bottom-1.5 right-1.5 text-default text-shadow-accent",
-          "group-hover:text-accent ",
-          isSelected && "text-accent scale-150 transition-all duration-150",
+          "group-hover:text-accent transition-colors duration-150",
+          isSelected && "text-accent",
         )}
       />
       <div
@@ -103,9 +103,9 @@ function Cell({
       />
       {imgSrc && (
         <Image
+          fill
           alt={title}
           src={imgSrc}
-          fill
           preload={false}
           loading="lazy"
           fetchPriority="low"

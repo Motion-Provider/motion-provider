@@ -3,30 +3,15 @@ import { MotionContainer, MotionText } from "motion-provider";
 import data from "@/constants/showcase.data";
 import { useShowcase } from "@/providers/showcase.provider";
 import type { ShowcaseItem } from "@/types/types-showcase";
-import { ContainerWrapper } from "../container";
 import { ShowcaseComponent } from "./showcase-component";
 
 export function ShowcasePreview() {
   return (
-    <>
-      <div className="size-full -z-10 bg-linear-to-b from-transparent to-surface/20" />
-      <ContainerWrapper<"div">
-        as="div"
-        width="lg"
-        grid={{
-          axis: "both",
-          lineWidth: 1,
-          opacity: 0.5,
-          size: 120,
-        }}
-        className="absolute z-10 size-full"
-        innerClassName="size-full relative flex items-center-safe justify-center-safe overflow-hidden"
-      >
-        <SlotDigit />
-        <ShowcaseComponent />
-        <Description />
-      </ContainerWrapper>
-    </>
+    <div className="size-full grid place-items-center overflow-hidden relative">
+      <Description />
+      <ShowcaseComponent />
+      {/* <SlotDigit /> */}
+    </div>
   );
 }
 
@@ -42,34 +27,34 @@ function Description() {
   return (
     <MotionContainer
       animation={{
-        mode: ["fadeUp", "filterBlurIn"],
+        mode: ["fadeDown", "filterBlurIn"],
         duration: 0.8,
         transition: "gentle",
       }}
       key={selected}
-      className="px-2 absolute w-full mt-auto bottom-2"
+      className="absolute w-full mb-auto top-0"
     >
       <Alert
-        className="bg-surface/20 backdrop-blur-2xl z-50 border border-border relative overflow-hidden"
+        className="bg-surface/20 backdrop-blur-2xl z-50 relative overflow-hidden rounded-none"
         status="accent"
       >
         <div className="size-48 blur-2xl absolute top-0 left-0 bg-accent/20" />
         <Alert.Content>
-          <Alert.Title className="font-secondary tracking-widest">
-            {title}
+          <Alert.Title className="font-secondary tracking-widest inline-flex items-center gap-1">
+            {title}{" "}
+            <Chip
+              variant="soft"
+              color="accent"
+              className="rounded-full text-[10px] font-primary tracking-normal"
+              size="sm"
+            >
+              {type}
+            </Chip>
           </Alert.Title>
-          <Alert.Description className="tracking-tighter text-xs">
+          <Alert.Description className="tracking-tighter text-xs max-w-md">
             {desc}
           </Alert.Description>
         </Alert.Content>
-        <Chip
-          variant="soft"
-          color="accent"
-          className="rounded-full text-[10px] font-semibold"
-          size="sm"
-        >
-          {type}
-        </Chip>
       </Alert>
     </MotionContainer>
   );
@@ -95,7 +80,7 @@ function SlotDigit() {
       }}
       key={selected}
       className="text-2xl font-secondary"
-      wrapperClassName="absolute top-4 left-4 text-muted "
+      wrapperClassName="absolute bottom-6 left-6 text-muted "
     >
       {digit}
     </MotionText>

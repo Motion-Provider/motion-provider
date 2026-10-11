@@ -1,4 +1,3 @@
-import { ScrollShadow } from "@heroui/react";
 import { MotionImage } from "motion-provider";
 import Image from "next/image";
 import { useState } from "react";
@@ -19,7 +18,12 @@ export default function MotionImageDemo({
   );
 
   return (
-    <>
+    <div
+      className={cn(
+        "flex gap-8 justify-items-center-safe items-center-safe",
+        className,
+      )}
+    >
       <MotionImage
         config={{
           img: currentImg,
@@ -33,16 +37,17 @@ export default function MotionImageDemo({
           duration: 1,
         }}
         controller={controller}
-        wrapperClassName={cn("size-60 rounded-2xl overflow-hidden", className)}
+        wrapperClassName={cn("size-60 rounded-2xl overflow-hidden")}
       />
-      <ScrollShadow className="max-h-60 flex flex-col absolute right-4 gap-2 scrollbar-none p-1 z-50">
+      <div className="h-auto flex flex-col gap-2 p-1">
         {images.map((src) => (
           <Image
             src={src}
             alt="cover image"
             onClick={() => setCurrentImg(src)}
             className={cn(
-              "size-12 rounded-full transition-transform hover:scale-110 duration-200 active:scale-90",
+              "size-12 rounded-full transition-transform",
+              "hover:scale-110 duration-200 active:scale-90 z-50",
               currentImg === src && "scale-110 border-2 border-accent",
             )}
             width={48}
@@ -50,7 +55,7 @@ export default function MotionImageDemo({
             key={src}
           />
         ))}
-      </ScrollShadow>
-    </>
+      </div>
+    </div>
   );
 }

@@ -1,6 +1,7 @@
 ﻿import { ContainerWrapper } from "@/components/container";
 import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
 import { ShowcasePreview } from "@/components/showcase/showcase-preview";
+import { ShowcaseSnippet } from "@/components/showcase/showcase-snippet";
 import { ShowcaseProvider } from "@/providers/showcase.provider";
 
 export default function Showcase() {
@@ -31,12 +32,21 @@ export default function Showcase() {
         >
           <ShowcaseProvider>
             <ShowcaseExplorer />
-            <div className="w-7/12 h-full flex">
-              <div className="w-7/12 grid place-items-center overflow-hidden relative">
-                <ShowcasePreview />
-              </div>
-              <div className="w-5/12"></div>
-            </div>
+            <ContainerWrapper<"div">
+              as="div"
+              width="lg"
+              grid={{
+                axis: "both",
+                lineWidth: 1,
+                opacity: 0.5,
+                size: 24,
+              }}
+              className="w-7/12 h-full flex"
+              innerClassName="size-full flex items-center-safe justify-center-safe overflow-hidden"
+            >
+              <ShowcasePreview />
+              <ShowcaseSnippet />
+            </ContainerWrapper>
           </ShowcaseProvider>
         </ContainerWrapper>
       </div>

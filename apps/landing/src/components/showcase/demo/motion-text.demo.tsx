@@ -16,7 +16,7 @@ export default function MotionTextDemo({
           delayLogic: "chaotic",
         }}
         controller={controller}
-        wrapperClassName="max-w-50 text-5xl tracking-tighter font-bold"
+        wrapperClassName="max-w-62 text-6xl tracking-tighter font-bold"
       >
         Motion Provider
       </MotionText>

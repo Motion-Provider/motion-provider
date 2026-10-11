@@ -1,7 +1,7 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { CopyIcon } from "lucide-react";
+import { Annotation } from "@/components/annotation";
 import { Circle } from "@/components/circle";
-import { CircleAnnotation } from "@/components/circle/circle-annotation";
 import { CircleCodeSnippet } from "@/components/circle/circle-code-snippet";
 import { CirclePlayButton } from "@/components/circle/circle-play-button";
 import { CircleProgress } from "@/components/circle/circle-progress";
@@ -55,7 +55,10 @@ export default function HeroSection() {
               M
               <span className="relative inline-flex items-center">
                 <CirclePlayButton />
-                <CircleAnnotation />
+                <Annotation
+                  title="Try me"
+                  textClassName="font-annotation -mt-1 -rotate-6 whitespace-nowrap text-xl font-bold leading-none sm:text-2xl lg:text-4xl tracking-wider"
+                />
               </span>
               tion Pr
               <CircleProgress className="shrink-0" />
