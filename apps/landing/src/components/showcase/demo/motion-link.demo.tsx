@@ -8,21 +8,51 @@ import {
   MotionText,
   useController,
 } from "motion-provider";
-import { type ReactNode, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Annotation } from "@/components/annotation";
 import { cn } from "@/lib/utils";
 import type { ShowcaseComponentProps } from "@/types/types-showcase";
 
-export default function MotionLinkDemo({ className }: ShowcaseComponentProps) {
-  const controller = useController();
-  const [activePage, setActivePage] = useState<"a" | "b">("a");
+const TIMEOUT = 1250;
 
-  const navigatePage = (page: "a" | "b") => {
-    setActivePage(page);
+const btnClass =
+  "shrink-0 cursor-pointer rounded-full hover:opacity-70 hover:bg-accent hover:text-accent-foreground text-muted active:scale-95 disabled:opacity-50 disabled:hover:text-muted disabled:hover:bg-transparent disabled:cursor-not-allowed";
+
+type PageId = "a" | "b";
+
+export default function MotionLinkDemo({ className }: ShowcaseComponentProps) {
+  const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const controller = useController();
+
+  const [activePage, setActivePage] = useState<PageId>("a");
+  const [isTransitioning, setIsTransitioning] = useState<boolean>(false);
+
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+        timeoutRef.current = null;
+      }
+    };
+  }, []);
+
+  const navigatePage = (page: PageId): void => {
+    if (timeoutRef.current || page === activePage) return;
+
+    setIsTransitioning(true);
+    controller.reverse();
+
+    timeoutRef.current = setTimeout(() => {
+      timeoutRef.current = null;
+      setActivePage(page);
+      setIsTransitioning(false);
+      controller.play();
+    }, TIMEOUT);
   };
 
   return (
     <div
+      aria-busy={isTransitioning}
       className={cn(
         "aspect-video flex flex-col items-center justify-start border rounded-3xl w-7/12 p-2 relative",
         className,
@@ -36,27 +66,35 @@ export default function MotionLinkDemo({ className }: ShowcaseComponentProps) {
         </div>
         <div className="rounded-full w-full items-center justify-center flex bg-surface">
           <span className="text-[11px] text-muted font-secondary tracking-tight">
-            https://www.hub.app/feed
+            {`https://www.hub.app/${activePage === "a" ? "feed" : "post/1"}`}
           </span>
         </div>
         <div className="gap-1 flex items-center-safe justify-center-safe">
           <button
-            onClick={() => navigatePage("a")}
             type="button"
-            className="shrink-0 hover:opacity-70 cursor-pointer rounded-full hover:bg-accent hover:text-accent-foreground text-muted active:scale-95"
+            disabled={isTransitioning || activePage === "a"}
+            onClick={() => navigatePage("a")}
+            aria-label="Go to feed"
+            className={btnClass}
           >
             <ChevronLeftIcon className="size-4.5" />
           </button>
           <button
             type="button"
+            disabled={isTransitioning || activePage === "b"}
             onClick={() => navigatePage("b")}
-            className="shrink-0 hover:opacity-70 cursor-pointer rounded-full hover:bg-accent hover:text-accent-foreground text-muted active:scale-95"
+            aria-label="Go to post"
+            className={btnClass}
           >
             <ChevronRightIcon className="size-4.5" />
           </button>
         </div>
       </div>
-      {activePage === "a" ? <PageA /> : <PageB />}
+      {activePage === "a" ? (
+        <PageA controller={controller} />
+      ) : (
+        <PageB controller={controller} />
+      )}
     </div>
   );
 }
@@ -99,7 +137,7 @@ const SHAPES_B: readonly string[] = [
 ];
 
 const STATS_A: readonly Stat[] = [
-  { text: "♡ 248 likes" },
+  { text: "248 likes" },
   { text: "32 comments" },
 ];
 
@@ -160,6 +198,7 @@ function MockNav({
           duration: 1,
           transition: "gentle",
         }}
+        controller={controller}
       >
         {items.map(({ label, icon }, i) => (
           <div
@@ -186,7 +225,7 @@ function PostHeader({ meta }: { meta: string }) {
   return (
     <div className="flex items-center gap-2 p-2">
       <Avatar
-        initials="AM"
+        initials="BB"
         className="size-6 bg-orange-400/20 text-[8px] font-semibold"
       />
       <div className="min-w-0 flex-1">
@@ -202,10 +241,12 @@ function PostMedia({
   shapes,
   className,
   children,
+  controller,
 }: {
   shapes: readonly string[];
   className: string;
   children: ReactNode;
+  controller: AnimationController;
 }) {
   return (
     <div
@@ -221,6 +262,7 @@ function PostMedia({
           transition: "gentle",
           delay: 0.5,
         }}
+        controller={controller}
       >
         {shapes.map((shape) => (
           <div key={shape} className={shape} />
@@ -231,14 +273,18 @@ function PostMedia({
   );
 }
 
+interface PageComponentProps {
+  controller: AnimationController;
+}
 /* ---------- Mock pages ---------- */
 
-function PageA() {
+function PageA({ controller }: PageComponentProps) {
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground relative">
       {/* Feed layout */}
       <div className="grid min-h-0 flex-1 grid-cols-[64px_minmax(0,1fr)_96px] gap-2 py-2 relative">
         <MockNav
+          controller={controller}
           items={NAV_A}
           activeIndex={0}
           activeClassName="rounded-md bg-accent font-medium text-black"
@@ -255,33 +301,26 @@ function PageA() {
               <b>Motion Provider</b> ✨
             </div>
 
-            <PostMedia shapes={SHAPES_A} className="h-20 p-2">
-              <div className="relative rounded-md bg-background/70 px-2 py-1 backdrop-blur-sm">
+            <PostMedia
+              shapes={SHAPES_A}
+              className="h-20 p-2"
+              controller={controller}
+            >
+              <div className="relative rounded-md bg-background/70 px-2 py-1 backdrop-blur-sm size-auto">
                 <MotionText
                   elementType="p"
                   animation={{
                     mode: ["filterBlurIn", "textShimmer"],
                     delay: 1,
                   }}
+                  controller={controller}
                   wrapperClassName="text-[8px] uppercase tracking-widest text-muted"
                 >
                   Visual journal
                 </MotionText>
-                <MotionText
-                  elementType="p"
-                  animation={{
-                    mode: ["clipUp"],
-                    duration: 0.8,
-                    delay: 1.5,
-                  }}
-                  config={{
-                    mode: "chars",
-                    duration: 0.8,
-                  }}
-                  className="text-sm font-semibold tracking-tight"
-                >
-                  Create boldly.
-                </MotionText>
+                <p className="text-sm font-semibold tracking-tight">
+                  Create boldly
+                </p>
               </div>
             </PostMedia>
 
@@ -302,18 +341,13 @@ function PageA() {
   );
 }
 
-function PageB() {
+function PageB({ controller }: PageComponentProps) {
   return (
     <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground">
       {/* Individual post layout */}
       <div className="min-h-0 flex-1 gap-2 p-2">
         {/* Post and comments */}
         <main className="flex min-w-0 flex-col gap-2 overflow-hidden">
-          <div className="flex items-center gap-1 text-[9px] text-muted">
-            <span>←</span>
-            <span>Back to feed</span>
-          </div>
-
           <article className="min-w-0 overflow-hidden rounded-lg border">
             <PostHeader meta="@alexmorgan · 12 min ago" />
 
@@ -327,7 +361,11 @@ function PageB() {
               </p>
             </div>
 
-            <PostMedia shapes={SHAPES_B} className="h-28 p-3">
+            <PostMedia
+              shapes={SHAPES_B}
+              className="h-28 p-3"
+              controller={controller}
+            >
               <div className="relative">
                 <p className="text-[8px] uppercase tracking-[0.2em] text-muted">
                   Visual journal — 001

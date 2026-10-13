@@ -40,13 +40,51 @@ export default [
     type: "component",
     title: "<MotionLink />",
     tagline: "Click. Hover. Tap.",
-    desc: "Mollit do do non sit do anim consequat dolor quis minim laboris consectetur ad ex.",
+    desc: "Waits for reverse playback of existing animations before navigating. Wire it with useController() to perform seamless transitions between pages.",
     imgSrc: "/assets/backgrounds/motion-link.webp",
-    snippet: `import { MotionLink } from "motion-provider";
+    snippet: `import {
+  MotionText, 
+  MotionContainer, 
+  MotionLink, 
+  useAnimationControl,
+} from "motion-provider";
 
-<MotionLink href="/" animation={{ mode: "filterBlurIn" }}>
-  Home
-</MotionLink>`,
+export default function Page() {
+  const controls = useAnimationControl();
+
+  return (
+    <>
+      <MotionText
+        animation={{
+          mode: ["filterBlurIn", "textShimmer"],
+          delay: 1,
+        }}
+        elementType="h1"  
+        controller={controls}
+      >
+        Make your interface move.
+      </MotionText>
+      <MotionContainer
+        animation={{
+          mode: "fadeUp",
+          delay: 1,
+        }}
+        elementType="p"  
+        controller={controls}
+      >
+        One config. Shared playback. Animated navigation.
+      </MotionContainer>
+      <MotionLink
+        controller={controls}
+        navigate={(href: string) => window.location.assign(href)}
+        onMouseEnter={() => prefetch(link.href)}
+        onFocus={() => prefetch(link.href)}
+      >
+        Navigate Post
+      </MotionLink>
+    </>
+  );
+}`,
   },
   {
     id: "motion-image.demo",
