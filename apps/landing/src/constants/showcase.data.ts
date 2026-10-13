@@ -144,8 +144,9 @@ const animations: MotionAnimationProps[] = elements.map((_, idx) => ({
     title: "createMotionRegistry()",
     tagline: "It's just woow",
     imgSrc: "/assets/backgrounds/motion-registry.webp",
-    desc: "Defines reusable props which allows you to keep your workflow so-called organized",
-    snippet: `import { createMotionConfig } from "@/motion/config";
+    desc: "Defines reusable entry points for animations allowing you to keep your workflow organized. DX friendly and easy to use.",
+    snippet: `// src/motion/hero.config.ts
+import { createMotionConfig } from "@/motion/config";
 
 export default createMotionConfig({
   appHeroTitle: {
@@ -173,11 +174,31 @@ export default createMotionConfig({
       },
     },
   },
-  appHeroLink: {
-    type: "MotionLink",
-    props: { href: "/about", timeout: 10000 },
-  },
-});`,
+  // ... all other animations
+});
+
+// src/lib/motion.ts
+// Bind your app’s getter once
+
+import config from "@/motion/hero.config";
+import { createMotionRegistry } from "motion-provider";
+
+export const { getMotionAnimation } = createMotionRegistry(config);
+
+
+// src/app.tsx
+
+import { getMotionAnimation } from "@/lib/motion";
+
+export default App() {
+  return (
+    <>
+      <MotionText {...getMotionAnimation("appHeroTitle")} />
+      <MotionContainer {...getMotionAnimation("appHeroDescription")} />
+    </>
+  );
+};
+`,
   },
   {
     id: "motion-motion.demo",
