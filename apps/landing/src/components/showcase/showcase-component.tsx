@@ -15,7 +15,7 @@ export function ShowcaseComponent() {
     controller.play();
   }
 
-  if (!selected || !isDemoId(selected)) return null;
+  if (!isDemoId(selected)) return null;
 
   const Demo = getDemo(selected);
 

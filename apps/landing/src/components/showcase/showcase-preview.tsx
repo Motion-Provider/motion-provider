@@ -1,8 +1,9 @@
 ﻿import { Alert, Chip } from "@heroui/react";
-import { MotionContainer, MotionText } from "motion-provider";
+import { MotionContainer } from "motion-provider";
 import data from "@/constants/showcase.data";
 import { useShowcase } from "@/providers/showcase.provider";
 import type { ShowcaseItem } from "@/types/types-showcase";
+import { CountDigit } from "../count-digit";
 import { ShowcaseComponent } from "./showcase-component";
 
 export function ShowcasePreview() {
@@ -10,7 +11,7 @@ export function ShowcasePreview() {
     <div className="size-full grid place-items-center overflow-hidden relative">
       <Description />
       <ShowcaseComponent />
-      {/* <SlotDigit /> */}
+      <SlotDigit />
     </div>
   );
 }
@@ -72,17 +73,11 @@ function SlotDigit() {
   const digit = (slot + 1).toString().padStart(2, "0");
 
   return (
-    <MotionText
-      animation={{ mode: ["fadeDown", "filterBlurIn"] }}
-      config={{
-        mode: "chars",
-        space: 5,
-      }}
-      key={selected}
-      className="text-2xl font-secondary"
-      wrapperClassName="absolute bottom-6 left-6 text-muted "
-    >
-      {digit}
-    </MotionText>
+    <div className="absolute top-12 right-12 bg-linear-to-t from-muted/20 to-transparent bg-clip-text -z-10">
+      <CountDigit
+        digit={digit}
+        className="text-9xl text-transparent font-semibold"
+      />
+    </div>
   );
 }

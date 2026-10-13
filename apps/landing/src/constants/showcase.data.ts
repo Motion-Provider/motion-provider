@@ -8,7 +8,7 @@ export default [
     title: "<MotionContainer />",
     tagline: "Wrap anything. It animates on view.",
     desc: "A viewport-triggered wrapper. Drop it around any element, pick a preset, ship.",
-    imgSrc: "/assets/backgrounds/motion-container.webp",
+    imgSrc: "/assets/backgrounds/motion-container-illustration.webp",
     snippet: `import { MotionContainer } from "motion-provider";
 
 <MotionContainer animation={{ mode: ["fadeIn", "filterBlurIn"] }}>
@@ -22,7 +22,7 @@ export default [
     title: "<MotionText />",
     tagline: "Split. Stagger. Reveal.",
     desc: "Breaks text into pieces and staggers a preset across them. Headlines stop being static, they're more like — ALIVE.",
-    imgSrc: "/assets/backgrounds/motion-text.webp",
+    imgSrc: "/assets/backgrounds/motion-text-illustration.webp",
     snippet: `import { MotionText } from "motion-provider";
 
 <MotionText animation={{ mode: ["flash", "filterBlurIn"] }}
@@ -41,7 +41,7 @@ export default [
     title: "<MotionLink />",
     tagline: "Click. Hover. Tap.",
     desc: "Waits for reverse playback of existing animations before navigating. Wire it with useController() to perform seamless transitions between pages.",
-    imgSrc: "/assets/backgrounds/motion-link.webp",
+    imgSrc: "/assets/backgrounds/motion-link-illustration.webp",
     snippet: `import {
   MotionText, 
   MotionContainer, 
@@ -93,12 +93,12 @@ export default function Page() {
     title: "<MotionImage />",
     tagline: "One image. Hundreds of pieces.",
     desc: "Fragments an image into a grid of tiles and animates each piece independently using deterministic algorithms.",
-    imgSrc: "/assets/backgrounds/motion-image.webp",
+    imgSrc: "/assets/backgrounds/motion-image-illustration.webp",
     snippet: `import { MotionImage } from "motion-provider";
 
 <MotionImage
   config={{
-    img: '/assets/image.webp',
+    img: '/assets/image-illustration.webp',
     pieces: 64,
     delayLogic: "sinusoidal",
     duration: 1.5,
@@ -118,7 +118,7 @@ export default function Page() {
     title: "<MotionChain />",
     tagline: "Sequence without timelines.",
     desc: "Animates a group of elements or nodes in sequence. Auto-detects the order & timing.",
-    imgSrc: "/assets/backgrounds/motion-chain.webp",
+    imgSrc: "/assets/backgrounds/motion-chain-illustration.webp",
     snippet: `import { MotionChain } from "motion-provider";
 import elements from "./data";
 
@@ -142,8 +142,8 @@ const animations: MotionAnimationProps[] = elements.map((_, idx) => ({
     slot: 6,
     type: "lib",
     title: "createMotionRegistry()",
-    tagline: "It's just woow",
-    imgSrc: "/assets/backgrounds/motion-registry.webp",
+    tagline: "Centralize all animations, organize from one space.",
+    imgSrc: "/assets/backgrounds/motion-createregistry-illustration.webp",
     desc: "Defines reusable entry points for animations allowing you to keep your workflow organized. DX friendly and easy to use.",
     snippet: `// src/motion/hero.config.ts
 import { createMotionConfig } from "@/motion/config";
@@ -207,21 +207,63 @@ export default App() {
     title: "<Motion />",
     tagline: "Lighten up version of the container.",
     desc: "Unopinionated wrapper that feels eased. Best for lightweight and simple animations.",
-    imgSrc: "/assets/backgrounds/motion-motion.webp",
-    snippet: `<MotionContainer animation={{ mode: "rotateClockwise" }}>
-  <Badge />
-</MotionContainer>`,
+    imgSrc: "/assets/backgrounds/motion-motion-illustration.webp",
+    snippet: `import { Motion } from "motion-provider";
+import { spin } from "@/motion/presets";
+
+<Motion definition={spin} timing={{ duration: 2 }} />
+
+// or manually define your custom animations
+<Motion
+  definition={{
+    initial: { opacity: 0, y: 24, scale: 0.96 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+  }}
+  timing={{ duration: 0.6, easing: "ease-out" }}
+/>`,
   },
   {
     id: "motion-hooks.demo",
     slot: 8,
     type: "hook",
-    title: "The hooks",
+    title: "useController()",
     tagline: "One hook to control all animations.",
     desc: "Introducing the controlled animation system which allows you to control the animation lifecycle with a line of code.",
-    imgSrc: "/assets/backgrounds/motion-hooks.webp",
-    snippet: `import { useController } from "motion-provider/hooks";
+    imgSrc: "/assets/backgrounds/motion-hooks-illustration.webp",
+    snippet: `import {
+  MotionText, 
+  MotionContainer, 
+  useController,
+} from "motion-provider";
+import { getMotionAnimation } from "@/lib/motion";
 
-const controller = useController();`,
+const titleMotion = getMotionAnimation("appHeroTitle");
+const descMotion = getMotionAnimation("appHeroDescription");
+
+export default function Page() {
+  const controller = useController();
+  const link = getMotionAnimation("appHeroLink");
+
+  return (
+    <>
+      <MotionText {...titleMotion} controller={controller}>
+        Make your interface move.
+      </MotionText>
+      <MotionContainer {...descMotion} controller={controller}>
+        One config. Shared playback. Animate on demand.
+      </MotionContainer>
+
+      <button type="button" onClick={() => {
+        controller.reset();
+        void controller.play();
+      }}>
+        Replay
+      </button>
+      <button type="button" onClick={() => controller.reverse()}>
+        Reverse
+      </button>
+    </>
+  );
+}`,
   },
 ] as const satisfies readonly ShowcaseItem[];

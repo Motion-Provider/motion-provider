@@ -1,6 +1,6 @@
 ﻿import { ScrollShadow } from "@heroui/react";
 import { Highlight } from "prism-react-renderer";
-import { useId, useState } from "react";
+import { useEffect, useEffectEvent, useId, useState } from "react";
 import defaultTheme from "@/constants/highlighter.schema";
 import data from "@/constants/showcase.data";
 import { useShowcase } from "@/providers/showcase.provider";
@@ -13,8 +13,19 @@ const theme = {
 export function ShowcaseSnippet() {
   const { selected } = useShowcase();
   const [expanded, setExpanded] = useState<boolean>(false);
+
   const contentId = useId();
   const snippet = data.find((i) => i.id === selected)?.snippet ?? null;
+
+  const resetExpandedEvent = useEffectEvent(
+    () => expanded && setExpanded(false),
+  );
+
+  useEffect(() => {
+    if (selected === "motion-container.demo") return;
+
+    resetExpandedEvent();
+  }, [selected]);
 
   if (!snippet) return null;
 

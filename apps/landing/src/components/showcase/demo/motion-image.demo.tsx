@@ -14,7 +14,7 @@ export default function MotionImageDemo({
   controller,
 }: ShowcaseComponentProps) {
   const [currentImg, setCurrentImg] = useState<string>(
-    "/assets/backgrounds/motion-image.webp",
+    "/assets/backgrounds/motion-image-illustration.webp",
   );
 
   return (

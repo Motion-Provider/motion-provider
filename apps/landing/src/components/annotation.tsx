@@ -18,8 +18,7 @@ export function Annotation({
     <span
       aria-hidden="true"
       className={cn(
-        "pointer-events-none absolute right-1/2 top-full",
-        "flex select-none flex-col items-end text-accent mt-2",
+        "flex select-none flex-col items-end text-accent mt-2 pointer-events-none",
         className,
       )}
     >

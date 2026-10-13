@@ -103,7 +103,6 @@ export default function MotionLinkDemo({ className }: ShowcaseComponentProps) {
 
 interface NavItem {
   label: string;
-  icon?: string;
 }
 
 interface Stat {
@@ -179,14 +178,10 @@ function Avatar({
 
 function MockNav({
   items,
-  activeIndex,
-  activeClassName,
   footer,
   controller,
 }: {
   items: readonly NavItem[];
-  activeIndex: number;
-  activeClassName: string;
   footer: string;
   controller: AnimationController;
 }) {
@@ -194,21 +189,17 @@ function MockNav({
     <aside className="flex flex-col gap-1 border-r pr-2">
       <MotionChain
         animation={{
-          mode: "fadeDown",
+          mode: "fadeIn",
           duration: 1,
           transition: "gentle",
         }}
         controller={controller}
       >
-        {items.map(({ label, icon }, i) => (
+        {items.map(({ label }) => (
           <div
             key={label}
-            className={cn(
-              "flex items-center gap-1 px-1.5 py-2 text-[9px]",
-              i === activeIndex ? activeClassName : "text-muted",
-            )}
+            className="flex items-center gap-1 px-1.5 py-2 text-[9px]"
           >
-            {icon && <span>{icon}</span>}
             {label}
           </div>
         ))}
@@ -283,13 +274,7 @@ function PageA({ controller }: PageComponentProps) {
     <div className="flex min-h-0 w-full flex-1 flex-col overflow-hidden bg-background text-foreground relative">
       {/* Feed layout */}
       <div className="grid min-h-0 flex-1 grid-cols-[64px_minmax(0,1fr)_96px] gap-2 py-2 relative">
-        <MockNav
-          controller={controller}
-          items={NAV_A}
-          activeIndex={0}
-          activeClassName="rounded-md bg-accent font-medium text-black"
-          footer="Settings"
-        />
+        <MockNav controller={controller} items={NAV_A} footer="Settings" />
 
         {/* Main feed */}
         <main className="min-w-0 overflow-hidden">

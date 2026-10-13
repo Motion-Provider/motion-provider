@@ -57,7 +57,7 @@ export default function HeroSection() {
                 <CirclePlayButton />
                 <Annotation
                   title="Try me"
-                  textClassName="font-annotation -mt-1 -rotate-6 whitespace-nowrap text-xl font-bold leading-none sm:text-2xl lg:text-4xl tracking-wider"
+                  textClassName="font-annotation -mt-1 -rotate-6 whitespace-nowrap text-xl font-bold leading-none sm:text-2xl lg:text-4xl tracking-wider absolute right-1/2 top-full"
                 />
               </span>
               tion Pr

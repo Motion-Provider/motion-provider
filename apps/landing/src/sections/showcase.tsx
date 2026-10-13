@@ -41,6 +41,7 @@ export default function Showcase() {
                 opacity: 0.5,
                 size: 24,
               }}
+              scales={false}
               className="w-7/12 h-full flex"
               innerClassName="size-full flex items-center-safe justify-center-safe overflow-hidden"
             >

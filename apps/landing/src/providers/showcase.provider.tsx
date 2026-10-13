@@ -21,7 +21,9 @@ export function useShowcase() {
 }
 
 export function ShowcaseProvider({ children }: { children: React.ReactNode }) {
-  const [selected, setSelected] = useState<ShowcaseSelected>(null);
+  const [selected, setSelected] = useState<ShowcaseSelected>(
+    "motion-container.demo",
+  );
 
   return (
     <ShowcaseContext value={{ selected, setSelected }}>

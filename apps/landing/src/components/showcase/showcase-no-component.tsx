@@ -2,10 +2,12 @@ import { Annotation } from "../annotation";
 
 export function ShowcaseNoComponent() {
   return (
-    <Annotation
-      title="Navigate me"
-      className="z-50 -rotate-12 scale-90"
-      textClassName="text-xl font-bold tracking-normal"
-    />
+    <div className="relative flex items-center-safe justify-center-safe flex-col">
+      <Annotation
+        title="No Preview available check the snippet Instead."
+        className="z-50 -rotate-180 scale-90 relative"
+        textClassName="text-3xl font-bold tracking-normal rotate-180 w-50 pb-2"
+      />
+    </div>
   );
 }

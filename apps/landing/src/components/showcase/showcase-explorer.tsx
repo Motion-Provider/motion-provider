@@ -75,14 +75,13 @@ function Cell({
     <button
       type="button"
       className={cn(
-        "relative size-full will-change-auto cursor-pointer",
+        "relative size-full will-change-auto cursor-pointer overflow-hidden",
         "group group-hover/grid:opacity-50 hover:opacity-100",
-        "active:scale-95 transition-all border-accent",
+        "active:scale-95 transition-all border-accent/20",
         TARGET_BORDER_L.has(slot) && "border-l",
         TARGET_BORDER_R.has(slot) && "border-r",
         TARGET_BORDER_T.has(slot) && "border-t",
         TARGET_BORDER_B.has(slot) && "border-b",
-        isSelected && "border-accent",
       )}
       onClick={handleSelect}
     >
@@ -109,7 +108,10 @@ function Cell({
           preload={false}
           loading="lazy"
           fetchPriority="low"
-          className="-z-10"
+          className={cn(
+            "-z-10",
+            isSelected && "invert-100 transition-all duration-1000",
+          )}
         />
       )}
       <div className="size-full absolute top-0 left-0 flex flex-col items-start justify-between text-left z-10 p-2 gap-1 pointer-events-none">
