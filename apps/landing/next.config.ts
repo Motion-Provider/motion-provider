@@ -7,9 +7,9 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  // experimental: {
-  //   turbopackRustReactCompiler: true,
-  // },
+  experimental: {
+    turbopackRustReactCompiler: true,
+  },
 };
 
 export default nextConfig;
