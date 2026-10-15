@@ -1,4 +1,5 @@
-﻿import Image from "next/image";
+﻿import { MotionChain } from "motion-provider";
+import Image from "next/image";
 import showcaseData from "@/constants/showcase.data";
 import { cn } from "@/lib/utils";
 import { useShowcase } from "@/providers/showcase.provider";
@@ -22,31 +23,53 @@ export function ShowcaseExplorer() {
         "grid-cols-3 grid-rows-3",
       )}
     >
-      {data.map((item, i) =>
-        item ? (
-          <Cell
-            key={item.id}
-            id={item.id}
-            slot={item.slot}
-            tagline={item.tagline}
-            title={item.title}
-            imgSrc={item.imgSrc}
-          />
-        ) : (
-          <div
-            className="size-full relative"
-            // biome-ignore lint/suspicious/noArrayIndexKey: static item
-            key={i}
-          >
-            <Scales
-              orientation="diagonal"
-              lineWidth={1}
-              opacity={0.25}
-              color="var(--color-accent)"
+      <MotionChain
+        animations={data.map((_, idx) => ({
+          mode: [
+            "filterBlurIn",
+            idx % 2 === 0 ? "fadeLeft" : idx % 3 === 0 ? "fadeUp" : "fadeDown",
+          ],
+          duration: 0.88,
+          transition: "gentle",
+        }))}
+        config={{
+          delayLogic: "linear",
+          duration: 0.24,
+        }}
+        controller={{
+          configView: {
+            once: true,
+            amount: 0.5,
+          },
+        }}
+        className="size-full relative"
+      >
+        {data.map((item, i) =>
+          item ? (
+            <Cell
+              key={item.id}
+              id={item.id}
+              slot={item.slot}
+              tagline={item.tagline}
+              title={item.title}
+              imgSrc={item.imgSrc}
             />
-          </div>
-        ),
-      )}
+          ) : (
+            <div
+              className="size-full relative"
+              // biome-ignore lint/suspicious/noArrayIndexKey: static item
+              key={i}
+            >
+              <Scales
+                orientation="diagonal"
+                lineWidth={1}
+                opacity={0.25}
+                color="var(--color-accent)"
+              />
+            </div>
+          ),
+        )}
+      </MotionChain>
     </div>
   );
 }
@@ -66,6 +89,7 @@ function Cell({
   const { setSelected, selected } = useShowcase();
 
   function handleSelect() {
+    if (selected === id) return;
     setSelected(id);
   }
 
@@ -108,10 +132,7 @@ function Cell({
           preload={false}
           loading="lazy"
           fetchPriority="low"
-          className={cn(
-            "-z-10",
-            isSelected && "invert-100 transition-all duration-1000",
-          )}
+          className="-z-10"
         />
       )}
       <div className="size-full absolute top-0 left-0 flex flex-col items-start justify-between text-left z-10 p-2 gap-1 pointer-events-none">

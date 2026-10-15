@@ -1,6 +1,7 @@
 ﻿import { Alert, Chip } from "@heroui/react";
 import { MotionContainer } from "motion-provider";
 import data from "@/constants/showcase.data";
+import { getAnimation } from "@/lib/motion";
 import { useShowcase } from "@/providers/showcase.provider";
 import type { ShowcaseItem } from "@/types/types-showcase";
 import { CountDigit } from "../count-digit";
@@ -8,7 +9,7 @@ import { ShowcaseComponent } from "./showcase-component";
 
 export function ShowcasePreview() {
   return (
-    <div className="size-full grid place-items-center overflow-hidden relative">
+    <div className="size-full grid place-items-center overflow-hidden relative rounded-r-3xl">
       <Description />
       <ShowcaseComponent />
       <SlotDigit />
@@ -16,6 +17,7 @@ export function ShowcasePreview() {
   );
 }
 
+const descAnimation = getAnimation("showcasePreviewDescription");
 function Description() {
   const { selected } = useShowcase();
 
@@ -27,11 +29,7 @@ function Description() {
 
   return (
     <MotionContainer
-      animation={{
-        mode: ["fadeDown", "filterBlurIn"],
-        duration: 0.8,
-        transition: "gentle",
-      }}
+      {...descAnimation}
       key={selected}
       className="absolute w-full mb-auto top-0"
     >
@@ -42,7 +40,7 @@ function Description() {
         <div className="size-48 blur-2xl absolute top-0 left-0 bg-accent/20" />
         <Alert.Content>
           <Alert.Title className="font-secondary tracking-widest inline-flex items-center gap-1">
-            {title}{" "}
+            {title}
             <Chip
               variant="soft"
               color="accent"
@@ -68,7 +66,7 @@ function SlotDigit() {
     (i) => i.id === selected,
   )?.slot;
 
-  if (Number.isNaN(slot) || typeof slot === "undefined") return null;
+  if (!slot || Number.isNaN(slot)) return null;
 
   const digit = (slot + 1).toString().padStart(2, "0");
 

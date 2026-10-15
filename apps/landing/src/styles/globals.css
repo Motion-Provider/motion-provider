@@ -138,6 +138,11 @@ body {
   scroll-behavior: smooth;
 }
 
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
 .glass {
   background: var(--glass-surface);
   border: 1px solid var(--glass-border);

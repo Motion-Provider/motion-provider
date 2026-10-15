@@ -43,7 +43,7 @@ export default function Showcase() {
               }}
               scales={false}
               className="w-7/12 h-full flex"
-              innerClassName="size-full flex items-center-safe justify-center-safe overflow-hidden"
+              innerClassName="size-full flex items-center-safe justify-center-safe overflow-hidden rounded-r-3xl"
             >
               <ShowcasePreview />
               <ShowcaseSnippet />

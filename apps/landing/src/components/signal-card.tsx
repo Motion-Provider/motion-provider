@@ -11,7 +11,7 @@ export function SignalCard({
   return (
     <div
       className={cn(
-        "flex flex-col items-start justify-start px-3 relative gap-1.5 pb-1 group",
+        "flex flex-col items-start justify-start px-3 relative gap-1.5 pb-1 group *:cursor-default *:pointer-events-none",
         className,
       )}
     >
