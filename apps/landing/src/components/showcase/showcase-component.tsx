@@ -21,6 +21,8 @@ export function ShowcaseComponent() {
 
   const Demo = getDemo(selected);
 
+  const githubURL = `https://github.com/Motion-Provider/motion-provider/blob/main/apps/landing/src/components/showcase/demo/${selected}.tsx`;
+
   return (
     <>
       <ErrorBoundary
@@ -52,8 +54,8 @@ export function ShowcaseComponent() {
             <RotateCcw className="size-4" />
           </MotionContainer>
         </Button>
-        <Link href={"github.com"}>
-          <Button variant="tertiary" isIconOnly>
+        <Link href={githubURL} target="_blank" rel="noopener noreferrer">
+          <Button variant="outline" isIconOnly>
             <GithubIcon />
           </Button>
         </Link>

@@ -3,7 +3,7 @@ import Image from "next/image";
 import showcaseData from "@/constants/showcase.data";
 import { cn } from "@/lib/utils";
 import { useShowcase } from "@/providers/showcase.provider";
-import type { ShowcaseItem } from "@/types/types-showcase";
+import type { ShowcaseItem } from "@/types/showcase.type";
 import { Scales } from "../container";
 import { CountDigit } from "../count-digit";
 

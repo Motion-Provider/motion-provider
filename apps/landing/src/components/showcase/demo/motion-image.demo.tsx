@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useState } from "react";
 import data from "@/constants/showcase.data";
 import { cn } from "@/lib/utils";
-import type { ShowcaseComponentProps } from "@/types/types-showcase";
+import type { ShowcaseComponentProps } from "@/types/showcase.type";
 
 const images = data
   .map(({ imgSrc }, idx) => (idx < 4 ? imgSrc : null))

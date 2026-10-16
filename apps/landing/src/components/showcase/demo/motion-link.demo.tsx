@@ -11,7 +11,7 @@ import {
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { Annotation } from "@/components/annotation";
 import { cn } from "@/lib/utils";
-import type { ShowcaseComponentProps } from "@/types/types-showcase";
+import type { ShowcaseComponentProps } from "@/types/showcase.type";
 
 const TIMEOUT = 1250;
 

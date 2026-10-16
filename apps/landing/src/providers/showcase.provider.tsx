@@ -1,6 +1,6 @@
 ﻿import { createContext, useContext, useState } from "react";
 import type { SetStateProps } from "@/types";
-import type { ShowcaseSelected } from "@/types/types-showcase";
+import type { ShowcaseSelected } from "@/types/showcase.type";
 
 type ShowcaseContext = {
   selected: ShowcaseSelected;

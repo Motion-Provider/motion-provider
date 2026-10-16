@@ -1,6 +1,6 @@
 ﻿import { type ComponentType, type LazyExoticComponent, lazy } from "react";
 import showcase from "@/constants/showcase.data";
-import type { ShowcaseComponentProps } from "@/types/types-showcase";
+import type { ShowcaseComponentProps } from "@/types/showcase.type";
 
 type DemoProps = ShowcaseComponentProps;
 type DemoModule = { default: ComponentType<DemoProps> };

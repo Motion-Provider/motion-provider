@@ -1,5 +1,5 @@
 ﻿import { MotionText } from "motion-provider";
-import type { ShowcaseComponentProps } from "@/types/types-showcase";
+import type { ShowcaseComponentProps } from "@/types/showcase.type";
 
 export default function MotionTextDemo({
   className,

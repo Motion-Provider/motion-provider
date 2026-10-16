@@ -71,22 +71,21 @@
   "peerDependencies": {
     "react": "^19.0.0"
   },
-  "dependencies": {},
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "test": "npm run build && node --test tests/*.test.mjs",
     "test:browser": "node tests/browser/run.mjs",
     "test:compiler": "node scripts/check-compiler.mjs",
-    "size": "node scripts/size.mjs",
+    "size": "node ../../scripts/src/size.mjs",
     "demo": "node scripts/demo.mjs",
     "prepack": "npm run build",
     "check": "npm run typecheck && npm test && npm run test:compiler && npm run size"
   },
   "devDependencies": {
-    "typescript": "^7.0.2",
+    "esbuild": "^0.28.2",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "esbuild": "0.28.0"
+    "typescript": "^7.0.2"
   },
   "license": "MIT"
 }

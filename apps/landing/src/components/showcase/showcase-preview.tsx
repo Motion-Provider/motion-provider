@@ -3,7 +3,7 @@ import { MotionContainer } from "motion-provider";
 import data from "@/constants/showcase.data";
 import { getAnimation } from "@/lib/motion";
 import { useShowcase } from "@/providers/showcase.provider";
-import type { ShowcaseItem } from "@/types/types-showcase";
+import type { ShowcaseItem } from "@/types/showcase.type";
 import { CountDigit } from "../count-digit";
 import { ShowcaseComponent } from "./showcase-component";
 

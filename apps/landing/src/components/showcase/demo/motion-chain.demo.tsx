@@ -1,6 +1,6 @@
 ﻿import { type MotionAnimationProps, MotionChain } from "motion-provider";
 import { cn } from "@/lib/utils";
-import type { ShowcaseComponentProps } from "@/types/types-showcase";
+import type { ShowcaseComponentProps } from "@/types/showcase.type";
 
 const elements = [
   <circle key="circle" cx="60" cy="25" r="6" className="text-blue-500" />,

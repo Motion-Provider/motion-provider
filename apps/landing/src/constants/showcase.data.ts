@@ -1,4 +1,4 @@
-﻿import type { ShowcaseItem } from "@/types/types-showcase";
+﻿import type { ShowcaseItem } from "@/types/showcase.type";
 
 export default [
   {

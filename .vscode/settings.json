@@ -7,7 +7,8 @@
     "https://json.schemastore.org/": true,
     "https://json-schema.org/": true,
     "https://developer.microsoft.com/json-schemas/": true,
-    "https://turborepo.dev/": true
+    "https://turborepo.dev/": true,
+    "https://v2-11-8.turborepo.dev/schema.json": true
   },
 
   "editor.formatOnSave": true,

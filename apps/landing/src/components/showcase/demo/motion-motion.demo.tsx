@@ -1,7 +1,7 @@
 import { SparkleIcon } from "lucide-react";
 import { Motion } from "motion-provider";
 import { spin } from "motion-provider/presets";
-import type { ShowcaseComponentProps } from "@/types/types-showcase";
+import type { ShowcaseComponentProps } from "@/types/showcase.type";
 
 export default function MotionMotionDemo({
   className,
