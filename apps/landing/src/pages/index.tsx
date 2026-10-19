@@ -1,3 +1,4 @@
+import Cta from "@/sections/cta";
 import HeroSection from "@/sections/hero";
 import Metrics from "@/sections/metrics";
 import ShowcaseSection from "@/sections/showcase";
@@ -10,6 +11,7 @@ export default function Home() {
       <TrustSignals />
       <ShowcaseSection />
       <Metrics />
+      <Cta />
     </>
   );
 }

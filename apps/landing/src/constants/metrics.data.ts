@@ -1,6 +1,6 @@
-import SvgAnimatejsLogo from "@/components/animatejs-logo";
-import SvgGsapLogo from "@/components/gsap-logo";
-import MotionLogo from "@/components/motion-logo";
+import SvgAnimatejsLogo from "@/components/icons/animatejs-logo";
+import SvgGsapLogo from "@/components/icons/gsap-logo";
+import MotionLogo from "@/components/icons/motion-logo";
 import type { MetricItem } from "@/types/metrics.type";
 
 export default [

@@ -1,6 +1,6 @@
 import { Chip } from "@heroui/react";
 import { MotionChain } from "motion-provider";
-import { MetricBar } from "@/components/metrics/metric-bar";
+import { MetricBar } from "@/components/metric-bar";
 import metrics from "@/constants/metrics.data";
 import type {
   MetricItem,
@@ -37,7 +37,7 @@ export default function Metrics() {
   return (
     <section
       aria-labelledby="metrics-heading"
-      className="relative min-h-screen w-full max-w-7xl justify-self-center overflow-visible py-28"
+      className="relative min-h-screen w-full max-w-7xl justify-self-center overflow-visible pt-36 pb-28"
     >
       <div className="flex flex-col gap-16">
         <div className="flex h-auto min-h-min flex-col gap-3">
@@ -53,15 +53,15 @@ export default function Metrics() {
             </Chip>{" "}
             ships at{" "}
             <b className="text-white">{formatKb(MOTION_PROVIDER[METRIC])}</b>{" "}
-            gzipped, preset registry included. Motion&apos;s component{" "}
+            gzipped, preset registry included. About{" "}
             <b className="text-white">
               {heavierBy(MOTION_PROVIDER, MOTION_FULL, METRIC)}
-            </b>
-            , GSAP with useGSAP{" "}
+            </b>{" "}
+            smaller than Motion&apos;s component and{" "}
             <b className="text-white">
               {heavierBy(MOTION_PROVIDER, GSAP, METRIC)}
-            </b>
-            .
+            </b>{" "}
+            smaller than GSAP core + useGSAP.
           </p>
         </div>
 
@@ -100,6 +100,8 @@ export default function Metrics() {
           <p className="text-xs text-muted">
             *React excluded, container-level comparison, minified and gzipped
             with esbuild. Feature coverage differs between libraries.
+            Comparisons has been made based on bare minimum reasonable
+            combination of animation APIs.
           </p>
         </div>
       </div>

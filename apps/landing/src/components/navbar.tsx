@@ -1,6 +1,6 @@
 ﻿import NextLink from "next/link";
 import { cn } from "@/lib/utils";
-import { GithubIcon } from "./github-icon";
+import { GithubIcon } from "./icons/github-icon";
 
 const navigation = [
   { label: "Features", href: "#features" },

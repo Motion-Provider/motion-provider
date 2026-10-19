@@ -6,7 +6,7 @@ import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { getDemo, isDemoId } from "@/lib/demo-registry";
 import { useShowcase } from "@/providers/showcase.provider";
-import { GithubIcon } from "../github-icon";
+import { GithubIcon } from "../icons/github-icon";
 
 export function ShowcaseComponent() {
   const { selected } = useShowcase();

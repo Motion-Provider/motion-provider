@@ -4,7 +4,7 @@ import { cn } from "@/lib/utils";
 import type { MetricItem, MetricSizeKey } from "@/types/metrics.type";
 import { formatKb } from "@/utils/formatKb";
 import { getFillStyle } from "@/utils/metrics";
-import { Scales } from "../container";
+import { Scales } from "./container";
 
 interface MetricBarProps {
   readonly item: MetricItem;
