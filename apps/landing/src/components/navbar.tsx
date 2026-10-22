@@ -1,116 +1,133 @@
 ﻿import NextLink from "next/link";
 import { cn } from "@/lib/utils";
+import { Scales } from "./container";
 import { GithubIcon } from "./icons/github-icon";
 
-const navigation = [
+interface NavigationItem {
+  readonly label: string;
+  readonly href: string;
+}
+
+const navigation: readonly NavigationItem[] = [
   { label: "Features", href: "#features" },
   { label: "Docs", href: "/docs" },
   { label: "Pricing", href: "#pricing" },
 ];
 
+const FOCUS_RING = cn(
+  "focus-visible:outline-none",
+  "focus-visible:ring-2 focus-visible:ring-focus",
+  "focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+);
+
 function AcmeLogo() {
   return (
-    <svg aria-hidden="true" className="size-4" fill="none" viewBox="0 0 24 24">
-      <path
-        className="fill-current"
-        d="M12 2.5 20.5 7v10L12 21.5 3.5 17V7L12 2.5Z"
-      />
-      <path
-        className="fill-background"
-        d="m12 6.25 4.75 2.5v6.5L12 17.75l-4.75-2.5v-6.5L12 6.25Z"
-      />
+    <svg
+      aria-hidden="true"
+      className="h-4 w-auto"
+      fill="currentColor"
+      viewBox="0 0 40 16"
+    >
+      <path d="M6 0h5L5 16H0z" />
+      <path d="M15 0h5l-6 16H9z" />
+      <path d="M24 0h5l-6 16h-5z" />
+      <circle cx="35" cy="4" r="3" />
     </svg>
   );
 }
 
 export function Navbar() {
   return (
-    <nav
-      aria-label="Main navigation"
+    <header
       className={cn(
-        "fixed inset-x-0 top-0 z-999",
-        "border-b border-[color-mix(in_oklab,var(--border)_65%,transparent)]",
-        "bg-background backdrop-blur-md",
+        "pointer-events-none fixed inset-x-0 top-0 z-999",
+        "px-4 pt-3 sm:px-6",
       )}
     >
       <div
         className={cn(
-          "mx-auto grid w-full max-w-7xl",
-          "grid-cols-[1fr_auto_1fr]",
-          "items-center",
-          "px-4 sm:px-6 lg:px-8",
-          "h-16",
+          "pointer-events-auto relative isolate mx-auto w-full md:max-w-7xl",
+          "overflow-hidden rounded-xl",
+          "border border-foreground/15",
+          "backdrop-blur-md",
+          "transition-colors duration-200",
         )}
       >
-        <NextLink
-          aria-label="Acme home"
+        <Scales className="size-full pointer-events-none absolute inset-0 -z-10" />
+        <div
           className={cn(
-            "flex w-fit items-center gap-2",
-            "text-foreground no-underline",
-            "transition-opacity hover:opacity-70",
-            "focus-visible:outline-none",
-            "focus-visible:ring-2 focus-visible:ring-focus",
-            "focus-visible:ring-offset-2",
+            "grid grid-cols-[1fr_auto_1fr] items-center",
+            "h-14 px-4 md:h-16 md:px-6",
           )}
-          href="/"
         >
-          <span
+          <NextLink
+            aria-label="Acme home"
             className={cn(
-              "flex size-8 items-center justify-center",
-              "rounded-(--radius)",
-              "bg-foreground text-background",
+              "flex w-fit items-center gap-3 rounded-md",
+              "text-foreground no-underline",
+              "transition-opacity duration-200 hover:opacity-70",
+              "motion-reduce:transition-none",
+              FOCUS_RING,
             )}
+            href="/"
           >
             <AcmeLogo />
-          </span>
-
-          <span className="text-small font-semibold tracking-tight">Acme</span>
-        </NextLink>
-
-        {/* Navigation */}
-        <nav className="hidden md:flex">
-          <ul className="flex items-center gap-1">
-            {navigation.map((item) => (
-              <li key={item.href}>
-                <NextLink
-                  className={cn(
-                    "link",
-                    "rounded-(--radius)",
-                    "px-3 py-1.5",
-                    "text-small font-medium",
-                    "text-muted no-underline",
-                    "transition-colors",
-                    "hover:bg-default/70 hover:text-foreground",
-                  )}
-                  href={item.href}
-                >
-                  {item.label}
-                </NextLink>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        {/* GitHub */}
-        <div className="flex justify-self-end">
-          <NextLink
-            aria-label="GitHub"
-            className={cn(
-              "button button--ghost button--sm button--icon-only",
-              "size-9 min-w-9",
-              "rounded-(--radius)",
-              "text-muted",
-              "transition-colors",
-              "hover:text-foreground",
-            )}
-            href="https://github.com/acme"
-            rel="noreferrer"
-            target="_blank"
-          >
-            <GithubIcon />
+            <span className="text-sm font-semibold uppercase tracking-tight">
+              Acme
+            </span>
           </NextLink>
+
+          <nav aria-label="Main navigation" className="hidden md:block">
+            <ul className="flex items-center gap-6">
+              {navigation.map((item) => (
+                <li key={item.href}>
+                  <NextLink
+                    className={cn(
+                      "group relative block rounded-sm py-1",
+                      "font-mono text-xs font-bold uppercase tracking-widest",
+                      "text-foreground/70 no-underline",
+                      "transition-colors duration-200 hover:text-foreground",
+                      "motion-reduce:transition-none",
+                      "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px",
+                      "after:origin-left after:scale-x-0 after:bg-current",
+                      "after:transition-transform after:duration-300 after:ease-out",
+                      "hover:after:scale-x-100 focus-visible:after:scale-x-100",
+                      "motion-reduce:after:transition-none",
+                      FOCUS_RING,
+                    )}
+                    href={item.href}
+                  >
+                    {item.label}
+                  </NextLink>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="flex justify-self-end">
+            <NextLink
+              aria-label="Acme on GitHub"
+              className={cn(
+                "flex items-center gap-2 rounded-md",
+                "border border-foreground/20",
+                "px-3 py-2 sm:px-4",
+                "font-mono text-xs uppercase tracking-widest",
+                "text-foreground/70 no-underline",
+                "transition-colors duration-200",
+                "hover:border-foreground/50 hover:text-foreground",
+                "motion-reduce:transition-none",
+                FOCUS_RING,
+              )}
+              href="https://github.com/acme"
+              rel="noreferrer"
+              target="_blank"
+            >
+              <GithubIcon />
+              <span className="hidden sm:inline">GitHub</span>
+            </NextLink>
+          </div>
         </div>
       </div>
-    </nav>
+    </header>
   );
 }

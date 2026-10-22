@@ -18,6 +18,7 @@ export function ShowcasePreview() {
 }
 
 const descAnimation = getAnimation("showcasePreviewDescription");
+
 function Description() {
   const { selected } = useShowcase();
 
@@ -34,10 +35,10 @@ function Description() {
       className="absolute w-full mb-auto top-0"
     >
       <Alert
-        className="bg-surface/20 backdrop-blur-2xl z-50 relative overflow-hidden rounded-none"
+        className=" backdrop-blur-2xl z-50 relative overflow-hidden rounded-none bg-transparent"
         status="accent"
       >
-        <div className="size-48 blur-2xl absolute top-0 left-0 bg-accent/20" />
+        {/* <div className="size-48 blur-2xl absolute top-0 left-0 bg-accent/20" /> */}
         <Alert.Content>
           <Alert.Title className="font-secondary tracking-widest inline-flex items-center gap-1">
             {title}
@@ -62,11 +63,10 @@ function Description() {
 function SlotDigit() {
   const { selected } = useShowcase();
 
-  const slot: ShowcaseItem["slot"] | undefined = data.find(
-    (i) => i.id === selected,
-  )?.slot;
+  const slot: ShowcaseItem["slot"] =
+    data.find((i) => i.id === selected)?.slot ?? 0;
 
-  if (!slot || Number.isNaN(slot)) return null;
+  if (Number.isNaN(slot)) return null;
 
   const digit = (slot + 1).toString().padStart(2, "0");
 
