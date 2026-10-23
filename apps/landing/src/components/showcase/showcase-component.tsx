@@ -36,7 +36,11 @@ export function ShowcaseComponent() {
           </div>
         )}
       >
-        <Suspense key={selected} fallback={<Spinner size="lg" />}>
+        <Suspense
+          key={selected}
+          name="showcase-component-suspense"
+          fallback={<Spinner size="lg" />}
+        >
           <Demo controller={controller} className="mb-8" />
         </Suspense>
       </ErrorBoundary>

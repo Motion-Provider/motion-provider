@@ -23,7 +23,7 @@ export default function Showcase() {
           scales={{
             sides: ["right", "bottom", "left", "top"],
             size: 8,
-            thickness: 48,
+            thickness: 24,
             opacity: 1,
             orientation: "diagonal",
           }}

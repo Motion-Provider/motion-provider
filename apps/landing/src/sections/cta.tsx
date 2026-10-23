@@ -1,28 +1,34 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { ArrowUpRightIcon, Boxes } from "lucide-react";
 import Link from "next/link";
-import { ContainerWrapper, Scales } from "@/components/container";
+import { ContainerWrapper } from "@/components/container";
 import SquareGrid from "@/components/square-grid";
 
 export default function Cta() {
   return (
-    <ContainerWrapper<"section">
-      as="section"
-      className="lg:w-[calc(100vw-6rem)] h-auto mb-24"
-      scales={{
-        sides: ["top", "bottom"],
-        size: 12,
-        thickness: 48,
-        opacity: 1,
-        orientation: "diagonal",
-      }}
-    >
-      <div className="w-full max-w-7xl relative h-fit grid place-items-center-safe text-center justify-self-center py-36 rounded-3xl overflow-hidden">
+    <section className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible mb-28">
+      <ContainerWrapper<"section">
+        as="section"
+        surface="glass"
+        width="7xl"
+        scales={{
+          sides: ["top", "bottom", "left", "right"],
+          size: 12,
+          thickness: 24,
+          opacity: 1,
+          orientation: "vertical",
+        }}
+        grid={{
+          axis: "diagonal",
+          size: 100,
+          opacity: 0.8,
+          lineWidth: 1,
+          className: "pointer-events-none",
+        }}
+        className="max-w-7xl rounded-3xl size-full"
+        innerClassName="grid place-items-center-safe relative overflow-hidden size-full rounded-3xl"
+      >
         <SquareGrid />
-        <Scales
-          className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-muted -z-10 rounded-3xl"
-          opacity={0.5}
-        />
         <div className="grid place-items-center-safe z-50">
           <Chip
             variant="primary"
@@ -50,11 +56,11 @@ export default function Cta() {
             className="relative"
           >
             <Button variant="primary" size="lg" className="mt-4">
-              Get to the Playground <ArrowUpRightIcon className="size-5" />
+              Get me to the Playground <ArrowUpRightIcon className="size-5" />
             </Button>
           </Link>
         </div>
-      </div>
-    </ContainerWrapper>
+      </ContainerWrapper>
+    </section>
   );
 }

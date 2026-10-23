@@ -1,14 +1,30 @@
-﻿import { Button, Chip } from "@heroui/react";
+﻿import { Button, Chip, Skeleton } from "@heroui/react";
 import { CopyIcon } from "lucide-react";
+import dynamic from "next/dynamic";
 import { Annotation } from "@/components/annotation";
 import { Circle } from "@/components/circle";
-import { CircleCodeSnippet } from "@/components/circle/circle-code-snippet";
 import { CirclePlayButton } from "@/components/circle/circle-play-button";
 import { CircleProgress } from "@/components/circle/circle-progress";
 import { CircleSelect } from "@/components/circle/circle-select";
 import { CircleSlider } from "@/components/circle/circle-slider";
 import { ContainerWrapper } from "@/components/container";
 import { CircleProvider } from "@/providers/circle.provider";
+
+const CircleCodeSnippet = dynamic(
+  () =>
+    import("@/components/circle/circle-code-snippet").then(
+      ({ CircleCodeSnippet }) => CircleCodeSnippet,
+    ),
+  {
+    ssr: false,
+    loading: () => (
+      <Skeleton
+        aria-hidden="true"
+        className="text-xs h-[calc(16lh+1.75rem)] rounded-3xl w-md z-50 top-16 left-24 absolute bg-glass-surface"
+      />
+    ),
+  },
+);
 
 export default function HeroSection() {
   return (
@@ -32,7 +48,7 @@ export default function HeroSection() {
           opacity: 0.9,
           orientation: "diagonal",
         }}
-        className="h-full lg:w-[calc(100vw-6rem)] "
+        className="h-full lg:w-[calc(100vw-6rem)]"
         innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center mt-16 z-20"
       >
         <CircleProvider>

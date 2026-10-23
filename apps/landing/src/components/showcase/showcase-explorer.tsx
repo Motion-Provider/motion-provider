@@ -165,7 +165,7 @@ function MiddleCell() {
           duration: 1,
           transition: "gentle",
         }}
-        className="z-10 bg-clip-text bg-linear-to-b from-accent to-muted/15"
+        className="z-10 bg-clip-text bg-linear-to-b from-foreground/50 to-muted/15 from-20%"
         key={slot}
       >
         <CountDigit

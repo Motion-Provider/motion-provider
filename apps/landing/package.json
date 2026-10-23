@@ -19,7 +19,10 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-error-boundary": "^6.1.6",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.0",
+    "@shikijs/core": "^4.5.0",
+    "@shikijs/engine-javascript": "^4.5.0",
+    "@shikijs/langs": "^4.5.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",
