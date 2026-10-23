@@ -1,8 +1,6 @@
-﻿import * as React from "react";
+﻿import { cn } from "@/lib/utils";
 
-import { cn } from "@/lib/utils";
-
-export type GridAxis = "horizontal" | "vertical" | "both";
+export type GridAxis = "horizontal" | "vertical" | "both" | "diagonal";
 
 export interface GridLinesProps {
   axis?: GridAxis;
@@ -45,23 +43,39 @@ export function GridLines({
     );
   }
 
+  if (axis === "diagonal") {
+    // Perpendicular spacing = size / √2 → horizontal spacing = size,
+    // so the repeat divides the square tile exactly (no seams).
+    const period = size * Math.SQRT1_2;
+
+    gradients.push(
+      `repeating-linear-gradient(
+        315deg,
+        currentColor 0,
+        currentColor ${lineWidth}px,
+        transparent ${lineWidth}px,
+        transparent ${period}px
+      )`,
+    );
+  }
+
   return (
     <div
       aria-hidden="true"
       className={cn(
         "pointer-events-none absolute inset-0",
-        "text-foreground/[0.065]",
+        "text-foreground/6.5",
         className,
       )}
       style={{
         opacity,
         backgroundImage: gradients.join(","),
         backgroundSize:
-          axis === "both"
-            ? `${size}px ${size}px`
-            : axis === "horizontal"
-              ? `100% ${size}px`
-              : `${size}px 100%`,
+          axis === "horizontal"
+            ? `100% ${size}px`
+            : axis === "vertical"
+              ? `${size}px 100%`
+              : `${size}px ${size}px`,
       }}
     />
   );

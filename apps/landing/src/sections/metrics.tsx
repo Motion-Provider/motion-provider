@@ -49,7 +49,7 @@ export default function Metrics() {
               variant="primary"
               className="bg-accent-soft text-accent font-secondary"
             >
-              MotionContainer
+              {"<MotionContainer />"}
             </Chip>{" "}
             ships at{" "}
             <b className="text-white">{formatKb(MOTION_PROVIDER[METRIC])}</b>{" "}

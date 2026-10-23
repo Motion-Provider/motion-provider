@@ -1,3 +1,4 @@
+import { Chip } from "@heroui/react";
 import { Motion, MotionText } from "motion-provider";
 import { LIBRARY_NAMES, METRIC_SUFFIX } from "@/constants/metrics.config";
 import { cn } from "@/lib/utils";
@@ -6,21 +7,19 @@ import { formatKb } from "@/utils/formatKb";
 import { getFillStyle } from "@/utils/metrics";
 import { Scales } from "./container";
 
-interface MetricBarProps {
-  readonly item: MetricItem;
-  readonly index: number;
-  readonly max: number;
-  readonly metric?: MetricSizeKey;
-  readonly isHighlighted?: boolean;
-}
-
 export function MetricBar({
   item,
   index,
   max,
   metric = "gzipBytes",
   isHighlighted = false,
-}: MetricBarProps) {
+}: {
+  readonly item: MetricItem;
+  readonly index: number;
+  readonly max: number;
+  readonly metric?: MetricSizeKey;
+  readonly isHighlighted?: boolean;
+}) {
   const { label, library, component: Component } = item;
   const bytes = item[metric];
   const name = LIBRARY_NAMES[library];
@@ -30,7 +29,7 @@ export function MetricBar({
   return (
     <li data-index={index} data-library={library}>
       <div className="mb-3 flex items-baseline justify-between gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-baseline sm:gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
           <MotionText
             wrapperClassName="text-xl font-medium tracking-tight"
             animation={{
@@ -47,22 +46,23 @@ export function MetricBar({
           >
             {name}
           </MotionText>
-          <MotionText
-            animation={{
-              mode: ["fadeUp"],
-              transition: "gentle",
-              delay: index,
-            }}
-            config={{
-              mode: "words",
-            }}
-            wrapperClassName="text-sm text-muted tracking-tighter"
-          >
-            {label}
-          </MotionText>
+          <Chip variant="soft" color="accent">
+            <MotionText
+              animation={{
+                mode: ["fadeUp"],
+                transition: "gentle",
+                delay: index,
+              }}
+              config={{
+                mode: "words",
+              }}
+              wrapperClassName="text-xs tracking-tighter"
+            >
+              {label}
+            </MotionText>
+          </Chip>
         </div>
       </div>
-
       {/** biome-ignore lint/a11y/useAriaPropsSupportedByRole: dynamic aria */}
       <div
         aria-label={`${name} ${label}`}
@@ -70,7 +70,7 @@ export function MetricBar({
         aria-valuemax={max}
         aria-valuenow={bytes}
         aria-valuetext={`${formatKb(bytes)} ${METRIC_SUFFIX[metric]}`}
-        className="h-14 w-full overflow-hidden rounded-2xl md:h-16 relative -mt-1"
+        className="h-14 w-full overflow-hidden rounded-3xl md:h-16 relative -mt-1"
       >
         <Scales className="size-full absolute" lineWidth={0.88} />
         <Motion
@@ -94,7 +94,6 @@ export function MetricBar({
           className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-[calc(var(--fill)*100%)] min-w-fit items-center justify-center gap-3"
         >
           {typeof Component === "function" && <Component className="size-8" />}
-
           <span
             className={cn(
               "tabular-nums tracking-tighter font-secondary font-semibold text-xl",

@@ -18,7 +18,7 @@ export default function Showcase() {
         <ContainerWrapper<"div">
           as="div"
           width="none"
-          radius="none"
+          radius="3xl"
           surface="glass"
           scales={{
             sides: ["right", "bottom", "left", "top"],

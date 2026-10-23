@@ -4,7 +4,6 @@ import data from "@/constants/showcase.data";
 import { getAnimation } from "@/lib/motion";
 import { useShowcase } from "@/providers/showcase.provider";
 import type { ShowcaseItem } from "@/types/showcase.type";
-import { CountDigit } from "../count-digit";
 import { ShowcaseComponent } from "./showcase-component";
 
 export function ShowcasePreview() {
@@ -12,7 +11,6 @@ export function ShowcasePreview() {
     <div className="size-full grid place-items-center overflow-hidden relative rounded-r-3xl">
       <Description />
       <ShowcaseComponent />
-      <SlotDigit />
     </div>
   );
 }
@@ -38,7 +36,6 @@ function Description() {
         className=" backdrop-blur-2xl z-50 relative overflow-hidden rounded-none bg-transparent"
         status="accent"
       >
-        {/* <div className="size-48 blur-2xl absolute top-0 left-0 bg-accent/20" /> */}
         <Alert.Content>
           <Alert.Title className="font-secondary tracking-widest inline-flex items-center gap-1">
             {title}
@@ -57,25 +54,5 @@ function Description() {
         </Alert.Content>
       </Alert>
     </MotionContainer>
-  );
-}
-
-function SlotDigit() {
-  const { selected } = useShowcase();
-
-  const slot: ShowcaseItem["slot"] =
-    data.find((i) => i.id === selected)?.slot ?? 0;
-
-  if (Number.isNaN(slot)) return null;
-
-  const digit = (slot + 1).toString().padStart(2, "0");
-
-  return (
-    <div className="absolute top-12 right-12 bg-linear-to-t from-muted/20 to-transparent bg-clip-text -z-10">
-      <CountDigit
-        digit={digit}
-        className="text-9xl text-transparent font-semibold"
-      />
-    </div>
   );
 }

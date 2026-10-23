@@ -1,4 +1,4 @@
-﻿import { MotionChain } from "motion-provider";
+﻿import { MotionChain, MotionContainer } from "motion-provider";
 import Image from "next/image";
 import showcaseData from "@/constants/showcase.data";
 import { cn } from "@/lib/utils";
@@ -7,6 +7,7 @@ import type { ShowcaseItem } from "@/types/showcase.type";
 import { Scales } from "../container";
 import { CountDigit } from "../count-digit";
 
+const MIDDLE_SLOT = 4;
 const CELL_COUNT = 9;
 
 const data = Array.from(
@@ -44,7 +45,7 @@ export function ShowcaseExplorer() {
         }}
         className="size-full relative"
       >
-        {data.map((item, i) =>
+        {data.map((item) =>
           item ? (
             <Cell
               key={item.id}
@@ -55,18 +56,7 @@ export function ShowcaseExplorer() {
               imgSrc={item.imgSrc}
             />
           ) : (
-            <div
-              className="size-full relative"
-              // biome-ignore lint/suspicious/noArrayIndexKey: static item
-              key={i}
-            >
-              <Scales
-                orientation="diagonal"
-                lineWidth={1}
-                opacity={0.25}
-                color="var(--color-accent)"
-              />
-            </div>
+            <MiddleCell key={MIDDLE_SLOT} />
           ),
         )}
       </MotionChain>
@@ -101,7 +91,7 @@ function Cell({
       className={cn(
         "relative size-full will-change-auto cursor-pointer overflow-hidden",
         "group group-hover/grid:opacity-50 hover:opacity-100",
-        "active:scale-95 transition-all border-accent/20",
+        "active:scale-[98%] transition-all border-accent/20",
         TARGET_BORDER_L.has(slot) && "border-l",
         TARGET_BORDER_R.has(slot) && "border-r",
         TARGET_BORDER_T.has(slot) && "border-t",
@@ -153,5 +143,36 @@ function Cell({
         </span>
       </div>
     </button>
+  );
+}
+
+function MiddleCell() {
+  const { selected } = useShowcase();
+
+  const slot = data.find((item) => item?.id === selected)?.slot ?? 1;
+
+  return (
+    <div className="size-full relative grid place-items-center pointer-events-none">
+      <Scales
+        orientation="diagonal"
+        lineWidth={1}
+        opacity={0.5}
+        className="absolute size-full inset-0 z-0"
+      />
+      <MotionContainer
+        animation={{
+          mode: ["filterBlurIn", "fadeUp"],
+          duration: 1,
+          transition: "gentle",
+        }}
+        className="z-10 bg-clip-text bg-linear-to-b from-accent to-muted/15"
+        key={slot}
+      >
+        <CountDigit
+          digit={slot + 1}
+          className="text-shadow-accent text-7xl font-semibold text-transparent "
+        />
+      </MotionContainer>
+    </div>
   );
 }

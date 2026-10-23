@@ -39,6 +39,7 @@ export function CirclePlayButton() {
           delay: 0.25,
           transition: "slowCubic",
         }}
+        reducedMotion="always"
         key={animationState}
       >
         {animationState === "play" ? (

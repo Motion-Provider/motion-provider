@@ -34,7 +34,7 @@ export function CircleSlider({ className }: { className?: string }) {
         step={1}
       >
         <Label className="text-muted">Seek</Label>
-        <Slider.Track className="bg-glass-surface">
+        <Slider.Track className="bg-glass-surface rounded-3xl">
           <Slider.Fill />
           <Slider.Thumb />
         </Slider.Track>

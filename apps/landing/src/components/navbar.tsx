@@ -42,13 +42,13 @@ export function Navbar() {
       className={cn(
         "pointer-events-none fixed inset-x-0 top-0 z-999",
         "px-4 pt-3 sm:px-6",
+        "rounded-3xl",
       )}
     >
       <div
         className={cn(
           "pointer-events-auto relative isolate mx-auto w-full md:max-w-7xl",
-          "overflow-hidden rounded-xl",
-          "border border-foreground/15",
+          "overflow-hidden rounded-3xl",
           "backdrop-blur-md",
           "transition-colors duration-200",
         )}
