@@ -129,6 +129,9 @@
   --font-primary: var(--font-primary);
   --font-secondary: var(--font-secondary);
   --font-annotation: var(--font-annotation);
+  --breakpoint-laptop: 88rem;
+  --breakpoint-desktop: 108rem;
+  --breakpoint-mobile: 32rem;
 }
 
 body {

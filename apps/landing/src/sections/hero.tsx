@@ -31,22 +31,13 @@ export default function HeroSection() {
     <div className="w-full h-screen overflow-x-clip gird place-items-center-safe">
       <ContainerWrapper<"main">
         as="main"
-        width="screen"
         radius="none"
-        surface="none"
         grid={{
           axis: "horizontal",
           size: 100,
           opacity: 0.8,
           lineWidth: 1,
           className: "pointer-events-none",
-        }}
-        scales={{
-          sides: ["left", "right"],
-          size: 8,
-          thickness: 48,
-          opacity: 0.9,
-          orientation: "diagonal",
         }}
         className="h-full lg:w-[calc(100vw-6rem)]"
         innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center mt-16 z-20"

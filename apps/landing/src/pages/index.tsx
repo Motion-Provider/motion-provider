@@ -1,17 +1,14 @@
-import Cta from "@/sections/cta";
-import HeroSection from "@/sections/hero";
-import Metrics from "@/sections/metrics";
-import ShowcaseSection from "@/sections/showcase";
-import TrustSignals from "@/sections/trust-signals";
+import DxComparison from "@/sections/dx-comparison";
 
 export default function Home() {
   return (
     <>
-      <HeroSection />
-      <TrustSignals />
-      <ShowcaseSection />
-      <Metrics />
-      <Cta />
+      {/* <HeroSection /> */}
+      {/* <TrustSignals /> */}
+      <DxComparison />
+      {/* <ShowcaseSection /> */}
+      {/* <Metrics /> */}
+      {/* <Cta /> */}
     </>
   );
 }

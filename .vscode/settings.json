@@ -8,7 +8,8 @@
     "https://json-schema.org/": true,
     "https://developer.microsoft.com/json-schemas/": true,
     "https://turborepo.dev/": true,
-    "https://v2-11-8.turborepo.dev/schema.json": true
+    "https://v2-11-10.turborepo.dev/schema.json": true,
+    "https://unpkg.com/knip@6/schema.json": true
   },
 
   "editor.formatOnSave": true,

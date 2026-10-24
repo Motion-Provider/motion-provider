@@ -11,7 +11,7 @@ export type Highlighter = HighlighterGeneric<Lang, Theme>;
 
 const createHighlighter = createBundledHighlighter<Lang, Theme>({
   langs: { tsx: () => import("@shikijs/langs/tsx") },
-  themes: { "circle-theme": () => import("@/constants/schiki.theme") },
+  themes: { "circle-theme": () => import("@/constants/highlight.theme") },
   engine: () => createJavaScriptRegexEngine(),
 });
 

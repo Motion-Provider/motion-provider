@@ -6,23 +6,23 @@
   "scripts": {
     "dev": "next dev --port 62335",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "knip": "knip"
   },
   "dependencies": {
     "@heroui/react": "^3.2.6",
     "@heroui/styles": "^3.2.6",
+    "@shikijs/core": "^4.5.0",
+    "@shikijs/engine-javascript": "^4.5.0",
+    "@shikijs/langs": "^4.5.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.48.0",
     "motion-provider": "*",
     "next": "16.3.8",
-    "prism-react-renderer": "^2.4.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-error-boundary": "^6.1.6",
-    "tailwind-merge": "^3.7.0",
-    "@shikijs/core": "^4.5.0",
-    "@shikijs/engine-javascript": "^4.5.0",
-    "@shikijs/langs": "^4.5.0"
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@biomejs/biome": "2.5.14",

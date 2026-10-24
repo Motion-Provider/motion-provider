@@ -125,4 +125,4 @@ export function CircleProvider({ children }: { children: React.ReactNode }) {
     </CircleContext>
   );
 }
-export { useCircle, useContext };
+export { useCircle };

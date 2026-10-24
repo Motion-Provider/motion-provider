@@ -1,0 +1,14 @@
+{
+  "$schema": "https://unpkg.com/knip@6/schema.json",
+  "tags": ["-lintignore"],
+  "ignoreBinaries": ["knip"],
+  "workspaces": {
+    ".": {},
+    "apps/landing": {
+      "entry": [
+        "src/components/showcase/demo/*.demo.tsx",
+        "src/components/showcase/showcase-no-component.tsx"
+      ]
+    }
+  }
+}
