@@ -1,18 +1,13 @@
 ﻿import { Skeleton } from "@heroui/react";
-import type { ThemedToken } from "@shikijs/core";
-import {
-  type AnimationKeys,
-  MotionChain,
-  type TransitionKeys,
-} from "motion-provider";
+import type { AnimationKeys, TransitionKeys } from "motion-provider";
 import dynamic from "next/dynamic";
 import { Suspense, use } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { getHighlighter } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
-import { getTokenStyle } from "@/utils/getTokenStyle";
 import { ContainerWrapper } from "../container";
+import { SyntaxHighlighter } from "../syntax-highlighter";
 
 const Loader = dynamic(
   () =>
@@ -49,11 +44,6 @@ function generateMotionCode(
         transition: '${transition}',
 `;
   return `${importCode}${prefixCode}${props}${closeCode}`.trim();
-}
-
-interface SnippetProps {
-  tokens: ThemedToken[][];
-  animationKey: string;
 }
 
 interface HighlightedCodeProps {
@@ -124,43 +114,24 @@ function HighlightedCode({ code, animationKey }: HighlightedCodeProps) {
   });
 
   return (
-    <pre className="font-secondary p-4 -mt-1 whitespace-pre text-left rounded-3xl text-xs size-full text-(--syntax-plain) bg-(--syntax-bg)">
-      <Snippet tokens={tokens} animationKey={animationKey} />
-    </pre>
-  );
-}
-
-function Snippet({ tokens, animationKey }: SnippetProps) {
-  return (
-    <MotionChain
-      key={animationKey}
-      animation={{
-        mode: ["fadeDown", "filterBlurIn"],
-        transition: "gentle",
-        duration: 1,
-        delay: 0.25,
+    <SyntaxHighlighter<"chain">
+      tokens={tokens}
+      animationKey={animationKey}
+      className="font-secondary p-4 -mt-1 whitespace-pre text-left rounded-3xl text-xs size-full text-(--syntax-plain) bg-(--syntax-bg)"
+      wrapperClassName="flex w-full flex-col items-stretch text-left"
+      lineClassName="block w-full min-h-lh text-left whitespace-pre"
+      animationProps={{
+        animation: {
+          mode: ["fadeDown", "filterBlurIn"],
+          transition: "gentle",
+          duration: 1,
+          delay: 0.25,
+        },
+        config: {
+          delayLogic: "linear",
+          duration: 0.15,
+        },
       }}
-      elementType="div"
-      config={{
-        delayLogic: "linear",
-        duration: 0.15,
-      }}
-      className="flex w-full flex-col items-stretch text-left"
-    >
-      {tokens.map((line, lineIndex) => (
-        <div
-          // biome-ignore lint/suspicious/noArrayIndexKey: static data
-          key={lineIndex}
-          className="block w-full min-h-lh text-left whitespace-pre"
-        >
-          {line.map((token, tokenIndex) => (
-            // biome-ignore lint/suspicious/noArrayIndexKey: static data
-            <span key={tokenIndex} style={getTokenStyle(token)}>
-              {token.content}
-            </span>
-          ))}
-        </div>
-      ))}
-    </MotionChain>
+    />
   );
 }
