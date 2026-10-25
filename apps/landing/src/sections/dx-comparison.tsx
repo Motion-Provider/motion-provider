@@ -38,11 +38,10 @@ export default function DxComparison() {
               </h1>
               <p className="max-w-sm text-muted leading-snug tracking-tight">
                 Most of us use animation libraries for three things: in-view,
-                scroll-based, and enter/exit transitions. What if one API
-                covered all of them?
+                scroll-based, and enter/exit transitions.
               </p>
               <p className="max-w-sm text-muted leading-snug tracking-tight">
-                What if I told you all these are now under one API?
+                What if one API covered all of them?
               </p>
             </div>
             <div className="flex flex-col gap-2 justify-end items-center size-full">

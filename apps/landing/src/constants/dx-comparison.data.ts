@@ -15,7 +15,13 @@ import type {
 const inViewMotionProvider = `import { MotionContainer } from "motion-provider";
 
 export default function App() {
-	return <MotionContainer animation={{ mode: ["filterBlurIn", "fadeIn"] }} />
+  return (
+    <MotionContainer
+      animation={{
+        mode: ["filterBlurIn", "fadeIn"],
+      }}
+    />
+  );
 }`;
 
 const inViewMotion = `import { motion } from "motion/react";

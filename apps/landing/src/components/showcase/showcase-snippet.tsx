@@ -1,20 +1,10 @@
 ﻿import { ScrollShadow, Skeleton } from "@heroui/react";
 import { ChevronUpIcon } from "lucide-react";
-import {
-  Suspense,
-  use,
-  useEffect,
-  useEffectEvent,
-  useId,
-  useState,
-} from "react";
+import { Suspense, useEffect, useEffectEvent, useId, useState } from "react";
 import data from "@/constants/showcase.data";
-import { getHighlighter } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
 import { useShowcase } from "@/providers/showcase.provider";
 import { SyntaxHighlighter } from "../syntax-highlighter";
-
-const highlighterPromise = getHighlighter();
 
 export function ShowcaseSnippet() {
   const { selected } = useShowcase();
@@ -76,30 +66,16 @@ export function ShowcaseSnippet() {
             <Skeleton className="h-28 w-full bg-glass-surface rounded-3xl" />
           }
         >
-          <HighlightedCode code={code} />
+          <SyntaxHighlighter
+            code={code}
+            className="h-auto w-full -mt-1 overflow-hidden rounded-3xl p-4 font-secondary text-left text-xs whitespace-pre text-(--syntax-plain) "
+            wrapperClassName="flex w-full flex-col items-stretch text-left"
+            lineClassName="flex w-full whitespace-pre"
+            withLineIndex
+            animationProps={undefined}
+          />
         </Suspense>
       </ScrollShadow>
     </div>
-  );
-}
-
-function HighlightedCode({ code }: { code: string }) {
-  const highlighter = use(highlighterPromise);
-  if (!highlighter) return null;
-
-  const { tokens } = highlighter.codeToTokens(code, {
-    lang: "tsx",
-    theme: "circle-theme",
-  });
-
-  return (
-    <SyntaxHighlighter
-      tokens={tokens}
-      className="h-auto w-full -mt-1 overflow-hidden rounded-3xl p-4 font-secondary text-left text-xs whitespace-pre text-(--syntax-plain) "
-      wrapperClassName="flex w-full flex-col items-stretch text-left"
-      lineClassName="flex w-full whitespace-pre"
-      withLineIndex
-      animationProps={undefined}
-    />
   );
 }

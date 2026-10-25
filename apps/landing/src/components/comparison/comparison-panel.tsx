@@ -50,15 +50,15 @@ export const DxComparisonPanel = memo(function DxComparisonPanel({
       sizeRef={sizeRef}
       defaultSize={DEFAULT_SPLIT_SIZE}
       minSize={25}
-      maxSize={75}
+      maxSize={100}
       className="flex-1 overflow-hidden rounded-3xl border border-border bg-(--syntax-bg)"
     >
-      <ResizablePanel side="start">
-        <DxComparedPane />
+      <ResizablePanel side="start" className="scrollbar-none overflow-hidden">
+        <DxMotionProviderPane />
       </ResizablePanel>
       <ResizableHandle withHandle />
-      <ResizablePanel side="end">
-        <DxMotionProviderPane />
+      <ResizablePanel side="end" className="scrollbar-none overflow-hidden">
+        <DxComparedPane />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

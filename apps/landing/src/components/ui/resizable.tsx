@@ -14,11 +14,6 @@ import {
   useRef,
 } from "react";
 
-/**
- * The size lives in the `--resizable-size` CSS variable on the group element.
- * Dragging / keyboard resizing mutates the DOM directly, so React never
- * re-renders anything while a panel is being resized.
- */
 type ResizableContextValue = {
   defaultSize: number;
   minSize: number;
@@ -143,7 +138,7 @@ export function ResizablePanelGroup({
 
 type ResizablePanelProps = {
   children: ReactNode;
-  /** `start` is sized by the handle, `end` fills the remaining space. */
+  /** `start` is  by the handle, `end` fills the remaining space. */
   side: "start" | "end";
   className?: string;
 };

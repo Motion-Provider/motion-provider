@@ -44,14 +44,12 @@ export const DEFAULT_LIBRARY_ID: DxLibraryID = getFirst(
   "library ids",
 );
 
-/** Tab metadata; identical for every comparison, so it never changes at runtime. */
 export const DX_LIBRARIES: readonly DxLibrary[] = Array.from(
   LIBRARY_BY_ID.values(),
 );
 
 export const MOTION_PROVIDER = {
   label: "Motion Provider",
-  // Placeholder: reuses the animejs mark until the Motion Provider logo is available.
   icon: (LIBRARY_BY_ID.get("animejs") ?? getFirst(DX_LIBRARIES, "libraries"))
     .icon,
 } as const;

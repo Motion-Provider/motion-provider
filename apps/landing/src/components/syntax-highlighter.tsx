@@ -7,7 +7,8 @@ import {
   MotionText,
   type MotionTextConfigProps,
 } from "motion-provider";
-import type { Attributes, CSSProperties, FC } from "react";
+import { type Attributes, type CSSProperties, type FC, use } from "react";
+import { getHighlighter } from "@/lib/shiki";
 
 type AnimationMode = "chain" | "text" | undefined;
 type FontOptions = {
@@ -23,8 +24,6 @@ type SyntaxAnimationProps<T = AnimationMode> = {
 
 interface Props<T = AnimationMode> {
   animationMode?: T;
-  /** @type ThemedToken[][] */
-  tokens: ThemedToken[][];
   animationKey?: Attributes["key"];
   fontOptions?: FontOptions;
   animationProps: T extends "chain" | "text"
@@ -37,6 +36,7 @@ interface Props<T = AnimationMode> {
   /** @description for chain if `animationMode` is defined otherwise for <div> */
   wrapperClassName?: string;
   withLineIndex?: boolean;
+  code: string;
 }
 
 const INITIAL_FONT_OPTIONS = {
@@ -63,14 +63,25 @@ function getTokenStyle(
   return style;
 }
 
+const highlighterPromise = getHighlighter();
+
 export function SyntaxHighlighter<T extends Props["animationMode"]>({
-  tokens,
   lineClassName,
   fontOptions = INITIAL_FONT_OPTIONS,
   withLineIndex,
+  code,
   ...props
 }: Props<T>) {
+  const highlighter = use(highlighterPromise);
+  if (!highlighter) return null;
+
+  const { tokens } = highlighter.codeToTokens(code, {
+    lang: "tsx",
+    theme: "syntax-theme",
+  });
+
   const lineIndexWidth = `${String(tokens.length).length}ch`;
+
   return (
     <Wrapper {...props}>
       {tokens.map((line, lineIndex) => (
@@ -133,7 +144,7 @@ function Wrapper({
   className,
   wrapperClassName,
   children,
-}: Omit<Props, "fontOptions" | "lineClassName" | "tokens"> & {
+}: Omit<Props, "fontOptions" | "lineClassName" | "tokens" | "code"> & {
   children: React.ReactNode;
 }) {
   const isAnimated =

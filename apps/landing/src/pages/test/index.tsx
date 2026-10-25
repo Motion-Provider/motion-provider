@@ -1,20 +1,11 @@
-﻿import { Card, CardDescription, CardTitle } from "@heroui/react";
-import { MotionChain } from "motion-provider";
-import data from "@/constants/avatars.data";
+﻿import { MotionContainer } from "motion-provider";
 
-export default function Page() {
+export default function App() {
   return (
-    <MotionChain
+    <MotionContainer
       animation={{
-        mode: ["fadeUp", "rotateFlipX"],
+        mode: ["filterBlurIn", "fadeIn"],
       }}
-    >
-      {data.map((item) => (
-        <Card key={item.id}>
-          <CardTitle>{item.title}</CardTitle>
-          <CardDescription>{item.desc}</CardDescription>
-        </Card>
-      ))}
-    </MotionChain>
+    />
   );
 }

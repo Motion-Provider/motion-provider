@@ -1,9 +1,8 @@
 ﻿import { Skeleton } from "@heroui/react";
 import type { AnimationKeys, TransitionKeys } from "motion-provider";
 import dynamic from "next/dynamic";
-import { Suspense, use } from "react";
+import { Suspense } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
-import { getHighlighter } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
 import { ContainerWrapper } from "../container";
@@ -16,8 +15,6 @@ const Loader = dynamic(
     ),
   { ssr: false },
 );
-
-const highlighterPromise = getHighlighter();
 
 const importCode = `import { MotionContainer } from 'motion-provider'
 import { Triangle } from '@/components/triangle'
@@ -44,11 +41,6 @@ function generateMotionCode(
         transition: '${transition}',
 `;
   return `${importCode}${prefixCode}${props}${closeCode}`.trim();
-}
-
-interface HighlightedCodeProps {
-  code: string;
-  animationKey: string;
 }
 
 export function CircleCodeSnippet({ className }: { className?: string }) {
@@ -98,42 +90,27 @@ export function CircleCodeSnippet({ className }: { className?: string }) {
         )}
       >
         <Loader keys={keys} />
-        <HighlightedCode code={code} animationKey={animationKey} />
+        <SyntaxHighlighter<"chain">
+          code={code}
+          animationMode="chain"
+          animationKey={animationKey}
+          className="font-secondary p-4 -mt-1 whitespace-pre text-left rounded-3xl text-xs size-full text-(--syntax-plain) bg-(--syntax-bg)"
+          wrapperClassName="flex w-full flex-col items-stretch text-left"
+          lineClassName="block w-full min-h-lh text-left whitespace-pre"
+          animationProps={{
+            animation: {
+              mode: ["fadeDown", "filterBlurIn"],
+              transition: "gentle",
+              duration: 1,
+              delay: 0.25,
+            },
+            config: {
+              delayLogic: "linear",
+              duration: 0.15,
+            },
+          }}
+        />
       </ContainerWrapper>
     </Suspense>
-  );
-}
-
-function HighlightedCode({ code, animationKey }: HighlightedCodeProps) {
-  const highlighter = use(highlighterPromise);
-
-  if (!highlighter) return null;
-
-  const { tokens } = highlighter.codeToTokens(code, {
-    lang: "tsx",
-    theme: "circle-theme",
-  });
-
-  return (
-    <SyntaxHighlighter<"chain">
-      tokens={tokens}
-      animationMode="chain"
-      animationKey={animationKey}
-      className="font-secondary p-4 -mt-1 whitespace-pre text-left rounded-3xl text-xs size-full text-(--syntax-plain) bg-(--syntax-bg)"
-      wrapperClassName="flex w-full flex-col items-stretch text-left"
-      lineClassName="block w-full min-h-lh text-left whitespace-pre"
-      animationProps={{
-        animation: {
-          mode: ["fadeDown", "filterBlurIn"],
-          transition: "gentle",
-          duration: 1,
-          delay: 0.25,
-        },
-        config: {
-          delayLogic: "linear",
-          duration: 0.15,
-        },
-      }}
-    />
   );
 }

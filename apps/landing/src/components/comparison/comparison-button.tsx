@@ -1,7 +1,11 @@
 import { Button } from "@heroui/react";
-import { ArrowUpRightIcon, type LucideIcon } from "lucide-react";
+import {
+  ArrowUpRightIcon,
+  CheckCheckIcon,
+  type LucideIcon,
+} from "lucide-react";
 import { MotionContainer } from "motion-provider";
-import { useState } from "react";
+import { type FC, useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import type { DxComparisonID } from "@/types/dx-comparison.types";
 
@@ -24,8 +28,16 @@ export function DxComparisonButton({
 }: DxComparisonButtonProps) {
   const [trigger, setTrigger] = useState<boolean>(false);
 
-  const handleTrigger = (ev: boolean) =>
-    isActive ? setTrigger(false) : setTrigger(ev);
+  const handleTrigger = (ev: boolean) => {
+    if (isActive) return;
+    setTrigger(ev);
+  };
+
+  useEffect(() => {
+    if (!isActive) return;
+
+    setTrigger(false);
+  }, [isActive]);
 
   return (
     <Button
@@ -36,28 +48,39 @@ export function DxComparisonButton({
       onMouseLeave={() => handleTrigger(false)}
       className={cn(
         "laptop:h-12 desktop:h-18 w-full justify-between group",
-        "gap-3 rounded-3xl border border-border bg-surface overflow-hidden",
+        "gap-3 border border-border bg-surface/50 backdrop-blur-xl overflow-hidden",
         "px-6 text-surface-secondary-foreground aria-pressed:border-transparent",
         "aria-pressed:bg-accent aria-pressed:text-accent-foreground relative isolate",
         className,
       )}
     >
-      <MotionContainer
-        animation={{
-          mode: ["typingEffect"],
-          transition: "elasticSoft",
-          duration: 0.66,
-        }}
-        controller={{
-          trigger,
-        }}
-        className="absolute size-full bg-linear-to-r from-accent to-accent/50 blur-2xl -z-10"
-      />
-      <div className="flex items-center gap-2 group-hover:text-accent-foreground z-50 transition-colors duration-300 ease-smooth">
+      <Background trigger={trigger} />
+      <div className="flex items-center gap-2">
         <Icon aria-hidden="true" className="size-5 shrink-0" />
         <span className="tracking-tighter">{label}</span>
       </div>
-      <ArrowUpRightIcon className="desktop:size-5 laptop:size-5 group-hover:rotate-45 transition-all duration-300 ease-smooth" />
+      <ButtonIcon isActive={isActive} />
     </Button>
   );
 }
+
+const Background: FC<{ trigger: boolean }> = ({ trigger }) => (
+  <MotionContainer
+    animation={{
+      mode: ["typingEffect"],
+      transition: "elasticSoft",
+      duration: 0.66,
+    }}
+    controller={{
+      trigger,
+    }}
+    className="absolute size-full bg-linear-to-r from-accent to-accent blur-2xl -z-10"
+  />
+);
+
+const ButtonIcon: FC<{ isActive: boolean }> = ({ isActive }) =>
+  !isActive ? (
+    <ArrowUpRightIcon className="size-5 group-hover:rotate-45 transition-all duration-300 ease-smooth" />
+  ) : (
+    <CheckCheckIcon className="size-5" />
+  );

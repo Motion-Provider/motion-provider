@@ -5,13 +5,13 @@ import {
 import { createJavaScriptRegexEngine } from "@shikijs/engine-javascript";
 
 type Lang = "tsx";
-type Theme = "circle-theme";
+type Theme = "syntax-theme";
 
 export type Highlighter = HighlighterGeneric<Lang, Theme>;
 
 const createHighlighter = createBundledHighlighter<Lang, Theme>({
   langs: { tsx: () => import("@shikijs/langs/tsx") },
-  themes: { "circle-theme": () => import("@/constants/highlight.theme") },
+  themes: { "syntax-theme": () => import("@/constants/highlight.theme") },
   engine: () => createJavaScriptRegexEngine(),
 });
 
