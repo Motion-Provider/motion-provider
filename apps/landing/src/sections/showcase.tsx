@@ -4,7 +4,7 @@ import { ShowcasePreview } from "@/components/showcase/showcase-preview";
 import { ShowcaseSnippet } from "@/components/showcase/showcase-snippet";
 import { ShowcaseProvider } from "@/providers/showcase.provider";
 
-export default function Showcase() {
+export default function ShowcaseSection() {
   return (
     <section className="w-full h-screen justify-self-center relative max-w-7xl py-28 overflow-visible">
       <div className="flex flex-col gap-3 min-h-min max-h-60 h-auto">

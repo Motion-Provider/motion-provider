@@ -108,6 +108,7 @@ function HighlightedCode({ code, animationKey }: HighlightedCodeProps) {
   const highlighter = use(highlighterPromise);
 
   if (!highlighter) return null;
+
   const { tokens } = highlighter.codeToTokens(code, {
     lang: "tsx",
     theme: "circle-theme",
@@ -116,6 +117,7 @@ function HighlightedCode({ code, animationKey }: HighlightedCodeProps) {
   return (
     <SyntaxHighlighter<"chain">
       tokens={tokens}
+      animationMode="chain"
       animationKey={animationKey}
       className="font-secondary p-4 -mt-1 whitespace-pre text-left rounded-3xl text-xs size-full text-(--syntax-plain) bg-(--syntax-bg)"
       wrapperClassName="flex w-full flex-col items-stretch text-left"

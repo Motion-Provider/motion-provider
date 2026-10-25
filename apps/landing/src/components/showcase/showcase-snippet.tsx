@@ -1,5 +1,4 @@
 ﻿import { ScrollShadow, Skeleton } from "@heroui/react";
-import type { ThemedToken } from "@shikijs/core";
 import { ChevronUpIcon } from "lucide-react";
 import {
   Suspense,
@@ -13,7 +12,7 @@ import data from "@/constants/showcase.data";
 import { getHighlighter } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
 import { useShowcase } from "@/providers/showcase.provider";
-import { getTokenStyle } from "@/utils/getTokenStyle";
+import { SyntaxHighlighter } from "../syntax-highlighter";
 
 const highlighterPromise = getHighlighter();
 
@@ -67,17 +66,18 @@ export function ShowcaseSnippet() {
         />
       </button>
 
-      <ScrollShadow id={contentId} className="grid size-full place-items-start">
-        <pre className="h-auto w-full -mt-1 overflow-hidden rounded-3xl p-4 font-secondary text-left text-xs whitespace-pre ">
-          <Suspense
-            name="showcase-snippet-suspense"
-            fallback={
-              <Skeleton className="h-28 w-full bg-glass-surface rounded-3xl" />
-            }
-          >
-            <HighlightedCode code={code} />
-          </Suspense>
-        </pre>
+      <ScrollShadow
+        id={contentId}
+        className="grid size-full place-items-start "
+      >
+        <Suspense
+          name="showcase-snippet-suspense"
+          fallback={
+            <Skeleton className="h-28 w-full bg-glass-surface rounded-3xl" />
+          }
+        >
+          <HighlightedCode code={code} />
+        </Suspense>
       </ScrollShadow>
     </div>
   );
@@ -92,33 +92,14 @@ function HighlightedCode({ code }: { code: string }) {
     theme: "circle-theme",
   });
 
-  return <Snippet tokens={tokens} />;
-}
-
-function Snippet({ tokens }: { tokens: ThemedToken[][] }) {
-  return tokens.map((line, lineIndex) => (
-    <div
-      // biome-ignore lint/suspicious/noArrayIndexKey: static data
-      key={lineIndex}
-      className="flex w-full whitespace-pre"
-    >
-      <span
-        className="mr-4 inline-block w-5 shrink-0 select-none text-right text-muted"
-        aria-hidden="true"
-      >
-        {lineIndex + 1}
-      </span>
-
-      <span className="min-w-0">
-        {line.map((token, tokenIndex) => {
-          return (
-            // biome-ignore lint/suspicious/noArrayIndexKey: static data
-            <span key={tokenIndex} style={getTokenStyle(token)}>
-              {token.content}
-            </span>
-          );
-        })}
-      </span>
-    </div>
-  ));
+  return (
+    <SyntaxHighlighter
+      tokens={tokens}
+      className="h-auto w-full -mt-1 overflow-hidden rounded-3xl p-4 font-secondary text-left text-xs whitespace-pre text-(--syntax-plain) "
+      wrapperClassName="flex w-full flex-col items-stretch text-left"
+      lineClassName="flex w-full whitespace-pre"
+      withLineIndex
+      animationProps={undefined}
+    />
+  );
 }

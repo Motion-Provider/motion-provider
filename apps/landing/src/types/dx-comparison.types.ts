@@ -1,5 +1,4 @@
 ﻿import type { LucideIcon } from "lucide-react";
-import type { ComponentType } from "react";
 import type { MetricLibrary } from "./metrics.type";
 
 export type DxComparisonID =
@@ -10,14 +9,14 @@ export type DxComparisonID =
 
 export type DxComparedItem = {
   id: Exclude<MetricLibrary, "motion-provider">;
-  icon: ComponentType<LucideIcon>;
+  icon: (props: React.SVGProps<SVGSVGElement>) => React.JSX.Element;
   label: string;
   code: string;
 };
 
 export type DxComparisonItem = {
   id: DxComparisonID;
-  icon: ComponentType<LucideIcon>;
+  icon: LucideIcon;
   label: string;
   motionProviderCode: string;
   comparedTo: DxComparedItem[];

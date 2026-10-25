@@ -84,7 +84,7 @@ export function Navbar() {
                   <NextLink
                     className={cn(
                       "group relative block rounded-sm py-1",
-                      "font-mono text-xs font-bold uppercase tracking-widest",
+                      "font-primary text-xs  uppercase tracking-widest",
                       "text-foreground/70 no-underline",
                       "transition-colors duration-200 hover:text-foreground",
                       "motion-reduce:transition-none",

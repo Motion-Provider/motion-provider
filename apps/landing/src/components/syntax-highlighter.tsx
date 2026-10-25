@@ -3,9 +3,11 @@ import {
   type MotionAnimationProps,
   MotionChain,
   type MotionChainConfigProps,
+  type MotionControllerProps,
+  MotionText,
   type MotionTextConfigProps,
 } from "motion-provider";
-import type { Attributes, CSSProperties } from "react";
+import type { Attributes, CSSProperties, FC } from "react";
 
 type AnimationMode = "chain" | "text" | undefined;
 type FontOptions = {
@@ -14,21 +16,27 @@ type FontOptions = {
   underline: number;
 };
 type SyntaxAnimationProps<T = AnimationMode> = {
-  animation: MotionAnimationProps;
-  config: T extends "chain" ? MotionChainConfigProps : MotionTextConfigProps;
+  animation?: MotionAnimationProps;
+  config?: T extends "chain" ? MotionChainConfigProps : MotionTextConfigProps;
+  controller?: MotionControllerProps;
 };
 
 interface Props<T = AnimationMode> {
   animationMode?: T;
+  /** @type ThemedToken[][] */
   tokens: ThemedToken[][];
-  animationKey: Attributes["key"];
+  animationKey?: Attributes["key"];
   fontOptions?: FontOptions;
   animationProps: T extends "chain" | "text"
     ? SyntaxAnimationProps<T>
     : undefined;
+  /** @description for outermost`<pre>` element */
   className?: string;
+  /** @description for the wrapper of `line` which carries tokens */
   lineClassName?: string;
+  /** @description for chain if `animationMode` is defined otherwise for <div> */
   wrapperClassName?: string;
+  withLineIndex?: boolean;
 }
 
 const INITIAL_FONT_OPTIONS = {
@@ -59,8 +67,10 @@ export function SyntaxHighlighter<T extends Props["animationMode"]>({
   tokens,
   lineClassName,
   fontOptions = INITIAL_FONT_OPTIONS,
+  withLineIndex,
   ...props
 }: Props<T>) {
+  const lineIndexWidth = `${String(tokens.length).length}ch`;
   return (
     <Wrapper {...props}>
       {tokens.map((line, lineIndex) => (
@@ -69,16 +79,52 @@ export function SyntaxHighlighter<T extends Props["animationMode"]>({
           key={lineIndex}
           className={lineClassName}
         >
-          {line.map((token) => (
-            <span key={token.offset} style={getTokenStyle(token)}>
-              {token.content}
+          {withLineIndex && (
+            <span
+              className="mr-4 inline-block shrink-0 select-none text-right text-muted"
+              style={{ width: lineIndexWidth }}
+              aria-hidden="true"
+            >
+              {lineIndex + 1}
             </span>
+          )}
+          {line.map((token) => (
+            <Line
+              key={token.offset}
+              token={token}
+              animationProps={{
+                ...props.animationProps,
+              }}
+              isAnimated={props.animationMode === "text"}
+            />
           ))}
         </div>
       ))}
     </Wrapper>
   );
 }
+
+const Line: FC<
+  {
+    token: ThemedToken;
+    isAnimated?: boolean;
+  } & Pick<Props<"text">, "animationProps">
+> = ({ token, isAnimated, animationProps }) => (
+  <span key={token.offset} style={getTokenStyle(token)}>
+    {isAnimated ? (
+      <MotionText
+        animation={{
+          mode: animationProps.animation?.mode ?? "fadeIn",
+          ...animationProps.animation,
+        }}
+      >
+        {token.content}
+      </MotionText>
+    ) : (
+      token.content
+    )}
+  </span>
+);
 
 function Wrapper({
   animationKey,
@@ -104,21 +150,11 @@ function Wrapper({
     <pre className={className}>
       <MotionChain
         key={animationKey}
-        animation={animationProps?.animation}
-        config={animationProps?.config}
-        elementType="div"
         className={wrapperClassName}
+        {...animationProps}
       >
         {children}
       </MotionChain>
     </pre>
   );
 }
-
-// const Line: FC<
-//   {
-//     token: ThemedToken;
-//     idx: number;
-//     isAnimated?: boolean;
-//   } & Pick<Props<"text">, "animationProps">
-// > = ({ idx, token, isAnimated, animationProps }) => {};

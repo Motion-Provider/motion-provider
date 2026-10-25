@@ -1,10 +1,9 @@
 import DxComparison from "@/sections/dx-comparison";
-import HeroSection from "@/sections/hero";
 
 export default function Home() {
   return (
     <>
-      <HeroSection />
+      {/* <HeroSection /> */}
       {/* <TrustSignals /> */}
       <DxComparison />
       {/* <ShowcaseSection />
