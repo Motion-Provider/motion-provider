@@ -1,6 +1,7 @@
 import clsx from "clsx";
 import { GripVertical } from "lucide-react";
 import {
+  type CSSProperties,
   createContext,
   type KeyboardEvent,
   type PointerEvent,
@@ -8,18 +9,25 @@ import {
   type RefObject,
   use,
   useId,
+  useLayoutEffect,
+  useMemo,
   useRef,
-  useState,
 } from "react";
 
+/**
+ * The size lives in the `--resizable-size` CSS variable on the group element.
+ * Dragging / keyboard resizing mutates the DOM directly, so React never
+ * re-renders anything while a panel is being resized.
+ */
 type ResizableContextValue = {
-  /** Size of the start panel, in percent of the group's width. */
-  size: number;
+  defaultSize: number;
   minSize: number;
   maxSize: number;
   step: number;
   startPanelId: string;
   groupRef: RefObject<HTMLDivElement | null>;
+  handleRef: RefObject<HTMLDivElement | null>;
+  getSize: () => number;
   setSize: (size: number) => void;
   setIsDragging: (isDragging: boolean) => void;
 };
@@ -42,60 +50,86 @@ function clamp(value: number, min: number, max: number): number {
   return Math.min(max, Math.max(min, value));
 }
 
+function paint(
+  group: HTMLDivElement | null,
+  handle: HTMLDivElement | null,
+  size: number,
+) {
+  group?.style.setProperty("--resizable-size", `${size}%`);
+  handle?.setAttribute("aria-valuenow", String(Math.round(size)));
+}
+
+const START_PANEL_STYLE: CSSProperties = { flex: "0 0 var(--resizable-size)" };
+
 type ResizablePanelGroupProps = {
   children: ReactNode;
   className?: string;
-  /** Controlled size of the start panel (percent). */
-  size?: number;
-  /** Initial size of the start panel (percent) when uncontrolled. */
+  /** Initial size of the start panel (percent). */
   defaultSize?: number;
-  onSizeChange?: (size: number) => void;
   minSize?: number;
   maxSize?: number;
   /** Keyboard step (percent). */
   step?: number;
+  /**
+   * Optional external holder of the current size (percent). Lets the size
+   * survive a remount of the group without ever triggering a re-render.
+   */
+  sizeRef?: RefObject<number>;
 };
 
 export function ResizablePanelGroup({
   children,
   className,
-  size: controlledSize,
   defaultSize = 50,
-  onSizeChange,
   minSize = 10,
   maxSize = 90,
   step = 5,
+  sizeRef: externalSizeRef,
 }: ResizablePanelGroupProps) {
-  const [uncontrolledSize, setUncontrolledSize] = useState(defaultSize);
-  const [isDragging, setIsDragging] = useState(false);
   const groupRef = useRef<HTMLDivElement>(null);
+  const handleRef = useRef<HTMLDivElement>(null);
+  const internalSizeRef = useRef(defaultSize);
+  const sizeRef = externalSizeRef ?? internalSizeRef;
   const startPanelId = useId();
 
-  const size = clamp(controlledSize ?? uncontrolledSize, minSize, maxSize);
+  useLayoutEffect(() => {
+    paint(
+      groupRef.current,
+      handleRef.current,
+      clamp(sizeRef.current, minSize, maxSize),
+    );
+  }, [sizeRef, minSize, maxSize]);
 
-  function setSize(next: number) {
-    const clamped = clamp(next, minSize, maxSize);
+  const context = useMemo<ResizableContextValue>(
+    () => ({
+      defaultSize,
+      minSize,
+      maxSize,
+      step,
+      startPanelId,
+      groupRef,
+      handleRef,
+      getSize: () => sizeRef.current,
+      setSize: (next) => {
+        const size = clamp(next, minSize, maxSize);
 
-    if (controlledSize === undefined) setUncontrolledSize(clamped);
-    onSizeChange?.(clamped);
-  }
+        sizeRef.current = size;
+        paint(groupRef.current, handleRef.current, size);
+      },
+      setIsDragging: (isDragging) => {
+        groupRef.current?.toggleAttribute("data-dragging", isDragging);
+      },
+    }),
+    [defaultSize, minSize, maxSize, step, startPanelId, sizeRef],
+  );
+
+  const style = { "--resizable-size": `${defaultSize}%` } as CSSProperties;
 
   return (
-    <ResizableContext
-      value={{
-        size,
-        minSize,
-        maxSize,
-        step,
-        startPanelId,
-        groupRef,
-        setSize,
-        setIsDragging,
-      }}
-    >
+    <ResizableContext value={context}>
       <div
         ref={groupRef}
-        data-dragging={isDragging || undefined}
+        style={style}
         className={clsx(
           "flex min-h-0 min-w-0 w-full data-dragging:cursor-col-resize data-dragging:select-none",
           className,
@@ -119,13 +153,13 @@ export function ResizablePanel({
   side,
   className,
 }: ResizablePanelProps) {
-  const { size, startPanelId } = useResizable();
+  const { startPanelId } = useResizable();
   const isStart = side === "start";
 
   return (
     <div
       id={isStart ? startPanelId : undefined}
-      style={isStart ? { flex: `0 0 ${size}%` } : undefined}
+      style={isStart ? START_PANEL_STYLE : undefined}
       className={clsx(
         "min-h-0 min-w-0 overflow-hidden",
         !isStart && "flex-1",
@@ -148,12 +182,14 @@ export function ResizableHandle({
   className,
 }: ResizableHandleProps) {
   const {
-    size,
+    defaultSize,
     minSize,
     maxSize,
     step,
     startPanelId,
     groupRef,
+    handleRef,
+    getSize,
     setSize,
     setIsDragging,
   } = useResizable();
@@ -186,10 +222,10 @@ export function ResizableHandle({
   function handleKeyDown(event: KeyboardEvent<HTMLDivElement>) {
     switch (event.key) {
       case "ArrowLeft":
-        setSize(size - step);
+        setSize(getSize() - step);
         break;
       case "ArrowRight":
-        setSize(size + step);
+        setSize(getSize() + step);
         break;
       case "Home":
         setSize(minSize);
@@ -205,14 +241,15 @@ export function ResizableHandle({
   }
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: dynamic content
     <div
-      // biome-ignore lint/a11y/useSemanticElements: focusable window splitter (WAI-ARIA), <hr> is not focusable/valued
+      ref={handleRef}
       role="separator"
       aria-orientation="vertical"
       aria-controls={startPanelId}
       aria-valuemin={minSize}
       aria-valuemax={maxSize}
-      aria-valuenow={Math.round(size)}
+      aria-valuenow={Math.round(defaultSize)}
       tabIndex={0}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}

@@ -1,5 +1,5 @@
 import type { ComponentType, SVGProps } from "react";
-import { Suspense, use } from "react";
+import { memo, Suspense, use } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 
 import { SyntaxHighlighter } from "@/components/syntax-highlighter";
@@ -43,7 +43,11 @@ type DxCodePaneProps = {
   icon: ComponentType<SVGProps<SVGSVGElement>>;
 };
 
-export function DxCodePane({ code, label, icon: Icon }: DxCodePaneProps) {
+export const DxCodePane = memo(function DxCodePane({
+  code,
+  label,
+  icon: Icon,
+}: DxCodePaneProps) {
   const lineCount = code.split("\n").length;
 
   return (
@@ -57,6 +61,7 @@ export function DxCodePane({ code, label, icon: Icon }: DxCodePaneProps) {
           <span>{lineCount} lines</span>
         </span>
       </header>
+      {/** biome-ignore lint/a11y/useSemanticElements: dynamic content */}
       <div
         role="region"
         aria-label={`${label} code`}
@@ -72,4 +77,4 @@ export function DxCodePane({ code, label, icon: Icon }: DxCodePaneProps) {
       </div>
     </div>
   );
-}
+});

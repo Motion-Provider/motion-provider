@@ -1,17 +1,22 @@
 import { dxComparison } from "@/constants/dx-comparison.data";
-import { useDxComparison } from "@/providers/dx-feature.provider";
+import {
+  useDxComparisonActions,
+  useDxComparisonId,
+} from "@/providers/dx-feature.provider";
 import { DxComparisonButton } from "./comparison-button";
 
 export function DxComparisonSwitcher() {
-  const { comparisonId, setComparisonId } = useDxComparison();
+  const comparisonId = useDxComparisonId();
+  const { setComparisonId } = useDxComparisonActions();
 
   return dxComparison.map((item) => (
     <DxComparisonButton
       key={item.id}
+      id={item.id}
       icon={item.icon}
       label={item.label}
       isActive={item.id === comparisonId}
-      onPress={() => setComparisonId(item.id)}
+      onSelect={setComparisonId}
     />
   ));
 }

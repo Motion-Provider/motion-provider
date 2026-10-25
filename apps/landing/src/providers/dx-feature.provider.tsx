@@ -1,83 +1,65 @@
-﻿import { createContext, type ReactNode, use, useState } from "react";
+﻿import { createContext, type ReactNode, use, useMemo, useState } from "react";
 
 import {
-  dxComparedLibraryIds,
-  dxComparison,
-  dxComparisonIds,
-} from "@/constants/dx-comparison.data";
+  DEFAULT_COMPARISON_ID,
+  DEFAULT_LIBRARY_ID,
+  type DxComparisonID,
+  type DxLibraryID,
+} from "@/utils/comparison";
 
-export type DxComparisonItem = (typeof dxComparison)[number];
-export type DxComparedItem = DxComparisonItem["comparedTo"][number];
-export type DxComparisonID = DxComparisonItem["id"];
-export type DxLibraryID = DxComparedItem["id"];
-
-type DxComparisonContextValue = {
-  comparisonId: DxComparisonID;
-  libraryId: DxLibraryID;
-  /** Comparison matching `comparisonId`. */
-  active: DxComparisonItem;
-  /** Compared library snippet matching `libraryId` within `active`. */
-  activeCompared: DxComparedItem;
+/**
+ * Three independent contexts, so a consumer re-renders only for the slice it reads:
+ * - comparison id (switcher buttons, comparison-dependent panes)
+ * - library id    (tabs, compared pane)
+ * - actions       (stable, never triggers a re-render)
+ */
+type DxComparisonActions = {
   setComparisonId: (id: DxComparisonID) => void;
   setLibraryId: (id: DxLibraryID) => void;
 };
 
-const DxComparisonContext = createContext<DxComparisonContextValue | null>(
+const DxComparisonIdContext = createContext<DxComparisonID | null>(null);
+const DxLibraryIdContext = createContext<DxLibraryID | null>(null);
+const DxComparisonActionsContext = createContext<DxComparisonActions | null>(
   null,
 );
 
-const COMPARISON_BY_ID = new Map(
-  dxComparison.map((item) => [item.id, item] as const),
-);
-
-function getFirst<T>(items: readonly T[], name: string): T {
-  const [head] = items;
-
-  if (head === undefined) {
-    throw new Error(`dx-comparison: "${name}" dataset is empty`);
-  }
-
-  return head;
-}
-
 export function DxComparisonProvider({ children }: { children: ReactNode }) {
-  const [comparisonId, setComparisonId] = useState<DxComparisonID>(() =>
-    getFirst(dxComparisonIds, "comparison ids"),
+  const [comparisonId, setComparisonId] = useState<DxComparisonID>(
+    DEFAULT_COMPARISON_ID,
   );
-  const [libraryId, setLibraryId] = useState<DxLibraryID>(() =>
-    getFirst(dxComparedLibraryIds, "library ids"),
-  );
+  const [libraryId, setLibraryId] = useState<DxLibraryID>(DEFAULT_LIBRARY_ID);
 
-  const active =
-    COMPARISON_BY_ID.get(comparisonId) ?? getFirst(dxComparison, "comparisons");
-  const activeCompared =
-    active.comparedTo.find((item) => item.id === libraryId) ??
-    getFirst(active.comparedTo, "compared libraries");
+  const actions = useMemo<DxComparisonActions>(
+    () => ({ setComparisonId, setLibraryId }),
+    [],
+  );
 
   return (
-    <DxComparisonContext
-      value={{
-        comparisonId,
-        libraryId,
-        active,
-        activeCompared,
-        setComparisonId,
-        setLibraryId,
-      }}
-    >
-      {children}
-    </DxComparisonContext>
+    <DxComparisonActionsContext value={actions}>
+      <DxComparisonIdContext value={comparisonId}>
+        <DxLibraryIdContext value={libraryId}>{children}</DxLibraryIdContext>
+      </DxComparisonIdContext>
+    </DxComparisonActionsContext>
   );
 }
 
-export function useDxComparison(): DxComparisonContextValue {
-  const context = use(DxComparisonContext);
-
-  if (!context) {
-    throw new Error(
-      "useDxComparison must be used inside <DxComparisonProvider>",
-    );
+function useRequired<T>(value: T | null, hookName: string): T {
+  if (value === null) {
+    throw new Error(`${hookName} must be used inside <DxComparisonProvider>`);
   }
 
-  return context;
+  return value;
+}
+
+export function useDxComparisonId(): DxComparisonID {
+  return useRequired(use(DxComparisonIdContext), "useDxComparisonId");
+}
+
+export function useDxLibraryId(): DxLibraryID {
+  return useRequired(use(DxLibraryIdContext), "useDxLibraryId");
+}
+
+export function useDxComparisonActions(): DxComparisonActions {
+  return useRequired(use(DxComparisonActionsContext), "useDxComparisonActions");
 }
