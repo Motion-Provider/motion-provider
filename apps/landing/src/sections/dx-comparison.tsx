@@ -1,4 +1,5 @@
 import { Separator } from "@heroui/react";
+import { MotionText } from "motion-provider";
 import { DxComparisonSplit } from "@/components/comparison/comparison-split";
 import { DxComparisonSwitcher } from "@/components/comparison/comparison-switcher";
 import { ContainerWrapper } from "@/components/container";
@@ -33,9 +34,21 @@ export default function DxComparison() {
         >
           <div className="flex min-w-0 flex-col justify-between p-6">
             <div className="flex flex-col gap-3 h-1/3">
-              <h1 className="text-5xl tracking-tighter">
+              <MotionText
+                elementType="h1"
+                animation={{
+                  mode: ["filterBlurIn", "fadeUp"],
+                  transition: "gentle",
+                  duration: 0.66,
+                }}
+                config={{
+                  mode: "words",
+                  duration: 0.1,
+                }}
+                wrapperClassName="text-5xl tracking-tighter"
+              >
                 In-view, scroll, enter/exit. One API
-              </h1>
+              </MotionText>
               <p className="max-w-sm text-muted leading-snug tracking-tight">
                 Most of us use animation libraries for three things: in-view,
                 scroll-based, and enter/exit transitions.
@@ -45,7 +58,7 @@ export default function DxComparison() {
               </p>
             </div>
             <div className="flex flex-col gap-2 justify-end items-center size-full">
-              <DxComparisonSwitcher />
+              <DxComparisonSwitcher className="list-none w-full relative" />
             </div>
           </div>
           <Separator orientation="vertical" className="bg-border my-6" />

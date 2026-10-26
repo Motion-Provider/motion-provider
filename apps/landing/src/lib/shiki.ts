@@ -20,8 +20,11 @@ let instance: Promise<Highlighter | null> | undefined;
 export function getHighlighter(): Promise<Highlighter | null> {
   instance ??= createHighlighter({
     langs: ["tsx"],
-    themes: ["circle-theme"],
-  }).catch(() => null);
+    themes: ["syntax-theme"],
+  }).catch((error: unknown) => {
+    console.error("[shiki] failed to create highlighter", error);
+    return null;
+  });
 
   return instance;
 }

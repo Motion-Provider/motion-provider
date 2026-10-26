@@ -1,4 +1,4 @@
-import { memo, type RefObject } from "react";
+import { type Attributes, memo, type RefObject } from "react";
 
 import {
   ResizableHandle,
@@ -14,21 +14,41 @@ import {
   getComparison,
   MOTION_PROVIDER,
 } from "@/utils/comparison";
-import { DxCodePane } from "./comparison-code";
+import { DxCodePane, type DxCodePaneAnimation } from "./comparison-code";
 
 export const DEFAULT_SPLIT_SIZE = 50;
 
-/** Depends on both the comparison and the selected library. */
-function DxComparedPane() {
+/**
+ * Animation props accepted by each pane. `animationMode` decides which
+ * `animationProps` shape is allowed; omit both for a static pane.
+ * `animationKey` is optional: each pane falls back to a key derived from the
+ * active selection, so the animation replays whenever the code changes.
+ */
+type DxPaneAnimationProps = DxCodePaneAnimation & {
+  animationKey?: Attributes["key"];
+};
+
+function DxComparedPane({ animationKey, ...animation }: DxPaneAnimationProps) {
   const comparisonId = useDxComparisonId();
   const libraryId = useDxLibraryId();
+
   const { code, label, icon } = getComparedItem(comparisonId, libraryId);
 
-  return <DxCodePane code={code} label={label} icon={icon} />;
+  return (
+    <DxCodePane
+      code={code}
+      label={label}
+      icon={icon}
+      animationKey={animationKey ?? `${comparisonId}-${libraryId}`}
+      {...animation}
+    />
+  );
 }
 
-/** Depends on the comparison only, so switching library never touches it. */
-function DxMotionProviderPane() {
+function DxMotionProviderPane({
+  animationKey,
+  ...animation
+}: DxPaneAnimationProps) {
   const comparisonId = useDxComparisonId();
 
   return (
@@ -36,6 +56,8 @@ function DxMotionProviderPane() {
       code={getComparison(comparisonId).motionProviderCode}
       label={MOTION_PROVIDER.label}
       icon={MOTION_PROVIDER.icon}
+      animationKey={animationKey ?? comparisonId}
+      {...animation}
     />
   );
 }
@@ -54,11 +76,37 @@ export const DxComparisonPanel = memo(function DxComparisonPanel({
       className="flex-1 overflow-hidden rounded-3xl border border-border bg-(--syntax-bg)"
     >
       <ResizablePanel side="start" className="scrollbar-none overflow-hidden">
-        <DxMotionProviderPane />
+        <DxMotionProviderPane
+          animationMode="text"
+          animationProps={{
+            animation: {
+              mode: ["filterBlurIn", "transformRevealRight"],
+              transition: "gentle",
+              duration: 0.44,
+            },
+            config: {
+              mode: "chars",
+              duration: 0.8,
+            },
+          }}
+        />
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel side="end" className="scrollbar-none overflow-hidden">
-        <DxComparedPane />
+        <DxComparedPane
+          animationMode="chain"
+          animationProps={{
+            animation: {
+              mode: ["fadeDown", "filterBlurIn"],
+              transition: "gentle",
+              duration: 1,
+            },
+            config: {
+              delayLogic: "linear",
+              duration: 0.15,
+            },
+          }}
+        />
       </ResizablePanel>
     </ResizablePanelGroup>
   );

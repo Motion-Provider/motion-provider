@@ -10,13 +10,15 @@ import {
 import { type Attributes, type CSSProperties, type FC, use } from "react";
 import { getHighlighter } from "@/lib/shiki";
 
-type AnimationMode = "chain" | "text" | undefined;
 type FontOptions = {
   italic: number;
   bold: number;
   underline: number;
 };
-type SyntaxAnimationProps<T = AnimationMode> = {
+
+export type AnimationMode = "chain" | "text" | undefined;
+
+export type SyntaxAnimationProps<T = AnimationMode> = {
   animation?: MotionAnimationProps;
   config?: T extends "chain" ? MotionChainConfigProps : MotionTextConfigProps;
   controller?: MotionControllerProps;

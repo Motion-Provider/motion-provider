@@ -15,7 +15,7 @@ const c = {
 } as const;
 
 const theme = {
-  name: "circle-theme",
+  name: "syntax-theme",
   type: "dark",
   fg: c.plain,
   bg: c.bg,

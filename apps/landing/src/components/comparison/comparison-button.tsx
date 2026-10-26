@@ -59,7 +59,7 @@ export function DxComparisonButton({
         <Icon aria-hidden="true" className="size-5 shrink-0" />
         <span className="tracking-tighter">{label}</span>
       </div>
-      <ButtonIcon isActive={isActive} />
+      <ButtonIcon isActive={isActive} trigger={trigger} />
     </Button>
   );
 }
@@ -67,20 +67,27 @@ export function DxComparisonButton({
 const Background: FC<{ trigger: boolean }> = ({ trigger }) => (
   <MotionContainer
     animation={{
-      mode: ["typingEffect"],
+      mode: ["fadeUp"],
       transition: "elasticSoft",
       duration: 0.66,
     }}
     controller={{
       trigger,
     }}
-    className="absolute size-full bg-linear-to-r from-accent to-accent blur-2xl -z-10"
+    className="absolute right-0 top-0 size-24 bg-linear-to-r from-accent to-accent blur-2xl -z-10"
   />
 );
 
-const ButtonIcon: FC<{ isActive: boolean }> = ({ isActive }) =>
-  !isActive ? (
-    <ArrowUpRightIcon className="size-5 group-hover:rotate-45 transition-all duration-300 ease-smooth" />
-  ) : (
-    <CheckCheckIcon className="size-5" />
-  );
+const ButtonIcon: FC<{ isActive: boolean; trigger?: boolean }> = ({
+  isActive,
+  trigger,
+}) => (
+  <span
+    className={cn(
+      "transition-colors duration-300 ease-smooth *:size-5",
+      trigger ? "text-surface" : "text-white",
+    )}
+  >
+    {!isActive ? <ArrowUpRightIcon /> : <CheckCheckIcon />}
+  </span>
+);
