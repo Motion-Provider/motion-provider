@@ -18,12 +18,6 @@ import { DxCodePane, type DxCodePaneAnimation } from "./comparison-code";
 
 export const DEFAULT_SPLIT_SIZE = 50;
 
-/**
- * Animation props accepted by each pane. `animationMode` decides which
- * `animationProps` shape is allowed; omit both for a static pane.
- * `animationKey` is optional: each pane falls back to a key derived from the
- * active selection, so the animation replays whenever the code changes.
- */
 type DxPaneAnimationProps = DxCodePaneAnimation & {
   animationKey?: Attributes["key"];
 };

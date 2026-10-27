@@ -1,7 +1,5 @@
 ﻿import { cn } from "@/lib/utils";
-import config from "../../constants/circle.config";
-
-const { cx, cy, rSub, strokeWidth } = config.identity;
+import type config from "../../constants/circle.config";
 
 function getTrianglePoints(cx: number, cy: number, radius: number) {
   return Array.from({ length: 3 }, (_, i) => {
@@ -12,16 +10,29 @@ function getTrianglePoints(cx: number, cy: number, radius: number) {
   }).join(" ");
 }
 
-interface Props {
+type Identity = typeof config.identity;
+
+interface Props extends Identity {
   id: number;
   radius: number;
+  oddColor?: string;
+  evenColor?: string;
 }
 
-export function CircleItem({ id, radius }: Props) {
+export function CircleItem({
+  id,
+  radius,
+  cx,
+  cy,
+  rSub,
+  strokeWidth,
+  oddColor = "text-accent/50",
+  evenColor = "text-accent/25",
+}: Props) {
   return (
     <polygon
       points={getTrianglePoints(cx, cy, radius - rSub)}
-      className={cn("z-30", id % 2 === 0 ? "text-accent/25" : "text-accent/50")}
+      className={cn("z-30", id % 2 === 0 ? evenColor : oddColor)}
       stroke="currentColor"
       fill="none"
       strokeWidth={strokeWidth}

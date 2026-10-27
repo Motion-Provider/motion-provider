@@ -6,7 +6,7 @@ import SquareGrid from "@/components/square-grid";
 
 export default function Cta() {
   return (
-    <section className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible mb-28">
+    <section className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible my-28">
       <ContainerWrapper<"section">
         as="section"
         surface="glass"
@@ -38,16 +38,16 @@ export default function Cta() {
             Rapid Prototyping
           </Chip>
           <div className="bg-clip-text bg-linear-to-b from-foreground to-transparent from-50%">
-            <h1 className="md:text-6xl tracking-tighter pt-2 capitalize text-transparent">
+            <h1 className="md:text-6xl tracking-tighter pt-2 capitalize text-transparent font-bold">
               Introducing The Motion Playgrounds.
             </h1>
           </div>
-          <p className="text-foreground max-w-2xl pt-3 leading-snug tracking-tight">
+          <p className="text-foreground max-w-2xl pt-3 leading-snug tracking-tight text-center">
             <b>Deterministic motion playground</b> to craft and copy-paste
             animations,
             <b>visually</b>. Completely eliminate the need for AI to design your
             motions. Entirely free!
-          </p>{" "}
+          </p>
           <Link
             href="https://playgrounds.motionprovider.dev"
             target="_blank"

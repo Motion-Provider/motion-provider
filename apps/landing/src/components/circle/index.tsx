@@ -55,7 +55,7 @@ export function Circle() {
             key={animations.join(",")}
           >
             {items.map(({ ...props }) => (
-              <CircleItem key={props.id} {...props} />
+              <CircleItem key={props.id} {...props} {...config.identity} />
             ))}
           </MotionChain>
         </svg>

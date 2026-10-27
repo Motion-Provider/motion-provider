@@ -45,6 +45,12 @@ export default function DxComparison() {
                   mode: "words",
                   duration: 0.1,
                 }}
+                controller={{
+                  configView: {
+                    amount: 1,
+                    once: true,
+                  },
+                }}
                 wrapperClassName="text-5xl tracking-tighter"
               >
                 In-view, scroll, enter/exit. One API

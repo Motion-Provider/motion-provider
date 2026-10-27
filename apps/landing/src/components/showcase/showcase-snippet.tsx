@@ -28,8 +28,8 @@ export function ShowcaseSnippet() {
   return (
     <div
       className={cn(
-        "absolute bottom-0 left-0 z-99 w-full border-t border-border bg-surface/20",
-        "backdrop-blur-lg selection:bg-accent selection:text-black transition-[height]",
+        "absolute bottom-0 left-0 z-99 w-full  bg-transparent",
+        "selection:bg-accent selection:text-black transition-[height]",
         "duration-300 ease-in-out motion-reduce:transition-none",
         expanded ? "h-56" : "h-28",
       )}

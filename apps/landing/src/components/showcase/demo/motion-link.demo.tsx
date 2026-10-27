@@ -19,7 +19,6 @@ const btnClass =
   "shrink-0 cursor-pointer rounded-full hover:opacity-70 hover:bg-accent hover:text-accent-foreground text-muted active:scale-95 disabled:opacity-50 disabled:hover:text-muted disabled:hover:bg-transparent disabled:cursor-not-allowed";
 
 type PageId = "a" | "b";
-
 export default function MotionLinkDemo({ className }: ShowcaseComponentProps) {
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const controller = useController();
@@ -54,7 +53,10 @@ export default function MotionLinkDemo({ className }: ShowcaseComponentProps) {
     <div
       aria-busy={isTransitioning}
       className={cn(
-        "aspect-video flex flex-col items-center justify-start border rounded-3xl w-7/12 p-2 relative",
+        "aspect-video flex flex-col items-center justify-start border rounded-3xl w-7/12 p-2 relative shadow-2xl",
+        "[transform:perspective(1200px)_rotateX(8deg)_rotateY(-14deg)]",
+        "hover:[transform:perspective(1200px)_rotateX(0deg)_rotateY(0deg)]",
+        "transition-transform duration-500 ease-out motion-reduce:transition-none",
         className,
       )}
     >

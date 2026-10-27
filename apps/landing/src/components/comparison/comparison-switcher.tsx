@@ -18,6 +18,14 @@ export function DxComparisonSwitcher({ className }: { className?: string }) {
         delay: 0.5,
       }}
       config={{}}
+      controller={{
+        scroll: {
+          axis: "y",
+          mode: "view",
+          start: 0,
+          end: 0.15,
+        },
+      }}
       className={className}
     >
       {dxComparison.map((item) => (
