@@ -1,178 +1,186 @@
-﻿import { MotionChain, MotionContainer } from "motion-provider";
+﻿import { Chip } from "@heroui/react";
 import Image from "next/image";
+import type { CSSProperties, KeyboardEvent, Ref } from "react";
+import { useRef } from "react";
 import showcaseData from "@/constants/showcase.data";
 import { cn } from "@/lib/utils";
 import { useShowcase } from "@/providers/showcase.provider";
 import type { ShowcaseItem } from "@/types/showcase.type";
-import { Scales } from "../container";
 import { CountDigit } from "../count-digit";
 
-const MIDDLE_SLOT = 4;
-const CELL_COUNT = 9;
+const VISIBLE_DEPTH = 2;
+const MAX_OFFSET = VISIBLE_DEPTH + 1;
 
-const data = Array.from(
-  { length: CELL_COUNT },
-  (_, slot) => showcaseData.find((item) => item.slot === slot) ?? null,
+const items: readonly ShowcaseItem[] = [...showcaseData].sort(
+  (a, b) => a.slot - b.slot,
 );
 
+type StackStyle = CSSProperties & { "--o": number; "--d": number };
+
+interface StackCardProps {
+  item: ShowcaseItem;
+  index: number;
+  offset: number;
+  onSelect: (index: number) => void;
+  ref: Ref<HTMLButtonElement>;
+}
+
 export function ShowcaseExplorer() {
+  const { selected, setSelected } = useShowcase();
+  const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const activeIndex = Math.max(
+    0,
+    items.findIndex((item) => item.id === selected),
+  );
+
+  function select(index: number) {
+    const item = items[index];
+    if (!item) return;
+    setSelected(item.id);
+    buttonRefs.current[index]?.focus();
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
+    const last = items.length - 1;
+    let next: number;
+
+    switch (e.key) {
+      case "ArrowDown":
+      case "ArrowRight":
+        next = Math.min(activeIndex + 1, last);
+        break;
+      case "ArrowUp":
+      case "ArrowLeft":
+        next = Math.max(activeIndex - 1, 0);
+        break;
+      case "Home":
+        next = 0;
+        break;
+      case "End":
+        next = last;
+        break;
+      default:
+        return;
+    }
+
+    e.preventDefault();
+    select(next);
+  }
+
   return (
     <div
-      className={cn(
-        "overflow-hidden relative rounded-l-3xl group/grid",
-        "w-5/12 h-full justify-items-center grid border-r border-border",
-        "grid-cols-3 grid-rows-3",
-      )}
+      role="radiogroup"
+      aria-label="Showcase items"
+      onKeyDown={handleKeyDown}
+      className="relative h-full w-5/12 overflow-hidden rounded-l-3xl border-border"
     >
-      <MotionChain
-        animations={data.map((_, idx) => ({
-          mode: [
-            "filterBlurIn",
-            idx % 2 === 0 ? "fadeLeft" : idx % 3 === 0 ? "fadeUp" : "fadeDown",
-          ],
-          duration: 0.88,
-          transition: "gentle",
-        }))}
-        config={{
-          delayLogic: "linear",
-          duration: 0.24,
-        }}
-        controller={{
-          configView: {
-            once: true,
-            amount: 0.5,
-          },
-        }}
-        className="size-full relative"
-      >
-        {data.map((item) =>
-          item ? (
-            <Cell
-              key={item.id}
-              id={item.id}
-              slot={item.slot}
-              tagline={item.tagline}
-              title={item.title}
-              imgSrc={item.imgSrc}
-            />
-          ) : (
-            <MiddleCell key={MIDDLE_SLOT} />
-          ),
-        )}
-      </MotionChain>
+      {items.map((item, index) => (
+        <StackCard
+          key={item.id}
+          item={item}
+          index={index}
+          offset={index - activeIndex}
+          onSelect={select}
+          ref={(el) => {
+            buttonRefs.current[index] = el;
+          }}
+        />
+      ))}
     </div>
   );
 }
 
-const TARGET_BORDER_L: ReadonlySet<number> = new Set<number>([2, 5, 8]);
-const TARGET_BORDER_R: ReadonlySet<number> = new Set<number>([0, 3, 6]);
-const TARGET_BORDER_T: ReadonlySet<number> = new Set<number>([3, 5, 7]);
-const TARGET_BORDER_B: ReadonlySet<number> = new Set<number>([1, 3, 5]);
+function StackCard({ item, index, offset, onSelect, ref }: StackCardProps) {
+  const { title, tagline, imgSrc, type } = item;
 
-function Cell({
-  id,
-  slot,
-  tagline,
-  title,
-  imgSrc,
-}: Pick<ShowcaseItem, "id" | "slot" | "tagline" | "title" | "imgSrc">) {
-  const { setSelected, selected } = useShowcase();
+  const isSelected = offset === 0;
+  const isVisible = Math.abs(offset) <= VISIBLE_DEPTH;
+  const clamped = Math.max(-MAX_OFFSET, Math.min(MAX_OFFSET, offset));
 
-  function handleSelect() {
-    if (selected === id) return;
-    setSelected(id);
-  }
-
-  const isSelected = selected === id;
+  const style: StackStyle = {
+    "--o": clamped,
+    "--d": Math.abs(clamped),
+    zIndex: items.length - Math.abs(offset),
+  };
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: dynamic content
     <button
+      ref={ref}
       type="button"
+      role="radio"
+      aria-checked={isSelected}
+      tabIndex={isSelected ? 0 : -1}
+      onClick={() => onSelect(index)}
+      style={style}
       className={cn(
-        "relative size-full will-change-auto cursor-pointer overflow-hidden",
-        "group group-hover/grid:opacity-50 hover:opacity-100",
-        "active:scale-[98%] transition-all border-accent/20",
-        TARGET_BORDER_L.has(slot) && "border-l",
-        TARGET_BORDER_R.has(slot) && "border-r",
-        TARGET_BORDER_T.has(slot) && "border-t",
-        TARGET_BORDER_B.has(slot) && "border-b",
+        "group absolute inset-x-6 top-1/2 h-[46%] cursor-pointer overflow-hidden rounded-2xl border bg-black text-left",
+        "translate-y-[calc(-50%+var(--o)*28%)] scale-[calc(1-var(--d)*0.06)]",
+        "transition-[translate,scale,opacity,border-color] duration-500 ease-out motion-reduce:transition-none",
+        "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
+        isSelected ? "border-accent" : "border-accent/20",
+        !isVisible && "pointer-events-none opacity-0",
       )}
-      onClick={handleSelect}
     >
-      <CountDigit
-        digit={slot + 1}
-        className={cn(
-          "z-50 absolute bottom-1.5 right-1.5 text-default text-shadow-accent",
-          "group-hover:text-accent transition-colors duration-150",
-          isSelected && "text-accent",
-        )}
-      />
-      <div
-        className={cn(
-          "bg-linear-to-b group-hover:from-accent/30 from-surface/30 to-black",
-          "absolute top-0 left-0 size-full z-0 transition-colors duration-150",
-          isSelected && "from-accent/30",
-        )}
-      />
       {imgSrc && (
         <Image
           fill
-          alt={title}
+          alt=""
           src={imgSrc}
-          preload={false}
           loading="lazy"
           fetchPriority="low"
-          className="-z-10"
+          sizes="(min-width: 1280px) 534px, 42vw"
+          className="object-cover"
         />
       )}
-      <div className="size-full absolute top-0 left-0 flex flex-col items-start justify-between text-left z-10 p-2 gap-1 pointer-events-none">
-        <span
-          className={cn(
-            "text-accent font-secondary font-light",
-            "rounded-r-full rounded-l-full px-1.5 py-0.5",
-            "border-0.5 border-accent bg-accent/15 tracking-tight",
-            "group-hover:bg-accent-hover group-hover:text-accent-foreground transition-colors duration-150",
-            title.length >= 20 ? "text-[10px]" : "text-xs",
-            isSelected && "bg-accent-hover text-accent-foreground",
-          )}
-        >
-          {title}
-        </span>
-        <span className="text-xs tracking-tighter text-muted max-w-32">
-          {tagline}
-        </span>
-      </div>
-    </button>
-  );
-}
-
-function MiddleCell() {
-  const { selected } = useShowcase();
-
-  const slot = data.find((item) => item?.id === selected)?.slot ?? 1;
-
-  return (
-    <div className="size-full relative grid place-items-center pointer-events-none">
-      <Scales
-        orientation="diagonal"
-        lineWidth={1}
-        opacity={0.5}
-        className="absolute size-full inset-0 z-0"
+      <span
+        aria-hidden
+        className={cn(
+          "absolute inset-0 bg-linear-to-b to-black transition-colors duration-150",
+          "from-surface/30 group-hover:from-accent/30",
+          isSelected && "from-accent/30",
+        )}
       />
-      <MotionContainer
-        animation={{
-          mode: ["filterBlurIn", "fadeUp"],
-          duration: 1,
-          transition: "gentle",
-        }}
-        className="z-10 bg-clip-text bg-linear-to-b from-foreground/50 to-muted/15 from-20%"
-        key={slot}
-      >
-        <CountDigit
-          digit={slot + 1}
-          className="text-shadow-accent text-7xl font-semibold text-transparent "
-        />
-      </MotionContainer>
-    </div>
+      <span
+        aria-hidden
+        className="absolute inset-0 bg-black opacity-[calc(var(--d)*0.22)] transition-opacity duration-500 motion-reduce:transition-none"
+      />
+      <span className="absolute inset-0 flex flex-col items-start justify-between gap-1 p-3">
+        <div className="flex items-center justify-between w-full gap-2">
+          <span
+            className={cn(
+              "rounded-full border-0.5 border-accent bg-accent/15 px-1.5 py-0.5",
+              "font-secondary text-xs font-light tracking-tight text-accent",
+              "transition-colors duration-150 group-hover:bg-accent-hover group-hover:text-accent-foreground",
+              isSelected && "bg-accent-hover text-accent-foreground",
+            )}
+          >
+            {title}
+          </span>
+          <Chip
+            variant="soft"
+            color="accent"
+            className="rounded-full text-[10px] font-primary tracking-normal"
+            size="sm"
+          >
+            {type}
+          </Chip>
+        </div>
+
+        <span className="flex w-full items-end justify-between gap-2">
+          <span className="max-w-48 text-xs tracking-tighter text-muted">
+            {tagline}
+          </span>
+          <CountDigit
+            digit={index + 1}
+            className={cn(
+              "text-default text-shadow-accent transition-colors duration-150 group-hover:text-accent",
+              isSelected && "text-accent",
+            )}
+          />
+        </span>
+      </span>
+    </button>
   );
 }

@@ -18,4 +18,4 @@
     duration: 2.5,
     staggerDuration: 0.24,
   },
-} as const;
+};

@@ -1,12 +1,16 @@
 ﻿import { Button, Spinner } from "@heroui/react";
-import { RotateCcw } from "lucide-react";
+import { InfoIcon, RotateCcw } from "lucide-react";
 import { MotionContainer, useController } from "motion-provider";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import { getDemo, isDemoId } from "@/lib/demo-registry";
+import { getAnimation } from "@/lib/motion";
 import { useShowcase } from "@/providers/showcase.provider";
 import { GithubIcon } from "../icons/github-icon";
+import { ShowcaseInfo } from "./showcase-info";
+
+const animation = getAnimation("showcaseComponentReRender");
 
 export function ShowcaseComponent() {
   const { selected } = useShowcase();
@@ -44,25 +48,25 @@ export function ShowcaseComponent() {
           <Demo controller={controller} className="mb-8" />
         </Suspense>
       </ErrorBoundary>
-      <div className="flex gap-2 absolute top-6 right-6 rounded-full z-50">
+      <div className="w-full z-50 flex gap-2 absolute top-0 p-2 flex-row justify-between">
+        <div className="flex gap-2">
+          <Link href={githubURL} target="_blank" rel="noopener noreferrer">
+            <Button variant="outline" isIconOnly>
+              <GithubIcon />
+            </Button>
+          </Link>
+          <ShowcaseInfo rendered={<ShowcaseInfo />}>
+            <Button variant="outline" isIconOnly>
+              <InfoIcon />
+            </Button>
+          </ShowcaseInfo>
+        </div>
         <Button variant="primary" size="md" onClick={handleReset}>
           Re-render
-          <MotionContainer
-            animation={{
-              mode: "spin",
-              transition: "bounceSoft",
-              duration: 1,
-            }}
-            controller={controller}
-          >
+          <MotionContainer {...animation} controller={controller}>
             <RotateCcw className="size-4" />
           </MotionContainer>
         </Button>
-        <Link href={githubURL} target="_blank" rel="noopener noreferrer">
-          <Button variant="outline" isIconOnly>
-            <GithubIcon />
-          </Button>
-        </Link>
       </div>
     </>
   );

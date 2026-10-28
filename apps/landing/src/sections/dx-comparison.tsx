@@ -3,7 +3,10 @@ import { MotionText } from "motion-provider";
 import { DxComparisonSplit } from "@/components/comparison/comparison-split";
 import { DxComparisonSwitcher } from "@/components/comparison/comparison-switcher";
 import { ContainerWrapper } from "@/components/container";
+import { getAnimation } from "@/lib/motion";
 import { DxComparisonProvider } from "@/providers/dx-feature.provider";
+
+const animation = getAnimation("dxComparisonText");
 
 export default function DxComparison() {
   return (
@@ -34,25 +37,7 @@ export default function DxComparison() {
         >
           <div className="flex min-w-0 flex-col justify-between p-6">
             <div className="flex flex-col gap-3 h-1/3">
-              <MotionText
-                elementType="h1"
-                animation={{
-                  mode: ["filterBlurIn", "fadeUp"],
-                  transition: "gentle",
-                  duration: 0.66,
-                }}
-                config={{
-                  mode: "words",
-                  duration: 0.1,
-                }}
-                controller={{
-                  configView: {
-                    amount: 1,
-                    once: true,
-                  },
-                }}
-                wrapperClassName="text-5xl tracking-tighter"
-              >
+              <MotionText {...animation}>
                 In-view, scroll, enter/exit. One API
               </MotionText>
               <p className="max-w-sm text-muted leading-snug tracking-tight">

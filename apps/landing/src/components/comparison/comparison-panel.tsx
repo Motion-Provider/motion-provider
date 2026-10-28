@@ -5,6 +5,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import { getAnimation } from "@/lib/motion";
 import {
   useDxComparisonId,
   useDxLibraryId,
@@ -56,6 +57,9 @@ function DxMotionProviderPane({
   );
 }
 
+const comparedToAnimation = getAnimation("circleCodeSnippet");
+const comparisonPanelAnimation = getAnimation("comparisonPanel");
+
 export const DxComparisonPanel = memo(function DxComparisonPanel({
   sizeRef,
 }: {
@@ -72,34 +76,14 @@ export const DxComparisonPanel = memo(function DxComparisonPanel({
       <ResizablePanel side="start" className="scrollbar-none overflow-hidden">
         <DxMotionProviderPane
           animationMode="text"
-          animationProps={{
-            animation: {
-              mode: ["filterBlurIn", "transformRevealRight"],
-              transition: "gentle",
-              duration: 0.44,
-            },
-            config: {
-              mode: "chars",
-              duration: 0.8,
-            },
-          }}
+          animationProps={comparisonPanelAnimation}
         />
       </ResizablePanel>
       <ResizableHandle withHandle />
       <ResizablePanel side="end" className="scrollbar-none overflow-hidden">
         <DxComparedPane
           animationMode="chain"
-          animationProps={{
-            animation: {
-              mode: ["fadeDown", "filterBlurIn"],
-              transition: "gentle",
-              duration: 1,
-            },
-            config: {
-              delayLogic: "linear",
-              duration: 0.15,
-            },
-          }}
+          animationProps={comparedToAnimation}
         />
       </ResizablePanel>
     </ResizablePanelGroup>

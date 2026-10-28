@@ -1,11 +1,15 @@
 import { Chip } from "@heroui/react";
 import { Motion, MotionText } from "motion-provider";
 import { LIBRARY_NAMES, METRIC_SUFFIX } from "@/constants/metrics.config";
+import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { MetricItem, MetricSizeKey } from "@/types/metrics.type";
 import { formatKb } from "@/utils/formatKb";
 import { getFillStyle } from "@/utils/metrics";
 import { Scales } from "./container";
+
+const nameAnimation = getAnimation("metricBarName");
+const labelAnimation = getAnimation("metricBarLabel");
 
 export function MetricBar({
   item,
@@ -33,29 +37,20 @@ export function MetricBar({
           <MotionText
             wrapperClassName="text-xl font-medium tracking-tight"
             animation={{
-              mode: ["flash", "filterBlurIn", "fadeIn"],
+              ...nameAnimation.animation,
               delay: index * 0.8,
-              transition: "slowCubic",
-              duration: 0.75,
             }}
-            config={{
-              mode: "chars",
-              duration: 0.48,
-              delayLogic: "sinusoidal",
-            }}
+            config={nameAnimation.config}
           >
             {name}
           </MotionText>
           <Chip variant="soft" color="accent">
             <MotionText
               animation={{
-                mode: ["fadeUp"],
-                transition: "gentle",
+                ...labelAnimation.animation,
                 delay: index,
               }}
-              config={{
-                mode: "words",
-              }}
+              config={labelAnimation.config}
               wrapperClassName="text-xs tracking-tighter"
             >
               {label}

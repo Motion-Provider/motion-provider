@@ -1,6 +1,9 @@
-﻿import { MotionChain, MotionText } from "motion-provider";
+﻿import { Chip } from "@heroui/react";
+import { MotionChain, MotionText } from "motion-provider";
 import { CircleItem } from "@/components/circle/circle-item";
 import config from "@/constants/circle.config";
+import { getAnimation } from "@/lib/motion";
+import { cn } from "@/lib/utils";
 
 const { beginRadius, endRadius, holeRadius } = config;
 
@@ -15,91 +18,38 @@ const items = Array.from({ length: count }, (_, i) => {
   };
 });
 
-const configIdentity = { ...config.identity, strokeWidth: 0.9 };
+const keywords = ["fadeDown", "fadeUp", "maskGradientPerforate"] as const;
+
+const textAnimation1 = getAnimation("myFingerIsGoodNowText1");
+const textAnimation2 = getAnimation("myFingerIsGoodNowText2");
+const chainAnimation = getAnimation("myFingerIsGoodNowChain");
+
 export default function MyFingerIsGoodNow() {
   return (
-    <section className="min-h-60 w-full justify-center items-center flex bg-white text-black my-160 py-24">
+    <section className="min-h-60 w-full justify-center items-center flex bg-white text-black py-24">
       <div className="w-7xl flex justify-between items-center">
-        <div className="">
-          <MotionText
-            animation={{
-              mode: ["filterBlurIn", "fadeDown"],
-              transition: "gentle",
-            }}
-            config={{
-              mode: "words",
-            }}
-            controller={{
-              scroll: {
-                axis: "y",
-                mode: "view",
-                start: 0.15,
-                end: 0.5,
-              },
-            }}
-            wrapperClassName="text-6xl text-start tracking-tighter font-bold max-w-3xs"
-          >
-            Simple yet powerful,
-          </MotionText>
+        <div className="text-6xl text-start tracking-tighter font-bold ">
+          <MotionText {...textAnimation1}>Simple yet powerful,</MotionText>
           <br />
-          <MotionText
-            animation={{
-              mode: ["filterBlurIn", "fadeUp"],
-              transition: "gentle",
-            }}
-            config={{
-              mode: "words",
-            }}
-            controller={{
-              scroll: {
-                axis: "y",
-                mode: "view",
-                start: 0.3,
-                end: 0.6,
-              },
-            }}
-            wrapperClassName="text-6xl text-start tracking-tighter font-bold max-w-3xs"
-          >
-            Animation Provider.
-          </MotionText>
+          <MotionText {...textAnimation2}>Animation Provider.</MotionText>
+          <ChipList className="pt-6 tracking-normal" />
         </div>
-        <div className="size-auto pr-12">
+        <div className="pr-12 relative">
           <svg
             viewBox="0 0 100 100"
             xmlns="http://www.w3.org/2000/svg"
-            className="z-30 pointer-events-none size-96"
+            className="z-30 pointer-events-none desktop:size-96 laptop:size-80"
           >
-            <MotionChain
-              animations={items.map((_, i) => ({
-                mode: [
-                  i === 0 ? "fadeDown" : "fadeUp",
-                  "maskGradientPerforate",
-                ],
-                transition: "gentle",
-                duration: 0.5,
-                endDelay: i * 0.1,
-              }))}
-              config={{
-                delayLogic: "sinusoidal",
-                duration: 0.5,
-              }}
-              controller={{
-                scroll: {
-                  axis: "y",
-                  mode: "view",
-                  start: 0.35,
-                  end: 0.5,
-                },
-              }}
-              elementType="g"
-            >
+            <title>My finger is good now</title>
+            <MotionChain {...chainAnimation}>
               {items.map(({ ...props }) => (
                 <g key={props.id}>
                   <CircleItem
                     evenColor="text-accent-foreground"
                     oddColor="text-accent"
-                    {...configIdentity}
+                    {...config.identity}
                     {...props}
+                    strokeWidth={0.8}
                   />
                 </g>
               ))}
@@ -110,3 +60,19 @@ export default function MyFingerIsGoodNow() {
     </section>
   );
 }
+
+const chipAnimation = getAnimation("myFingerIsGoodNowChip");
+
+const ChipList = ({ className }: { className?: string }) => {
+  return (
+    <div className={cn("flex gap-1", className)}>
+      <MotionChain {...chipAnimation}>
+        {keywords.map((k) => (
+          <Chip variant="soft" color="accent" key={k}>
+            {k}
+          </Chip>
+        ))}
+      </MotionChain>
+    </div>
+  );
+};

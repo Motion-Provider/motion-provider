@@ -2,6 +2,7 @@ import { Chip } from "@heroui/react";
 import { MotionChain } from "motion-provider";
 import { MetricBar } from "@/components/metric-bar";
 import metrics from "@/constants/metrics.data";
+import { getAnimation } from "@/lib/motion";
 import type {
   MetricItem,
   MetricLibrary,
@@ -32,6 +33,8 @@ const ITEMS: readonly MetricItem[] = [...metrics].sort(
 );
 
 const MAX = getMaxValue(ITEMS, METRIC);
+
+const animation = getAnimation("metricBarItems");
 
 export default function Metrics() {
   return (
@@ -64,27 +67,8 @@ export default function Metrics() {
             smaller than GSAP core + useGSAP.
           </p>
         </div>
-
         <div className="flex flex-col gap-6">
-          <MotionChain
-            animation={{
-              mode: ["fadeUp", "filterBlurIn"],
-              duration: 0.88,
-              transition: "gentle",
-            }}
-            controller={{
-              configView: {
-                once: true,
-                amount: 0.5,
-              },
-            }}
-            config={{
-              duration: 0.44,
-            }}
-            elementType="ol"
-            className="flex w-full flex-col gap-4"
-            data-size-bars
-          >
+          <MotionChain {...animation} data-size-bars>
             {ITEMS.map((item, index) => (
               <MetricBar
                 key={item.id}
@@ -96,7 +80,6 @@ export default function Metrics() {
               />
             ))}
           </MotionChain>
-
           <p className="text-xs text-muted">
             *React excluded, container-level comparison, minified and gzipped
             with esbuild. Feature coverage differs between libraries.

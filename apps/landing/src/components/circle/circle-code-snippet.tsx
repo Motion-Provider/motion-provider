@@ -3,6 +3,7 @@ import type { AnimationKeys, TransitionKeys } from "motion-provider";
 import dynamic from "next/dynamic";
 import { Suspense } from "react";
 import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
 import { ContainerWrapper } from "../container";
@@ -42,6 +43,8 @@ function generateMotionCode(
 `;
   return `${importCode}${prefixCode}${props}${closeCode}`.trim();
 }
+
+const animation = getAnimation("circleCodeSnippet");
 
 export function CircleCodeSnippet({ className }: { className?: string }) {
   const { animations, transition } = useCircle();
@@ -97,18 +100,7 @@ export function CircleCodeSnippet({ className }: { className?: string }) {
           className="font-secondary p-4 -mt-1 whitespace-pre text-left rounded-3xl text-xs size-full text-(--syntax-plain) bg-(--syntax-bg)"
           wrapperClassName="flex w-full flex-col items-stretch text-left"
           lineClassName="block w-full min-h-lh text-left whitespace-pre"
-          animationProps={{
-            animation: {
-              mode: ["fadeDown", "filterBlurIn"],
-              transition: "gentle",
-              duration: 1,
-              delay: 0.25,
-            },
-            config: {
-              delayLogic: "linear",
-              duration: 0.15,
-            },
-          }}
+          animationProps={animation}
         />
       </ContainerWrapper>
     </Suspense>

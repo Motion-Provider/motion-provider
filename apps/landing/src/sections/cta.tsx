@@ -25,7 +25,7 @@ export default function Cta() {
           lineWidth: 1,
           className: "pointer-events-none",
         }}
-        className="max-w-7xl rounded-3xl size-full"
+        className="max-w-7xl rounded-3xl size-full mt-24"
         innerClassName="grid place-items-center-safe relative overflow-hidden size-full rounded-3xl"
       >
         <SquareGrid />

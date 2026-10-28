@@ -1,33 +1,20 @@
 import { MotionChain } from "motion-provider";
 import { dxComparison } from "@/constants/dx-comparison.data";
+import { getAnimation } from "@/lib/motion";
 import {
   useDxComparisonActions,
   useDxComparisonId,
 } from "@/providers/dx-feature.provider";
 import { DxComparisonButton } from "./comparison-button";
 
+const animation = getAnimation("dxComparisonSwitcher");
+
 export function DxComparisonSwitcher({ className }: { className?: string }) {
   const comparisonId = useDxComparisonId();
   const { setComparisonId } = useDxComparisonActions();
 
   return (
-    <MotionChain
-      elementType="li"
-      animation={{
-        mode: "fadeUp",
-        delay: 0.5,
-      }}
-      config={{}}
-      controller={{
-        scroll: {
-          axis: "y",
-          mode: "view",
-          start: 0,
-          end: 0.15,
-        },
-      }}
-      className={className}
-    >
+    <MotionChain {...animation} className={className}>
       {dxComparison.map((item) => (
         <DxComparisonButton
           key={item.id}
