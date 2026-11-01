@@ -2,7 +2,7 @@ import { Annotation } from "../annotation";
 
 export function ShowcaseNoComponent() {
   return (
-    <div className="relative flex items-center-safe justify-center-safe flex-col">
+    <div className="relative flex items-center-safe justify-center-safe flex-col mb-12">
       <Annotation
         title="No Preview available check the snippet instead."
         className="z-50 -rotate-180 scale-90 relative"

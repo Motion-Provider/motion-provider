@@ -1,12 +1,14 @@
-﻿import { Button, Spinner } from "@heroui/react";
-import { InfoIcon, RotateCcw } from "lucide-react";
+﻿import { Button, InfoIcon, Spinner } from "@heroui/react";
+import { RotateCcw } from "lucide-react";
 import { MotionContainer, useController } from "motion-provider";
 import Link from "next/link";
 import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
+import showcaseData from "@/constants/showcase.data";
 import { getDemo, isDemoId } from "@/lib/demo-registry";
 import { getAnimation } from "@/lib/motion";
 import { useShowcase } from "@/providers/showcase.provider";
+import { CountDigit } from "../count-digit";
 import { GithubIcon } from "../icons/github-icon";
 import { ShowcaseInfo } from "./showcase-info";
 
@@ -27,6 +29,8 @@ export function ShowcaseComponent() {
 
   const githubURL = `https://github.com/Motion-Provider/motion-provider/blob/main/apps/landing/src/components/showcase/demo/${selected}.tsx`;
 
+  const { desc, title, tagline, slot } =
+    showcaseData.find((item) => item.id === selected) || showcaseData[0];
   return (
     <>
       <ErrorBoundary
@@ -45,20 +49,33 @@ export function ShowcaseComponent() {
           name="showcase-component-suspense"
           fallback={<Spinner size="lg" />}
         >
-          <Demo controller={controller} className="mb-8" />
+          <Demo controller={controller} className="mb-20" />
         </Suspense>
       </ErrorBoundary>
-      <div className="w-full z-50 flex gap-2 absolute top-0 p-2 flex-row justify-between">
+      <div className="w-full z-50 flex gap-2 absolute top-0 p-2 flex-row justify-end">
         <div className="flex gap-2">
           <Link href={githubURL} target="_blank" rel="noopener noreferrer">
             <Button variant="outline" isIconOnly>
               <GithubIcon />
             </Button>
           </Link>
-          <ShowcaseInfo rendered={<ShowcaseInfo />}>
-            <Button variant="outline" isIconOnly>
-              <InfoIcon />
-            </Button>
+          <ShowcaseInfo
+            render={() => (
+              <Button variant="outline" isIconOnly>
+                <InfoIcon />
+              </Button>
+            )}
+            header={title}
+            className="text-2xl tracking-tighter font-mono font-semibold text-accent"
+          >
+            <div className="flex flex-col gap-2 pb-4">
+              <span className="italic text-white">"{tagline}"</span>
+              <span>{desc}</span>
+            </div>
+            <CountDigit
+              digit={slot + 1}
+              className="absolute bottom-0 right-0 text-2xl font-semibold  font-mono text-muted"
+            />
           </ShowcaseInfo>
         </div>
         <Button variant="primary" size="md" onClick={handleReset}>

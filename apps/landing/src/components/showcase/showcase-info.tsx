@@ -1,25 +1,27 @@
 import { Modal } from "@heroui/react";
+import { XIcon } from "lucide-react";
 
-export function ShowcaseInfo({
-  children,
-  rendered,
-}: {
+interface Props {
+  header: string;
   children: React.ReactNode;
-  rendered: React.ReactNode;
-}) {
+  className?: string;
+  render: () => React.ReactNode;
+}
+
+export function ShowcaseInfo({ children, header, className, render }: Props) {
   return (
     <Modal>
-      {children}
+      {render()}
       <Modal.Backdrop>
         <Modal.Container>
-          <Modal.Dialog>
-            <Modal.CloseTrigger />
+          <Modal.Dialog className="bg-glass-surface backdrop-blur-lg">
+            <Modal.CloseTrigger>
+              <XIcon />
+            </Modal.CloseTrigger>
             <Modal.Header>
-              <Modal.Icon />
-              <Modal.Heading />
+              <Modal.Heading className={className}>{header}</Modal.Heading>
             </Modal.Header>
-            <Modal.Body>{rendered}</Modal.Body>
-            <Modal.Footer />
+            <Modal.Body className="relative">{children}</Modal.Body>
           </Modal.Dialog>
         </Modal.Container>
       </Modal.Backdrop>
