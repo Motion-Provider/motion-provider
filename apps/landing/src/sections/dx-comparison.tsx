@@ -52,7 +52,7 @@ export default function DxComparison() {
               <DxComparisonSwitcher className="list-none w-full relative" />
             </div>
           </div>
-          <Separator orientation="vertical" className="bg-border my-6" />
+          <Separator orientation="vertical" className="bg-transparent" />
           <DxComparisonSplit />
         </ContainerWrapper>
       </section>

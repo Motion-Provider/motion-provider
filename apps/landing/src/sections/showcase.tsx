@@ -1,9 +1,13 @@
-﻿import { ContainerWrapper } from "@/components/container";
+﻿import { MotionText } from "motion-provider";
+import { ContainerWrapper } from "@/components/container";
 import { ShowcaseDivider } from "@/components/showcase/showcase-divider";
 import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
 import { ShowcasePreview } from "@/components/showcase/showcase-preview";
 import { ShowcaseSnippet } from "@/components/showcase/showcase-snippet";
+import { getAnimation } from "@/lib/motion";
 import { ShowcaseProvider } from "@/providers/showcase.provider";
+
+const titleAnimation = getAnimation("showcaseTitle");
 
 export default function ShowcaseSection() {
   return (
@@ -11,9 +15,9 @@ export default function ShowcaseSection() {
       <ShowcaseDivider className="pointer-events-none" />
       <div className="justify-self-center relative max-w-7xl overflow-visible size-full py-28 flex flex-col">
         <div className="flex flex-col gap-3 min-h-min max-h-60 h-auto mb-4 justify-center items-center z-10">
-          <h1 className="text-6xl text-black tracking-tighter font-bold">
+          <MotionText {...titleAnimation} key="title2">
             Designed For Simplicity.
-          </h1>
+          </MotionText>
           <p className="max-w-md leading-snug text-center text-black">
             Here is the core of Motion Provider APIs and literally all
             <span className="text-white"> you need to animate a webpage.</span>

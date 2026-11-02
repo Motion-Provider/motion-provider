@@ -28,7 +28,7 @@ export function ShowcaseSnippet() {
   return (
     <div
       className={cn(
-        "absolute bottom-0 left-0 z-99 w-full bg-glass-surface rounded-3xl",
+        "absolute bottom-0 left-0 z-99 w-full bg-glass-surface/10 rounded-3xl",
         "selection:bg-accent selection:text-black transition-[height]",
         "duration-300 ease-in-out motion-reduce:transition-none backdrop-blur-2xl",
         expanded ? "h-56" : "h-28",
@@ -71,7 +71,6 @@ export function ShowcaseSnippet() {
             className="h-auto w-full -mt-1 overflow-hidden rounded-3xl p-4 font-secondary text-left text-xs whitespace-pre text-(--syntax-plain) "
             wrapperClassName="flex w-full flex-col items-stretch text-left"
             lineClassName="flex w-full whitespace-pre"
-            withLineIndex
             animationProps={undefined}
           />
         </Suspense>

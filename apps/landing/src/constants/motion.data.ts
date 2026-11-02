@@ -250,4 +250,21 @@ export default createMotionConfig({
       },
     },
   },
+  showcaseTitle: {
+    type: "MotionText",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.66,
+      },
+      config: {
+        mode: "chars",
+        delayLogic: "chaotic",
+        duration: 0.2,
+      },
+      elementType: "h1",
+      className: "text-6xl text-black tracking-tighter font-bold",
+    },
+  },
 });
