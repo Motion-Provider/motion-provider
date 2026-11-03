@@ -41,15 +41,29 @@ export default createMotionConfig({
       },
     },
   },
-  metricBarLabel: {
+  metricTitle: {
     type: "MotionText",
     props: {
       animation: {
-        mode: "fadeUp",
-        transition: "gentle",
+        mode: ["filterBlurIn", "textShimmer"],
+        delay: 0.33,
+        transition: "bounceSoft",
+        duration: 1.8,
       },
       config: {
-        mode: "words",
+        mode: "chars",
+        duration: 0.52,
+        delayLogic: "sinusoidal",
+      },
+    },
+  },
+  metricBarLabel: {
+    type: "MotionContainer",
+    props: {
+      animation: {
+        mode: ["filterBlurOut", "fadeOut"],
+        transition: "gentle",
+        direction: "alternate-reverse",
       },
     },
   },
@@ -264,7 +278,43 @@ export default createMotionConfig({
         duration: 0.2,
       },
       elementType: "h1",
-      className: "text-6xl text-black tracking-tighter font-bold",
+      className: "text-7xl text-black tracking-tighter font-bold",
+    },
+  },
+  faqTitle: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["fadeIn", "filterBlurIn"],
+        transition: "gentle",
+        duration: 1.2,
+      },
+      config: {
+        delayLogic: "shuffle",
+        duration: 0.44,
+      },
+      controller: {
+        configView: {
+          amount: 0.25,
+          once: true,
+        },
+      },
+      elementType: "span",
+    },
+  },
+  faqAccordion: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+      },
+      controller: {
+        configView: {
+          amount: 0.5,
+          once: true,
+        },
+      },
     },
   },
 });

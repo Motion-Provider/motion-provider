@@ -1,5 +1,5 @@
 import { Chip } from "@heroui/react";
-import { Motion, MotionText } from "motion-provider";
+import { Motion, MotionContainer, MotionText } from "motion-provider";
 import { LIBRARY_NAMES, METRIC_SUFFIX } from "@/constants/metrics.config";
 import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -25,8 +25,9 @@ export function MetricBar({
   readonly isHighlighted?: boolean;
 }) {
   const { label, library, component: Component } = item;
-  const bytes = item[metric];
-  const name = LIBRARY_NAMES[library];
+
+  const [bytes, name] = [item[metric], LIBRARY_NAMES[library]];
+
   const fillStyle = getFillStyle(bytes, max);
   const fill = fillStyle["--fill"];
 
@@ -36,26 +37,24 @@ export function MetricBar({
         <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
           <MotionText
             wrapperClassName="text-xl font-medium tracking-tight"
+            {...nameAnimation}
             animation={{
               ...nameAnimation.animation,
               delay: index * 0.8,
             }}
-            config={nameAnimation.config}
           >
             {name}
           </MotionText>
-          <Chip variant="soft" color="accent">
-            <MotionText
-              animation={{
-                ...labelAnimation.animation,
-                delay: index,
-              }}
-              config={labelAnimation.config}
-              wrapperClassName="text-xs tracking-tighter"
-            >
+          <MotionContainer
+            animation={{
+              ...labelAnimation.animation,
+              delay: index * 0.9,
+            }}
+          >
+            <Chip variant="soft" color="accent">
               {label}
-            </MotionText>
-          </Chip>
+            </Chip>
+          </MotionContainer>
         </div>
       </div>
       {/** biome-ignore lint/a11y/useAriaPropsSupportedByRole: dynamic aria */}
@@ -77,9 +76,10 @@ export function MetricBar({
           timing={{
             duration: 1,
             delay: index * 0.5,
+            ease: "ease-in-out",
           }}
           className={cn(
-            isHighlighted ? "bg-accent" : "bg-surface-secondary",
+            isHighlighted ? "bg-accent" : "bg-surface",
             "size-full origin-left",
           )}
         />

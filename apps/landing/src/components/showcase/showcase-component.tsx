@@ -68,14 +68,16 @@ export function ShowcaseComponent() {
             header={title}
             className="text-2xl tracking-tighter font-mono font-semibold text-accent"
           >
-            <div className="flex flex-col gap-2 pb-4">
+            <div className="flex flex-col gap-2 pb-4 z-50">
               <span className="italic text-white">"{tagline}"</span>
               <span>{desc}</span>
             </div>
-            <CountDigit
-              digit={slot + 1}
-              className="absolute bottom-0 right-0 text-2xl font-semibold  font-mono text-muted"
-            />
+            <div className="absolute translate-x-1/2 -translate-y-1/2 left-2/3 top-1/5 -z-20 bg-clip-text bg-linear-to-b from-foreground/20 to-transparent from-50%">
+              <CountDigit
+                digit={slot + 1}
+                className="text-5xl font-mono text-transparent"
+              />
+            </div>
           </ShowcaseInfo>
         </div>
         <Button variant="primary" size="md" onClick={handleReset}>

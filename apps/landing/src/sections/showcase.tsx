@@ -11,13 +11,11 @@ const titleAnimation = getAnimation("showcaseTitle");
 
 export default function ShowcaseSection() {
   return (
-    <section className="w-full min-h-screen relative">
+    <section className="w-full min-h-screen relative" id="features">
       <ShowcaseDivider className="pointer-events-none" />
       <div className="justify-self-center relative max-w-7xl overflow-visible size-full py-28 flex flex-col">
         <div className="flex flex-col gap-3 min-h-min max-h-60 h-auto mb-4 justify-center items-center z-10">
-          <MotionText {...titleAnimation} key="title2">
-            Designed For Simplicity.
-          </MotionText>
+          <MotionText {...titleAnimation}>Designed For Simplicity.</MotionText>
           <p className="max-w-md leading-snug text-center text-black">
             Here is the core of Motion Provider APIs and literally all
             <span className="text-white"> you need to animate a webpage.</span>

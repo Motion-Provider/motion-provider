@@ -26,8 +26,8 @@ const chainAnimation = getAnimation("myFingerIsGoodNowChain");
 
 export default function MyFingerIsGoodNow() {
   return (
-    <section className="min-h-60 w-full justify-center items-center flex bg-white text-black py-24">
-      <div className="w-7xl flex justify-between items-center">
+    <section className="min-h-60 w-full justify-center items-center flex bg-white text-black py-24 relative">
+      <div className="w-7xl flex justify-between items-center z-10">
         <div className="text-6xl text-start tracking-tighter font-bold -mt-4">
           <ChipList className="tracking-normal pb-2" />
           <MotionText {...textAnimation1}>Simple yet powerful,</MotionText>

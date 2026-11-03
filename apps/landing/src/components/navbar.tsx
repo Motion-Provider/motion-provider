@@ -1,18 +1,8 @@
 ﻿import NextLink from "next/link";
+import navigationData from "@/constants/navigation.data";
 import { cn } from "@/lib/utils";
 import { Scales } from "./container";
 import { GithubIcon } from "./icons/github-icon";
-
-interface NavigationItem {
-  readonly label: string;
-  readonly href: string;
-}
-
-const navigation: readonly NavigationItem[] = [
-  { label: "Features", href: "#features" },
-  { label: "Docs", href: "/docs" },
-  { label: "Pricing", href: "#pricing" },
-];
 
 const FOCUS_RING = cn(
   "focus-visible:outline-none",
@@ -79,7 +69,7 @@ export function Navbar() {
 
           <nav aria-label="Main navigation" className="hidden md:block">
             <ul className="flex items-center gap-6">
-              {navigation.map((item) => (
+              {navigationData.map((item) => (
                 <li key={item.href}>
                   <NextLink
                     className={cn(

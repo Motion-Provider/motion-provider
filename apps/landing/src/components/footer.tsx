@@ -1,16 +1,6 @@
 ﻿import NextLink from "next/link";
+import navigationData from "@/constants/navigation.data";
 import { cn } from "@/lib/utils";
-
-const footerLinks = [
-  { label: "Features", href: "#features" },
-  { label: "Docs", href: "/docs" },
-  { label: "Pricing", href: "#pricing" },
-  {
-    label: "GitHub",
-    href: "https://github.com/acme",
-    external: true,
-  },
-];
 
 function AcmeLogo() {
   return (
@@ -89,7 +79,7 @@ export function Footer() {
           {/* Links */}
           <nav aria-label="Footer navigation">
             <ul className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-              {footerLinks.map((item) => (
+              {navigationData.map((item) => (
                 <li key={item.href}>
                   <NextLink
                     className={cn(

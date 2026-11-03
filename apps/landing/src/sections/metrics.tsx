@@ -1,5 +1,5 @@
 import { Chip } from "@heroui/react";
-import { MotionChain } from "motion-provider";
+import { MotionChain, MotionText } from "motion-provider";
 import { MetricBar } from "@/components/metric-bar";
 import metrics from "@/constants/metrics.data";
 import { getAnimation } from "@/lib/motion";
@@ -24,9 +24,9 @@ const pick = (id: MetricId): MetricItem => {
   return item;
 };
 
-const MOTION_PROVIDER = pick("mp-container");
-const GSAP = pick("gsap-use-gsap");
-const MOTION_FULL = pick("motion-component");
+const MOTION_PROVIDER = pick("mp-container"),
+  GSAP = pick("gsap-use-gsap"),
+  MOTION_FULL = pick("motion-component");
 
 const ITEMS: readonly MetricItem[] = [...metrics].sort(
   (a, b) => a[METRIC] - b[METRIC],
@@ -34,19 +34,27 @@ const ITEMS: readonly MetricItem[] = [...metrics].sort(
 
 const MAX = getMaxValue(ITEMS, METRIC);
 
-const animation = getAnimation("metricBarItems");
+const [metricAnimation, titleAnimation] = [
+  getAnimation("metricBarItems"),
+  getAnimation("metricTitle"),
+];
 
 export default function Metrics() {
   return (
     <section
       aria-labelledby="metrics-heading"
-      className="relative min-h-screen w-full max-w-7xl justify-self-center overflow-visible pt-36 pb-28"
+      className="relative min-h-screen w-full max-w-7xl justify-self-center overflow-visible pt-36"
     >
       <div className="flex flex-col gap-16">
         <div className="flex h-auto min-h-min flex-col gap-3">
-          <h2 id="metrics-heading" className="text-5xl tracking-tighter">
+          <MotionText
+            {...titleAnimation}
+            wrapperClassName="text-5xl tracking-tighter"
+            id="metrics-heading"
+            elementType="h2"
+          >
             Pay Only For What You Animate.
-          </h2>
+          </MotionText>
           <p className="max-w-2xl text-muted leading-snug">
             <Chip
               variant="primary"
@@ -68,7 +76,7 @@ export default function Metrics() {
           </p>
         </div>
         <div className="flex flex-col gap-6">
-          <MotionChain {...animation} data-size-bars>
+          <MotionChain {...metricAnimation} data-size-bars>
             {ITEMS.map((item, index) => (
               <MetricBar
                 key={item.id}
