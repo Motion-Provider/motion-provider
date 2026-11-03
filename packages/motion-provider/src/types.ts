@@ -151,24 +151,6 @@ export interface MotionImageProps
   onMotionComplete?: (result: AnimationResult) => void;
   ref?: Ref<HTMLDivElement>;
 }
-export interface MotionMovieAnimationsProps
-  extends Omit<MotionAnimationProps, "mode"> {
-  enter: MotionAnimationProps["mode"];
-  exit: MotionAnimationProps["mode"];
-}
-export interface MotionMovieConfigProps
-  extends Omit<MotionImageConfigProps, "img" | "fn"> {
-  images: readonly string[];
-  /** Hold time in seconds after entry completes and before exit begins. */
-  animationDuration: number;
-}
-export interface MotionMovieProps
-  extends Omit<MotionImageProps, "animation" | "config" | "onMotionComplete"> {
-  animations: MotionMovieAnimationsProps;
-  config: MotionMovieConfigProps;
-  prefetch?: boolean;
-  onIndexChange?: (index: number) => void;
-}
 export interface MotionLinkProps
   extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;

@@ -1,20 +1,19 @@
 import { Profiler, StrictMode } from "react";
 import { createRoot, hydrateRoot, type Root } from "react-dom/client";
-import animations from "../../src/constants/animations.js";
-import transitions from "../../src/constants/transitions.js";
-import { animateElement } from "../../src/engine/animate.js";
-import { createController } from "../../src/engine/controller.js";
-import { bindScroll } from "../../src/engine/scroll.js";
+import animations from "../../packages/motion-provider/dist/constants/animations.js";
+import transitions from "../../packages/motion-provider/dist/constants/transitions.js";
+import { animateElement } from "../../packages/motion-provider/dist/engine/animate.js";
+import { createController } from "../../packages/motion-provider/dist/engine/controller.js";
+import { bindScroll } from "../../packages/motion-provider/dist/engine/scroll.js";
 import {
   MotionChain,
   MotionContainer,
   MotionImage,
   MotionLink,
-  MotionMovie,
   MotionText,
   useAnimation,
   useController,
-} from "../../src/index.js";
+} from "../../packages/motion-provider/dist/index.js";
 
 const host = document.getElementById("root") as HTMLElement;
 let root: Root | undefined;
@@ -112,7 +111,7 @@ function Suite({ name, revision = 0 }: { name: string; revision?: number }) {
           elementType="h1"
           id="text"
         >
-          👨‍👩‍👦é a
+          {"\u{1F468}\u200D\u{1F469}\u200D\u{1F466}\u00E9  a"}
         </MotionText>
       );
     case "chain":
@@ -157,28 +156,6 @@ function Suite({ name, revision = 0 }: { name: string; revision?: number }) {
             alt="Tiles"
           />
         </Profiler>
-      );
-    case "movie":
-      return (
-        <MotionMovie
-          {...common}
-          animations={{
-            enter: "fadeIn",
-            exit: "fadeOut",
-            duration: 0.03,
-          }}
-          config={{
-            images,
-            pieces: 4,
-            duration: 0.01,
-            animationDuration: 0.05,
-          }}
-          onIndexChange={(i) => metrics.indices.push(i)}
-          style={{
-            width: 200,
-            height: 100,
-          }}
-        />
       );
     case "link":
       return (

@@ -5,8 +5,8 @@ import {
 	bindScroll,
 	createController,
 	observeInView,
-} from "../dist/engine/index.js";
-import { fadeIn, fadeUp } from "../dist/presets/index.js";
+} from "../../packages/motion-provider/dist/engine/index.js";
+import { fadeIn, fadeUp } from "../../packages/motion-provider/dist/presets/index.js";
 
 class NativeAnimation {
 	playState = "running";

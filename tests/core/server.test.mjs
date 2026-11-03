@@ -8,9 +8,8 @@ import {
 	MotionContainer,
 	MotionImage,
 	MotionLink,
-	MotionMovie,
 	MotionText,
-} from "../../dist/index.js";
+} from "../../packages/motion-provider/dist/index.js";
 
 test("all public components render without window/document and keep content visible", () => {
 	assert.equal(typeof window, "undefined");
@@ -58,17 +57,6 @@ test("all public components render without window/document and keep content visi
 				},
 				alt: "Photo",
 			}),
-			createElement(MotionMovie, {
-				animations: {
-					enter: "fadeIn",
-					exit: "fadeOut",
-				},
-				config: {
-					images: ["/one.svg", "/two.svg"],
-					pieces: 4,
-					animationDuration: 0.25,
-				},
-			}),
 			createElement(
 				MotionLink,
 				{
@@ -84,9 +72,11 @@ test("all public components render without window/document and keep content visi
 });
 test("ESM exports preserve client boundaries and runtime has no dependencies", () => {
 	const pkg = JSON.parse(
-		readFileSync(new URL("../package.json", import.meta.url)),
+		readFileSync(
+			new URL("../../packages/motion-provider/package.json", import.meta.url),
+		),
 	);
-	assert.deepEqual(pkg.dependencies, {});
+	assert.deepEqual(pkg.dependencies ?? {}, {});
 	assert.equal(pkg.sideEffects, false);
 	for (const name of [
 		"motion",
@@ -94,19 +84,18 @@ test("ESM exports preserve client boundaries and runtime has no dependencies", (
 		"motion-text",
 		"motion-chain",
 		"motion-image",
-		"motion-movie",
 		"motion-link",
 	]) {
 		assert.match(
 			readFileSync(
-				new URL(`../dist/components/${name}.js`, import.meta.url),
+				new URL(`../../packages/motion-provider/dist/components/${name}.js`, import.meta.url),
 				"utf8",
 			),
 			/^['"]use client['"];/,
 		);
 	}
 	assert.doesNotMatch(
-		readFileSync(new URL("../dist/config.js", import.meta.url), "utf8"),
+		readFileSync(new URL("../../packages/motion-provider/dist/config.js", import.meta.url), "utf8"),
 		/from ['"]react|use client/,
 	);
 });

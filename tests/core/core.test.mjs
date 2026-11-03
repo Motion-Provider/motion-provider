@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { createMotionConfig, createMotionRegistry } from "../../dist/config.js";
-import animations from "../../dist/constants/animations.js";
-import delays from "../../dist/constants/delays.js";
-import transitions from "../../dist/constants/transitions.js";
+import { createMotionConfig, createMotionRegistry } from "../../packages/motion-provider/dist/config.js";
+import animations from "../../packages/motion-provider/dist/constants/animations.js";
+import delays from "../../packages/motion-provider/dist/constants/delays.js";
+import transitions from "../../packages/motion-provider/dist/constants/transitions.js";
 import {
 	animateElement,
 	compileAnimation,
@@ -13,9 +13,9 @@ import {
 	mixAnimations,
 	resolveEasing,
 	resolveTiming,
-} from "../../dist/engine/index.js";
-import { splitText } from "../../dist/internal/text.js";
-import { calculateDelay, calculateDelays } from "../../dist/utils.js";
+} from "../../packages/motion-provider/dist/engine/index.js";
+import { splitText } from "../../packages/motion-provider/dist/internal/text.js";
+import { calculateDelay, calculateDelays } from "../../packages/motion-provider/dist/utils.js";
 
 test("all 70 source presets and 30 transitions compile", () => {
 	assert.equal(Object.keys(animations).length, 70);

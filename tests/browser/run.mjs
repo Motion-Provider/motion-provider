@@ -6,9 +6,10 @@ import { build } from "esbuild";
 import { chromium, firefox, webkit } from "playwright";
 import { createElement } from "react";
 import { renderToString } from "react-dom/server";
-import { MotionContainer } from "../../dist/index.js";
+import { MotionContainer } from "../../packages/motion-provider/dist/index.js";
 
 process.chdir(fileURLToPath(new URL("../..", import.meta.url)));
+
 const bundle = await build({
 	absWorkingDir: process.cwd(),
 	entryPoints: ["tests/browser/fixture.tsx"],
@@ -18,6 +19,7 @@ const bundle = await build({
 	target: "es2022",
 	logLevel: "silent",
 });
+
 const server = createServer((req, res) => {
 	if (req.url === "/fixture.js") {
 		res.setHeader("Content-Type", "text/javascript");
@@ -29,15 +31,20 @@ const server = createServer((req, res) => {
 		);
 	}
 });
+
 await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+
 const url = `http://127.0.0.1:${server.address().port}`;
 const engine = {
 	chromium,
 	firefox,
 	webkit,
 }[process.env.BROWSER ?? "chromium"];
+
 let browser, context, page;
 const results = [];
+const failures = [];
+
 async function fresh(name) {
 	await context?.close();
 	context = await browser.newContext();
@@ -55,9 +62,15 @@ async function fresh(name) {
 	return errors;
 }
 async function check(name, fn) {
-	await fn();
-	results.push(name);
-	console.log(`PASS ${name}`);
+	try {
+		await fn();
+		results.push(name);
+		console.log(`PASS ${name}`);
+	} catch (error) {
+		const message = error instanceof Error ? error.message : String(error);
+		failures.push({ name, message });
+		console.log(`FAIL ${name}\n${message}\n`);
+	}
 }
 try {
 	browser = await engine.launch({
@@ -186,7 +199,7 @@ try {
 		await fresh("text");
 		assert.equal(
 			await page.locator("#text > span").first().textContent(),
-			"👨‍👩‍👦é  a",
+			"\u{1F468}\u200D\u{1F469}\u200D\u{1F466}\u00E9  a",
 		);
 		await fresh("chain");
 		const times = await page.evaluate(() =>
@@ -222,19 +235,6 @@ try {
 					.locator('[data-motion-tile="0"]')
 					.evaluate((el) => el.style.backgroundImage),
 				/blue/,
-			);
-			assert.deepEqual(errors, []);
-		},
-	);
-	await check(
-		"gallery completes fractional entry, hold, and exit cycles",
-		async () => {
-			const errors = await fresh("movie");
-			await page.waitForFunction(
-				() => window.fixture.metrics.indices.includes(1),
-				{
-					timeout: 3000,
-				},
 			);
 			assert.deepEqual(errors, []);
 		},
@@ -365,12 +365,20 @@ try {
 			{
 				browser: await browser.version(),
 				passed: results.length,
+				failed: failures.length,
 				tests: results,
+				failures,
 			},
 			null,
 			2,
 		) + "\n",
 	);
+	console.log(
+		`\n${results.length} passed, ${failures.length} failed${
+			failures.length ? `\n${failures.map((f) => `  - ${f.name}`).join("\n")}` : ""
+		}`,
+	);
+	if (failures.length) process.exitCode = 1;
 } catch (error) {
 	console.error(error);
 	process.exitCode = 1;

@@ -4,7 +4,6 @@ import type {
   MotionContainerProps,
   MotionImageProps,
   MotionLinkProps,
-  MotionMovieProps,
   MotionTextProps,
 } from "./types.js";
 export type MotionComponentPropsMap = {
@@ -14,11 +13,6 @@ export type MotionComponentPropsMap = {
   MotionImage: Omit<MotionImageProps, "config"> & {
     config: Omit<MotionImageProps["config"], "img"> & {
       img?: string;
-    };
-  };
-  MotionMovie: Omit<MotionMovieProps, "config"> & {
-    config: Omit<MotionMovieProps["config"], "images"> & {
-      images?: readonly string[];
     };
   };
   MotionLink: MotionLinkProps;

@@ -1,11 +1,18 @@
 {
-  "name": "motion-provider tests",
+  "name": "@motion/tests",
   "private": true,
+  "type": "module",
   "scripts": {
-    "test:browser": "node tests/browser/run.mjs",
-    "test:compiler": "node scripts/check-compiler.mjs"
+    "test:browser": "npm --prefix ../packages/motion-provider run build && node browser/run.mjs",
+    "test:core": "node core/core.test.mjs && node core/lifecycle.test.mjs && node core/server.test.mjs"
+  },
+  "dependencies": {
+    "playwright": "^1.64.1"
   },
   "devDependencies": {
-    "@motion/typescript-config": "*"
+    "@motion/typescript-config": "*",
+    "esbuild": "^0.28.2",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
   }
 }
