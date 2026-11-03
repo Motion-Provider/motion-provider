@@ -1,6 +1,4 @@
-﻿"use client";
-
-import { Spinner } from "@heroui/react";
+﻿import { Spinner } from "@heroui/react";
 import { MotionContainer, useController } from "motion-provider";
 import { useState } from "react";
 import { useDebouncedFn } from "@/hooks/use-debounced-fn";

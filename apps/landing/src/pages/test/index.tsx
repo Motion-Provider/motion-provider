@@ -6,6 +6,7 @@ export default function App() {
       animation={{
         mode: ["filterBlurIn", "fadeIn"],
       }}
+      reducedMotion="always"
     />
   );
 }
