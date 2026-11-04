@@ -12,8 +12,8 @@ export default function DxComparison() {
   return (
     <DxComparisonProvider>
       <section className="w-full h-[70vh] justify-self-center relative max-w-7xl overflow-visible my-28">
-        <ContainerWrapper<"section">
-          as="section"
+        <ContainerWrapper<"div">
+          as="div"
           surface="glass"
           width="7xl"
           radius="3xl"

@@ -278,7 +278,7 @@ export default createMotionConfig({
         duration: 0.2,
       },
       elementType: "h1",
-      className: "text-7xl text-black tracking-tighter font-bold",
+      wrapperClassName: "text-7xl text-black tracking-tighter font-bold",
     },
   },
   faqTitle: {

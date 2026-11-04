@@ -7,7 +7,7 @@ export class MotionError extends Error {
     message: string,
     options?: ErrorOptions,
   ) {
-    super(`[Motion Provider: ${code}] Oops, ${message}`, options);
+    super(`[Motion Provider: ${code}] ${message}`, options);
     this.name = "MotionError";
   }
 }

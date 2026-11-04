@@ -123,8 +123,7 @@ export function compileAnimation(module: AnimationModule): CompiledAnimation {
     ...Object.keys(module.initial),
     ...Object.keys(module.animate),
   ])) {
-    const from = module.initial[key],
-      to = module.animate[key];
+    const [from, to] = [module.initial[key], module.animate[key]];
 
     if (typeof from === "undefined" && typeof to === "undefined") {
       invariant(

@@ -28,9 +28,9 @@ export function animateElement(
   );
 
   const compiled = compileAnimation(definition),
-    timing = resolveTiming(options);
-  const owner = styleOwner(element);
-  const duration = Number(timing.duration) / 1e3;
+    timing = resolveTiming(options),
+    owner = styleOwner(element),
+    duration = Number(timing.duration) / 1e3;
 
   let effects: Animation[] = [],
     disposed = false,
@@ -55,11 +55,15 @@ export function animateElement(
 
   const settle = (status: AnimationResult["status"]) => {
     if (settled) return;
+
     settled = true;
+
     const result = {
       status,
     };
+
     resolve(result);
+
     if (!disposed) options.onFinish?.(result);
   };
 
