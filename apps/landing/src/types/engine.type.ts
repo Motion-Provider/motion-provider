@@ -52,6 +52,7 @@ export interface EngineNode {
   /** Top edge in canvas units. Height is `NODE_HEIGHT`. */
   y: number;
   w: number;
+  slug: string;
 }
 
 export interface EngineEdge {
@@ -94,3 +95,29 @@ export interface EdgeGeometry {
 
 export type Emphasis = "idle" | "active" | "dimmed";
 export type NodeEmphasis = Emphasis | "linked";
+
+export interface MiniMapNode {
+  id: EngineNodeId;
+  role: "selected" | "incoming" | "outgoing";
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  /** Label split into at most two lines. */
+  lines: string[];
+}
+
+export interface MiniMapEdge {
+  id: string;
+  label: string;
+  d: string;
+  arrow: string;
+  labelPoint: Point;
+}
+
+export interface MiniMapLayout {
+  width: number;
+  height: number;
+  nodes: MiniMapNode[];
+  edges: MiniMapEdge[];
+}

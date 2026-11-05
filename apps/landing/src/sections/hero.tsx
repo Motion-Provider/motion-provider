@@ -39,16 +39,19 @@ export default function HeroSection() {
           lineWidth: 1,
           className: "pointer-events-none",
         }}
+        scales={false}
         className="h-full lg:w-[calc(100vw-6rem)]"
         innerClassName="size-full relative flex flex-col items-center-safe justify-center-safe text-center mt-16 z-20"
       >
         <CircleProvider>
           <Circle />
           <CircleCodeSnippet className="z-50 top-16 left-24 absolute" />
+
           <div className="top-12 right-16 absolute flex gap-8">
-            <CircleSelect className="z-50 " />
+            <CircleSelect className="z-50" />
             <CircleSlider className="perspective-distant will-change-transforsm" />
           </div>
+
           <div className="items-center flex flex-col px-4 relative -mt-16 z-50">
             <Chip
               variant="soft"
@@ -58,23 +61,27 @@ export default function HeroSection() {
             >
               🚀 v1.0 • Preset-driven WAAPI animations
             </Chip>
+
             <h1 className="max-w-5xl text-balance text-6xl font-bold leading-[0.95] tracking-tighter text-foreground sm:text-7xl lg:text-8xl inline-flex items-center selection:bg-transparent">
               M
               <span className="relative inline-flex items-center">
                 <CirclePlayButton />
                 <Annotation
                   title="Try me"
-                  textClassName="font-annotation -mt-1 -rotate-6 whitespace-nowrap text-xl font-bold leading-none sm:text-2xl lg:text-4xl tracking-wider absolute right-1/2 top-full"
+                  className="absolute right-1/2 top-full z-50 mt-0 translate-y-5 -translate-x-2 -rotate-12"
+                  textClassName="font-annotation -mt-1  whitespace-nowrap text-xl font-bold leading-none sm:text-2xl lg:text-4xl tracking-wider"
                 />
               </span>
               tion Pr
               <CircleProgress className="shrink-0" />
               vider
             </h1>
+
             <p className="mt-4 max-w-155 text-center text-balance tracking-tight text-md text-muted">
               Preset-driven animation engine for the web and React, powered by
               the Web Animations API.
             </p>
+
             <Button
               variant="primary"
               className="rounded-full px-6 font-secondary gap-3 mt-4"

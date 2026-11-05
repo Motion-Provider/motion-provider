@@ -138,7 +138,7 @@ export default createMotionConfig({
       },
     },
   },
-  myFingerIsGoodNowChain: {
+  myFingerIsGoodNowPyramid: {
     type: "MotionChain",
     props: {
       animation: {
@@ -315,6 +315,99 @@ export default createMotionConfig({
           once: true,
         },
       },
+    },
+  },
+  engineHeroPyramid: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["fadeIn", "transformClipDiamond", "neonGlow"],
+        transition: "smoothFast",
+        duration: 2.5,
+      },
+      config: {
+        delayLogic: "sinusoidal",
+        duration: 1.2,
+      },
+      controller: {
+        scroll: {
+          axis: "y",
+          mode: "view",
+          start: 0.15,
+          end: 0.65,
+        },
+      },
+      elementType: "g",
+    },
+  },
+  engineGlow: {
+    type: "MotionContainer",
+    props: {
+      elementType: "g",
+      animation: {
+        mode: "fadeIn",
+        delay: 0.2,
+        transition: "gentle",
+        duration: 0.88,
+      },
+    },
+  },
+  engineNodeModalChip: {
+    type: "MotionText",
+    props: {
+      animation: {
+        mode: "textShimmer",
+        transition: "fadeSlide",
+        duration: 1,
+      },
+      config: {
+        duration: 1,
+        delayLogic: "pendulum",
+        mode: "chars",
+      },
+    },
+  },
+  engineNodeModalHeader: {
+    type: "MotionText",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.88,
+      },
+      config: {
+        duration: 0.22,
+        mode: "words",
+      },
+      elementType: "h2",
+    },
+  },
+  engineMinimapEdges: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["fadeIn", "filterBlurIn"],
+        delay: 0.5,
+        transition: "gentle",
+      },
+      config: {
+        duration: 0.22,
+      },
+      elementType: "g",
+    },
+  },
+  engineMinimapNodes: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["filterBlurIn", "fadeUp"],
+        duration: 0.5,
+        transition: "gentle",
+      },
+      config: {
+        duration: 0.22,
+      },
+      elementType: "g",
     },
   },
 });

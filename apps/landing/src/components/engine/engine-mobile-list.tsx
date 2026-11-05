@@ -31,9 +31,7 @@ export function EngineMobileList({ onSelect }: EngineMobileListProps) {
                 >
                   <span className="text-left text-sm">{node.label}</span>
                   {node.file && (
-                    <span className="font-annotation text-xs text-muted">
-                      {node.file}
-                    </span>
+                    <span className=" text-xs text-muted">{node.file}</span>
                   )}
                 </Button>
               </li>

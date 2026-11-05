@@ -6,8 +6,8 @@ interface EngineGroupFrameProps {
   group: EngineGroup;
 }
 
-const size = 8;
-const lineWidth = 1;
+const size = 6;
+const lineWidth = 0.8;
 
 export function EngineGroupFrame({ group }: EngineGroupFrameProps) {
   const end = group.titleAt === "bottom-right";
@@ -27,7 +27,7 @@ export function EngineGroupFrame({ group }: EngineGroupFrameProps) {
           height={size}
           patternUnits="userSpaceOnUse"
           patternTransform="rotate(45)"
-          className="text-border/50"
+          className="text-border/60"
         >
           <path
             d={`M 0 0 V ${size}`}
@@ -61,7 +61,7 @@ export function EngineGroupFrame({ group }: EngineGroupFrameProps) {
         height={height}
         rx={16}
         fill="none"
-        className="stroke-border/50"
+        className="stroke-border/20"
       />
       <text
         x={end ? group.x + group.w - 16 : group.x + 16}

@@ -20,7 +20,7 @@ export function EngineDiagram() {
     <>
       <EngineLabelsProvider>
         <EngineLabelsSwitch
-          className="absolute rounded-full w-fit -top-14 left-0 z-50 bg-glass-surface px-3 py-2 backdrop-blur-3xl items-center-safe text-muted"
+          className="absolute rounded-full w-fit desktop:-top-12 laptop:-top-8 -translate-1/2 left-1/2 bg-glass-surface px-3 py-2 text-muted"
           size="lg"
         />
         <EngineCanvas

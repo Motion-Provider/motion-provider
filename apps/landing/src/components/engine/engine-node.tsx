@@ -8,7 +8,7 @@ import type {
 } from "@/types/engine.type";
 import { toneStyle } from "@/utils/engineTone";
 
-const RECT: Record<NodeEmphasis, string> = {
+export const NODE_RECT: Record<NodeEmphasis, string> = {
   idle: "fill-[color-mix(in_oklch,var(--tone)_8%,var(--surface))] stroke-[color-mix(in_oklch,var(--tone)_55%,transparent)]",
   linked:
     "fill-[color-mix(in_oklch,var(--tone)_14%,var(--surface))] stroke-[color-mix(in_oklch,var(--tone)_85%,transparent)]",
@@ -45,15 +45,15 @@ export function EngineNode({
       role="button"
       tabIndex={0}
       aria-label={`${node.label}${node.file ? `, ${node.file}` : ""}. Open details`}
-      className="group cursor-pointer outline-none"
+      className="group cursor-pointer outline-none "
       onPointerEnter={() => onActivate(node.id)}
       onPointerLeave={() => onActivate(null)}
       onFocus={() => onActivate(node.id)}
       onBlur={() => onActivate(null)}
       onClick={() => onSelect(node.id)}
-      onKeyDown={(event) => {
-        if (event.key === "Enter" || event.key === " ") {
-          event.preventDefault();
+      onKeyDown={(ev) => {
+        if (ev.key === "Enter" || ev.key === " ") {
+          ev.preventDefault();
           onSelect(node.id);
         }
       }}
@@ -67,7 +67,7 @@ export function EngineNode({
         strokeWidth={1.25}
         className={cn(
           "group-focus-visible:stroke-focus group-focus-visible:stroke-[2.5px]",
-          RECT[emphasis],
+          NODE_RECT[emphasis],
         )}
       />
       <text

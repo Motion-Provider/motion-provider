@@ -1,11 +1,15 @@
 import { Switch } from "@heroui/react";
 import { TagPlusIcon, TagXIcon } from "lucide-react";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useEngineLabels } from "@/providers/engine.provider";
 
 export function EngineLabelsSwitch({
   ...props
 }: React.ComponentProps<typeof Switch>) {
   const { showLabels, setShowLabels } = useEngineLabels();
+
+  const isMobile = useIsMobile();
+  if (isMobile) return null;
 
   return (
     <Switch isSelected={showLabels} onChange={setShowLabels} {...props}>

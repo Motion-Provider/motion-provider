@@ -4,20 +4,23 @@ import { useEngineLabels } from "@/providers/engine.provider";
 import type { EdgeGeometry, Emphasis } from "@/types/engine.type";
 import { getEngineLabelDelayByIndex } from "@/utils/engineDiagram";
 
-const PATH: Record<Emphasis, string> = {
+export const EDGE_PATH: Record<Emphasis, string> = {
   idle: "stroke-[color-mix(in_oklch,var(--foreground)_26%,transparent)]",
   active: "stroke-(--accent)",
   dimmed: "stroke-[color-mix(in_oklch,var(--foreground)_8%,transparent)]",
 };
 
-const ARROW: Record<Emphasis, string> = {
-  idle: "fill-border-secondary",
+export const EDGE_ARROW: Record<Emphasis, string> = {
+  idle: "fill-[color-mix(in_oklch,var(--foreground)_45%,transparent)]",
   active: "fill-(--accent)",
   dimmed: "fill-[color-mix(in_oklch,var(--foreground)_12%,transparent)]",
 };
 
-const LABEL: Record<Emphasis, string> = {
-  idle: "fill-[color-mix(in_oklch,var(--foreground)_48%,transparent)]",
+export const EDGE_LABEL_BASE =
+  "stroke-(--background) [paint-order:stroke] [stroke-linejoin:round] [stroke-width:6px]";
+
+export const EDGE_LABEL: Record<Emphasis, string> = {
+  idle: "fill-[color-mix(in_oklch,var(--foreground)_62%,transparent)]",
   active: "fill-(--foreground)",
   dimmed: "fill-[color-mix(in_oklch,var(--foreground)_18%,transparent)]",
 };
@@ -44,18 +47,18 @@ export function EngineEdge({ edge, emphasis }: EngineEdgeProps) {
         fill="none"
         strokeWidth={emphasis === "active" ? 1.75 : 1.25}
         strokeLinecap="round"
-        className={PATH[emphasis]}
+        className={EDGE_PATH[emphasis]}
       />
       <path
         d={edge.arrow}
         className={cn(
           "transition-all duration-500 ease-in-out",
-          ARROW[emphasis],
+          EDGE_ARROW[emphasis],
         )}
       />
       <MotionContainer
         animation={{
-          mode: "fadeIn",
+          mode: "fadeUp",
           duration: 0.55,
           transition: "gentle",
           delay: getEngineLabelDelayByIndex(edge.id),
@@ -71,7 +74,7 @@ export function EngineEdge({ edge, emphasis }: EngineEdgeProps) {
         className={cn(
           "stroke-background font-secondary text-[11px]",
           "[paint-order:stroke] [stroke-linejoin:round] stroke-2",
-          LABEL[emphasis],
+          EDGE_LABEL[emphasis],
         )}
       >
         {edge.label}

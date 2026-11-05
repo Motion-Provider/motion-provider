@@ -8,7 +8,7 @@ export default function TrustSignals() {
   return (
     <section
       className={cn(
-        "w-full max-w-7xl h-18 relative",
+        "w-full max-w-7xl h-18 relative -mt-8",
         "justify-self-center grid grid-cols-5 grid-flow-col",
         "overflow-hidden rounded-b-2xl",
       )}

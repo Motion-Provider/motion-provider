@@ -27,7 +27,7 @@ function indexBy<K extends string, T>(
   return out;
 }
 
-function recordFrom<K extends string, V>(
+export function recordFrom<K extends string, V>(
   keys: readonly K[],
   value: (key: K) => V,
 ): Record<K, V> {
@@ -36,7 +36,7 @@ function recordFrom<K extends string, V>(
   return out;
 }
 
-const NODE_IDS = ENGINE_NODES.map((node) => node.id);
+export const NODE_IDS = ENGINE_NODES.map((node) => node.id);
 const GROUP_IDS = ENGINE_GROUPS.map((group) => group.id);
 
 export const NODE_BY_ID = indexBy(ENGINE_NODES, (node) => node.id);
@@ -127,6 +127,10 @@ function labelPoint(points: readonly Point[], edge: EngineEdge): Point {
   };
 }
 
+export function arrowPath(end: Point): string {
+  return `M${end.x - ARROW_HALF_WIDTH} ${end.y - ARROW_LENGTH} L${end.x} ${end.y} L${end.x + ARROW_HALF_WIDTH} ${end.y - ARROW_LENGTH} Z`;
+}
+
 function buildEdge(edge: EngineEdge): EdgeGeometry {
   const from: EngineNode = NODE_BY_ID[edge.from];
   const to: EngineNode = NODE_BY_ID[edge.to];
@@ -142,11 +146,12 @@ function buildEdge(edge: EngineEdge): EdgeGeometry {
     to: edge.to,
     label: edge.label,
     d: roundedPath(points),
-    arrow: `M${end.x - ARROW_HALF_WIDTH} ${end.y - ARROW_LENGTH} L${end.x} ${end.y} L${end.x + ARROW_HALF_WIDTH} ${end.y - ARROW_LENGTH} Z`,
+    arrow: arrowPath(end),
     labelPoint: labelPoint(points, edge),
   };
 }
 
+/** Computed once at module load, never per render. */
 export const EDGE_GEOMETRY: readonly EdgeGeometry[] =
   ENGINE_EDGES.map(buildEdge);
 
@@ -176,3 +181,10 @@ export const NEIGHBORS: Record<
 
 export const getEngineLabelDelayByIndex = (id: EdgeGeometry["id"]) =>
   ENGINE_EDGES.findIndex((e) => e.id === id) * 0.2;
+
+const GITHUB_SOURCE_BASE =
+  "https://github.com/Motion-Provider/motion-provider/blob/main/packages/motion-provider/src";
+
+export function getEngineNodeSourceUrl(node: EngineNode): string {
+  return `${GITHUB_SOURCE_BASE}/${node.slug}`;
+}

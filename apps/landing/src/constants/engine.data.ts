@@ -53,6 +53,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Motion chain",
     file: "motion-chain.tsx",
+    slug: "components/motion-chain.tsx",
     summary: "Plays animations one after another as a chain.",
     cx: 108,
     y: 42,
@@ -63,6 +64,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Motion components",
     file: "motion.tsx",
+    slug: "components/motion.tsx",
     summary: "Wraps any element and applies a preset-driven animation.",
     cx: 334,
     y: 42,
@@ -73,6 +75,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Motion image",
     file: "motion-image.tsx",
+    slug: "components/motion-image.tsx",
     summary:
       "Animated image. Starts its reveal through the image grid hook and validates input with the engine's error handling.",
     cx: 560,
@@ -84,6 +87,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Motion text",
     file: "motion-text.tsx",
+    slug: "components/motion-text.tsx",
     summary: "Animated text, built on the same hooks as the other components.",
     cx: 786,
     y: 42,
@@ -94,6 +98,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Motion link",
     file: "motion-link.tsx",
+    slug: "components/motion-link.tsx",
     summary: "Animated link, built on the same hooks as the other components.",
     cx: 1012,
     y: 42,
@@ -104,6 +109,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Image grid hook",
     file: "use-image-grid.ts",
+    slug: "hooks/use-image-grid.ts",
     summary:
       "Drives image reveals: resolves the definition, creates the animations and binds playback.",
     cx: 520,
@@ -115,18 +121,21 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "react-api",
     label: "Motion hooks",
     file: "use-motion.ts",
+    slug: "hooks/use-motion.ts",
     summary:
       "Core hook layer. Creates animations and connects controls, visibility and scrolling.",
     cx: 750,
     y: 148,
     w: 220,
   },
+
   // Animation Definitions
   {
     id: "resolver",
     group: "definitions",
     label: "Animation resolver",
     file: "resolve.ts",
+    slug: "internal/resolve.ts",
     summary:
       "Turns a preset name or inline definition into a concrete animation definition.",
     cx: 115,
@@ -138,6 +147,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "definitions",
     label: "Preset registry",
     file: "animations.ts",
+    slug: "constants/animations.ts",
     summary: "Looks up presets by name.",
     cx: 95,
     y: 382,
@@ -148,17 +158,20 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "definitions",
     label: "Animation presets",
     file: "index.ts",
+    slug: "presets/index.ts",
     summary: "The built-in preset map.",
     cx: 95,
     y: 458,
     w: 150,
   },
+
   // Playback Drivers
   {
     id: "binding",
     group: "drivers",
     label: "Playback binding",
     file: "playback.ts",
+    slug: "internal/playback.ts",
     summary:
       "Connects an animation to its triggers: control handles, visibility and scroll.",
     cx: 908,
@@ -170,6 +183,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "drivers",
     label: "Animation controller",
     file: "controller.ts",
+    slug: "engine/controller.ts",
     summary:
       "Holds the controls for a running animation and validates the values it receives.",
     cx: 674,
@@ -181,6 +195,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "drivers",
     label: "Visibility driver",
     file: "in-view.ts",
+    slug: "engine/in-view.ts",
     summary: "Plays an animation when its element becomes visible.",
     cx: 830,
     y: 420,
@@ -191,17 +206,20 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "drivers",
     label: "Scroll driver",
     file: "scroll.ts",
+    slug: "engine/scroll.ts",
     summary: "Drives an animation from scroll position.",
     cx: 986,
     y: 420,
     w: 140,
   },
+
   // Animation Engine
   {
     id: "engine",
     group: "engine",
     label: "Animation engine",
     file: "animate.ts",
+    slug: "engine/animate.ts",
     summary:
       "Compiles definitions into keyframes, resolves timing, owns styles, reports errors and starts the browser animation.",
     cx: 560,
@@ -213,6 +231,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "engine",
     label: "Timing resolver",
     file: "timing.ts",
+    slug: "engine/timing.ts",
     summary: "Resolves duration, delay and easing into concrete timing.",
     cx: 334,
     y: 728,
@@ -223,6 +242,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "engine",
     label: "Keyframe compiler",
     file: "keyframes.ts",
+    slug: "engine/keyframes.ts",
     summary: "Compiles animation definitions into keyframe tracks.",
     cx: 485,
     y: 728,
@@ -233,6 +253,7 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "engine",
     label: "Style ownership",
     file: "styles.ts",
+    slug: "engine/styles.ts",
     summary: "Tracks which animation owns which element styles.",
     cx: 636,
     y: 728,
@@ -243,13 +264,13 @@ export const ENGINE_NODES: readonly EngineNode[] = [
     group: "engine",
     label: "Error handling",
     file: "errors.ts",
+    slug: "engine/errors.ts",
     summary: "Receives validation failures and engine errors.",
     cx: 787,
     y: 728,
     w: 128,
   },
 ];
-
 export const ENGINE_EDGES: readonly EngineEdge[] = [
   // React API
   {

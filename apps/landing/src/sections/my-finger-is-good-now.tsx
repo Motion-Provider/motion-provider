@@ -1,28 +1,16 @@
 ﻿import { Chip } from "@heroui/react";
 import { MotionChain, MotionText } from "motion-provider";
-import { CircleItem } from "@/components/circle/circle-item";
+import { PyramidChain } from "@/components/pyramid-chain";
 import config from "@/constants/circle.config";
 import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 
 const { beginRadius, endRadius, holeRadius } = config;
 
-const count = 8;
-
-const items = Array.from({ length: count }, (_, i) => {
-  const t = i / (count - 1);
-
-  return {
-    radius: holeRadius + (beginRadius + t * (endRadius - beginRadius)),
-    id: i + 1,
-  };
-});
-
 const keywords = ["fadeDown", "fadeUp", "maskGradientPerforate"] as const;
 
 const textAnimation1 = getAnimation("myFingerIsGoodNowText1");
 const textAnimation2 = getAnimation("myFingerIsGoodNowText2");
-const chainAnimation = getAnimation("myFingerIsGoodNowChain");
 
 export default function MyFingerIsGoodNow() {
   return (
@@ -35,26 +23,19 @@ export default function MyFingerIsGoodNow() {
           <MotionText {...textAnimation2}>Animation Provider.</MotionText>
         </div>
         <div className="pr-12 relative">
-          <svg
-            viewBox="0 0 100 100"
-            xmlns="http://www.w3.org/2000/svg"
-            className="z-30 pointer-events-none desktop:size-96 laptop:size-80"
-          >
-            <title>My finger is good now</title>
-            <MotionChain {...chainAnimation}>
-              {items.map(({ ...props }) => (
-                <g key={props.id}>
-                  <CircleItem
-                    evenColor="text-accent-foreground"
-                    oddColor="text-accent"
-                    {...config.identity}
-                    {...props}
-                    strokeWidth={0.8}
-                  />
-                </g>
-              ))}
-            </MotionChain>
-          </svg>
+          <PyramidChain
+            withSvg
+            {...config.identity}
+            className="z-30 desktop:size-96 laptop:size-80"
+            animationName="myFingerIsGoodNowPyramid"
+            evenColor="text-accent-foreground"
+            oddColor="text-accent"
+            beginRadius={beginRadius}
+            endRadius={endRadius}
+            holeRadius={holeRadius}
+            count={8}
+            strokeWidth={0.8}
+          />
         </div>
       </div>
     </section>

@@ -1,4 +1,5 @@
-﻿import { Footer } from "@/components/footer";
+﻿import { Toast } from "@heroui/react";
+import { Footer } from "@/components/footer";
 import { Navbar } from "@/components/navbar";
 import { fontAnnotation, fontPrimary, fontSecondary } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -20,6 +21,7 @@ export default function AppProvider({
       <Navbar />
       {children}
       <Footer />
+      <Toast.Provider placement="top" />
     </div>
   );
 }

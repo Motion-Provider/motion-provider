@@ -74,18 +74,14 @@ export function Navbar() {
                   <NextLink
                     className={cn(
                       "group relative block rounded-sm py-1",
-                      "font-primary text-xs  uppercase tracking-widest",
+                      "font-primary text-[11px]  uppercase tracking-widest",
                       "text-foreground/70 no-underline",
                       "transition-colors duration-200 hover:text-foreground",
                       "motion-reduce:transition-none",
-                      "after:absolute after:inset-x-0 after:-bottom-0.5 after:h-px",
-                      "after:origin-left after:scale-x-0 after:bg-current",
-                      "after:transition-transform after:duration-300 after:ease-out",
-                      "hover:after:scale-x-100 focus-visible:after:scale-x-100",
-                      "motion-reduce:after:transition-none",
                       FOCUS_RING,
                     )}
                     href={item.href}
+                    target={item.external ? "_blank" : "_self"}
                   >
                     {item.label}
                   </NextLink>
