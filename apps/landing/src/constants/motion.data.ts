@@ -410,6 +410,68 @@ export default createMotionConfig({
       elementType: "g",
     },
   },
+  showcasesTitle: {
+    type: "MotionText",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.7,
+      },
+      config: {
+        mode: "words",
+        duration: 0.12,
+      },
+      elementType: "h2",
+      wrapperClassName: "text-5xl font-bold tracking-tighter md:text-6xl",
+    },
+  },
+  showcasesDescription: {
+    type: "MotionContainer",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.8,
+        delay: 0.2,
+      },
+      elementType: "p",
+      className: "max-w-md text-sm leading-snug tracking-tight text-muted",
+    },
+  },
+  showcasesAction: {
+    type: "MotionContainer",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.8,
+        delay: 0.35,
+      },
+    },
+  },
+  showcasesCards: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.9,
+      },
+      config: {
+        delayLogic: "sinusoidal",
+        duration: 0.16,
+      },
+      controller: {
+        configView: {
+          amount: 0.15,
+          once: true,
+        },
+      },
+      elementType: "li",
+      className: "h-full",
+    },
+  },
   testChain: {
     type: "MotionChain",
     props: {

@@ -2,6 +2,7 @@ import Cta from "@/sections/cta";
 import DxComparison from "@/sections/dx-comparison";
 import { EngineDiagramSection } from "@/sections/engine-diagram";
 import FaqSection from "@/sections/faq";
+import GallerySection from "@/sections/gallery";
 import HeroSection from "@/sections/hero";
 import Metrics from "@/sections/metrics";
 import MyFingerIsGoodNow from "@/sections/my-finger-is-good-now";
@@ -15,12 +16,12 @@ export default function Home() {
       <TrustSignals />
       <DxComparison />
       <MyFingerIsGoodNow />
-
       <ShowcaseSection />
       <EngineDiagramSection />
       <Cta />
       <Metrics />
       <FaqSection />
+      <GallerySection />
     </>
   );
 }

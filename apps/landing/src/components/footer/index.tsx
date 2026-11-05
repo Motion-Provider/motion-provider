@@ -1,0 +1,66 @@
+import {
+  FooterLinkGroupColumn,
+  FooterLinkItem,
+} from "@/components/footer/footer-link-group";
+import { FooterWordmark } from "@/components/footer/footer-wordmark";
+import { FOOTER_DATA } from "@/constants/footer.data";
+
+export function Footer() {
+  const { brand, description, tagline, copyrightYear, groups, legal } =
+    FOOTER_DATA;
+
+  return (
+    <footer className="relative isolate overflow-hidden bg-accent/15">
+      <h2 id="footer-heading" className="sr-only">
+        {brand} footer
+      </h2>
+
+      {/* <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,oklch(74.28%_0.1618_40.24/0.10),transparent)]"
+      /> */}
+
+      <div className="mx-auto w-full max-w-7xl px-6 pt-16 sm:pt-20 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
+          <div className="lg:col-span-5">
+            <p className="text-lg font-semibold text-foreground">{brand}</p>
+            <p className="mt-3 max-w-xs text-sm leading-6 text-foreground/60">
+              {description}
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:col-span-7">
+            {groups.map((group) => (
+              <FooterLinkGroupColumn key={group.id} group={group} />
+            ))}
+          </div>
+        </div>
+
+        <div className="mt-16 flex flex-col gap-4 border-t border-foreground/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+          <p className="text-xs text-foreground/40">
+            © {copyrightYear} {brand}
+          </p>
+          <ul className="flex flex-wrap gap-x-6 gap-y-2">
+            {legal.map((link) => (
+              <li key={link.label}>
+                <FooterLinkItem link={link} />
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mt-16 pb-6 sm:mt-20">
+          <p className="text-3xl font-medium tracking-tight text-foreground sm:text-5xl">
+            {tagline.lead}{" "}
+            <span className="italic text-[oklch(74.28%_0.1618_40.24)]">
+              {tagline.accent}
+            </span>
+          </p>
+          <div className="mt-6 sm:mt-10">
+            <FooterWordmark text={brand} />
+          </div>
+        </div>
+      </div>
+    </footer>
+  );
+}

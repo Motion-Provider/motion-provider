@@ -129,14 +129,14 @@ const galleryMotion = createMotionConfig({
     type: "MotionImage",
     props: {
       animation: {
-        mode: ["clipDown", "fadeIn", "filterBlurIn"],
+        mode: ["fadeIn", "filterBlurIn"],
         transition: "gentle",
         duration: 1,
       },
       config: {
         pieces: 81,
         duration: 0.08,
-        delayLogic: "sinusoidal",
+        delayLogic: "chaotic",
       },
     },
   },
@@ -394,7 +394,7 @@ export default function GalleryShowcasePage() {
             </div>
 
             <span className="text-xs font-medium uppercase tracking-[0.2em] text-foreground/45">
-              Selected photography · 01—12
+              Selected photography · 01—48
             </span>
           </div>
 
@@ -460,6 +460,186 @@ export default function GalleryShowcasePage() {
                 alt: "Rolling green hills",
                 span: "col-span-2 row-span-1",
               },
+              {
+                src: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=900&q=85",
+                alt: "Valley framed by granite cliffs",
+                span: "col-span-2 row-span-2",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?auto=format&fit=crop&w=700&q=85",
+                alt: "Sunlit mountain ridge",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=700&q=85",
+                alt: "Calm lake beneath mountains",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=900&q=85",
+                alt: "Turquoise beach shoreline",
+                span: "col-span-1 row-span-2",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1426604966848-d7adac402bff?auto=format&fit=crop&w=700&q=85",
+                alt: "Misty natural scenery",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1447752875215-b2761acb3c5d?auto=format&fit=crop&w=900&q=85",
+                alt: "Path through an autumn forest",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=700&q=85",
+                alt: "Waterfall in a green gorge",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1465146344425-f00d5f5c8f07?auto=format&fit=crop&w=700&q=85",
+                alt: "Wildflower field in bloom",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1475924156734-496f6cac6ec1?auto=format&fit=crop&w=900&q=85",
+                alt: "Sunset over the sea",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1441716844725-09cedc13a4e7?auto=format&fit=crop&w=700&q=85",
+                alt: "Light through tall trees",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1482192596544-9eb780fc7f66?auto=format&fit=crop&w=700&q=85",
+                alt: "Mountain range at dusk",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1494500764479-0c8f2919a3d8?auto=format&fit=crop&w=900&q=85",
+                alt: "Layered hills in soft light",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1502082553048-f009c37129b9?auto=format&fit=crop&w=900&q=85",
+                alt: "Lone tree in open land",
+                span: "col-span-2 row-span-2",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1418065460487-3e41a6c84dc5?auto=format&fit=crop&w=700&q=85",
+                alt: "Fog drifting through a forest",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1505765050516-f72dcac9c60e?auto=format&fit=crop&w=700&q=85",
+                alt: "Mountain lake at sunrise",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1472396961693-142e6e269027?auto=format&fit=crop&w=900&q=85",
+                alt: "Deer in a quiet meadow",
+                span: "col-span-1 row-span-2",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1431794062232-2a99a5431c6c?auto=format&fit=crop&w=700&q=85",
+                alt: "Peaks rising above the horizon",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1458668383970-8ddd3927deed?auto=format&fit=crop&w=900&q=85",
+                alt: "Snow-covered mountain slope",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1464207687429-7505649dae38?auto=format&fit=crop&w=700&q=85",
+                alt: "Night sky over the mountains",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1486870591958-9b9d0d1dda99?auto=format&fit=crop&w=700&q=85",
+                alt: "Desert dunes and rock",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1477346611705-65d1883cee1e?auto=format&fit=crop&w=900&q=85",
+                alt: "Misty mountain valley",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1454496522488-7a8e488e8606?auto=format&fit=crop&w=700&q=85",
+                alt: "Snowy peak at first light",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?auto=format&fit=crop&w=700&q=85",
+                alt: "Still lake and distant hills",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1455218873509-8097305ee378?auto=format&fit=crop&w=900&q=85",
+                alt: "Rolling ocean surface",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1500375592092-40eb2168fd21?auto=format&fit=crop&w=900&q=85",
+                alt: "Wave breaking on open water",
+                span: "col-span-2 row-span-2",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1473773508845-188df298d2d1?auto=format&fit=crop&w=700&q=85",
+                alt: "Palm trees on a sandy beach",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1490750967868-88aa4486c946?auto=format&fit=crop&w=700&q=85",
+                alt: "Close view of blooming flowers",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1444703686981-a3abbc4d4fe3?auto=format&fit=crop&w=900&q=85",
+                alt: "Stars above a dark horizon",
+                span: "col-span-1 row-span-2",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1519681393784-d120267933ba?auto=format&fit=crop&w=700&q=85",
+                alt: "Milky Way over a mountain",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?auto=format&fit=crop&w=900&q=85",
+                alt: "Mountains under soft clouds",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1508739773434-c26b3d09e071?auto=format&fit=crop&w=700&q=85",
+                alt: "Warm sunset sky",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=700&q=85",
+                alt: "Traveller's view over a lake",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1506197603052-3cc9c3a201bd?auto=format&fit=crop&w=900&q=85",
+                alt: "Coastal cliffs and sea",
+                span: "col-span-2 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1500964757637-c85e8a162699?auto=format&fit=crop&w=700&q=85",
+                alt: "Green fields stretching outward",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?auto=format&fit=crop&w=700&q=85",
+                alt: "Green lake in a forest",
+                span: "col-span-1 row-span-1",
+              },
+              {
+                src: "https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=900&q=85",
+                alt: "Aerial view of lush land",
+                span: "col-span-2 row-span-1",
+              },
             ].map((image, index) => (
               <MotionContainer
                 key={image.src}
@@ -468,45 +648,22 @@ export default function GalleryShowcasePage() {
                   mode: ["fadeUp", "filterBlurIn"],
                   duration: 0.8,
                   transition: "gentle",
-                  delay: index * 0.035,
+                  delay: (index % 6) * 0.035,
                 }}
                 controller={{
                   configView: {
-                    once: true,
+                    once: false,
                     amount: 0.2,
                   },
                 }}
                 className={`group relative isolate min-h-0 overflow-hidden rounded-xl bg-zinc-200 ${image.span}`}
               >
-                <MotionImage
+                <img
+                  src={image.src}
                   alt={image.alt}
-                  animation={{
-                    mode: ["fadeIn", "filterBlurIn"],
-                    duration: 0.9,
-                    transition: "gentle",
-                  }}
-                  config={{
-                    img: image.src,
-                    pieces: 16,
-                    duration: 0.24,
-                    delayLogic: "sinusoidal",
-                  }}
-                  controller={{
-                    configView: {
-                      once: true,
-                      amount: 0.2,
-                    },
-                  }}
-                  wrapperClassName="size-full"
-                  style={{
-                    position: "absolute",
-                    inset: 0,
-                    width: "100%",
-                    height: "100%",
-                  }}
-                  fallback={
-                    <div className="absolute inset-0 z-10 animate-pulse bg-zinc-200" />
-                  }
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 size-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
 
                 <figcaption className="pointer-events-none absolute inset-0 z-20 bg-gradient-to-t from-black/35 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100">
@@ -524,6 +681,7 @@ export default function GalleryShowcasePage() {
       <section className=" border-border px-6 py-28 sm:px-10 lg:px-20 lg:py-36">
         <div className="mx-auto grid max-w-[100rem] items-center gap-16 lg:grid-cols-2">
           <MotionImage
+            key={"v"}
             {...editorialImageAnimation}
             config={{
               ...editorialImageAnimation.config,
@@ -531,7 +689,7 @@ export default function GalleryShowcasePage() {
             }}
             alt="Golden sunlight over a quiet natural landscape"
             loading="lazy"
-            wrapperClassName="aspect-[5/4] w-full overflow-hidden rounded-[2rem] bg-surface-tertiary"
+            wrapperClassName="size-full overflow-hidden rounded-[2rem] bg-surface-tertiary"
             fallback={
               <div className="size-full animate-pulse bg-surface-tertiary" />
             }
