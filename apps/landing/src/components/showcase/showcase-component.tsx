@@ -2,7 +2,7 @@
 import { RotateCcw } from "lucide-react";
 import { MotionContainer, useController } from "motion-provider";
 import Link from "next/link";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import showcaseData from "@/constants/showcase.data";
 import { getDemo, isDemoId } from "@/lib/demo-registry";
@@ -22,6 +22,10 @@ export function ShowcaseComponent() {
     controller.reset();
     controller.play();
   }
+
+  useEffect(() => {
+    if (controller) controller.play();
+  }, [controller]);
 
   if (!isDemoId(selected)) return null;
 
@@ -49,7 +53,7 @@ export function ShowcaseComponent() {
           name="showcase-component-suspense"
           fallback={<Spinner size="lg" />}
         >
-          <Demo controller={controller} className="mb-20" />
+          <Demo key={selected} controller={controller} className="mb-20" />
         </Suspense>
       </ErrorBoundary>
       <div className="w-full z-50 flex gap-2 absolute top-0 p-2 flex-row justify-end">

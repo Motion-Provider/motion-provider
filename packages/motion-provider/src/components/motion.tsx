@@ -2,9 +2,9 @@
 
 import { createElement, forwardRef, useCallback, useRef } from "react";
 import { invariant } from "../engine/errors.js";
+import { compileAnimation } from "../engine/keyframes.js";
 import { useMotion } from "../hooks/use-motion.js";
 import type { MotionProps } from "../types.js";
-
 /**
  * Small React adapter for direct animation definitions. Import from motion-provider/lite
  * and pass named presets to omit the full registry. Server HTML stays visible until hydration.
@@ -32,6 +32,7 @@ export const Motion = forwardRef<HTMLElement | SVGElement, MotionProps>(
       "elementType must be an intrinsic HTML/SVG tag.",
     );
 
+    const initialStyle = compileAnimation(definition).initial;
     const ref = useRef<HTMLElement | SVGElement | null>(null);
     const setRef = useCallback(
       (node: HTMLElement | SVGElement | null) => {
@@ -56,6 +57,10 @@ export const Motion = forwardRef<HTMLElement | SVGElement, MotionProps>(
       elementType,
       {
         ...dom,
+        style: {
+          ...dom.style,
+          ...initialStyle,
+        },
         ref: setRef,
       },
       children,

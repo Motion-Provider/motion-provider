@@ -55,12 +55,15 @@ export const MotionImage = forwardRef<HTMLDivElement, MotionImageProps>(
       "IMAGE_INTERACTION",
       "config.fn must be hover or click.",
     );
+
     const imageRef = useRef<HTMLImageElement | null>(null),
       gridRef = useRef<HTMLDivElement | null>(null);
+
     const [loaded, setLoaded] = useState<{
       request: string;
       source: string;
     } | null>(null);
+
     const request = JSON.stringify([
       config.img,
       srcSet,
@@ -68,16 +71,21 @@ export const MotionImage = forwardRef<HTMLDivElement, MotionImageProps>(
       crossOrigin,
       referrerPolicy,
     ]);
+
     const ready = loaded?.request === request;
+
     useEffect(() => {
       const img = imageRef.current;
-      if (img?.complete && img.naturalWidth > 0)
+      if (img?.complete && img.naturalWidth > 0) {
         setLoaded({
           request,
           source: img.currentSrc || img.src,
         });
+      }
     }, [request]);
+
     const source = ready ? loaded.source : config.img;
+
     const reveal = useImageGrid(gridRef, ready, {
       animation,
       config: {
@@ -89,7 +97,9 @@ export const MotionImage = forwardRef<HTMLDivElement, MotionImageProps>(
       onMotionError,
       onMotionComplete,
     });
+
     const columns = Math.sqrt(config.pieces);
+
     return (
       <div
         {...dom}
@@ -118,14 +128,17 @@ export const MotionImage = forwardRef<HTMLDivElement, MotionImageProps>(
             width: "100%",
             height: "100%",
             objectFit: "fill",
-            opacity: ready ? 0 : 1,
+            opacity: 0,
+            pointerEvents: "none",
           }}
           onLoad={(event) => {
             const img = event.currentTarget;
+
             setLoaded({
               request,
               source: img.currentSrc || img.src,
             });
+
             onLoad?.(event);
           }}
           onError={(event) => {
@@ -133,7 +146,18 @@ export const MotionImage = forwardRef<HTMLDivElement, MotionImageProps>(
             onError?.(event);
           }}
         />
-        {!ready && fallback}
+
+        {!ready && fallback != null && (
+          <div
+            style={{
+              position: "absolute",
+              inset: 0,
+              zIndex: 1,
+            }}
+          >
+            {fallback}
+          </div>
+        )}
         <div
           ref={gridRef}
           aria-hidden="true"
@@ -145,7 +169,7 @@ export const MotionImage = forwardRef<HTMLDivElement, MotionImageProps>(
             gridTemplateColumns: `repeat(${columns},minmax(0,1fr))`,
             gridTemplateRows: `repeat(${columns},minmax(0,1fr))`,
             gap: 0,
-            pointerEvents: config.fn ? "auto" : "none",
+            pointerEvents: ready && config.fn ? "auto" : "none",
           }}
           onPointerMove={
             config.fn === "hover"

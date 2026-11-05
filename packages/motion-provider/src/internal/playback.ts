@@ -10,8 +10,10 @@ export function bindPlayback(
   input?: ControllerInput,
   manual = false,
 ): () => void {
-  const props = isController(input) ? undefined : input;
-  const controls = isController(input) ? input : props?.controls;
+  const imperativeController = isController(input),
+    props = imperativeController ? undefined : input,
+    controls = imperativeController ? input : props?.controls;
+
   const cleanups: (() => void)[] = [];
 
   const owns = () => controls?.getSnapshot() !== undefined;
@@ -34,7 +36,7 @@ export function bindPlayback(
     for (const handle of handles)
       cleanups.push(controls?.register(handle) ?? (() => {}));
 
-    if (!owns()) {
+    if (!imperativeController && !owns()) {
       if (props?.isAnimationStopped) drive(true);
       else if (props?.scroll)
         cleanups.push(

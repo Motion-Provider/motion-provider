@@ -379,7 +379,7 @@ export default createMotionConfig({
         duration: 0.22,
         mode: "words",
       },
-      elementType: "h2",
+      elementType: "span",
     },
   },
   engineMinimapEdges: {
@@ -406,6 +406,15 @@ export default createMotionConfig({
       },
       config: {
         duration: 0.22,
+      },
+      elementType: "g",
+    },
+  },
+  testChain: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: "fadeIn",
       },
       elementType: "g",
     },

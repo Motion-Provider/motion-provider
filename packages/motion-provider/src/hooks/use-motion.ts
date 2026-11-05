@@ -42,9 +42,10 @@ export function useMotion(
     onComplete: props.onMotionComplete,
   });
 
-  const input = props.controller;
-  const declarative = isController(input) ? undefined : input;
-  const controls = isController(input) ? input : declarative?.controls;
+  const input = props.controller,
+    imperativeController = isController(input),
+    declarative = imperativeController ? undefined : input,
+    controls = imperativeController ? input : declarative?.controls;
 
   const trigger = declarative?.trigger,
     reverse = declarative?.reverse ?? false,
@@ -68,8 +69,30 @@ export function useMotion(
   const hasScroll = !!scroll,
     reducedMotion = props.reducedMotion;
 
+  // useEffect(() => {
+  //   if (!ref.current) return;
+  //   const animation = animateElement(ref.current, spec.definition, {
+  //     ...spec.timing,
+  //     autoplay: false,
+  //     reducedMotion,
+  //     onError: (error) => report(error, callbacks.current.onError),
+  //     onFinish: (result) => callbacks.current.onComplete?.(result),
+  //   });
+  //   handle.current = animation;
+  //   return () => {
+  //     animation.dispose();
+  //     if (handle.current === animation) handle.current = null;
+  //   };
+  // }, [ref, spec, reducedMotion, callbacks]);
+
+  // useEffect(() => {
+  //   if (!handle.current || !controls) return;
+  //   return controls.register(handle.current);
+  // }, [controls]);
+
   useEffect(() => {
     if (!ref.current) return;
+
     const animation = animateElement(ref.current, spec.definition, {
       ...spec.timing,
       autoplay: false,
@@ -77,22 +100,39 @@ export function useMotion(
       onError: (error) => report(error, callbacks.current.onError),
       onFinish: (result) => callbacks.current.onComplete?.(result),
     });
-    handle.current = animation;
-    return () => {
-      animation.dispose();
-      if (handle.current === animation) handle.current = null;
-    };
-  }, [ref, spec, reducedMotion, callbacks]);
 
-  useEffect(() => {
-    if (!handle.current || !controls) return;
-    return controls.register(handle.current);
-  }, [controls]);
+    handle.current = animation;
+
+    let unregister: (() => void) | undefined;
+
+    try {
+      unregister = controls?.register(animation);
+    } catch (error) {
+      animation.dispose();
+
+      if (handle.current === animation) {
+        handle.current = null;
+      }
+
+      throw error;
+    }
+
+    return () => {
+      unregister?.();
+      animation.dispose();
+
+      if (handle.current === animation) {
+        handle.current = null;
+      }
+    };
+  }, [ref, spec, reducedMotion, callbacks, controls]);
 
   useEffect(() => {
     const animation = handle.current,
       element = ref.current;
     if (!animation || !element) return;
+    if (imperativeController) return;
+
     const commandOwns = () => controls?.getSnapshot() !== undefined;
 
     if (commandOwns()) return;
@@ -173,5 +213,6 @@ export function useMotion(
     margin,
     root,
     callbacks,
+    imperativeController,
   ]);
 }
