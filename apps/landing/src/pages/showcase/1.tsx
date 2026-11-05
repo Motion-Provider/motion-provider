@@ -68,6 +68,12 @@ const galleryMotion = createMotionConfig({
         duration: 0.08,
         delayLogic: "sinusoidal",
       },
+      controller: {
+        configView: {
+          amount: 0.15,
+          once: true,
+        },
+      },
     },
   },
   galleryHeading: {
@@ -239,7 +245,7 @@ export default function GalleryShowcasePage() {
   return (
     <main className="overflow-hidden bg-background text-foreground">
       {/* Hero */}
-      <section className="relative px-6 pb-24 pt-32 sm:px-10 lg:px-20 lg:pb-32 lg:pt-40">
+      <section className="relative px-6 pb-24 pt-16 sm:px-10 lg:px-20 lg:pb-32 lg:pt-40">
         <div className="mx-auto grid max-w-[100rem] items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="flex flex-col items-start">
             <MotionContainer {...getMotionAnimation("heroEyebrow")}>

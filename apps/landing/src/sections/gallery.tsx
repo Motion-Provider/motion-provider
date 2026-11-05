@@ -1,13 +1,8 @@
-import { Chip } from "@heroui/react";
-import { buttonVariants } from "@heroui/styles";
-import { ArrowRight, LayoutGrid } from "lucide-react";
-import { MotionContainer, MotionText } from "motion-provider";
-import Link from "next/link";
+import { MotionText } from "motion-provider";
 import { ContainerWrapper } from "@/components/container";
 import { GalleryGrid } from "@/components/gallery/gallery-grid";
 import data from "@/constants/gallery.data";
 import { getAnimation } from "@/lib/motion";
-import { cn } from "@/lib/utils";
 
 const titleAnimation = getAnimation("showcasesTitle");
 const descriptionAnimation = getAnimation("showcasesDescription");
@@ -25,31 +20,10 @@ export default function GallerySection() {
         className="pointer-events-none absolute inset-0 -z-10 bg-linear-to-b from-transparent via-accent/5 to-accent/15"
       />
 
-      <div className="mx-auto mb-12 flex w-full max-w-7xl flex-col gap-8 px-4 sm:px-6 md:flex-row md:items-end md:justify-between">
-        <div className="flex flex-col items-start gap-4">
-          <Chip color="accent" variant="soft" size="sm" className="gap-1.5">
-            <LayoutGrid aria-hidden="true" className="size-3.5" />
-            Live showcases
-          </Chip>
-          <MotionText {...titleAnimation}>Real pages. Real motion.</MotionText>
-          <MotionContainer {...descriptionAnimation}>
-            Three full pages built entirely with Motion Provider. Open one,
-            scroll, and watch every preset play out.
-          </MotionContainer>
+      <div className="mx-auto mb-12 flex w-full max-w-7xl flex-col gap-8 px-4 sm:px-6 text-center justify-center">
+        <div className="flex flex-col items-center gap-4">
+          <MotionText {...titleAnimation}>Live Showcases</MotionText>
         </div>
-
-        <MotionContainer {...actionAnimation}>
-          <Link
-            href="/showcase/1"
-            className={cn(
-              buttonVariants({ variant: "primary", size: "lg" }),
-              "no-underline",
-            )}
-          >
-            Browse all showcases
-            <ArrowRight aria-hidden="true" className="size-4" />
-          </Link>
-        </MotionContainer>
       </div>
 
       <ContainerWrapper<"div">
@@ -64,9 +38,14 @@ export default function GallerySection() {
           opacity: 0.05,
           className: "pointer-events-none",
         }}
-        className="px-4 sm:px-6"
-        innerClassName="p-0"
+        className=""
+        innerClassName="relative"
       >
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-transparent via-accent/15 to-[#2a1610]  h-1/2 mt-auto"
+        />
+
         <GalleryGrid items={data} />
       </ContainerWrapper>
     </section>

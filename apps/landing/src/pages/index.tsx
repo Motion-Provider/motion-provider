@@ -18,8 +18,8 @@ export default function Home() {
       <MyFingerIsGoodNow />
       <ShowcaseSection />
       <EngineDiagramSection />
-      <Cta />
       <Metrics />
+      <Cta />
       <FaqSection />
       <GallerySection />
     </>

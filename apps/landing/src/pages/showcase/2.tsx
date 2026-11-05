@@ -258,7 +258,7 @@ export default function ShopShowcasePage() {
   return (
     <main className="overflow-hidden bg-background text-foreground">
       {/* Hero */}
-      <section className="px-5 pb-20 pt-28 sm:px-8 lg:px-12 lg:pb-28">
+      <section className="px-5 pb-20 pt-14 sm:px-8 lg:px-12 lg:pb-28">
         <div className="mx-auto grid max-w-7xl items-center gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:gap-20">
           <MotionContainer
             animation={{

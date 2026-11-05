@@ -16,7 +16,7 @@ export default function ShowcaseSection() {
       <div className="justify-self-center relative max-w-7xl overflow-visible size-full py-28 flex flex-col">
         <div className="flex flex-col gap-3 min-h-min max-h-60 h-auto mb-4 justify-center items-center z-10">
           <MotionText {...titleAnimation}>Designed For Simplicity.</MotionText>
-          <p className="max-w-md leading-snug text-center text-black">
+          <p className="max-w-md leading-snug text-center text-accent">
             Here is the core of Motion Provider APIs and literally all
             <span className="text-white"> you need to animate a webpage.</span>
           </p>

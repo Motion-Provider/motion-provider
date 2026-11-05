@@ -14,7 +14,8 @@ const textAnimation2 = getAnimation("myFingerIsGoodNowText2");
 
 export default function MyFingerIsGoodNow() {
   return (
-    <section className="min-h-60 w-full justify-center items-center flex bg-white text-black py-24 relative">
+    <section className="min-h-60 w-full justify-center items-center flex bg-[#2a1610] text-foreground py-24 relative">
+      <div className="absolute top-0 h-24 w-full bg-linear-to-b from-background to-[#2a1610]" />
       <div className="w-7xl flex justify-between items-center z-10">
         <div className="text-6xl text-start tracking-tighter font-bold -mt-4">
           <ChipList className="tracking-normal pb-2" />
@@ -28,7 +29,7 @@ export default function MyFingerIsGoodNow() {
             {...config.identity}
             className="z-30 desktop:size-96 laptop:size-80"
             animationName="myFingerIsGoodNowPyramid"
-            evenColor="text-accent-foreground"
+            evenColor="text-accent/50"
             oddColor="text-accent"
             beginRadius={beginRadius}
             endRadius={endRadius}
