@@ -4,10 +4,8 @@
   AvatarImage,
   Badge,
   Description,
-  type Key,
   Label,
   ListBox,
-  Select,
 } from "@heroui/react";
 import { SparklesIcon } from "lucide-react";
 import { MotionContainer } from "motion-provider";
@@ -17,69 +15,38 @@ import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
 import { arraysEqual } from "@/utils/arraysEqual";
 
-export function CircleSelect({ className }: { className?: string }) {
+export function CircleList({ className }: { className?: string }) {
   const { setAnimations, animations, setTransition } = useCircle();
 
   const currentAvatar = avatars.find((item) =>
     arraysEqual(item.animationKeys, animations),
   )?.id;
 
-  function handleValueChange(e: Key | Key[] | null) {
-    if (e === null) return;
-
-    const { animationKeys, transition } = avatars.find(
-      (item) => item.id === e,
-    ) as AvatarItem;
-
-    if (animationKeys) setAnimations(animationKeys);
-    if (transition) setTransition(transition);
-
-    return;
-  }
-
   return (
-    <Select
-      className={cn("w-2xs", className)}
-      placeholder="Select an animation preset"
-      aria-labelledby="Select an animation preset"
-      value={currentAvatar}
+    <ListBox
+      aria-label="Select an animation preset"
+      className={cn(
+        "h-48 w-2xs overflow-y-auto rounded-2xl bg-glass-surface backdrop-blur-xl",
+        className,
+      )}
       selectionMode="single"
-      defaultOpen
-      onChange={handleValueChange}
+      disallowEmptySelection
+      selectedKeys={currentAvatar ? [currentAvatar] : []}
+      onSelectionChange={(keys) => {
+        if (keys === "all") return;
+        const [id] = keys;
+        if (id === undefined) return;
+        const item = avatars.find((avatar) => avatar.id === id);
+        if (!item) return;
+        if (item.animationKeys) setAnimations(item.animationKeys);
+        if (item.transition) setTransition(item.transition);
+      }}
     >
-      <Select.Trigger className="bg-glass-surface">
-        <Select.Value>
-          {({ defaultChildren, isPlaceholder, state }) => {
-            if (isPlaceholder || state.selectedItems.length === 0)
-              return defaultChildren;
-
-            const item = avatars.find(
-              (item) => item.id === state.selectedItems[0]?.key,
-            );
-
-            if (!item) return defaultChildren;
-            return (
-              <div className="flex items-center gap-2">
-                <Avatar className="size-4" size="md">
-                  <AvatarImage src={item.src} />
-                  <AvatarFallback>{item.title}</AvatarFallback>
-                </Avatar>
-                <span>{item.title}</span>
-              </div>
-            );
-          }}
-        </Select.Value>
-        <Select.Indicator />
-      </Select.Trigger>
-      <Select.Popover className="bg-glass-surface backdrop-blur-xl h-48">
-        <ListBox>
-          {avatars.map((avatar) => (
-            <ListBoxItem {...avatar} key={avatar.id} />
-          ))}
-          <EmptyListBoxItem />
-        </ListBox>
-      </Select.Popover>
-    </Select>
+      {avatars.map((avatar) => (
+        <ListBoxItem {...avatar} key={avatar.id} />
+      ))}
+      <EmptyListBoxItem />
+    </ListBox>
   );
 }
 
@@ -105,7 +72,6 @@ const ListBoxItem = ({
   transition,
 }: AvatarItem) => {
   const [trigger, setTrigger] = useState(false);
-
   const handleMouseEnter = () => setTrigger(true);
   const handleMouseLeave = () => setTrigger(false);
 
@@ -134,9 +100,8 @@ const ListBoxItem = ({
           <AvatarFallback>M</AvatarFallback>
         </Avatar>
       </MotionContainer>
-
       <div className="flex flex-col relative">
-        <Label className="flex items-center justify-center ">
+        <Label className="flex items-center justify-center">
           {title}{" "}
           <Badge
             color="accent"

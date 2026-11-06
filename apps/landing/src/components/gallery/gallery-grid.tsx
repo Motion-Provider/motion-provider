@@ -21,8 +21,8 @@ export function GalleryGrid({
       )}
     >
       <MotionChain {...cardsAnimation}>
-        {items.map((item, index) => (
-          <GalleryCard key={item.id} index={index} {...item} />
+        {items.map((item) => (
+          <GalleryCard key={item.id} {...item} />
         ))}
       </MotionChain>
     </ul>

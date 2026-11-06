@@ -250,7 +250,7 @@ body {
   background: transparent;
 }
 
-.custom-shape-divider-top-1793568733 {
+.custom-shape-divider-top-1793924738 {
   position: absolute;
   top: 0;
   left: 0;
@@ -259,13 +259,13 @@ body {
   line-height: 0;
 }
 
-.custom-shape-divider-top-1793568733 svg {
+.custom-shape-divider-top-1793924738 svg {
   position: relative;
   display: block;
   width: calc(100% + 1.3px);
-  height: 236px;
+  height: 150px;
 }
 
-.custom-shape-divider-top-1793568733 .shape-fill {
+.custom-shape-divider-top-1793924738 .shape-fill {
   fill: #2a1610;
 }

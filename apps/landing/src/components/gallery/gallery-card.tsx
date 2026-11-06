@@ -11,12 +11,10 @@ const FOCUS_RING = cn(
 );
 
 export type GalleryCardProps = GalleryItem & {
-  index: number;
   className?: string;
 };
 
 export function GalleryCard({
-  index,
   className,
   category,
   href,
@@ -52,9 +50,9 @@ export function GalleryCard({
         className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-background to-accent/15"
       />
       <div className="flex flex-col gap-4 rounded-2xl pt-2 z-50">
-        <div className="flex items-center justify-between gap-4">
+        <div className="flex items-center justify-between gap-4 group-hover:text-accent">
           <div className="flex flex-col gap-1.5">
-            <h3 className="text-2xl font-semibold leading-tight tracking-tighter ">
+            <h3 className="text-2xl font-semibold leading-tight tracking-tighter transition-colors duration-150">
               {category}
             </h3>
           </div>
@@ -64,7 +62,7 @@ export function GalleryCard({
             className="motion-reduce:transition-none rounded-full"
             size="lg"
           >
-            <ArrowUpRight className="size-7 " />
+            <ArrowUpRight className="size-7 group-hover:text-accent transition-colors duration-150" />
           </Button>
         </div>
       </div>

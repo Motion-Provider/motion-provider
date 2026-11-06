@@ -3,9 +3,9 @@ import { CopyIcon } from "lucide-react";
 import dynamic from "next/dynamic";
 import { Annotation } from "@/components/annotation";
 import { Circle } from "@/components/circle";
+import { CircleList } from "@/components/circle/circle-list";
 import { CirclePlayButton } from "@/components/circle/circle-play-button";
 import { CircleProgress } from "@/components/circle/circle-progress";
-import { CircleSelect } from "@/components/circle/circle-select";
 import { CircleSlider } from "@/components/circle/circle-slider";
 import { ContainerWrapper } from "@/components/container";
 import { CircleProvider } from "@/providers/circle.provider";
@@ -48,7 +48,7 @@ export default function HeroSection() {
           <CircleCodeSnippet className="z-50 top-16 left-24 absolute" />
 
           <div className="top-12 right-16 absolute flex gap-8">
-            <CircleSelect className="z-50" />
+            <CircleList className="z-50" />
             <CircleSlider className="perspective-distant will-change-transforsm" />
           </div>
 

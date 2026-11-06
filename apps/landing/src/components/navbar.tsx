@@ -2,6 +2,7 @@
 import navigationData from "@/constants/navigation.data";
 import { cn } from "@/lib/utils";
 import { Scales } from "./container";
+import { GithubStar } from "./github-star";
 import { GithubIcon } from "./icons/github-icon";
 
 const FOCUS_RING = cn(
@@ -110,6 +111,7 @@ export function Navbar() {
             >
               <GithubIcon />
               <span className="hidden sm:inline">GitHub</span>
+              <GithubStar />
             </NextLink>
           </div>
         </div>
