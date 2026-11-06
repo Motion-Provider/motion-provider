@@ -1,4 +1,5 @@
-﻿import NextLink from "next/link";
+﻿import { StarIcon } from "lucide-react";
+import NextLink from "next/link";
 import navigationData from "@/constants/navigation.data";
 import { cn } from "@/lib/utils";
 import { Scales } from "./container";
@@ -97,20 +98,23 @@ export function Navbar() {
               className={cn(
                 "flex items-center gap-2 rounded-md",
                 "border border-foreground/20",
-                "px-3 py-2 sm:px-4",
+                "px-3 py-2 sm:px-4 shrink-0",
                 "font-mono text-xs uppercase tracking-widest",
                 "text-foreground/70 no-underline",
                 "transition-colors duration-200",
                 "hover:border-foreground/50 hover:text-foreground",
-                "motion-reduce:transition-none",
+                "motion-reduce:transition-none relative group",
                 FOCUS_RING,
               )}
-              href="https://github.com/acme"
+              href="https://github.com/Motion-Provider/motion-provider"
               rel="noreferrer"
               target="_blank"
             >
               <GithubIcon />
-              <span className="hidden sm:inline">GitHub</span>
+              <div className="flex gap-1 items-center justify-center">
+                <span className="hidden sm:inline">GitHub</span>
+                <StarIcon className="size-3.5 group-hover:fill-amber-500 group-hover:text-amber-500" />
+              </div>
               <GithubStar />
             </NextLink>
           </div>

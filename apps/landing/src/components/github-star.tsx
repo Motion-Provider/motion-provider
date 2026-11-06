@@ -1,45 +1,69 @@
-﻿import { Spinner } from "@heroui/react";
+﻿import { Badge, Spinner } from "@heroui/react";
 import { useEffect, useState } from "react";
 
 const ENDPOINT = "https://api.github.com/repos/Motion-Provider/motion-provider";
 
-let ignore = false;
+interface RepoResponse {
+  stargazers_count: number;
+}
+
+function isRepoResponse(value: unknown): value is RepoResponse {
+  return (
+    typeof value === "object" &&
+    value !== null &&
+    "stargazers_count" in value &&
+    typeof value.stargazers_count === "number"
+  );
+}
+
+let starCountPromise: Promise<number | null> | null = null;
+
+function fetchStarCount(): Promise<number | null> {
+  starCountPromise ??= fetch(ENDPOINT)
+    .then(async (res) => {
+      if (!res.ok) return null;
+      const data: unknown = await res.json();
+      return isRepoResponse(data) ? data.stargazers_count : null;
+    })
+    .catch(() => null)
+    .then((count) => {
+      if (count === null) starCountPromise = null;
+      return count;
+    });
+
+  return starCountPromise;
+}
 
 export function GithubStar() {
-  const [starCount, setStarCount] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [starCount, setStarCount] = useState<number | null | undefined>(
+    undefined,
+  );
 
   useEffect(() => {
-    if (ignore || loading) return;
+    let cancelled = false;
 
-    const controller = new AbortController();
-
-    const getStarCount = async () => {
-      const res = await fetch(ENDPOINT, { signal: controller.signal })
-        .then((res) => res.json())
-        .catch(() => {
-          setStarCount(null);
-          setLoading(false);
-        });
-
-      if (res) {
-        setStarCount(parseInt(res.stargazers_count, 10));
-        setLoading(false);
-      }
-    };
-
-    if (!starCount) {
-      setLoading(true);
-      getStarCount();
-    }
+    fetchStarCount().then((count) => {
+      if (!cancelled) setStarCount(count);
+    });
 
     return () => {
-      ignore = true;
-      controller.abort();
-      setLoading(false);
+      cancelled = true;
     };
-  }, [starCount, loading]);
+  }, []);
 
-  if (loading) return <Spinner color="accent" />;
-  return <span>{starCount}</span>;
+  if (starCount === null) return null;
+  return (
+    <Badge
+      size="md"
+      color="accent"
+      variant="soft"
+      className="font-bold tracking-tight rounded-full border-none "
+    >
+      {typeof starCount === "undefined" ? (
+        <Spinner color="current" size="sm" />
+      ) : (
+        starCount
+      )}
+    </Badge>
+  );
 }
