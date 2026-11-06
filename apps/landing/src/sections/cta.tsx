@@ -1,8 +1,11 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { ArrowUpRightIcon, Boxes } from "lucide-react";
+import { MotionImage } from "motion-provider";
 import Link from "next/link";
 import { ContainerWrapper } from "@/components/container";
-import SquareGrid from "@/components/square-grid";
+import { getAnimation } from "@/lib/motion";
+
+const imageAnimation = getAnimation("squareGrid");
 
 export default function Cta() {
   return (
@@ -28,7 +31,17 @@ export default function Cta() {
         className="max-w-7xl rounded-3xl size-full mt-24"
         innerClassName="grid place-items-center-safe relative overflow-hidden size-full rounded-3xl"
       >
-        <SquareGrid />
+        <div className="absolute top-0 left-0 size-full grid place-items-center-safe">
+          <MotionImage
+            {...imageAnimation}
+            config={{
+              ...imageAnimation.config,
+              img: "/assets/backgrounds/grid-background-be9b88fc.webp",
+            }}
+            wrapperClassName="top-0 left-0 z-10 absolute size-full aspect-video overflow-hidden"
+          />
+        </div>
+
         <div className="grid place-items-center-safe z-50">
           <Chip
             variant="primary"

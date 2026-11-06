@@ -20,7 +20,7 @@ export default function FaqSection() {
       className="w-full h-auto flex flex-col items-center justify-center gap-24 py-28"
       id="faq"
     >
-      <h2 className="text-6xl tracking-tighter text-center">
+      <h2 className="md:text-6xl text-4xl tracking-tighter text-center">
         <MotionChain {...titleAnimation}>{headline}</MotionChain>
       </h2>
       <Accordion className="w-full max-w-4xl">

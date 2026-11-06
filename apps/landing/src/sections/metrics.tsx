@@ -49,7 +49,7 @@ export default function Metrics() {
         <div className="flex h-auto min-h-min flex-col gap-3">
           <MotionText
             {...titleAnimation}
-            wrapperClassName="text-5xl tracking-tighter"
+            wrapperClassName="text-6xl tracking-tighter"
             id="metrics-heading"
             elementType="h2"
           >

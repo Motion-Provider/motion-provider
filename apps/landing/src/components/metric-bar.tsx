@@ -1,5 +1,5 @@
 import { Chip } from "@heroui/react";
-import { Motion, MotionContainer, MotionText } from "motion-provider";
+import { Motion, MotionContainer } from "motion-provider";
 import { LIBRARY_NAMES, METRIC_SUFFIX } from "@/constants/metrics.config";
 import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
@@ -34,28 +34,20 @@ export function MetricBar({
   return (
     <li data-index={index} data-library={library}>
       <div className="mb-3 flex items-baseline justify-between gap-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:gap-2">
-          <MotionText
-            wrapperClassName="text-xl font-medium tracking-tight"
-            {...nameAnimation}
-            animation={{
-              ...nameAnimation.animation,
-              delay: index * 0.8,
-            }}
-          >
-            {name}
-          </MotionText>
-          <MotionContainer
-            animation={{
-              ...labelAnimation.animation,
-              delay: index * 0.9,
-            }}
-          >
-            <Chip variant="soft" color="accent">
-              {label}
-            </Chip>
-          </MotionContainer>
-        </div>
+        <MotionContainer
+          animation={{
+            mode: ["fadeIn", "slideUp"],
+            delay: index * 0.66,
+            transition: "elasticHard",
+            duration: 1.5,
+          }}
+          className="flex flex-col sm:flex-row sm:items-center sm:gap-2"
+        >
+          <h3 className="text-xl font-medium tracking-tight">{name}</h3>
+          <Chip variant="soft" color="accent">
+            {label}
+          </Chip>
+        </MotionContainer>
       </div>
       {/** biome-ignore lint/a11y/useAriaPropsSupportedByRole: dynamic aria */}
       <div
@@ -77,6 +69,14 @@ export function MetricBar({
             duration: 1,
             delay: index * 0.5,
             ease: "ease-in-out",
+          }}
+          controller={{
+            scroll: {
+              axis: "y",
+              mode: "view",
+              start: 0,
+              end: 0.25,
+            },
           }}
           className={cn(
             isHighlighted ? "bg-accent" : "bg-surface",

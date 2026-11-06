@@ -38,7 +38,7 @@ export function DxComparisonSplit() {
 
   return (
     <Tabs
-      className="flex size-full min-h-0 min-w-0 flex-col p-6"
+      className="flex size-full min-h-0 min-w-0 flex-col md:p-6"
       variant="primary"
       selectedKey={libraryId}
       onSelectionChange={handleSelectionChange}

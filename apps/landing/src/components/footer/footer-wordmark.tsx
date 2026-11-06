@@ -1,31 +1,32 @@
-interface FooterWordmarkProps {
-  readonly text: string;
-}
+import { MotionImage } from "motion-provider";
 
-export function FooterWordmark({ text }: FooterWordmarkProps) {
+export function FooterWordmark() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none select-none text-foreground mask-[linear-gradient(to_bottom,black_15%,transparent_95%)]"
+      className="pointer-events-none select-none text-foreground relative -my-26"
+      key={"y"}
     >
-      <svg
-        viewBox="0 0 1200 190"
-        className="block h-auto w-full"
-        focusable="false"
-      >
-        <title className="sr-only">Motion Provider</title>
-        <text
-          x="0"
-          y="170"
-          textLength="1200"
-          lengthAdjust="spacingAndGlyphs"
-          fill="currentColor"
-          fontSize="200"
-          fontWeight="600"
-        >
-          {text}
-        </text>
-      </svg>
+      <MotionImage
+        animation={{
+          mode: ["fadeIn", "filterBlurIn", "rotateFlipX"],
+          transition: "gentle",
+          duration: 1.5,
+        }}
+        config={{
+          img: "/assets/app-wordmark.png",
+          pieces: 144,
+          delayLogic: "chaotic",
+          duration: 0.33,
+        }}
+        controller={{
+          configView: {
+            once: false,
+            amount: 0.5,
+          },
+        }}
+        wrapperClassName="size-full"
+      />
     </div>
   );
 }

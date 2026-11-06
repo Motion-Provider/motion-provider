@@ -202,14 +202,21 @@ export default createMotionConfig({
     props: {
       animation: {
         mode: ["fadeIn", "filterBlurIn", "skewX45"],
-        duration: 0.75,
+        duration: 1.5,
         transition: "gentle",
       },
       config: {
         pieces: 121,
-        duration: 0.1,
-        fn: "hover",
-        delayLogic: "sinusoidal",
+        duration: 0.5,
+        delayLogic: "perlin",
+      },
+      controller: {
+        scroll: {
+          axis: "y",
+          mode: "view",
+          start: 0.25,
+          end: 0.75,
+        },
       },
     },
   },
@@ -278,7 +285,7 @@ export default createMotionConfig({
         duration: 0.2,
       },
       elementType: "h1",
-      wrapperClassName: "text-7xl text-foreground tracking-tighter font-bold",
+      wrapperClassName: "text-7xl text-foreground tracking-tighter",
     },
   },
   faqTitle: {

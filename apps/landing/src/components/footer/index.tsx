@@ -14,12 +14,6 @@ export function Footer() {
       <h2 id="footer-heading" className="sr-only">
         {brand} footer
       </h2>
-
-      {/* <div
-        aria-hidden="true"
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-72 bg-[radial-gradient(60%_100%_at_50%_0%,oklch(74.28%_0.1618_40.24/0.10),transparent)]"
-      /> */}
-
       <div className="mx-auto w-full max-w-7xl px-6 pt-16 sm:pt-20 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
           <div className="lg:col-span-5">
@@ -56,9 +50,7 @@ export function Footer() {
               {tagline.accent}
             </span>
           </p>
-          <div className="mt-6 sm:mt-10">
-            <FooterWordmark text={brand} />
-          </div>
+          <FooterWordmark />
         </div>
       </div>
     </footer>

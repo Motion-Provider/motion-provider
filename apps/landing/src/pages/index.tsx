@@ -15,6 +15,9 @@ export default function Home() {
       <HeroSection />
       <TrustSignals />
       <DxComparison />
+
+      {/* Below non-responsive zone */}
+
       <MyFingerIsGoodNow />
       <ShowcaseSection />
       <EngineDiagramSection />

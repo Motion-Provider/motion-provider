@@ -5,10 +5,11 @@ import { cn } from "@/lib/utils";
 import { useCircle } from "@/providers/circle.provider";
 
 const iconClassName =
-  "size-20 stroke-4 -mx-1.25 cursor-pointer group-focus-visible:text-foreground/50 group-hover:text-accent group-hover:-rotate-12 transition-all duration-300";
+  "size-10 sm:size-14 md:size-16 lg:size-20 -mx-1 sm:-mx-1.25 cursor-pointer group-focus-visible:text-foreground/50 group-hover:text-accent group-hover:-rotate-12 transition-all duration-300 stroke-4";
 
 export function CirclePlayButton() {
   const { controller } = useCircle();
+
   const animationState = useSyncExternalStore<ControlAction | undefined>(
     controller.subscribe,
     controller.getSnapshot,
@@ -22,6 +23,7 @@ export function CirclePlayButton() {
   function handleToggle() {
     void controller.onReverse();
   }
+
   return (
     <button
       onClick={handleToggle}

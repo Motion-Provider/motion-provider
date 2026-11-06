@@ -31,25 +31,28 @@ export function DxComparisonButton({
       aria-pressed={isActive}
       onPress={() => onSelect(id)}
       className={cn(
-        "laptop:h-12 desktop:h-18 w-full justify-between group",
-        "gap-3 border border-border bg-surface/50 backdrop-blur-xl overflow-hidden",
-        "px-6 text-surface-secondary-foreground aria-pressed:border-transparent",
-        "aria-pressed:bg-accent aria-pressed:text-accent-foreground relative isolate",
+        "group relative isolate flex h-11 w-full min-w-0 justify-between gap-2 overflow-hidden",
+        "border border-border bg-surface/50 px-3 text-xs text-surface-secondary-foreground backdrop-blur-xl",
+        "aria-pressed:border-transparent aria-pressed:bg-accent aria-pressed:text-accent-foreground",
+        "sm:h-12 sm:gap-3 sm:px-4 sm:text-sm",
+        "desktop:h-18",
         className,
       )}
     >
-      <div className="absolute right-0 top-0 size-24 bg-linear-to-r from-accent to-accent blur-2xl -z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 ease-smooth" />
-      <div className="flex items-center gap-2">
-        <Icon aria-hidden="true" className="size-5 shrink-0" />
-        <span className="tracking-tighter">{label}</span>
+      <div className="absolute -z-10 right-0 top-0 size-24 bg-linear-to-r from-accent to-accent opacity-0 blur-2xl transition-opacity duration-300 ease-smooth group-hover:opacity-100" />
+
+      <div className="flex min-w-0 items-center gap-2">
+        <Icon aria-hidden="true" className="size-4 shrink-0 sm:size-5" />
+        <span className="truncate tracking-tighter">{label}</span>
       </div>
+
       <ButtonIcon isActive={isActive} />
     </Button>
   );
 }
 
 const ButtonIcon: FC<{ isActive: boolean }> = ({ isActive }) => (
-  <span className="transition-colors duration-300 ease-smooth *:size-5">
+  <span className="shrink-0 transition-colors duration-300 ease-smooth *:size-4 sm:*:size-5">
     {!isActive ? <ArrowUpRightIcon /> : <CheckCheckIcon />}
   </span>
 );
