@@ -3,24 +3,20 @@ import { ArrowUpRightIcon, Boxes } from "lucide-react";
 import { MotionImage } from "motion-provider";
 import Link from "next/link";
 import { ContainerWrapper } from "@/components/container";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
 
 const imageAnimation = getAnimation("squareGrid");
 
 export default function Cta() {
+  const isMobile = useIsMobile();
   return (
     <section className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible my-28">
       <ContainerWrapper<"section">
         as="section"
         surface="glass"
         width="7xl"
-        scales={{
-          sides: ["top", "bottom", "left", "right"],
-          size: 12,
-          thickness: 24,
-          opacity: 1,
-          orientation: "vertical",
-        }}
+        scales={false}
         grid={{
           axis: "diagonal",
           size: 100,
@@ -37,6 +33,7 @@ export default function Cta() {
             config={{
               ...imageAnimation.config,
               img: "/assets/backgrounds/grid-background-be9b88fc.webp",
+              pieces: isMobile ? 36 : imageAnimation.config.pieces,
             }}
             wrapperClassName="top-0 left-0 z-10 absolute size-full aspect-video overflow-hidden"
           />
@@ -51,7 +48,7 @@ export default function Cta() {
             Rapid Prototyping
           </Chip>
           <div className="bg-clip-text bg-linear-to-b from-foreground to-transparent from-50%">
-            <h1 className="md:text-6xl tracking-tighter pt-2 capitalize text-transparent font-bold">
+            <h1 className="md:text-6xl text-3xl tracking-tighter pt-2 capitalize text-transparent font-bold">
               Introducing The Motion Playgrounds.
             </h1>
           </div>

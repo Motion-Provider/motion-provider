@@ -2,6 +2,7 @@ import { Chip } from "@heroui/react";
 import { MotionChain, MotionText } from "motion-provider";
 import { MetricBar } from "@/components/metric-bar";
 import metrics from "@/constants/metrics.data";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
 import type {
   MetricItem,
@@ -40,6 +41,8 @@ const [metricAnimation, titleAnimation] = [
 ];
 
 export default function Metrics() {
+  const isMobile = useIsMobile();
+
   return (
     <section
       aria-labelledby="metrics-heading"
@@ -48,14 +51,18 @@ export default function Metrics() {
       <div className="flex flex-col gap-16">
         <div className="flex h-auto min-h-min flex-col gap-3">
           <MotionText
-            {...titleAnimation}
-            wrapperClassName="text-6xl tracking-tighter"
+            animation={titleAnimation.animation}
+            config={{
+              ...titleAnimation.config,
+              mode: isMobile ? "words" : "chars",
+            }}
+            wrapperClassName="md:text-6xl text-5xl tracking-tighter"
             id="metrics-heading"
             elementType="h2"
           >
             Pay Only For What You Animate.
           </MotionText>
-          <p className="max-w-2xl text-muted leading-snug">
+          <p className="md:max-w-2xl text-pretty text-muted leading-snug">
             <Chip
               variant="primary"
               className="bg-accent-soft text-accent font-secondary"

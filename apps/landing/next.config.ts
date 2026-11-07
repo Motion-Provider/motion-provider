@@ -10,6 +10,7 @@ const nextConfig: NextConfig = {
   experimental: {
     turbopackRustReactCompiler: true,
   },
+  allowedDevOrigins: ["192.168.10.125"],
 };
 
 export default nextConfig;

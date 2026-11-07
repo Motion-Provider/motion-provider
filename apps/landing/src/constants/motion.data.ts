@@ -26,44 +26,19 @@ export default createMotionConfig({
       },
     },
   },
-  metricBarName: {
-    type: "MotionText",
-    props: {
-      animation: {
-        mode: ["flash", "filterBlurIn", "fadeIn"],
-        transition: "slowCubic",
-        duration: 0.75,
-      },
-      config: {
-        mode: "chars",
-        duration: 0.48,
-        delayLogic: "sinusoidal",
-      },
-    },
-  },
   metricTitle: {
     type: "MotionText",
     props: {
       animation: {
-        mode: ["filterBlurIn", "textShimmer"],
+        mode: ["textShimmer", "transformTextGlow"],
         delay: 0.33,
         transition: "bounceSoft",
         duration: 1.8,
       },
       config: {
-        mode: "chars",
+        mode: "words",
         duration: 0.52,
         delayLogic: "sinusoidal",
-      },
-    },
-  },
-  metricBarLabel: {
-    type: "MotionContainer",
-    props: {
-      animation: {
-        mode: ["filterBlurOut", "fadeOut"],
-        transition: "gentle",
-        direction: "alternate-reverse",
       },
     },
   },
@@ -206,7 +181,7 @@ export default createMotionConfig({
         transition: "gentle",
       },
       config: {
-        pieces: 121,
+        pieces: 81,
         duration: 0.5,
         delayLogic: "perlin",
       },
@@ -285,7 +260,8 @@ export default createMotionConfig({
         duration: 0.2,
       },
       elementType: "h1",
-      wrapperClassName: "text-7xl text-foreground tracking-tighter",
+      wrapperClassName:
+        "md:text-7xl text-5xl text-balance text-foreground tracking-tighter",
     },
   },
   faqTitle: {
@@ -446,6 +422,39 @@ export default createMotionConfig({
         mode: "fadeIn",
       },
       elementType: "g",
+    },
+  },
+  engineDiagramTitle: {
+    type: "MotionText",
+    props: {
+      animation: {
+        mode: ["fadeUp", "slideUp", "filterBlurIn"],
+        delay: 0,
+        duration: 0.8,
+        transition: "pop",
+      },
+      config: {
+        mode: "words",
+        duration: 0.12,
+        delayLogic: "pingpong",
+      },
+      controller: {
+        configView: {
+          amount: 0.5,
+          once: true,
+        },
+      },
+    },
+  },
+  engineDiagramDesc: {
+    type: "MotionContainer",
+    props: {
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "pop",
+        duration: 1.2,
+        delay: 1,
+      },
     },
   },
 });

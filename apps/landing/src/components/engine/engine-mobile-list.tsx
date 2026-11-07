@@ -1,5 +1,7 @@
 import { Button } from "@heroui/react";
+import { MotionChain } from "motion-provider";
 import { ENGINE_GROUPS } from "@/constants/engine.data";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import type { EngineNodeId } from "@/types/engine.type";
 import { NODES_BY_GROUP } from "@/utils/engineDiagram";
 import { toneStyle } from "@/utils/engineTone";
@@ -8,10 +10,12 @@ interface EngineMobileListProps {
   onSelect: (id: EngineNodeId) => void;
 }
 
-/** Below `lg` the wired canvas is unreadable, so the same dataset renders as grouped lists. */
 export function EngineMobileList({ onSelect }: EngineMobileListProps) {
+  const isMobile = useIsMobile();
+
+  if (!isMobile) return null;
   return (
-    <div className="grid gap-4 sm:grid-cols-2 lg:hidden">
+    <div className="grid gap-4 sm:grid-cols-2">
       {ENGINE_GROUPS.map((group) => (
         <section
           key={group.id}
@@ -22,10 +26,27 @@ export function EngineMobileList({ onSelect }: EngineMobileListProps) {
             {group.label}
           </h3>
           <ul className="mt-3 flex flex-col gap-2">
-            {NODES_BY_GROUP[group.id].map((node) => (
-              <li key={node.id}>
+            <MotionChain
+              key={"b"}
+              animation={{
+                mode: "fadeUp",
+                duration: 1.5,
+                transition: "bounceSoft",
+              }}
+              controller={{
+                scroll: {
+                  axis: "y",
+                  start: 0,
+                  end: 0.35,
+                  mode: "view",
+                },
+              }}
+              elementType="li"
+            >
+              {NODES_BY_GROUP[group.id].map((node) => (
                 <Button
-                  variant="tertiary"
+                  key={node.id}
+                  variant="outline"
                   className="h-auto w-full justify-between gap-3 py-2"
                   onPress={() => onSelect(node.id)}
                 >
@@ -34,8 +55,8 @@ export function EngineMobileList({ onSelect }: EngineMobileListProps) {
                     <span className=" text-xs text-muted">{node.file}</span>
                   )}
                 </Button>
-              </li>
-            ))}
+              ))}
+            </MotionChain>
           </ul>
         </section>
       ))}

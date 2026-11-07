@@ -56,7 +56,7 @@ export function EngineNodeModal({
     node && links ? (
       <>
         {node.file && (
-          <div className="absolute top-6 right-6 flex gap-2">
+          <div className="absolute md:top-6 right-6 flex gap-2">
             <GithubButton
               buttonProps={{
                 className: "font-primary text-xs",
@@ -86,7 +86,7 @@ export function EngineNodeModal({
   if (isMobile) {
     return (
       <Sheet isOpen={isOpen} onOpenChange={onOpenChange} placement="bottom">
-        <Sheet.Backdrop variant="blur">
+        <Sheet.Backdrop variant="opaque">
           <Sheet.Content className="w-full">
             <Sheet.Dialog
               aria-label={node?.label ?? "Engine node details"}

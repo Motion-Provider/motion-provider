@@ -39,9 +39,9 @@ export default function DxComparison() {
             <div className="flex flex-col gap-3 lg:h-1/3">
               <MotionText
                 {...animation}
-                wrapperClassName="max-w-lg text-3xl leading-tight tracking-tighter sm:text-4xl lg:text-5xl"
+                wrapperClassName="max-w-lg text-5xl leading-tight tracking-tighter lg:text-5xl"
               >
-                In-view, scroll, enter/exit. One API
+                In-view, scroll, enter/exit. One API.
               </MotionText>
 
               <p className="max-w-sm text-sm leading-snug tracking-tight text-muted sm:text-base">

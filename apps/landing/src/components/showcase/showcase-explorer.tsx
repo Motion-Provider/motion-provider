@@ -3,6 +3,7 @@ import Image from "next/image";
 import type { CSSProperties, KeyboardEvent, Ref } from "react";
 import { useRef } from "react";
 import showcaseData from "@/constants/showcase.data";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { cn } from "@/lib/utils";
 import { useShowcase } from "@/providers/showcase.provider";
 import type { ShowcaseItem } from "@/types/showcase.type";
@@ -26,17 +27,25 @@ interface StackCardProps {
 }
 
 export function ShowcaseExplorer() {
-  const { selected, setSelected } = useShowcase();
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
+
+  const isMobile = useIsMobile();
+
+  const { selected, setSelected } = useShowcase();
+
+  const filteredItems = isMobile
+    ? items.filter((item) => item.id !== "motion-link.demo")
+    : items;
 
   const activeIndex = Math.max(
     0,
-    items.findIndex((item) => item.id === selected),
+    filteredItems.findIndex((item) => item.id === selected),
   );
 
   function select(index: number) {
-    const item = items[index];
+    const item = filteredItems[index];
     if (!item) return;
+
     setSelected(item.id);
     buttonRefs.current[index]?.focus();
   }
@@ -73,9 +82,9 @@ export function ShowcaseExplorer() {
       role="radiogroup"
       aria-label="Showcase items"
       onKeyDown={handleKeyDown}
-      className="relative h-full w-5/12 overflow-hidden rounded-l-3xl border-border"
+      className="relative h-full md:w-5/12 w-full overflow-hidden rounded-l-3xl border-border"
     >
-      {items.map((item, index) => (
+      {filteredItems.map((item, index) => (
         <StackCard
           key={item.id}
           item={item}

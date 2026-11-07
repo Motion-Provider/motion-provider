@@ -1,15 +1,11 @@
 import { Chip } from "@heroui/react";
 import { Motion, MotionContainer } from "motion-provider";
 import { LIBRARY_NAMES, METRIC_SUFFIX } from "@/constants/metrics.config";
-import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
 import type { MetricItem, MetricSizeKey } from "@/types/metrics.type";
 import { formatKb } from "@/utils/formatKb";
 import { getFillStyle } from "@/utils/metrics";
 import { Scales } from "./container";
-
-const nameAnimation = getAnimation("metricBarName");
-const labelAnimation = getAnimation("metricBarLabel");
 
 export function MetricBar({
   item,
@@ -32,7 +28,7 @@ export function MetricBar({
   const fill = fillStyle["--fill"];
 
   return (
-    <li data-index={index} data-library={library}>
+    <li data-index={index} data-library={library} key={"s"}>
       <div className="mb-3 flex items-baseline justify-between gap-4">
         <MotionContainer
           animation={{
@@ -41,9 +37,11 @@ export function MetricBar({
             transition: "elasticHard",
             duration: 1.5,
           }}
-          className="flex flex-col sm:flex-row sm:items-center sm:gap-2"
+          className="flex items-center justify-between gap-2 w-full overflow-hidden"
         >
-          <h3 className="text-xl font-medium tracking-tight">{name}</h3>
+          <h3 className="text-xl font-medium tracking-tight shrink-0">
+            {name}
+          </h3>
           <Chip variant="soft" color="accent">
             {label}
           </Chip>
@@ -88,10 +86,12 @@ export function MetricBar({
           style={fillStyle}
           className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-[calc(var(--fill)*100%)] min-w-fit items-center justify-center gap-3"
         >
-          {typeof Component === "function" && <Component className="size-8" />}
+          {typeof Component === "function" && (
+            <Component className="md:size-8 size-7" />
+          )}
           <span
             className={cn(
-              "tabular-nums tracking-tighter font-secondary font-semibold text-xl",
+              "tabular-nums tracking-tighter font-secondary font-semibold md:text-xl text-md",
               isHighlighted && "text-surface-secondary",
             )}
             data-size-value

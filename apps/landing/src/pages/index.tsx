@@ -6,7 +6,6 @@ import GallerySection from "@/sections/gallery";
 import HeroSection from "@/sections/hero";
 import Metrics from "@/sections/metrics";
 import MyFingerIsGoodNow from "@/sections/my-finger-is-good-now";
-import ShowcaseSection from "@/sections/showcase";
 import TrustSignals from "@/sections/trust-signals";
 
 export default function Home() {
@@ -15,12 +14,10 @@ export default function Home() {
       <HeroSection />
       <TrustSignals />
       <DxComparison />
-
       {/* Below non-responsive zone */}
-
       <MyFingerIsGoodNow />
-      <ShowcaseSection />
-      <EngineDiagramSection />
+      {/** add responsivitiy for layout shit (mobile) */}
+      {/* <ShowcaseSection /> */} <EngineDiagramSection />
       <Metrics />
       <Cta />
       <FaqSection />

@@ -27,7 +27,7 @@ export default function MotionImageDemo({
       <MotionImage
         config={{
           img: currentImg,
-          pieces: 64,
+          pieces: 49,
           delayLogic: "sinusoidal",
           duration: 1.5,
         }}
@@ -39,14 +39,14 @@ export default function MotionImageDemo({
         controller={controller}
         wrapperClassName={cn("size-60 rounded-2xl overflow-hidden")}
       />
-      <div className="h-auto flex flex-col gap-2 p-1">
+      <div className="h-auto flex flex-col md:gap-2 gap-px p-1">
         {images.map((src) => (
           <Image
             src={src}
             alt="cover image"
             onClick={() => setCurrentImg(src)}
             className={cn(
-              "size-12 rounded-full transition-transform",
+              "md:size-12 size-10 rounded-full transition-transform",
               "hover:scale-110 duration-200 active:scale-90 z-50",
               currentImg === src && "scale-110 border-2 border-accent",
             )}

@@ -16,18 +16,19 @@ export default function MyFingerIsGoodNow() {
   return (
     <section className="min-h-60 w-full justify-center items-center flex bg-[#2a1610] text-foreground py-24 relative">
       <div className="absolute top-0 h-24 w-full bg-linear-to-b from-background to-[#2a1610]" />
-      <div className="w-7xl flex justify-between items-center z-10">
-        <div className="text-6xl text-start tracking-tighter font-bold -mt-4">
-          <ChipList className="tracking-normal pb-2" />
-          <MotionText {...textAnimation1}>Simple yet powerful,</MotionText>
+      <div className="absolute bottom-0 h-24 w-full bg-linear-to-b from-[#2a1610] to-background" />
+      <div className="w-7xl flex md:flex-row flex-col justify-between items-center z-10">
+        <div className="md:text-6xl text-5xl md:text-start text-center tracking-tighter font-bold -mt-4">
+          <ChipList className="tracking-normal md:pb-2 pb-6 md:justify-start justify-center" />
+          <MotionText {...textAnimation1}>Simple Yet Powerful,</MotionText>
           <br />
           <MotionText {...textAnimation2}>Animation Provider.</MotionText>
         </div>
-        <div className="pr-12 relative">
+        <div className="md:pr-12 relative">
           <PyramidChain
             withSvg
             {...config.identity}
-            className="z-30 desktop:size-96 laptop:size-80"
+            className="z-30 desktop:size-96 laptop:size-80 size-60 md:mt-0 mt-8"
             animationName="myFingerIsGoodNowPyramid"
             evenColor="text-accent/50"
             oddColor="text-accent"

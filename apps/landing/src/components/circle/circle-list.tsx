@@ -18,7 +18,7 @@ import { arraysEqual } from "@/utils/arraysEqual";
 export function CircleList({ className }: { className?: string }) {
   const { setAnimations, animations, setTransition } = useCircle();
 
-  const currentAvatar = avatars.find((item) =>
+  const currItem = avatars.find((item) =>
     arraysEqual(item.animationKeys, animations),
   )?.id;
 
@@ -26,12 +26,12 @@ export function CircleList({ className }: { className?: string }) {
     <ListBox
       aria-label="Select an animation preset"
       className={cn(
-        "h-48 w-2xs overflow-y-auto rounded-2xl bg-glass-surface backdrop-blur-xl",
+        "h-48 w-2xs overflow-y-auto rounded-2xl bg-glass-surface backdrop-blur-xl hidden xl:block",
         className,
       )}
       selectionMode="single"
       disallowEmptySelection
-      selectedKeys={currentAvatar ? [currentAvatar] : []}
+      selectedKeys={currItem ? [currItem] : []}
       onSelectionChange={(keys) => {
         if (keys === "all") return;
         const [id] = keys;

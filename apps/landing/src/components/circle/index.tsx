@@ -33,7 +33,7 @@ export function Circle() {
 
   return (
     <div
-      className="absolute size-full pointer-events-none -mt-36"
+      className="absolute size-full pointer-events-none -mt-36 md:scale-100 scale-200"
       style={{ perspective: "520px", perspectiveOrigin: "50% 60%" }}
     >
       <div className="relative size-full flex items-center-safe justify-center-safe transform-[rotateX(40deg)] transform-3d">
