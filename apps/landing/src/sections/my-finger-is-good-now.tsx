@@ -5,6 +5,7 @@ import { PyramidChain } from "@/components/pyramid-chain";
 import config from "@/constants/circle.config";
 import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const { beginRadius, endRadius, holeRadius } = config;
 
@@ -30,8 +31,8 @@ export default function MyFingerIsGoodNow() {
       <div className="absolute top-0 h-24 w-full bg-linear-to-b from-background to-[#2a1610]" />
       <div className="absolute bottom-0 h-24 w-full bg-linear-to-b from-[#2a1610] to-background" />
       <div className="w-7xl flex md:flex-row flex-col justify-between items-center z-10">
-        <div className="md:text-6xl text-5xl md:text-start text-center tracking-tighter font-bold -mt-4">
-          <ChipList className="tracking-normal md:pb-4 pb-6 md:justify-start md:max-w-lg rounded-2xl" />
+        <div className="md:text-6xl text-5xl md:text-start text-center tracking-tighter font-bold -mt-4 items-center">
+          <ChipList className="tracking-normal md:pb-4 pb-6 md:justify-start items-center md:max-w-lg max-w-xs overflow-hidden rounded-2xl" />
           <MotionText {...textAnimation1}>Simple Yet Powerful,</MotionText>
           <br />
           <MotionText {...textAnimation2}>Animation Provider.</MotionText>
@@ -57,13 +58,17 @@ export default function MyFingerIsGoodNow() {
 }
 
 const ChipList = ({ className }: { className?: string }) => {
+  const isMobile = useIsMobile();
+  const Wrapper = isMobile ? "center" : "div";
   return (
-    <Marquee className={cn("flex gap-1", className)} repeat={4}>
-      {keywords.map((k) => (
-        <Chip variant="soft" color="accent" key={k}>
-          {k}
-        </Chip>
-      ))}
-    </Marquee>
+    <Wrapper>
+      <Marquee className={cn("flex gap-1", className)} repeat={4}>
+        {keywords.map((k) => (
+          <Chip variant="soft" color="accent" key={k}>
+            {k}
+          </Chip>
+        ))}
+      </Marquee>
+    </Wrapper>
   );
 };
