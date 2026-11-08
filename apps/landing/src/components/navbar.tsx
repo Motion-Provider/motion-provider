@@ -149,7 +149,7 @@ function GithubLink() {
         "font-mono text-xs uppercase tracking-widest relative",
         FOCUS_RING,
       )}
-      href="https://github.com/acme"
+      href="https://github.com/Motion-Provider/motion-provider"
       rel="noreferrer"
       target="_blank"
     >

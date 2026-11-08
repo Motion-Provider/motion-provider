@@ -15,22 +15,25 @@ export function Footer() {
         {brand} footer
       </h2>
       <div className="mx-auto w-full max-w-7xl px-6 pt-16 sm:pt-20 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-12 lg:gap-8">
-          <div className="lg:col-span-5">
-            <p className="text-lg font-semibold text-foreground">{brand}</p>
-            <p className="mt-3 max-w-xs text-sm leading-6 text-foreground/60">
-              {description}
-            </p>
-          </div>
+        <div className="pb-6">
+          <p className="text-3xl font-medium tracking-tight text-foreground sm:text-5xl">
+            {tagline.lead}{" "}
+            <span className="italic text-[oklch(74.28%_0.1618_40.24)]">
+              {tagline.accent}
+            </span>
+          </p>
+          <FooterWordmark />
+        </div>
 
-          <div className="grid grid-cols-2 gap-x-6 gap-y-10 sm:grid-cols-4 lg:col-span-7">
+        <div className=" place-items-stretch">
+          <div className="grid grid-cols-2 gap-x-12 gap-y-10 sm:grid-cols-4 lg:col-span-7">
             {groups.map((group) => (
               <FooterLinkGroupColumn key={group.id} group={group} />
             ))}
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col gap-4 border-t border-foreground/10 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-16 flex flex-col gap-4 border-t border-foreground/10 py-6 sm:flex-row sm:items-center sm:justify-between">
           <p className="text-xs text-foreground/40">
             © {copyrightYear} {brand}
           </p>
@@ -41,16 +44,6 @@ export function Footer() {
               </li>
             ))}
           </ul>
-        </div>
-
-        <div className="mt-16 pb-6 sm:mt-20">
-          <p className="text-3xl font-medium tracking-tight text-foreground sm:text-5xl">
-            {tagline.lead}{" "}
-            <span className="italic text-[oklch(74.28%_0.1618_40.24)]">
-              {tagline.accent}
-            </span>
-          </p>
-          <FooterWordmark />
         </div>
       </div>
     </footer>

@@ -5,12 +5,14 @@ const fontPrimary = Sora({
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
   preload: true,
+  display: "swap",
 });
 
 const fontSecondary = Geist_Mono({
   variable: "--font-secondary",
   subsets: ["latin"],
   weight: ["100", "200", "300", "400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const fontAnnotation = Caveat({

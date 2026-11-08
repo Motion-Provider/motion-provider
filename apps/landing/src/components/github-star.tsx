@@ -1,4 +1,5 @@
 ﻿import { Badge, Spinner } from "@heroui/react";
+import { StarIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const ENDPOINT = "https://api.github.com/repos/Motion-Provider/motion-provider";
@@ -57,12 +58,15 @@ export function GithubStar() {
       size="md"
       color="accent"
       variant="soft"
-      className="font-bold tracking-tight rounded-full border-none"
+      className="font-bold tracking-tight rounded-full border-none px-2"
     >
       {typeof starCount === "undefined" ? (
         <Spinner color="current" size="sm" />
       ) : (
-        starCount
+        <>
+          <StarIcon className="size-3 fill-current" />
+          {starCount}
+        </>
       )}
     </Badge>
   );

@@ -16,7 +16,7 @@ export function GalleryGrid({
   return (
     <ul
       className={cn(
-        "grid w-full grid-cols-1 md:grid-cols-2 xl:grid-cols-3 relative",
+        "grid w-full grid-cols-1 md:grid-cols-2 xl:grid-cols-3 relative overflow-visible",
         className,
       )}
     >

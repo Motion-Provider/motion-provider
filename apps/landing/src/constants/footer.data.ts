@@ -12,8 +12,6 @@ export const FOOTER_DATA: FooterData = {
       links: [
         { label: "Documentation", href: "https://docs.motionprovider.dev" },
         { label: "Playground", href: "https://playground.motionprovider.dev" },
-        // PLACEHOLDER: replace with the real section id
-        { label: "Showcase", href: "#showcase" },
       ],
     },
     {

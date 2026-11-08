@@ -87,8 +87,8 @@ export default createMotionConfig({
         scroll: {
           axis: "y",
           mode: "view",
-          start: 0.15,
-          end: 0.5,
+          start: 0.08,
+          end: 0.42,
         },
       },
     },
@@ -107,8 +107,8 @@ export default createMotionConfig({
         scroll: {
           axis: "y",
           mode: "view",
-          start: 0.3,
-          end: 0.55,
+          start: 0.24,
+          end: 0.5,
         },
       },
     },
@@ -129,7 +129,7 @@ export default createMotionConfig({
         scroll: {
           axis: "y",
           mode: "view",
-          start: 0.35,
+          start: 0.08,
           end: 0.5,
         },
       },

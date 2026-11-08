@@ -1,3 +1,4 @@
+import { SeoHead } from "@/components/seo-head";
 import Cta from "@/sections/cta";
 import DxComparison from "@/sections/dx-comparison";
 import { EngineDiagramSection } from "@/sections/engine-diagram";
@@ -12,10 +13,10 @@ import TrustSignals from "@/sections/trust-signals";
 export default function Home() {
   return (
     <>
+      <SeoHead />
       <HeroSection />
       <TrustSignals />
       <DxComparison />
-      {/* Below non-responsive zone */}
       <MyFingerIsGoodNow />
       {/** add responsivitiy for layout shit (mobile) */}
       <ShowcaseSection />

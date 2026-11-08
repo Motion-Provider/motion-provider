@@ -25,8 +25,7 @@ export default function GallerySection() {
           opacity: 0.05,
           className: "pointer-events-none",
         }}
-        className=""
-        innerClassName="relative"
+        innerClassName="relative overflow-visible"
       >
         <div
           aria-hidden="true"

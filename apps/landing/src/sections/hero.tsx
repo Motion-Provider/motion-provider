@@ -1,5 +1,4 @@
-﻿import { Button, Chip, Skeleton } from "@heroui/react";
-import { CopyIcon } from "lucide-react";
+﻿import { Chip, Skeleton } from "@heroui/react";
 import dynamic from "next/dynamic";
 import { Annotation } from "@/components/annotation";
 import { Circle } from "@/components/circle";
@@ -8,6 +7,7 @@ import { CirclePlayButton } from "@/components/circle/circle-play-button";
 import { CircleProgress } from "@/components/circle/circle-progress";
 import { CircleSlider } from "@/components/circle/circle-slider";
 import { ContainerWrapper } from "@/components/container";
+import { NpmButton } from "@/components/npm-button";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { cn } from "@/lib/utils";
 import { CircleProvider } from "@/providers/circle.provider";
@@ -108,12 +108,7 @@ export default function HeroSection() {
               the Web Animations API.
             </p>
 
-            <Button
-              variant="primary"
-              className="mt-4 max-w-full gap-3 rounded-full px-5 font-secondary sm:px-6"
-            >
-              npm i motion-provider <CopyIcon className="size-4" />
-            </Button>
+            <NpmButton />
           </div>
         </CircleProvider>
       </ContainerWrapper>
