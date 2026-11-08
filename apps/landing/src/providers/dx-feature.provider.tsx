@@ -7,12 +7,6 @@ import {
   type DxLibraryID,
 } from "@/utils/comparison";
 
-/**
- * Three independent contexts, so a consumer re-renders only for the slice it reads:
- * - comparison id (switcher buttons, comparison-dependent panes)
- * - library id    (tabs, compared pane)
- * - actions       (stable, never triggers a re-render)
- */
 type DxComparisonActions = {
   setComparisonId: (id: DxComparisonID) => void;
   setLibraryId: (id: DxLibraryID) => void;

@@ -9,7 +9,6 @@ const EngineLabelsContext = createContext<EngineLabelsContextValue | null>(
   null,
 );
 
-/** Owns its own state so canvas hover updates never re-render the consumers. */
 export function EngineLabelsProvider({ children }: { children: ReactNode }) {
   const [showLabels, setShowLabels] = useState(false);
   return (

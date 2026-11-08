@@ -88,49 +88,15 @@ export interface ContainerFrameOptions {
 
 export interface ContainerWrapperProps<T extends React.ElementType = "div"> {
   as?: T;
-
   children?: React.ReactNode;
-
-  /**
-   * Horizontal max-width of the visual frame.
-   */
   width?: ContainerWidth;
-
-  /**
-   * Controls the outer frame borders.
-   */
   frame?: ContainerFrameOptions;
-
-  /**
-   * Controls repeating grid lines inside the frame.
-   */
   grid?: false | GridLinesProps;
-
-  /**
-   * Controls the striped/scales rails around the frame.
-   */
   scales?: false | ContainerScalesOptions;
-
   radius?: ContainerRadius;
-
-  /**
-   * Adds a subtle inner surface.
-   */
   surface?: "none" | "subtle" | "glass";
-
-  /**
-   * Applies overflow clipping to the actual content frame.
-   */
   clip?: boolean;
-
-  /**
-   * Additional classes applied to the outer container.
-   */
   className?: string;
-
-  /**
-   * Additional classes applied to the content layer.
-   */
   innerClassName?: string;
 }
 

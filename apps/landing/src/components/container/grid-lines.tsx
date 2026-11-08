@@ -44,8 +44,6 @@ export function GridLines({
   }
 
   if (axis === "diagonal") {
-    // Perpendicular spacing = size / √2 → horizontal spacing = size,
-    // so the repeat divides the square tile exactly (no seams).
     const period = size * Math.SQRT1_2;
 
     gradients.push(

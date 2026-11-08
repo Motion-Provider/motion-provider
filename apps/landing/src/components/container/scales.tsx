@@ -55,7 +55,7 @@ export function Scales({
       <div
         className="h-full w-full bg-[repeating-linear-gradient(var(--scales-angle),var(--pattern-scales)_0,var(--pattern-scales)_var(--scales-line-width),transparent_0,transparent_50%)]"
         style={{
-          backgroundSize: `var(--scales-size) var(--scales-size)`,
+          backgroundSize: "var(--scales-size) var(--scales-size)",
         }}
       />
     </div>
