@@ -6,7 +6,7 @@
     "dev": "turbo run dev",
     "format": "biome format --write .",
     "lint": "biome lint .",
-    "check": "biome check --write .",
+    "check": "biome check --write ./apps/landing",
     "clean": "node scripts/src/clean.mjs",
     "clean:all": "node scripts/src/clean.mjs --dist --lock",
     "reinstall": "npm run clean:all && npm install && npm run build -w motion-provider"

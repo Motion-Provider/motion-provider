@@ -37,7 +37,7 @@ export function useAnimation(
   controller:
     | AnimationController
     | {
-        stopAnimation?: boolean;  
+        stopAnimation?: boolean;
         reverseAnimation?: boolean;
       },
 ): AnimationController | MotionControllerProps {
