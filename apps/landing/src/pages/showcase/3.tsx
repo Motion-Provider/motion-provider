@@ -281,7 +281,7 @@ export default function AgencyShowcasePage() {
             img: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=2200&q=90",
             pieces: 81,
             duration: 0.6,
-            delayLogic: "sinusoidal",
+            delayLogic: "chaotic",
           }}
           controller={{
             configView: {

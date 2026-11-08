@@ -62,15 +62,15 @@ export default function HeroSection() {
           <div className="relative z-50 -mt-8 flex w-full max-w-5xl flex-col items-center px-4 sm:-mt-12 lg:-mt-16">
             <Annotation
               title="Try it"
-              className="absolute left-8 top-0 -translate-y-1/2 flex-col-reverse rotate-6 sm:left-[22%] xl:hidden [&>svg]:scale-y-[-1]"
-              textClassName="font-annotation whitespace-nowrap text-base font-bold leading-none tracking-wider text-xl"
+              className="absolute left-8 top-0 -translate-y-1/2 flex-col-reverse rotate-6 sm:left-[22%] xl:hidden [&>svg]:scale-y-[-1] size-auto"
+              textClassName="font-annotation whitespace-nowrap text-base font-bold leading-none tracking-wider"
             />
 
             <Chip
               variant="soft"
               color="accent"
               size="sm"
-              className="glass mb-4 rounded-3xl border-glass-border px-1 py-0.5 sm:mb-6"
+              className="glass mb-2 rounded-3xl border-glass-border px-1 py-0.5 "
             >
               🚀 v1.0 • WAAPI animations
             </Chip>
@@ -88,9 +88,9 @@ export default function HeroSection() {
                   <CirclePlayButton />
 
                   <Annotation
-                    title="Try it"
+                    title="Try it!"
                     className="absolute right-1/2 top-full z-50 mt-0 hidden translate-y-5 -translate-x-2 -rotate-12 xl:flex"
-                    textClassName="font-annotation -mt-1 whitespace-nowrap text-xl font-bold leading-none tracking-wider "
+                    textClassName="font-annotation  whitespace-nowrap text-3xl font-bold leading-none tracking-wider "
                   />
                 </span>
                 tion

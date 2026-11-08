@@ -1,5 +1,8 @@
 ﻿import { MotionText } from "motion-provider";
-import { ContainerWrapper } from "@/components/container";
+import {
+  type ContainerScalesOptions,
+  ContainerWrapper,
+} from "@/components/container";
 import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
 import { ShowcasePreview } from "@/components/showcase/showcase-preview";
 import { ShowcaseSnippet } from "@/components/showcase/showcase-snippet";
@@ -37,6 +40,15 @@ export default function ShowcaseSection() {
 function Wrapper({ children }: { children: React.ReactNode }) {
   const isMobile = useIsMobile();
 
+  const scales: ContainerScalesOptions | false = isMobile
+    ? false
+    : {
+        sides: ["left", "right", "bottom"],
+        className: "pointer-events-none",
+        offset: 24,
+        lineWidth: 0.5,
+      };
+
   return (
     <ContainerWrapper<"div">
       as="div"
@@ -49,12 +61,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
         opacity: 0.5,
         size: 24,
       }}
-      scales={{
-        sides: ["left", "right", "bottom"],
-        className: "pointer-events-none",
-        offset: isMobile ? 0 : 24,
-        lineWidth: 0.5,
-      }}
+      scales={scales}
       className="size-full flex flex-row bg-transparent"
       innerClassName="size-full relative flex md:flex-row flex-col overflow-clip items-center-safe justify-center-safe md:gap-8  bg-transparent"
     >

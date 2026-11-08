@@ -7,7 +7,6 @@
   Label,
   ListBox,
 } from "@heroui/react";
-import { SparklesIcon } from "lucide-react";
 import { MotionContainer } from "motion-provider";
 import { useState } from "react";
 import avatars, { type AvatarItem } from "@/constants/avatars.data";
@@ -45,24 +44,9 @@ export function CircleList({ className }: { className?: string }) {
       {avatars.map((avatar) => (
         <ListBoxItem {...avatar} key={avatar.id} />
       ))}
-      <EmptyListBoxItem />
     </ListBox>
   );
 }
-
-const EmptyListBoxItem = () => (
-  <ListBox.Item isDisabled textValue="Countless Predefined Animations">
-    <Avatar className="size-5" size="md">
-      <SparklesIcon className="text-amber-500" />
-    </Avatar>
-    <div className="flex flex-col">
-      <Label>+Countless Predefined Animations</Label>
-      <Description>46,200 combination possibilities</Description>
-    </div>
-    <ListBox.ItemIndicator />
-  </ListBox.Item>
-);
-
 const ListBoxItem = ({
   animationKeys,
   desc,
@@ -72,6 +56,7 @@ const ListBoxItem = ({
   transition,
 }: AvatarItem) => {
   const [trigger, setTrigger] = useState(false);
+
   const handleMouseEnter = () => setTrigger(true);
   const handleMouseLeave = () => setTrigger(false);
 

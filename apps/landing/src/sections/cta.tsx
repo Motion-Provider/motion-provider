@@ -47,12 +47,12 @@ export default function Cta() {
             <Boxes className="size-4 text-accent" />
             Rapid Prototyping
           </Chip>
-          <div className="bg-clip-text bg-linear-to-b from-foreground to-transparent from-50%">
-            <h1 className="md:text-6xl text-3xl tracking-tighter pt-2 capitalize text-transparent font-bold">
+          <div className="md:bg-clip-text md:bg-linear-to-b md:from-foreground md:to-transparent md:from-50%">
+            <h1 className="md:text-6xl text-3xl tracking-tighter pt-2 capitalize md:text-transparent text-foreground font-bold text-center">
               Introducing The Motion Playgrounds.
             </h1>
           </div>
-          <p className="text-foreground max-w-2xl pt-3 leading-snug tracking-tight text-center">
+          <p className="text-foreground max-w-2xl pt-3 leading-snug tracking-tight text-center md:text-base text-xs text-pretty ">
             <b>Deterministic motion playground</b> to craft and copy-paste
             animations,
             <b>visually</b>. Completely eliminate the need for AI to design your
@@ -65,7 +65,7 @@ export default function Cta() {
             referrerPolicy="same-origin"
             className="relative"
           >
-            <Button variant="primary" size="lg" className="mt-4">
+            <Button variant="primary" size="md" className="mt-4">
               Get me to the Playground <ArrowUpRightIcon className="size-5" />
             </Button>
           </Link>

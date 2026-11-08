@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import { Scales } from "./container";
 import { GithubStar } from "./github-star";
 import { GithubIcon } from "./icons/github-icon";
+import Logo from "./logo";
 
 const FOCUS_RING = cn(
   "focus-visible:outline-none",
@@ -17,7 +18,7 @@ const FOCUS_RING = cn(
 
 const OUTLINE_BUTTON = cn(
   "flex size-10 items-center justify-center rounded-md",
-  "border border-foreground/20",
+  "md:border-1 border-0 border-foreground/20",
   "text-foreground/70 no-underline",
   "transition-colors duration-200",
   "hover:border-foreground/50 hover:text-foreground",
@@ -32,22 +33,6 @@ const NAV_LINK = cn(
   FOCUS_RING,
 );
 
-function AcmeLogo() {
-  return (
-    <svg
-      aria-hidden="true"
-      className="h-4 w-auto"
-      fill="currentColor"
-      viewBox="0 0 40 16"
-    >
-      <path d="M6 0h5L5 16H0z" />
-      <path d="M15 0h5l-6 16H9z" />
-      <path d="M24 0h5l-6 16h-5z" />
-      <circle cx="35" cy="4" r="3" />
-    </svg>
-  );
-}
-
 function Brand() {
   return (
     <NextLink
@@ -61,10 +46,7 @@ function Brand() {
       )}
       href="/"
     >
-      <AcmeLogo />
-      <span className="text-sm font-semibold uppercase tracking-tight">
-        Acme
-      </span>
+      <Logo />
     </NextLink>
   );
 }
@@ -117,8 +99,7 @@ function MobileMenu() {
               <Sheet.Dialog aria-label="Navigation menu" className="glass">
                 <Sheet.Header>
                   <Sheet.Heading className="flex items-center gap-3 text-sm font-semibold uppercase tracking-tight">
-                    <AcmeLogo />
-                    Acme
+                    <Logo />
                   </Sheet.Heading>
                 </Sheet.Header>
                 <Sheet.Body>
@@ -165,7 +146,7 @@ function GithubLink() {
       className={cn(
         OUTLINE_BUTTON,
         "gap-2 sm:w-auto sm:px-4 md:h-9",
-        "font-mono text-xs uppercase tracking-widest",
+        "font-mono text-xs uppercase tracking-widest relative",
         FOCUS_RING,
       )}
       href="https://github.com/acme"
@@ -174,11 +155,7 @@ function GithubLink() {
     >
       <GithubIcon />
       <span className="hidden sm:inline">GitHub</span>
-      {!isMobile && (
-        <span className="max-md:hidden">
-          <GithubStar />
-        </span>
-      )}
+      {!isMobile && <GithubStar />}
     </NextLink>
   );
 }

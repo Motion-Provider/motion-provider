@@ -57,7 +57,7 @@ export function GithubStar() {
       size="md"
       color="accent"
       variant="soft"
-      className="font-bold tracking-tight rounded-full border-none "
+      className="font-bold tracking-tight rounded-full border-none"
     >
       {typeof starCount === "undefined" ? (
         <Spinner color="current" size="sm" />

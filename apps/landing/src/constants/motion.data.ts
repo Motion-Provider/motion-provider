@@ -190,7 +190,7 @@ export default createMotionConfig({
           axis: "y",
           mode: "view",
           start: 0.25,
-          end: 0.75,
+          end: 0.5,
         },
       },
     },
