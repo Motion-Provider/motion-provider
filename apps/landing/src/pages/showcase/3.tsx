@@ -50,21 +50,6 @@ const agencyMotion = createMotionConfig({
       },
     },
   },
-  heroImage: {
-    type: "MotionImage",
-    props: {
-      animation: {
-        mode: ["clipDown", "filterBlurIn"],
-        transition: "gentle",
-        duration: 1.1,
-      },
-      config: {
-        pieces: 81,
-        duration: 0.08,
-        delayLogic: "sinusoidal",
-      },
-    },
-  },
   stats: {
     type: "MotionChain",
     props: {
@@ -122,22 +107,6 @@ const agencyMotion = createMotionConfig({
           amount: 0.12,
           once: true,
         },
-      },
-    },
-  },
-  projectImage: {
-    type: "MotionImage",
-    props: {
-      animation: {
-        mode: ["fadeIn", "filterBlurIn", "skewX45"],
-        transition: "gentle",
-        duration: 0.85,
-      },
-      config: {
-        pieces: 64,
-        duration: 0.075,
-        delayLogic: "sinusoidal",
-        fn: "hover",
       },
     },
   },
@@ -206,42 +175,6 @@ const agencyMotion = createMotionConfig({
 });
 
 const { getMotionAnimation } = createMotionRegistry(agencyMotion);
-
-const heroImageAnimation = getMotionAnimation("heroImage");
-const projectImageAnimation = getMotionAnimation("projectImage");
-
-const projects = [
-  {
-    id: "architecture",
-    number: "01",
-    title: "A quieter kind of luxury.",
-    client: "FORM & FUNCTION",
-    discipline: "Brand identity / Digital",
-    image:
-      "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1400&q=85",
-    aspect: "aspect-[5/4]",
-  },
-  {
-    id: "creative",
-    number: "02",
-    title: "Making space for ideas.",
-    client: "STUDIO OBJECT",
-    discipline: "Art direction / Campaign",
-    image:
-      "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=85",
-    aspect: "aspect-[5/4]",
-  },
-  {
-    id: "technology",
-    number: "03",
-    title: "The human side of technology.",
-    client: "NORTH DIGITAL",
-    discipline: "Strategy / Web experience",
-    image:
-      "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=85",
-    aspect: "aspect-[5/4]",
-  },
-];
 
 const faqItems = [
   {

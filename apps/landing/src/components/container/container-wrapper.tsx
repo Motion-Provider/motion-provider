@@ -81,12 +81,12 @@ export interface ContainerScalesOptions {
   className?: string;
 }
 
-export interface ContainerFrameOptions {
+interface ContainerFrameOptions {
   sides?: ContainerSide[];
   className?: string;
 }
 
-export interface ContainerWrapperProps<T extends React.ElementType = "div"> {
+interface ContainerWrapperProps<T extends React.ElementType = "div"> {
   as?: T;
   children?: React.ReactNode;
   width?: ContainerWidth;

@@ -3,9 +3,9 @@ import { MotionText } from "motion-provider";
 import Marquee from "@/components/marquee";
 import { PyramidChain } from "@/components/pyramid-chain";
 import config from "@/constants/circle.config";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
 import { cn } from "@/lib/utils";
-import { useIsMobile } from "@/hooks/use-is-mobile";
 
 const { beginRadius, endRadius, holeRadius } = config;
 

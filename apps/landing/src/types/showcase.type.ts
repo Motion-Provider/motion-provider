@@ -1,10 +1,8 @@
 ﻿import type { AnimationController } from "motion-provider";
 
-export type ShowcaseSlot = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type ShowcaseItemType = "component" | "hook" | "lib";
+type ShowcaseSlot = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+type ShowcaseItemType = "component" | "hook" | "lib";
 export type ShowcaseSelected = ShowcaseItem["id"];
-
-export type ShowcaseComponent = React.ComponentType<ShowcaseComponentProps>;
 
 export interface ShowcaseItem {
   id: string;

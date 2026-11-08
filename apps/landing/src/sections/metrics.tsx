@@ -46,7 +46,7 @@ export default function Metrics() {
   return (
     <section
       aria-labelledby="metrics-heading"
-      className="relative min-h-screen w-full max-w-7xl justify-self-center overflow-visible py-28"
+      className="relative min-h-screen w-full max-w-7xl justify-self-center overflow-visible py-28 md:px-0 px-4"
     >
       <div className="flex flex-col gap-16">
         <div className="flex h-auto min-h-min flex-col gap-3">

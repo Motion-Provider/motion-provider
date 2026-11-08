@@ -169,8 +169,7 @@ function buildMiniMap(id: EngineNodeId): MiniMapLayout | null {
   return { width: L.width, height, nodes: [selected, ...neighbors], edges };
 }
 
-/** Computed once at module load. `null` when a node has no wiring. */
-export const MINI_MAPS: Record<EngineNodeId, MiniMapLayout | null> = recordFrom(
+const MINI_MAPS: Record<EngineNodeId, MiniMapLayout | null> = recordFrom(
   NODE_IDS,
   buildMiniMap,
 );

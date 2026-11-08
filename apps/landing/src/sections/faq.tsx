@@ -17,7 +17,7 @@ const accordionAnimation = getAnimation("faqAccordion");
 export default function FaqSection() {
   return (
     <section
-      className="w-full h-auto flex flex-col items-center justify-center md:gap-24 gap-12 py-28"
+      className="w-full h-auto flex flex-col items-center justify-center md:gap-24 gap-10 py-28 md:px-0 px-4"
       id="faq"
     >
       <h2 className="md:text-6xl text-4xl tracking-tighter text-center text-pretty">

@@ -28,6 +28,7 @@ export function CirclePlayButton() {
     <button
       onClick={handleToggle}
       type="button"
+      aria-label="play animation"
       className={cn(
         "focus-visible:ring-2 focus-visible:focus-ring rounded-2xl z-50",
         "focus-visible:ring-offset-2 focus-visible:ring-offset-accent",

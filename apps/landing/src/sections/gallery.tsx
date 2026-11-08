@@ -29,7 +29,7 @@ export default function GallerySection() {
       >
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-transparent via-accent/15 to-[#2a1610]  h-1/2 mt-auto"
+          className="pointer-events-none absolute inset-0 z-10 bg-linear-to-b from-transparent via-accent/15 to-[#2a1610] h-1/2 mt-auto"
         />
 
         <GalleryGrid items={data} />

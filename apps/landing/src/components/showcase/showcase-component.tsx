@@ -53,7 +53,11 @@ export function ShowcaseComponent() {
           name="showcase-component-suspense"
           fallback={<Spinner size="lg" />}
         >
-          <Demo key={selected} controller={controller} className="mb-20" />
+          <Demo
+            key={selected}
+            controller={controller}
+            className="md:mb-20 md:pb-0 pb-16"
+          />
         </Suspense>
       </ErrorBoundary>
       <div className="w-full z-50 flex gap-2 absolute top-0 p-2 flex-row justify-end">

@@ -81,7 +81,7 @@ const ListBoxItem = ({
         key={id}
       >
         <Avatar className="size-5.5" size="md">
-          <AvatarImage src={src} />
+          <AvatarImage src={src} title={title} />
           <AvatarFallback>M</AvatarFallback>
         </Avatar>
       </MotionContainer>

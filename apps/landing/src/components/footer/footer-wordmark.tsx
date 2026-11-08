@@ -4,8 +4,7 @@ export function FooterWordmark() {
   return (
     <div
       aria-hidden="true"
-      className="pointer-events-none select-none text-foreground relative -my-26"
-      key={"y"}
+      className="pointer-events-none select-none text-foreground relative md:-my-26"
     >
       <MotionImage
         animation={{

@@ -1,6 +1,6 @@
 ﻿import { cn } from "@/lib/utils";
 
-export type GridAxis = "horizontal" | "vertical" | "both" | "diagonal";
+type GridAxis = "horizontal" | "vertical" | "both" | "diagonal";
 
 export interface GridLinesProps {
   axis?: GridAxis;

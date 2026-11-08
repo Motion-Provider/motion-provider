@@ -28,7 +28,7 @@ export function Scales({
   orientation = "diagonal",
   size = 8,
   lineWidth = 1,
-  color,
+  color = "var(--color-overlay)",
   opacity = 1,
   className,
 }: ScalesProps) {

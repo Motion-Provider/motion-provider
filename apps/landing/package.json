@@ -7,6 +7,8 @@
     "dev": "next dev --port 62335",
     "build": "next build",
     "start": "next start",
+    "analyze": "next build && npx next analyze",
+    "serve": "npx serve@latest ./out",
     "knip": "knip"
   },
   "dependencies": {
@@ -25,7 +27,6 @@
     "next": "^16.4.3"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.14",
     "@motion/typescript-config": "*",
     "@tailwindcss/postcss": "^4",
     "@types/react": "^19",

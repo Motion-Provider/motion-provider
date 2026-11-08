@@ -46,7 +46,7 @@ function Brand() {
       )}
       href="/"
     >
-      <Logo />
+      <Logo className="size-12" />
     </NextLink>
   );
 }

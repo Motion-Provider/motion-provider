@@ -10,31 +10,31 @@ const animation = getAnimation("dxComparisonText");
 
 export default function DxComparison() {
   return (
-    <DxComparisonProvider>
-      <section className="relative mx-auto my-16 w-full max-w-7xl md:px-4 sm:my-20 lg:my-28 lg:h-[70vh] lg:px-0">
-        <ContainerWrapper<"div">
-          as="div"
-          surface="glass"
-          width="7xl"
-          radius="3xl"
-          scales={{
-            sides: ["bottom"],
-            size: 12,
-            thickness: 24,
-            lineWidth: 1,
-            opacity: 0.8,
-            orientation: "vertical",
-          }}
-          grid={{
-            axis: "diagonal",
-            size: 8,
-            opacity: 0.8,
-            lineWidth: 1,
-            className: "pointer-events-none",
-          }}
-          className="w-full rounded-3xl lg:mt-38 lg:size-full"
-          innerClassName="relative grid w-full overflow-hidden rounded-3xl p-4 sm:p-6 lg:size-full lg:grid-cols-[minmax(0,2fr)_1px_minmax(0,3fr)] lg:grid-rows-1 lg:gap-4 lg:p-4"
-        >
+    <section className="relative mx-auto my-16 w-full max-w-7xl md:px-4 sm:my-20 lg:my-28 lg:h-[70vh] lg:px-0">
+      <ContainerWrapper<"div">
+        as="div"
+        surface="glass"
+        width="7xl"
+        radius="3xl"
+        scales={{
+          sides: ["bottom"],
+          size: 12,
+          thickness: 24,
+          lineWidth: 1,
+          opacity: 0.8,
+          orientation: "vertical",
+        }}
+        grid={{
+          axis: "diagonal",
+          size: 8,
+          opacity: 0.8,
+          lineWidth: 1,
+          className: "pointer-events-none",
+        }}
+        className="w-full rounded-3xl lg:mt-38 lg:size-full"
+        innerClassName="relative grid w-full overflow-hidden rounded-3xl p-4 sm:p-6 lg:size-full lg:grid-cols-[minmax(0,2fr)_1px_minmax(0,3fr)] lg:grid-rows-1 lg:gap-4 lg:p-4"
+      >
+        <DxComparisonProvider>
           <div className="flex min-w-0 flex-col gap-6 lg:justify-between lg:p-6">
             <div className="flex flex-col gap-3 lg:h-1/3">
               <MotionText
@@ -66,8 +66,8 @@ export default function DxComparison() {
           <div className="min-w-0">
             <DxComparisonSplit />
           </div>
-        </ContainerWrapper>
-      </section>
-    </DxComparisonProvider>
+        </DxComparisonProvider>
+      </ContainerWrapper>
+    </section>
   );
 }

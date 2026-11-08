@@ -47,15 +47,15 @@ export function MetricBar({
           </Chip>
         </MotionContainer>
       </div>
-      {/** biome-ignore lint/a11y/useAriaPropsSupportedByRole: dynamic aria */}
-      <div
-        aria-label={`${name} ${label}`}
-        aria-valuemin={0}
-        aria-valuemax={max}
-        aria-valuenow={bytes}
-        aria-valuetext={`${formatKb(bytes)} ${METRIC_SUFFIX[metric]}`}
-        className="h-14 w-full overflow-hidden rounded-3xl md:h-16 relative -mt-1"
-      >
+      <div className="h-14 w-full overflow-hidden rounded-3xl md:h-16 relative -mt-1">
+        <meter
+          className="sr-only"
+          aria-label={`${name} ${label}`}
+          aria-valuetext={`${formatKb(bytes)} ${METRIC_SUFFIX[metric]}`}
+          min={0}
+          max={max}
+          value={bytes}
+        />
         <Scales className="size-full absolute" lineWidth={0.88} />
         <Motion
           data-size-fill
@@ -82,6 +82,7 @@ export function MetricBar({
           )}
         />
         <div
+          aria-hidden="true"
           data-size-label
           style={fillStyle}
           className="pointer-events-none absolute inset-y-0 left-0 z-10 flex w-[calc(var(--fill)*100%)] min-w-fit items-center justify-center gap-3"

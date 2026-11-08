@@ -16,16 +16,6 @@ export default createMotionConfig({
       },
     },
   },
-  showcasePreviewDescription: {
-    type: "MotionContainer",
-    props: {
-      animation: {
-        mode: ["fadeDown", "filterBlurIn"],
-        duration: 0.8,
-        transition: "gentle",
-      },
-    },
-  },
   metricTitle: {
     type: "MotionText",
     props: {
@@ -134,24 +124,6 @@ export default createMotionConfig({
         },
       },
       elementType: "g",
-    },
-  },
-  myFingerIsGoodNowChip: {
-    type: "MotionChain",
-    props: {
-      animation: {
-        mode: ["filterBlurIn", "fadeUp"],
-        transition: "gentle",
-        duration: 1,
-      },
-      controller: {
-        scroll: {
-          axis: "y",
-          mode: "view",
-          start: 0.3,
-          end: 0.55,
-        },
-      },
     },
   },
   dxComparisonSwitcher: {
@@ -413,15 +385,6 @@ export default createMotionConfig({
       },
       elementType: "li",
       className: "h-full",
-    },
-  },
-  testChain: {
-    type: "MotionChain",
-    props: {
-      animation: {
-        mode: "fadeIn",
-      },
-      elementType: "g",
     },
   },
   engineDiagramTitle: {

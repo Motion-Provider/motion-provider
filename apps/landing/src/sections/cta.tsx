@@ -2,7 +2,10 @@
 import { ArrowUpRightIcon, Boxes } from "lucide-react";
 import { MotionImage } from "motion-provider";
 import Link from "next/link";
-import { ContainerWrapper } from "@/components/container";
+import {
+  type ContainerScalesOptions,
+  ContainerWrapper,
+} from "@/components/container";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
 
@@ -10,22 +13,35 @@ const imageAnimation = getAnimation("squareGrid");
 
 export default function Cta() {
   const isMobile = useIsMobile();
+
+  const scales: ContainerScalesOptions | false = isMobile
+    ? {
+        sides: ["bottom", "top"],
+        className: "pointer-events-none",
+        lineWidth: 0.5,
+      }
+    : {
+        sides: ["left", "right", "bottom", "top"],
+        className: "pointer-events-none",
+        lineWidth: 0.5,
+      };
+
   return (
     <section className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible my-28">
-      <ContainerWrapper<"section">
-        as="section"
+      <ContainerWrapper<"div">
+        as="div"
+        width="none"
+        radius="3xl"
         surface="glass"
-        width="7xl"
-        scales={false}
+        scales={scales}
         grid={{
-          axis: "diagonal",
-          size: 100,
-          opacity: 0.8,
+          axis: "horizontal",
           lineWidth: 1,
-          className: "pointer-events-none",
+          opacity: 0.5,
+          size: 24,
         }}
-        className="max-w-7xl rounded-3xl size-full mt-24"
-        innerClassName="grid place-items-center-safe relative overflow-hidden size-full rounded-3xl"
+        className="size-full flex flex-row bg-transparent"
+        innerClassName="size-full relative flex md:flex-row flex-col overflow-clip items-center-safe justify-center-safe md:gap-8  bg-transparent"
       >
         <div className="absolute top-0 left-0 size-full grid place-items-center-safe">
           <MotionImage

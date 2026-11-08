@@ -35,7 +35,10 @@ export default function MotionContainerDemo({
 }: ShowcaseComponentProps) {
   return (
     <div
-      className={cn("flex size-full items-center justify-center", className)}
+      className={cn(
+        "flex size-full items-center justify-center md:pt-0 pt-12",
+        className,
+      )}
     >
       <svg
         viewBox="0 0 100 100"

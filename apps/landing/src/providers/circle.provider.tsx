@@ -78,7 +78,7 @@ function createProgressStore(
   };
 }
 
-export interface CircleContextProps {
+interface CircleContextProps {
   controller: AnimationController;
   progress: ProgressStore;
   svgRef: RefObject<SVGSVGElement | null>;

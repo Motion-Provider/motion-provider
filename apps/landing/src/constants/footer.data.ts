@@ -2,7 +2,6 @@ import type { FooterData } from "@/types/footer.type";
 
 export const FOOTER_DATA: FooterData = {
   brand: "Motion Provider",
-  description: "Preset-driven animation engine for the web and React.",
   tagline: { lead: "Preset-driven.", accent: "Animated." },
   copyrightYear: 2026,
   groups: [
@@ -22,7 +21,6 @@ export const FOOTER_DATA: FooterData = {
           label: "GitHub",
           href: "https://github.com/Motion-Provider/motion-provider",
         },
-        // PLACEHOLDER: verify the published package name
         {
           label: "npm",
           href: "https://www.npmjs.com/package/motion-provider",
@@ -42,11 +40,9 @@ export const FOOTER_DATA: FooterData = {
       title: "Follow us",
       links: [
         { label: "GitHub", href: "https://github.com/Motion-Provider" },
-        // PLACEHOLDER: replace the four profile URLs below
-        { label: "X", href: "https://x.com/" },
-        { label: "LinkedIn", href: "https://www.linkedin.com/" },
-        { label: "dev.to", href: "https://dev.to/" },
+        { label: "X", href: "https://x.com/motionprovider" },
         { label: "daily.dev", href: "https://app.daily.dev/" },
+        { label: "Bluesky", href: "https://bsky.app/profile/motionprovider" },
       ],
     },
     {
@@ -61,7 +57,6 @@ export const FOOTER_DATA: FooterData = {
   legal: [
     {
       label: "MIT License",
-      // PLACEHOLDER: verify the LICENSE path
       href: "https://github.com/Motion-Provider/motion-provider/blob/main/LICENSE",
     },
   ],

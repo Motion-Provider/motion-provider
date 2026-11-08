@@ -12,7 +12,10 @@ import { ShowcaseProvider } from "@/providers/showcase.provider";
 
 export default function ShowcaseSection() {
   return (
-    <section className="w-full min-h-screen relative" id="features">
+    <section
+      className="w-full min-h-screen relative md:px-0 px-4"
+      id="features"
+    >
       <div className="justify-self-center relative max-w-7xl overflow-visible size-full md:py-28 py-14 flex flex-col">
         <div className="flex flex-col gap-3 min-h-min max-h-60 h-auto mb-4 justify-center text-center items-center z-10">
           <Title />

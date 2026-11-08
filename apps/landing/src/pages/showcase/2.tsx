@@ -56,21 +56,6 @@ const shopMotion = createMotionConfig({
       },
     },
   },
-  heroImage: {
-    type: "MotionImage",
-    props: {
-      animation: {
-        mode: ["clipDown", "filterBlurIn"],
-        transition: "gentle",
-        duration: 1.2,
-      },
-      config: {
-        pieces: 100,
-        duration: 0.08,
-        delayLogic: "sinusoidal",
-      },
-    },
-  },
   collectionTitle: {
     type: "MotionText",
     props: {
@@ -107,22 +92,6 @@ const shopMotion = createMotionConfig({
           amount: 0.12,
           once: true,
         },
-      },
-    },
-  },
-  productImage: {
-    type: "MotionImage",
-    props: {
-      animation: {
-        mode: ["fadeIn", "filterBlurIn", "skewX45"],
-        transition: "gentle",
-        duration: 0.85,
-      },
-      config: {
-        pieces: 64,
-        duration: 0.075,
-        delayLogic: "sinusoidal",
-        fn: "hover",
       },
     },
   },
@@ -181,56 +150,6 @@ const shopMotion = createMotionConfig({
 });
 
 const { getMotionAnimation } = createMotionRegistry(shopMotion);
-
-const heroImageAnimation = getMotionAnimation("heroImage");
-const productImageAnimation = getMotionAnimation("productImage");
-
-const products = [
-  {
-    id: "watch",
-    title: "Minimalist watch",
-    category: "TIMELESS OBJECTS",
-    price: "$189",
-    oldPrice: "$229",
-    badge: "BESTSELLER",
-    image:
-      "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=1000&q=85",
-    color: "bg-[#e7ded0]",
-  },
-  {
-    id: "headphones",
-    title: "Studio headphones",
-    category: "PERSONAL AUDIO",
-    price: "$149",
-    oldPrice: null,
-    badge: "NEW ARRIVAL",
-    image:
-      "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=1000&q=85",
-    color: "bg-[#e1e0dc]",
-  },
-  {
-    id: "camera",
-    title: "Analog camera",
-    category: "CREATIVE TOOLS",
-    price: "$329",
-    oldPrice: null,
-    badge: null,
-    image:
-      "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=1000&q=85",
-    color: "bg-[#dedbd3]",
-  },
-  {
-    id: "sneakers",
-    title: "Everyday sneakers",
-    category: "DAILY ESSENTIALS",
-    price: "$119",
-    oldPrice: "$139",
-    badge: "LIMITED",
-    image:
-      "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=1000&q=85",
-    color: "bg-[#e5ddd6]",
-  },
-];
 
 const questions = [
   {

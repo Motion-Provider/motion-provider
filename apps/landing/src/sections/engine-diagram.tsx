@@ -5,13 +5,13 @@ import { getAnimation } from "@/lib/motion";
 const titleAnimation = getAnimation("engineDiagramTitle");
 const descAnimation = getAnimation("engineDiagramDesc");
 
-export function EngineDiagramSection() {
+export default function EngineDiagramSection() {
   return (
     <section
       key="t"
       id="engine"
       aria-labelledby="engine-heading"
-      className="mx-auto w-full max-w-7xl py-24"
+      className="mx-auto w-full max-w-7xl py-24 md:px-0 px-4"
     >
       <header className="mx-auto pb-8 w-full text-center items-center flex flex-col">
         <MotionText
