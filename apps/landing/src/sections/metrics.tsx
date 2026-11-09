@@ -1,9 +1,10 @@
 import { Chip } from "@heroui/react";
 import { MotionChain, MotionText } from "motion-provider";
-import { MetricBar } from "@/components/metric-bar";
+import dynamic from "next/dynamic";
 import metrics from "@/constants/metrics.data";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
+import IntersectionProvider from "@/providers/intersection.provider";
 import type {
   MetricItem,
   MetricLibrary,
@@ -40,7 +41,7 @@ const [metricAnimation, titleAnimation] = [
   getAnimation("metricTitle"),
 ];
 
-export default function Metrics() {
+export default function MetricsSection() {
   const isMobile = useIsMobile();
 
   return (
@@ -82,27 +83,46 @@ export default function Metrics() {
             smaller than GSAP core + useGSAP.
           </p>
         </div>
-        <div className="flex flex-col gap-6">
-          <MotionChain {...metricAnimation} data-size-bars>
-            {ITEMS.map((item, index) => (
-              <MetricBar
-                key={item.id}
-                item={item}
-                index={index}
-                max={MAX}
-                metric={METRIC}
-                isHighlighted={item.library === HIGHLIGHT}
-              />
-            ))}
-          </MotionChain>
-          <p className="text-xs text-muted">
-            *React excluded, container-level comparison, minified and gzipped
-            with esbuild. Feature coverage differs between libraries.
-            Comparisons has been made based on bare minimum reasonable
-            combination of animation APIs.
-          </p>
-        </div>
+        <Metrics />
       </div>
     </section>
+  );
+}
+
+const MetricBar = dynamic(
+  () => import("@/components/metric-bar").then((mod) => mod.MetricBar),
+  {
+    ssr: false,
+  },
+);
+
+function Metrics() {
+  return (
+    <IntersectionProvider
+      className="flex flex-col gap-6 h-60 md:h-80"
+      options={{
+        threshold: 0,
+        scrollMargin: "60px",
+      }}
+    >
+      <MotionChain {...metricAnimation} data-size-bars>
+        {ITEMS.map((item, index) => (
+          <MetricBar
+            key={item.id}
+            item={item}
+            index={index}
+            max={MAX}
+            metric={METRIC}
+            isHighlighted={item.library === HIGHLIGHT}
+          />
+        ))}
+      </MotionChain>
+      <p className="text-xs text-muted">
+        *React excluded, container-level comparison, minified and gzipped with
+        esbuild. Feature coverage differs between libraries. Comparisons has
+        been made based on bare minimum reasonable combination of animation
+        APIs.
+      </p>
+    </IntersectionProvider>
   );
 }

@@ -1,14 +1,30 @@
 ﻿import { MotionText } from "motion-provider";
+import dynamic from "next/dynamic";
 import {
   type ContainerScalesOptions,
   ContainerWrapper,
 } from "@/components/container";
 import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
-import { ShowcasePreview } from "@/components/showcase/showcase-preview";
-import { ShowcaseSnippet } from "@/components/showcase/showcase-snippet";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
+import IntersectionProvider from "@/providers/intersection.provider";
 import { ShowcaseProvider } from "@/providers/showcase.provider";
+
+const ShowcasePreview = dynamic(
+  () =>
+    import("@/components/showcase/showcase-preview").then(
+      (mod) => mod.ShowcasePreview,
+    ),
+  { ssr: false },
+);
+
+const ShowcaseSnippet = dynamic(
+  () =>
+    import("@/components/showcase/showcase-snippet").then(
+      (mod) => mod.ShowcaseSnippet,
+    ),
+  { ssr: false },
+);
 
 export default function ShowcaseSection() {
   return (
@@ -24,7 +40,7 @@ export default function ShowcaseSection() {
             to animate a webpage.
           </p>
         </div>
-        <div className="md:h-[60vh] h-screen w-full z-10">
+        <IntersectionProvider className="md:h-[60vh] h-screen w-full z-10">
           <Wrapper>
             <ShowcaseProvider>
               <ShowcaseExplorer />
@@ -34,7 +50,7 @@ export default function ShowcaseSection() {
               </div>
             </ShowcaseProvider>
           </Wrapper>
-        </div>
+        </IntersectionProvider>
       </div>
     </section>
   );

@@ -15,8 +15,8 @@ export default function GallerySection() {
       />
       <ContainerWrapper<"div">
         as="div"
-        width="none"
         radius="3xl"
+        width="screen"
         scales={false}
         grid={{
           axis: "diagonal",

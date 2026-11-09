@@ -1,7 +1,7 @@
+import { Skeleton } from "@heroui/react";
 import type { Attributes, ComponentType, SVGProps } from "react";
 import { memo, Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
-
 import {
   type AnimationMode,
   type SyntaxAnimationProps,
@@ -10,10 +10,6 @@ import {
 
 const CODE_CLASS_NAME =
   "h-auto w-max min-w-full p-4 font-secondary text-left text-xs whitespace-pre text-(--syntax-plain)";
-
-function PlainCode({ code }: { code: string }) {
-  return <pre className={CODE_CLASS_NAME}>{code}</pre>;
-}
 
 export type DxCodePaneAnimation =
   | { animationMode?: undefined; animationProps?: undefined }
@@ -49,8 +45,11 @@ export const DxCodePane = memo(function DxCodePane({
         tabIndex={0}
         className="min-h-0 flex-1 overflow-x-hidden overflow-y-scroll outline-none focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-focus "
       >
-        <ErrorBoundary fallback={<PlainCode code={code} />} resetKeys={[code]}>
-          <Suspense fallback={<PlainCode code={code} />}>
+        <ErrorBoundary
+          fallback={<Skeleton className="w-full h-52 md:h-88" />}
+          resetKeys={[code]}
+        >
+          <Suspense fallback={<Skeleton className="w-full h-52 md:h-88" />}>
             <SyntaxHighlighter<AnimationMode>
               code={code}
               className={CODE_CLASS_NAME}

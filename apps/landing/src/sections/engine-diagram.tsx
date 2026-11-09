@@ -1,9 +1,17 @@
 import { MotionContainer, MotionText } from "motion-provider";
-import { EngineDiagram } from "@/components/engine/engine-diagram";
+import dynamic from "next/dynamic";
 import { getAnimation } from "@/lib/motion";
 
 const titleAnimation = getAnimation("engineDiagramTitle");
 const descAnimation = getAnimation("engineDiagramDesc");
+
+const EngineDiagram = dynamic(
+  () =>
+    import("@/components/engine/engine-diagram").then(
+      (mod) => mod.EngineDiagram,
+    ),
+  { ssr: false },
+);
 
 export default function EngineDiagramSection() {
   return (

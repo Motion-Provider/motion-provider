@@ -25,9 +25,9 @@ const keywords = [
 const textAnimation1 = getAnimation("myFingerIsGoodNowText1");
 const textAnimation2 = getAnimation("myFingerIsGoodNowText2");
 
-export default function MyFingerIsGoodNow() {
+export default function PyramidSection() {
   return (
-    <section className="min-h-60 w-full justify-center items-center flex bg-[#2a1610] text-foreground py-24 relative">
+    <section className="min-h-60 laptop:min-h-80 desktop:min-h-96  w-full justify-center items-center flex bg-[#2a1610] text-foreground py-24 relative">
       <div className="absolute top-0 h-24 w-full bg-linear-to-b from-background to-[#2a1610]" />
       <div className="absolute bottom-0 h-24 w-full bg-linear-to-b from-[#2a1610] to-background" />
       <div className="w-7xl flex md:flex-row flex-col justify-between items-center z-10">
@@ -37,21 +37,19 @@ export default function MyFingerIsGoodNow() {
           <br />
           <MotionText {...textAnimation2}>Animation Provider.</MotionText>
         </div>
-        <div className="md:pr-12 relative">
-          <PyramidChain
-            withSvg
-            {...config.identity}
-            className="z-30 desktop:size-96 laptop:size-80 size-60 md:mt-0 mt-8"
-            animationName="myFingerIsGoodNowPyramid"
-            evenColor="text-accent/50"
-            oddColor="text-accent"
-            beginRadius={beginRadius}
-            endRadius={endRadius}
-            holeRadius={holeRadius}
-            count={8}
-            strokeWidth={0.8}
-          />
-        </div>
+        <PyramidChain
+          withSvg
+          {...config.identity}
+          className="z-30 md:pr-12 desktop:size-96 laptop:size-80 size-60 md:mt-0 mt-8"
+          animationName="myFingerIsGoodNowPyramid"
+          evenColor="text-accent/50"
+          oddColor="text-accent"
+          beginRadius={beginRadius}
+          endRadius={endRadius}
+          holeRadius={holeRadius}
+          count={8}
+          strokeWidth={0.8}
+        />
       </div>
     </section>
   );

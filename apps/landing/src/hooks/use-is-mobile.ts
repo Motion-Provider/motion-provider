@@ -13,7 +13,7 @@ export function useIsMobile() {
 
   const getSnapshot = () => window.matchMedia(query).matches;
 
-  const getServerSnapshot = () => false;
+  const getServerSnapshot = () => true;
 
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

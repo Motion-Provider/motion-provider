@@ -1,5 +1,6 @@
 import { Button } from "@heroui/react";
 import { ArrowUpRight } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import type { GalleryItem } from "@/types/gallery.type";
@@ -33,12 +34,13 @@ export function GalleryCard({
         className,
       )}
     >
-      {/* biome-ignore lint/performance/noImgElement: static export with images.unoptimized, next/image adds no optimization */}
-      <img
+      <Image
         src={image}
         alt={imageAlt}
         loading="lazy"
         decoding="async"
+        height={1400}
+        width={800}
         className={cn(
           "absolute inset-0 -z-20 size-full object-cover object-top",
           "transition-transform duration-700 ease-out group-hover:scale-105",

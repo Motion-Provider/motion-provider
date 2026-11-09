@@ -1,16 +1,28 @@
 import { Separator } from "@heroui/react";
 import { MotionText } from "motion-provider";
-import { DxComparisonSplit } from "@/components/comparison/comparison-split";
+import dynamic from "next/dynamic";
 import { DxComparisonSwitcher } from "@/components/comparison/comparison-switcher";
 import { ContainerWrapper } from "@/components/container";
 import { getAnimation } from "@/lib/motion";
 import { DxComparisonProvider } from "@/providers/dx-feature.provider";
+import IntersectionProvider from "@/providers/intersection.provider";
+
+const DxComparisonSplit = dynamic(
+  () =>
+    import("@/components/comparison/comparison-split").then(
+      (mod) => mod.DxComparisonSplit,
+    ),
+  { ssr: false },
+);
 
 const animation = getAnimation("dxComparisonText");
 
-export default function DxComparison() {
+export default function DxComparisonSection() {
   return (
-    <section className="relative mx-auto my-16 w-full max-w-7xl md:px-4 sm:my-20 lg:my-28 lg:h-[70vh] lg:px-0">
+    <section
+      className="relative mx-auto my-16 w-full max-w-7xl md:px-4 sm:my-20 lg:my-28 lg:h-[70vh] lg:px-0"
+      id="comparison"
+    >
       <ContainerWrapper<"div">
         as="div"
         surface="glass"
@@ -63,9 +75,9 @@ export default function DxComparison() {
             className="hidden bg-transparent lg:block"
           />
 
-          <div className="min-w-0">
+          <IntersectionProvider className="min-w-0">
             <DxComparisonSplit />
-          </div>
+          </IntersectionProvider>
         </DxComparisonProvider>
       </ContainerWrapper>
     </section>

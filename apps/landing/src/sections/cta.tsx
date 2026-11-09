@@ -1,60 +1,21 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { ArrowUpRightIcon, Boxes } from "lucide-react";
-import { MotionImage } from "motion-provider";
 import Link from "next/link";
 import {
   type ContainerScalesOptions,
   ContainerWrapper,
 } from "@/components/container";
+import GridImage from "@/components/grid-image";
 import { useIsMobile } from "@/hooks/use-is-mobile";
-import { getAnimation } from "@/lib/motion";
 
-const imageAnimation = getAnimation("squareGrid");
-
-export default function Cta() {
-  const isMobile = useIsMobile();
-
-  const scales: ContainerScalesOptions | false = isMobile
-    ? {
-        sides: ["bottom", "top"],
-        className: "pointer-events-none",
-        lineWidth: 0.5,
-      }
-    : {
-        sides: ["left", "right", "bottom", "top"],
-        className: "pointer-events-none",
-        lineWidth: 0.5,
-      };
-
+export default function CtaSection() {
   return (
-    <section className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible my-28">
-      <ContainerWrapper<"div">
-        as="div"
-        width="none"
-        radius="3xl"
-        surface="glass"
-        scales={scales}
-        grid={{
-          axis: "horizontal",
-          lineWidth: 1,
-          opacity: 0.5,
-          size: 24,
-        }}
-        className="size-full flex flex-row bg-transparent"
-        innerClassName="size-full relative flex md:flex-row flex-col overflow-clip items-center-safe justify-center-safe md:gap-8  bg-transparent"
-      >
-        <div className="absolute top-0 left-0 size-full grid place-items-center-safe">
-          <MotionImage
-            {...imageAnimation}
-            config={{
-              ...imageAnimation.config,
-              img: "/assets/backgrounds/grid-background-be9b88fc.webp",
-              pieces: isMobile ? 36 : imageAnimation.config.pieces,
-            }}
-            wrapperClassName="top-0 left-0 z-10 absolute size-full aspect-video overflow-hidden"
-          />
-        </div>
-
+    <section
+      className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible mb-28 mt-56"
+      id="cta-playground"
+    >
+      <Wrapper>
+        <GridImage />
         <div className="grid place-items-center-safe z-50">
           <Chip
             variant="primary"
@@ -86,7 +47,37 @@ export default function Cta() {
             </Button>
           </Link>
         </div>
-      </ContainerWrapper>
+      </Wrapper>
     </section>
+  );
+}
+
+function Wrapper({ children }: { children: React.ReactNode }) {
+  const isMobile = useIsMobile();
+
+  const scales: ContainerScalesOptions = {
+    sides: isMobile ? ["bottom", "top"] : ["left", "right", "bottom", "top"],
+    className: "pointer-events-none",
+    lineWidth: 0.5,
+  };
+
+  return (
+    <ContainerWrapper<"div">
+      as="div"
+      width="none"
+      radius="3xl"
+      surface="glass"
+      scales={scales}
+      grid={{
+        axis: "horizontal",
+        lineWidth: 1,
+        opacity: 0.5,
+        size: 24,
+      }}
+      className="size-full flex flex-row bg-transparent"
+      innerClassName="size-full relative flex md:flex-row flex-col overflow-clip items-center-safe justify-center-safe md:gap-8  bg-transparent"
+    >
+      {children}
+    </ContainerWrapper>
   );
 }
