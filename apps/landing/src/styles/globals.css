@@ -123,45 +123,6 @@ body {
   display: none;
 }
 
-.scrollbar-custom::-webkit-scrollbar {
-  width: 6px;
-  z-index: 999;
-}
-
-.scrollbar-custom::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 999px;
-  transition: background 0.2s ease;
-}
-
-.scrollbar-custom::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
-}
-
-.scrollbar-thin::-webkit-scrollbar {
-  width: 3px;
-}
-
-.scrollbar-thick::-webkit-scrollbar {
-  width: 10px;
-}
-
-.scrollbar-dark::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
-}
-
-.scrollbar-dark::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.scrollbar-hidden::-webkit-scrollbar {
-  display: none;
-}
-
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -185,26 +146,6 @@ body {
 
 ::-webkit-scrollbar-corner {
   background: transparent;
-}
-
-.custom-shape-divider-top-1793924738 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-}
-
-.custom-shape-divider-top-1793924738 svg {
-  position: relative;
-  display: block;
-  width: calc(100% + 1.3px);
-  height: 150px;
-}
-
-.custom-shape-divider-top-1793924738 .shape-fill {
-  fill: #2a1610;
 }
 
 @keyframes marquee {

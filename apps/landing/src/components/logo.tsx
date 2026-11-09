@@ -27,8 +27,11 @@ export default function Logo({ className }: { className?: string }) {
       <Image
         height={48}
         width={48}
+        loading="eager"
+        priority
+        decoding="async"
         alt="Motion Provider Logo"
-        src="/logo.png"
+        src="/logo-6f9f20fb.webp"
         className={className}
       />
     </MotionContainer>

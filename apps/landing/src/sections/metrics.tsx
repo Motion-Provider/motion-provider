@@ -98,13 +98,7 @@ const MetricBar = dynamic(
 
 function Metrics() {
   return (
-    <IntersectionProvider
-      className="flex flex-col gap-6 h-60 md:h-80"
-      options={{
-        threshold: 0,
-        scrollMargin: "60px",
-      }}
-    >
+    <IntersectionProvider className="flex flex-col gap-6 h-60 md:h-80">
       <MotionChain {...metricAnimation} data-size-bars>
         {ITEMS.map((item, index) => (
           <MetricBar

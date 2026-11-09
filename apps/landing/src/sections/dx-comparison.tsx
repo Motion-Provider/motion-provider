@@ -1,7 +1,6 @@
 import { Separator } from "@heroui/react";
 import { MotionText } from "motion-provider";
 import dynamic from "next/dynamic";
-import { DxComparisonSwitcher } from "@/components/comparison/comparison-switcher";
 import { ContainerWrapper } from "@/components/container";
 import { getAnimation } from "@/lib/motion";
 import { DxComparisonProvider } from "@/providers/dx-feature.provider";
@@ -15,6 +14,13 @@ const DxComparisonSplit = dynamic(
   { ssr: false },
 );
 
+const DxComparisonSwitcher = dynamic(
+  () =>
+    import("@/components/comparison/comparison-switcher").then(
+      (mod) => mod.DxComparisonSwitcher,
+    ),
+  { ssr: false },
+);
 const animation = getAnimation("dxComparisonText");
 
 export default function DxComparisonSection() {
@@ -65,9 +71,9 @@ export default function DxComparisonSection() {
                 What if one API covered all of them?
               </p>
             </div>
-            <div className="size-full flex flex-col items-center justify-end gap-2 md:pb-0 pb-12">
+            <IntersectionProvider className="size-full flex flex-col items-center justify-end gap-2 md:pb-0 pb-12">
               <DxComparisonSwitcher className="w-full list-none relative" />
-            </div>
+            </IntersectionProvider>
           </div>
 
           <Separator

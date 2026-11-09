@@ -1,6 +1,7 @@
 import { MotionContainer, MotionText } from "motion-provider";
 import dynamic from "next/dynamic";
 import { getAnimation } from "@/lib/motion";
+import IntersectionProvider from "@/providers/intersection.provider";
 
 const titleAnimation = getAnimation("engineDiagramTitle");
 const descAnimation = getAnimation("engineDiagramDesc");
@@ -42,10 +43,9 @@ export default function EngineDiagramSection() {
           </p>
         </MotionContainer>
       </header>
-
-      <div className="max-w-7xl rounded-3xl size-full desktop:mt-12 laptop:mt-8 relative">
+      <IntersectionProvider className="max-w-7xl rounded-3xl size-full desktop:mt-12 laptop:mt-8 relative md:aspect-1120/800 w-full">
         <EngineDiagram />
-      </div>
+      </IntersectionProvider>
     </section>
   );
 }

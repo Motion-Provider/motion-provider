@@ -1,12 +1,11 @@
 import { MotionImage } from "motion-provider";
-import dynamic from "next/dynamic";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
 import IntersectionProvider from "@/providers/intersection.provider";
 
 const imageAnimation = getAnimation("squareGrid");
 
-const _GridImage = () => {
+export function GridImage() {
   const isMobile = useIsMobile();
   return (
     <IntersectionProvider className="absolute top-0 left-0 size-full grid place-items-center-safe">
@@ -21,8 +20,4 @@ const _GridImage = () => {
       />
     </IntersectionProvider>
   );
-};
-1;
-const GridImage = dynamic(() => Promise.resolve(_GridImage), { ssr: false });
-
-export default GridImage;
+}

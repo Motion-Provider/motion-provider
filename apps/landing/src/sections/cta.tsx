@@ -1,13 +1,17 @@
 ﻿import { Button, Chip } from "@heroui/react";
 import { ArrowUpRightIcon, Boxes } from "lucide-react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import {
   type ContainerScalesOptions,
   ContainerWrapper,
 } from "@/components/container";
-import GridImage from "@/components/grid-image";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 
+const GridImage = dynamic(
+  () => import("@/components/grid-image").then((mod) => mod.GridImage),
+  { ssr: false },
+);
 export default function CtaSection() {
   return (
     <section

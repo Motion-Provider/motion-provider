@@ -13,7 +13,7 @@ export function FooterWordmark() {
           duration: 1.5,
         }}
         config={{
-          img: "/assets/app-wordmark.png",
+          img: "/assets/app-wordmark.webp",
           pieces: 144,
           delayLogic: "chaotic",
           duration: 0.33,
@@ -24,7 +24,9 @@ export function FooterWordmark() {
             amount: 0.5,
           },
         }}
+        loading="lazy"
         wrapperClassName="size-full"
+        alt="Motion Provider Wordmark"
       />
     </div>
   );

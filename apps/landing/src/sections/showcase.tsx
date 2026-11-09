@@ -4,7 +4,6 @@ import {
   type ContainerScalesOptions,
   ContainerWrapper,
 } from "@/components/container";
-import { ShowcaseExplorer } from "@/components/showcase/showcase-explorer";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAnimation } from "@/lib/motion";
 import IntersectionProvider from "@/providers/intersection.provider";
@@ -22,6 +21,14 @@ const ShowcaseSnippet = dynamic(
   () =>
     import("@/components/showcase/showcase-snippet").then(
       (mod) => mod.ShowcaseSnippet,
+    ),
+  { ssr: false },
+);
+
+const ShowcaseExplorer = dynamic(
+  () =>
+    import("@/components/showcase/showcase-explorer").then(
+      (mod) => mod.ShowcaseExplorer,
     ),
   { ssr: false },
 );

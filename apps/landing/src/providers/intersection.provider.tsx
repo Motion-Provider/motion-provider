@@ -1,24 +1,28 @@
-﻿import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
+﻿import { useEffect, useState } from "react";
+import { useIntersectionObserver } from "@/hooks/use-intersection-observer";
 import { cn } from "@/lib/utils";
 
 export default function IntersectionProvider({
   children,
   className,
-  options = {
-    threshold: 0,
-    root: null,
-    rootMargin: "0px",
-  },
+  options,
 }: {
   children: React.ReactNode;
   className?: string;
-  options?: Parameters<typeof useIntersectionObserver>[0];
+  options?: IntersectionObserverInit;
 }) {
   const [ref, entry] = useIntersectionObserver(options);
+  const [hasIntersected, setHasIntersected] = useState(false);
+
+  useEffect(() => {
+    if (entry?.isIntersecting) {
+      setHasIntersected(true);
+    }
+  }, [entry?.isIntersecting]);
 
   return (
     <div ref={ref} className={cn("relative", className)}>
-      {entry?.isIntersecting ? children : null}
+      {hasIntersected ? children : null}
     </div>
   );
 }
