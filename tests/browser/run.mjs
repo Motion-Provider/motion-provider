@@ -356,11 +356,11 @@ try {
 			assert.ok(value > 0 && value < 1);
 		},
 	);
-	mkdirSync("docs", {
+	mkdirSync("tests/out", {
 		recursive: true,
 	});
 	writeFileSync(
-		"docs/browser-results.json",
+		"tests/out/browser-results.json",
 		JSON.stringify(
 			{
 				browser: await browser.version(),
