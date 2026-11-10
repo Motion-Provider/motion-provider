@@ -1,0 +1,27 @@
+---
+type CalloutType = "note" | "tip" | "warning" | "danger";
+
+interface Props {
+  type?: CalloutType;
+  title?: string;
+}
+
+const { type = "note", title } = Astro.props;
+
+const styles: Record<CalloutType, string> = {
+  note: "border-accent bg-accent/10",
+  tip: "border-success bg-success/10",
+  warning: "border-warning bg-warning/10",
+  danger: "border-danger bg-danger/10",
+};
+---
+
+<aside
+  role="note"
+  class={`not-prose my-6 rounded-r-lg border-l-4 p-4 ${styles[type]}`}
+>
+  {title && <p class="mb-1 font-semibold">{title}</p>}
+  <div class="text-sm [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+    <slot />
+  </div>
+</aside>

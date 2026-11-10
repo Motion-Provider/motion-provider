@@ -1,0 +1,62 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@source "../../../../docs";
+
+:root {
+  color-scheme: dark;
+  --accent: oklch(74.28% 0.1618 40.24);
+  --background: oklch(12% 0.006 40.24);
+  --foreground: oklch(99.11% 0.006 40.24);
+  --border: oklch(28% 0.006 40.24);
+  --muted: oklch(70.5% 0.012 40.24);
+  --surface: oklch(21.03% 0.012 40.24);
+  --surface-secondary: oklch(25.7% 0.009 40.24);
+  --danger: oklch(59.4% 0.1991 359);
+  --success: oklch(73.29% 0.1958 125.18);
+  --warning: oklch(82.03% 0.1405 50.71);
+
+  --syntax-bg: var(--surface);
+  --syntax-plain: var(--foreground);
+  --syntax-comment: var(--muted);
+  --syntax-punctuation: oklch(78% 0.012 40.24);
+  --syntax-keyword: var(--danger);
+  --syntax-string: oklch(78.899% 0.13582 144.719);
+  --syntax-function: var(--accent);
+  --syntax-type: var(--warning);
+  --syntax-constant: oklch(78% 0.14 20);
+  --syntax-attr: oklch(80% 0.13 40.24);
+  --syntax-regex: oklch(82% 0.12 70);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+  --color-surface: var(--surface);
+  --color-surface-secondary: var(--surface-secondary);
+  --color-danger: var(--danger);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+}
+
+.docs-prose {
+  --tw-prose-body: var(--foreground);
+  --tw-prose-headings: var(--foreground);
+  --tw-prose-lead: var(--muted);
+  --tw-prose-links: var(--accent);
+  --tw-prose-bold: var(--foreground);
+  --tw-prose-counters: var(--muted);
+  --tw-prose-bullets: var(--muted);
+  --tw-prose-hr: var(--border);
+  --tw-prose-quotes: var(--foreground);
+  --tw-prose-quote-borders: var(--border);
+  --tw-prose-captions: var(--muted);
+  --tw-prose-code: var(--foreground);
+  --tw-prose-pre-code: var(--syntax-plain);
+  --tw-prose-pre-bg: var(--syntax-bg);
+  --tw-prose-th-borders: var(--border);
+  --tw-prose-td-borders: var(--border);
+}

@@ -1,0 +1,44 @@
+---
+import { render } from "astro:content";
+import type { GetStaticPaths } from "astro";
+import Callout from "../components/mdx/Callout.astro";
+import DocLayout from "../layouts/DocLayout.astro";
+import {
+  buildIndex,
+  type DocEntry,
+  type DocsIndex,
+  getDocs,
+  getNeighbors,
+} from "../lib/docs";
+
+interface Props {
+  entry: DocEntry;
+  index: DocsIndex;
+}
+
+export const getStaticPaths = (async () => {
+  const docs = await getDocs();
+  const index = buildIndex(docs);
+  return docs.map((entry) => ({
+    params: { slug: entry.id === "index" ? undefined : entry.id },
+    props: { entry, index },
+  }));
+}) satisfies GetStaticPaths;
+
+const mdxComponents = { Callout };
+const { entry, index } = Astro.props;
+const { Content, headings } = await render(entry);
+const { prev, next } = getNeighbors(index.flat, entry.id);
+---
+
+<DocLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  nav={index.nav}
+  currentId={entry.id}
+  headings={headings}
+  prev={prev}
+  next={next}
+>
+  <Content components={mdxComponents} />
+</DocLayout>

@@ -1,0 +1,39 @@
+---
+import type { NavGroup } from "../lib/docs";
+
+interface Props {
+  groups: readonly NavGroup[];
+  currentId: string;
+}
+
+const { groups, currentId } = Astro.props;
+---
+
+<nav aria-label="Documentation">
+  <ul class="space-y-6">
+    {
+      groups.map((group) => (
+        <li>
+          {group.label && (
+            <p class="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">
+              {group.label}
+            </p>
+          )}
+          <ul class="space-y-1">
+            {group.items.map((item) => (
+              <li>
+                <a
+                  href={item.href}
+                  aria-current={item.id === currentId ? "page" : undefined}
+                  class="block rounded px-2 py-1 text-sm hover:bg-surface-secondary aria-[current=page]:bg-surface-secondary aria-[current=page]:font-medium aria-[current=page]:text-accent"
+                >
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ul>
+</nav>

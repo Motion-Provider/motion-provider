@@ -1,0 +1,78 @@
+---
+import type { MarkdownHeading } from "astro";
+import NavTree from "../components/NavTree.astro";
+import Toc from "../components/Toc.astro";
+import type { NavGroup, NavItem } from "../lib/docs";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description: string;
+  nav: readonly NavGroup[];
+  currentId: string;
+  headings: readonly MarkdownHeading[];
+  prev?: NavItem | undefined;
+  next?: NavItem | undefined;
+}
+
+const { title, description, nav, currentId, headings, prev, next } =
+  Astro.props;
+---
+
+<BaseLayout title={`${title} Â· Motion Provider Docs`} description={description}>
+  <a
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
+  >
+    Skip to content
+  </a>
+
+  <div class="mx-auto grid max-w-screen-xl gap-x-10 px-4 lg:grid-cols-[16rem_minmax(0,1fr)_14rem]">
+    <aside class="py-4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8">
+      <details class="lg:hidden">
+        <summary class="cursor-pointer rounded border border-border px-3 py-2 text-sm">
+          Menu
+        </summary>
+        <div class="pt-4">
+          <NavTree groups={nav} currentId={currentId} />
+        </div>
+      </details>
+      <div class="hidden lg:block">
+        <NavTree groups={nav} currentId={currentId} />
+      </div>
+    </aside>
+
+    <main id="main" class="min-w-0 py-8">
+      <article data-pagefind-body class="docs-prose prose max-w-none">
+        <h1>{title}</h1>
+        <slot />
+      </article>
+
+      <nav
+        aria-label="Pagination"
+        class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
+      >
+        {
+          prev ? (
+            <a href={prev.href} rel="prev" class="hover:text-accent">
+              â† {prev.title}
+            </a>
+          ) : (
+            <span />
+          )
+        }
+        {
+          next && (
+            <a href={next.href} rel="next" class="hover:text-accent">
+              {next.title} â†’
+            </a>
+          )
+        }
+      </nav>
+    </main>
+
+    <aside class="hidden py-8 lg:sticky lg:top-0 lg:block lg:h-screen lg:overflow-y-auto">
+      <Toc headings={headings} />
+    </aside>
+  </div>
+</BaseLayout>
