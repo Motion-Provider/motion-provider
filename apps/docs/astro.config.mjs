@@ -21,14 +21,14 @@ export default defineConfig({
       name: "Sora",
       cssVariable: "--font-primary",
       provider: fontProviders.google(),
-      weights: [100, 200, 300, 400, 500, 600, 700, 800],
+      weights: [400, 500, 600, 700, 800],
       display: "swap",
     },
     {
       name: "Geist Mono",
       cssVariable: "--font-secondary",
       provider: fontProviders.google(),
-      weights: [100, 200, 300, 400, 500, 600, 700, 800],
+      weights: [400, 500, 600, 700, 800],
       display: "swap",
     }
   ],
