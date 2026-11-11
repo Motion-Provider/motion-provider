@@ -6,7 +6,8 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
-      "@examples/*": ["../../docs/examples/*"]
+      "@examples/*": ["../../docs/examples/*"],
+      "@assets/*": ["../../public/*"]
     }
   },
   "include": [
