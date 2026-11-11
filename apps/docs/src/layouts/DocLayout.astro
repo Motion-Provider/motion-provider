@@ -22,15 +22,20 @@ const { title, description, nav, currentId, headings, prev, next } =
 
 <BaseLayout title={`${title} · Motion Provider Docs`} description={description}>
   <a
-  href="#main"
-    class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
+    href="#main"
+    class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-60 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
   >
-  Skip to content
-</a>
+    Skip to content
+  </a>
 
-<NavAstro />
-  <div class="mx-auto grid w-full gap-x-10 lg:grid-cols-[16rem_minmax(0,1fr)_14rem]">
-    <aside class="py-4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8">
+  <NavAstro />
+
+  <div
+    class="mx-auto grid w-full max-w-360 gap-x-10 px-4 sm:px-6 lg:grid-cols-[16rem_minmax(0,1fr)] lg:px-8 xl:grid-cols-[16rem_minmax(0,1fr)_14rem]"
+  >
+    <aside
+      class="py-4 lg:sticky lg:top-(--nav-h) lg:h-[calc(100dvh-var(--nav-h))] lg:overflow-y-auto lg:py-8"
+    >
       <details class="lg:hidden">
         <summary class="cursor-pointer rounded border border-border px-3 py-2 text-sm">
           Menu
@@ -44,8 +49,8 @@ const { title, description, nav, currentId, headings, prev, next } =
       </div>
     </aside>
 
-    <main id="main" class="min-w-0 py-8 w-3xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pt-8 pb-8">
-      <article data-pagefind-body class="docs-prose prose">
+    <main id="main" class="mx-auto w-full min-w-0 max-w-3xl py-8">
+      <article data-pagefind-body class="docs-prose prose max-w-none">
         <h1>{title}</h1>
         <slot />
       </article>
@@ -57,7 +62,7 @@ const { title, description, nav, currentId, headings, prev, next } =
         {
           prev ? (
             <a href={prev.href} rel="prev" class="hover:text-accent">
-              {prev.title} {"<"}
+              {"<"} {prev.title}
             </a>
           ) : (
             <span />
@@ -73,7 +78,9 @@ const { title, description, nav, currentId, headings, prev, next } =
       </nav>
     </main>
 
-    <aside class="hidden py-8 lg:sticky lg:top-0 lg:block lg:h-screen lg:overflow-y-auto">
+    <aside
+      class="hidden py-8 xl:sticky xl:top-(--nav-h) xl:block xl:h-[calc(100dvh-var(--nav-h))] xl:overflow-y-auto"
+    >
       <Toc headings={headings} />
     </aside>
   </div>

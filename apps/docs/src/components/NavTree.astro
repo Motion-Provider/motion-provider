@@ -9,7 +9,7 @@ interface Props {
 const { groups, currentId } = Astro.props;
 ---
 
-<nav aria-label="Documentation">
+<nav aria-label="Documentation" class="h-screen relative pl-3 overflow-y-scroll">
   <ul class="space-y-6">
     {
       groups.map((group) => (
@@ -21,11 +21,11 @@ const { groups, currentId } = Astro.props;
           )}
           <ul class="space-y-1">
             {group.items.map((item) => (
-              <li>
+              <li title={item.title}>
                 <a
                   href={item.href}
                   aria-current={item.id === currentId ? "page" : undefined}
-                  class="block rounded px-2 py-1 text-sm hover:bg-surface-secondary aria-[current=page]:bg-surface-secondary aria-[current=page]:font-medium aria-[current=page]:text-accent"
+                  class="block rounded px-2 py-1 text-sm hover:bg-surface-secondary aria-[current=page]:bg-surface-secondary aria-[current=page]:font-medium aria-[current=page]:text-accent truncate"
                 >
                   {item.title}
                 </a>

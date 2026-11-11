@@ -1,10 +1,22 @@
 ﻿---
-import { Image } from "astro:assets"
+import { Image } from "astro:assets";
 import Logo from "@assets/brand-lockup.png";
 ---
 
-<nav class="p-3 w-full border-b border-border h-auto sticky top-0 z-50">
-     <a href="/">
-        <Image src={Logo} alt="Motion Provider Logo" height={48} width={144} class="mr-auto"/>
+<header class="sticky top-0 z-50 h-(--nav-h) w-full border-b border-border bg-background/80 backdrop-blur">
+  <nav
+    aria-label="Primary"
+    class="mx-auto flex h-full w-full max-w-360 items-center justify-between px-4 sm:px-6 lg:px-8"
+  >
+    <a href="/" class="flex shrink-0 items-center" aria-label="Motion Provider home">
+      <Image
+        src={Logo}
+        alt="Motion Provider"
+        width={120}
+        height={40}
+        loading="eager"
+        class="h-10 w-auto"
+      />
     </a>
-</nav>
+  </nav>
+</header>

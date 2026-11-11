@@ -24,6 +24,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <Font cssVariable="--font-secondary" />
   </head>
   <body class="antialiased">
-    <slot />
+    <div class="flex h-screen flex-col bg-background" data-print-layout-root="true">
+      <slot />
+    </div>
   </body>
 </html>

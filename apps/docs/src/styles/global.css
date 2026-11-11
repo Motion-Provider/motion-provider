@@ -67,6 +67,10 @@ body {
   scroll-behavior: smooth;
 }
 
+html {
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
+}
+
 .docs-prose {
   --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
