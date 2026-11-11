@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import NavAstro from "../components/Nav.astro";
 import NavTree from "../components/NavTree.astro";
 import Toc from "../components/Toc.astro";
 import type { NavGroup, NavItem } from "../lib/docs";
@@ -21,13 +22,14 @@ const { title, description, nav, currentId, headings, prev, next } =
 
 <BaseLayout title={`${title} · Motion Provider Docs`} description={description}>
   <a
-    href="#main"
+  href="#main"
     class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
   >
-    Skip to content
-  </a>
+  Skip to content
+</a>
 
-  <div class="mx-auto grid w-full   gap-x-10  lg:grid-cols-[16rem_minmax(0,1fr)_14rem]">
+<NavAstro />
+  <div class="mx-auto grid w-full gap-x-10 lg:grid-cols-[16rem_minmax(0,1fr)_14rem]">
     <aside class="py-4 lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto lg:py-8">
       <details class="lg:hidden">
         <summary class="cursor-pointer rounded border border-border px-3 py-2 text-sm">
@@ -42,8 +44,8 @@ const { title, description, nav, currentId, headings, prev, next } =
       </div>
     </aside>
 
-    <main id="main" class="min-w-0 py-8">
-      <article data-pagefind-body class="docs-prose prose max-w-none">
+    <main id="main" class="min-w-0 py-8 w-3xl mx-auto space-y-8 px-4 sm:px-6 lg:px-8 pt-8 pb-8">
+      <article data-pagefind-body class="docs-prose prose">
         <h1>{title}</h1>
         <slot />
       </article>
@@ -55,7 +57,7 @@ const { title, description, nav, currentId, headings, prev, next } =
         {
           prev ? (
             <a href={prev.href} rel="prev" class="hover:text-accent">
-              â† {prev.title}
+              {prev.title} {"<"}
             </a>
           ) : (
             <span />
@@ -64,7 +66,7 @@ const { title, description, nav, currentId, headings, prev, next } =
         {
           next && (
             <a href={next.href} rel="next" class="hover:text-accent">
-              {next.title} â†’
+              {next.title} {">"}
             </a>
           )
         }
