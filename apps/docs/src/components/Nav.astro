@@ -1,26 +1,40 @@
-﻿---
-import { Image } from "astro:assets";
-import Logo from "@assets/brand-lockup.png";
+---
+const pathname = Astro.url.pathname;
+const isApi = pathname.startsWith("/api/");
+const isLearn = pathname.startsWith("/getting-started/");
+
+const navItems = [
+  { label: "Docs", href: "/", active: !isApi && !isLearn },
+  { label: "API", href: "/api/overview/", active: isApi },
+  {
+    label: "Learn",
+    href: "/getting-started/quick-start/",
+    active: isLearn,
+  },
+  {
+    label: "Help",
+    href: "https://github.com/Motion-Provider/motion-provider/issues",
+    external: true,
+  },
+];
 ---
 
-<header
-  class="sticky top-0 z-50 h-(--nav-h) w-full border-b border-border bg-surface/50 backdrop-blur"
->
-  <nav aria-label="Primary" class="flex h-full items-center gap-2 px-4">
+<header class="sticky top-0 z-50 h-[46px] w-full border-b border-[#2a2822] bg-[#14120b]/95 backdrop-blur">
+  <nav aria-label="Primary" class="relative flex h-full items-start gap-2 pl-[11px] pr-[7px] pt-[3px]">
     <button
       id="docs-nav-toggle"
       type="button"
       aria-controls="docs-sidebar"
       aria-expanded="false"
       aria-label="Toggle documentation menu"
-      class="-ml-2 inline-flex size-10 items-center justify-center rounded text-muted hover:bg-surface-secondary hover:text-foreground lg:hidden"
+      class="-ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-md text-[#a5a198] transition-colors hover:bg-white/5 hover:text-white lg:hidden"
     >
       <svg
         viewBox="0 0 24 24"
         class="size-5"
         fill="none"
         stroke="currentColor"
-        stroke-width="2"
+        stroke-width="1.8"
         stroke-linecap="round"
         aria-hidden="true"
       >
@@ -28,15 +42,90 @@ import Logo from "@assets/brand-lockup.png";
       </svg>
     </button>
 
-    <a href="/" class="flex shrink-0 items-center" aria-label="Motion Provider home">
-      <Image
-        src={Logo}
-        alt="Motion Provider"
-        width={120}
-        height={40}
-        loading="eager"
-        class="h-10 w-auto"
+    <div class="hidden h-full shrink-0 items-center gap-[3px] lg:flex">
+      {
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            aria-current={item.active ? "page" : undefined}
+            target={item.external ? "_blank" : undefined}
+            rel={item.external ? "noreferrer" : undefined}
+            class:list={[
+              "relative inline-flex h-full items-center px-[13px] text-[13px] leading-none transition-colors duration-150 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-[#eb5600] after:transition-transform after:duration-150",
+              item.active
+                ? "font-medium text-[#eb5600] after:scale-x-100"
+                : "text-[#a5a198] after:scale-x-0 hover:text-white hover:after:scale-x-100",
+            ]}
+          >
+            {item.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <label class="absolute left-[47.15%] top-[3px] hidden h-9 w-80 max-w-[calc(100vw-2rem)] -translate-x-1/2 items-center gap-2 rounded-[10px] border border-[#2a2822] bg-transparent px-3 text-[#a5a198] transition-colors focus-within:border-[#51483a] md:flex">
+      <svg
+        viewBox="0 0 24 24"
+        class="size-4 shrink-0"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.7"
+        stroke-linecap="round"
+        aria-hidden="true"
+      >
+        <circle cx="10.8" cy="10.8" r="6.3"></circle>
+        <path d="m15.5 15.5 4 4"></path>
+      </svg>
+      <input
+        id="docs-search"
+        type="search"
+        aria-label="Search documentation"
+        placeholder="Search docs..."
+        autocomplete="off"
+        class="h-full min-w-0 flex-1 bg-transparent text-[13px] text-[#e9e6df] outline-none placeholder:text-[#aaa49a] [&::-webkit-search-cancel-button]:hidden"
       />
-    </a>
+      <kbd class="inline-flex h-5 shrink-0 items-center rounded border border-[#39352c] px-1.5 font-sans text-[10px] leading-none text-[#aaa49a]">
+        ⌘K
+      </kbd>
+    </label>
+
+    <div class="ml-auto flex shrink-0 items-center gap-2">
+      <a
+        href="https://github.com/login"
+        target="_blank"
+        rel="noreferrer"
+        class="hidden h-9 items-center rounded-full border border-[#2a2822] bg-[#1b1913] px-4 text-[13px] font-medium text-[#f0eee9] transition-colors hover:border-[#494438] hover:bg-white/[0.03] sm:inline-flex"
+      >
+        Sign in
+      </a>
+      <a
+        href="https://www.npmjs.com/package/motion-provider"
+        target="_blank"
+        rel="noreferrer"
+        class="inline-flex h-9 items-center rounded-full bg-[#edecec] px-4 text-[13px] font-medium text-[#14120b] transition-colors hover:bg-white"
+      >
+        Download
+      </a>
+    </div>
   </nav>
 </header>
+
+<style is:global>
+  :root {
+    --nav-h: 46px;
+  }
+</style>
+
+<script>
+  const searchInput = document.getElementById("docs-search");
+
+  document.addEventListener("keydown", (event) => {
+    if (
+      (event.metaKey || event.ctrlKey) &&
+      event.key.toLowerCase() === "k"
+    ) {
+      event.preventDefault();
+      searchInput?.focus();
+    }
+  });
+</script>
