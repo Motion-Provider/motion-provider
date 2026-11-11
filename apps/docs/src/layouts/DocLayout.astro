@@ -30,53 +30,65 @@ const { title, description, nav, currentId, headings, prev, next } =
 
   <NavAstro />
 
-  <div class="lg:grid lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] lg:items-start">
-    <div id="docs-backdrop" class="fixed inset-0 top-(--nav-h) z-30 bg-background/60 backdrop-blur-sm lg:hidden" hidden></div>
+  <div
+    id="docs-backdrop"
+    aria-hidden="true"
+    class="fixed inset-0 top-(--nav-h) z-30 bg-background/60 backdrop-blur-sm lg:hidden"
+    hidden
+  ></div>
 
+  <div
+    class="grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]"
+  >
     <aside
       id="docs-sidebar"
+      aria-label="Documentation navigation"
       data-open="false"
-      class="invisible fixed top-(--nav-h) bottom-0 left-0 z-40 w-(--sidebar-w) max-w-[85vw] -translate-x-full overflow-y-auto overscroll-contain border-r border-border bg-background px-4 py-6 transition-[transform,visibility] duration-200 motion-reduce:transition-none data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:bottom-auto lg:left-auto lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
+      class="docs-sidebar bg-surface/50 invisible fixed left-0 top-(--nav-h) z-40 h-[calc(100dvh-var(--nav-h))] w-(--sidebar-w) max-w-[85vw] -translate-x-full overflow-y-scroll overscroll-contain  border-r border-border px-4 py-6 transition-[transform,visibility] duration-200 motion-reduce:transition-none data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:top-(--nav-h) lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
     >
       <NavTree groups={nav} currentId={currentId} />
     </aside>
 
-    <div class="mx-auto flex w-full min-w-0 max-w-5xl items-start gap-10 px-4 sm:px-6 lg:px-10">
-      <main id="main" class="mx-auto w-full min-w-0 max-w-3xl flex-1 py-10 pb-16">
-        <article data-pagefind-body class="docs-prose prose max-w-none">
-          <h1>{title}</h1>
-          <slot />
-        </article>
+    <main
+      id="main"
+      tabindex="-1"
+      class="mx-auto w-full min-w-0 max-w-3xl px-5 py-10 pb-16 sm:px-8 lg:px-10"
+    >
+      <article data-pagefind-body class="docs-prose prose max-w-none">
+        <h1>{title}</h1>
+        <slot />
+      </article>
 
-        <nav
-          aria-label="Pagination"
-          class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
-        >
-          {
-            prev ? (
-              <a href={prev.href} rel="prev" class="hover:text-accent">
-                {"<"} {prev.title}
-              </a>
-            ) : (
-              <span />
-            )
-          }
-          {
-            next && (
-              <a href={next.href} rel="next" class="hover:text-accent">
-                {next.title} {">"}
-              </a>
-            )
-          }
-        </nav>
-      </main>
-
-      <aside
-        class="sticky top-(--nav-h) hidden max-h-[calc(100dvh-var(--nav-h))] w-56 shrink-0 overflow-y-auto py-10 xl:block"
+      <nav
+        aria-label="Pagination"
+        class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
       >
-        <Toc headings={headings} />
-      </aside>
-    </div>
+        {
+          prev ? (
+            <a href={prev.href} rel="prev" class="hover:text-accent">
+              {"<"} {prev.title}
+            </a>
+          ) : (
+            <span />
+          )
+        }
+
+        {
+          next && (
+            <a href={next.href} rel="next" class="hover:text-accent">
+              {next.title} {">"}
+            </a>
+          )
+        }
+      </nav>
+    </main>
+
+    <aside
+      aria-label="Page contents"
+      class="hidden min-w-0 self-start border-l border-border xl:sticky xl:top-(--nav-h) xl:block xl:px-5 xl:py-10 mr-auto"
+    >
+      <Toc headings={headings} />
+    </aside>
   </div>
 </BaseLayout>
 
@@ -89,29 +101,83 @@ const { title, description, nav, currentId, headings, prev, next } =
     const desktop = window.matchMedia("(min-width: 64rem)");
 
     const setOpen = (open: boolean): void => {
-      sidebar.dataset.open = String(open);
-      backdrop.hidden = !open;
-      toggle.setAttribute("aria-expanded", String(open));
-      document.documentElement.classList.toggle("overflow-hidden", open);
+      const shouldOpen = open && !desktop.matches;
+
+      sidebar.dataset.open = String(shouldOpen);
+      backdrop.hidden = !shouldOpen;
+      toggle.setAttribute("aria-expanded", String(shouldOpen));
+
+      document.documentElement.classList.toggle(
+        "overflow-hidden",
+        shouldOpen,
+      );
+
+      if (shouldOpen) {
+        const activeLink =
+          sidebar.querySelector<HTMLElement>('a[aria-current="page"]') ??
+          sidebar.querySelector<HTMLElement>("a[href]");
+
+        activeLink?.focus({ preventScroll: true });
+      }
+    };
+
+    const closeMenu = (restoreFocus = false): void => {
+      setOpen(false);
+
+      if (restoreFocus && !desktop.matches) {
+        toggle.focus();
+      }
     };
 
     toggle.addEventListener("click", () => {
       setOpen(toggle.getAttribute("aria-expanded") !== "true");
     });
-    backdrop.addEventListener("click", () => setOpen(false));
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && sidebar.dataset.open === "true") {
-        setOpen(false);
-        toggle.focus();
-      }
-    });
-    desktop.addEventListener("change", (event) => {
-      if (event.matches) setOpen(false);
+
+    backdrop.addEventListener("click", () => {
+      closeMenu();
     });
 
-    const current = sidebar.querySelector<HTMLElement>('[aria-current="page"]');
-    if (current) {
-      sidebar.scrollTop = current.offsetTop - sidebar.clientHeight / 2;
-    }
+    sidebar.addEventListener("click", (event) => {
+      if (
+        !desktop.matches &&
+        event.target instanceof Element &&
+        event.target.closest("a")
+      ) {
+        closeMenu();
+      }
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (desktop.matches || sidebar.dataset.open !== "true") {
+        return;
+      }
+
+      if (event.key === "Escape") {
+        event.preventDefault();
+        closeMenu(true);
+        return;
+      }
+
+      if (event.key === "Tab") {
+        const focusable = sidebar.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        );
+
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last?.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first?.focus();
+        }
+      }
+    });
+
+    desktop.addEventListener("change", () => {
+      closeMenu();
+    });
   }
 </script>

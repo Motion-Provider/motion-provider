@@ -261,6 +261,7 @@ export default function GalleryShowcasePage() {
                   ...heroImageAnimation.config,
                   img: heroImage,
                 }}
+                controller={{}}
                 alt="Mountain lake reflecting the surrounding landscape"
                 loading="eager"
                 fetchPriority="high"

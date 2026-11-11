@@ -5,6 +5,11 @@
 
 :root {
   color-scheme: dark;
+
+  --nav-h: 3rem;
+  --sidebar-w: 17rem;
+  --toc-w: 14rem;
+
   --accent: oklch(74.28% 0.1618 40.24);
   --background: oklch(12% 0.006 40.24);
   --foreground: oklch(99.11% 0.006 40.24);
@@ -28,7 +33,6 @@
   --syntax-constant: oklch(78% 0.14 20);
   --syntax-attr: oklch(80% 0.13 40.24);
   --syntax-regex: oklch(82% 0.12 70);
-
   --syntax-bracket: oklch(82% 0.1 55);
   --syntax-operator: color-mix(in oklch, var(--accent) 65%, var(--foreground));
   --syntax-ternary: oklch(74% 0.17 52);
@@ -61,16 +65,19 @@
   --color-warning: var(--warning);
 }
 
-body {
-  font-family: var(--font-primary);
-  background: var(--background);
-  color: var(--foreground);
+html {
+  min-height: 100%;
+  scroll-padding-top: calc(var(--nav-h) + 1rem);
   scroll-behavior: smooth;
 }
 
-html {
-  scroll-padding-top: calc(var(--nav-h) + 1rem);
-  scroll-behavior: smooth;
+body {
+  min-height: 100dvh;
+  min-width: 320px;
+  overflow-x: clip;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-primary);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -104,7 +111,18 @@ html {
   background: transparent;
 }
 
+.docs-sidebar {
+  scrollbar-width: none;
+}
+
+.docs-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
 .docs-prose {
+  min-width: 0;
+  max-width: 100%;
+
   --tw-prose-body: var(--foreground);
   --tw-prose-headings: var(--foreground);
   --tw-prose-lead: var(--muted);
@@ -121,4 +139,34 @@ html {
   --tw-prose-pre-bg: var(--syntax-bg);
   --tw-prose-th-borders: var(--border);
   --tw-prose-td-borders: var(--border);
+}
+
+.docs-prose :is(h1, h2, h3, h4, h5, h6) {
+  scroll-margin-top: calc(var(--nav-h) + 1rem);
+}
+
+.docs-prose :is(p, li, blockquote) {
+  overflow-wrap: anywhere;
+}
+
+.docs-prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.docs-prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+}
+
+.docs-prose :is(img, video, iframe, svg) {
+  max-width: 100%;
+}
+
+.docs-prose img,
+.docs-prose video {
+  height: auto;
 }
