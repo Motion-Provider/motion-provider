@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import { Font } from "astro:assets"
 
 interface Props {
   title: string;
@@ -19,6 +20,8 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical.href} />
+    <Font cssVariable="--font-primary" preload />
+    <Font cssVariable="--font-secondary" />
   </head>
   <body class="antialiased">
     <slot />

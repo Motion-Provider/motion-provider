@@ -7,10 +7,11 @@ const docs = defineCollection({
     pattern: ["**/*.{md,mdx}", "!**/_*", "!examples/**"],
     base: "../../docs",
   }),
+  type: "content_layer",
   schema: z
     .object({
       title: z.string().min(1),
-      description: z.string().min(1).max(200),
+      description: z.string().max(200).default(""),
       order: z.number().int().nonnegative().default(1000),
       draft: z.boolean().default(false),
     })

@@ -21,7 +21,7 @@ const styles: Record<CalloutType, string> = {
   class={`not-prose my-6 rounded-r-lg border-l-4 p-4 ${styles[type]}`}
 >
   {title && <p class="mb-1 font-semibold">{title}</p>}
-  <div class="text-sm [&>:first-child]:mt-0 [&>:last-child]:mb-0">
+  <div class="text-sm *:first:mt-0 *:last:mb-0">
     <slot />
   </div>
 </aside>

@@ -19,9 +19,10 @@ interface Props {
 export const getStaticPaths = (async () => {
   const docs = await getDocs();
   const index = buildIndex(docs);
-  return docs.map((entry) => ({
+   return docs.map((entry) => ({
     params: { slug: entry.id === "index" ? undefined : entry.id },
     props: { entry, index },
+    cacheKey: entry.id,
   }));
 }) satisfies GetStaticPaths;
 
