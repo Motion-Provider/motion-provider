@@ -13,7 +13,8 @@
     "@heroui/styles": "^3.2.6",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "next": "^16.4.3"
+    "next": "^16.4.3",
+    "motion-provider": "*"
   },
   "devDependencies": {
     "@motion/typescript-config": "*",
