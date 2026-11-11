@@ -1,8 +1,8 @@
 ---
-title: "Quick Start: Your First Animation"
+title: "Quick Start"
 description: ""
-order: 20
+order: 10
 draft: true
 ---
 
-## Quick Start: Your First Animation
+## Quick Start

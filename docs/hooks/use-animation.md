@@ -1,8 +1,8 @@
 ---
-title: "`useAnimation`"
+title: "useAnimation"
 description: ""
-order: 415
+order: 430
 draft: true
 ---
 
-## `useAnimation`
+## useAnimation

@@ -1,9 +1,19 @@
 ---
+import { Image } from "astro:assets";
+import Logo from "@assets/brand-lockup.png";
+
 const pathname = Astro.url.pathname;
 const isApi = pathname.startsWith("/api/");
 const isLearn = pathname.startsWith("/getting-started/");
 
-const navItems = [
+type NavItem = {
+  label: string;
+  href: string;
+  active: boolean;
+  external?: boolean;
+};
+
+const navItems: NavItem[] = [
   { label: "Docs", href: "/", active: !isApi && !isLearn },
   { label: "API", href: "/api/overview/", active: isApi },
   {
@@ -11,16 +21,20 @@ const navItems = [
     href: "/getting-started/quick-start/",
     active: isLearn,
   },
-  {
-    label: "Help",
-    href: "https://github.com/Motion-Provider/motion-provider/issues",
-    external: true,
-  },
-];
+] as const;
 ---
 
-<header class="sticky top-0 z-50 h-[46px] w-full border-b border-[#2a2822] bg-[#14120b]/95 backdrop-blur">
-  <nav aria-label="Primary" class="relative flex h-full items-start gap-2 pl-[11px] pr-[7px] pt-[3px]">
+<header class="sticky top-0 z-50 h-11.5 w-full border-b border-border backdrop-blur pt-0.5">
+  <nav aria-label="Primary" class="relative flex h-full items-start gap-2 pl-2.75 pr-1.75 pt-0.75">
+    <a href="/">
+      <Image
+        src={Logo}
+        alt="Motion Provider Logo"
+        class="shrink-0 h-9 w-27 my-auto"
+        height={144}
+        width={432}
+      />
+    </a>
     <button
       id="docs-nav-toggle"
       type="button"
@@ -42,14 +56,14 @@ const navItems = [
       </svg>
     </button>
 
-    <div class="hidden h-full shrink-0 items-center gap-[3px] lg:flex">
+    <div class="hidden h-full shrink-0 items-center gap-0.75 lg:flex">
       {
-        navItems.map((item) => (
+        navItems.map((item: NavItem) => (
           <a
             href={item.href}
             aria-current={item.active ? "page" : undefined}
-            target={item.external ? "_blank" : undefined}
-            rel={item.external ? "noreferrer" : undefined}
+            target={item?.external ? "_blank" : undefined}
+            rel={item?.external ? "noreferrer" : undefined}
             class:list={[
               "relative inline-flex h-full items-center px-[13px] text-[13px] leading-none transition-colors duration-150 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-[#eb5600] after:transition-transform after:duration-150",
               item.active
@@ -96,15 +110,7 @@ const navItems = [
         rel="noreferrer"
         class="hidden h-9 items-center rounded-full border border-[#2a2822] bg-[#1b1913] px-4 text-[13px] font-medium text-[#f0eee9] transition-colors hover:border-[#494438] hover:bg-white/[0.03] sm:inline-flex"
       >
-        Sign in
-      </a>
-      <a
-        href="https://www.npmjs.com/package/motion-provider"
-        target="_blank"
-        rel="noreferrer"
-        class="inline-flex h-9 items-center rounded-full bg-[#edecec] px-4 text-[13px] font-medium text-[#14120b] transition-colors hover:bg-white"
-      >
-        Download
+        Github
       </a>
     </div>
   </nav>
