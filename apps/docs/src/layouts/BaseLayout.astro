@@ -1,6 +1,6 @@
 ---
 import "../styles/global.css";
-import { Font } from "astro:assets"
+import { Font } from "astro:assets";
 
 interface Props {
   title: string;
@@ -23,9 +23,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
     <Font cssVariable="--font-primary" preload />
     <Font cssVariable="--font-secondary" />
   </head>
-  <body class="antialiased">
-    <div class="flex h-screen flex-col bg-background" data-print-layout-root="true">
-      <slot />
-    </div>
+  <body class="min-h-dvh antialiased">
+    <slot />
   </body>
 </html>

@@ -30,58 +30,88 @@ const { title, description, nav, currentId, headings, prev, next } =
 
   <NavAstro />
 
-  <div
-    class="mx-auto grid w-full max-w-360 gap-x-10 px-4 sm:px-6 lg:grid-cols-[16rem_minmax(0,1fr)] lg:px-8 xl:grid-cols-[16rem_minmax(0,1fr)_14rem]"
-  >
+  <div class="lg:grid lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] lg:items-start">
+    <div id="docs-backdrop" class="fixed inset-0 top-(--nav-h) z-30 bg-background/60 backdrop-blur-sm lg:hidden" hidden></div>
+
     <aside
-      class="py-4 lg:sticky lg:top-(--nav-h) lg:h-[calc(100dvh-var(--nav-h))] lg:overflow-y-auto lg:py-8"
+      id="docs-sidebar"
+      data-open="false"
+      class="invisible fixed top-(--nav-h) bottom-0 left-0 z-40 w-(--sidebar-w) max-w-[85vw] -translate-x-full overflow-y-auto overscroll-contain border-r border-border bg-background px-4 py-6 transition-[transform,visibility] duration-200 motion-reduce:transition-none data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:bottom-auto lg:left-auto lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
     >
-      <details class="lg:hidden">
-        <summary class="cursor-pointer rounded border border-border px-3 py-2 text-sm">
-          Menu
-        </summary>
-        <div class="pt-4">
-          <NavTree groups={nav} currentId={currentId} />
-        </div>
-      </details>
-      <div class="hidden lg:block">
-        <NavTree groups={nav} currentId={currentId} />
-      </div>
+      <NavTree groups={nav} currentId={currentId} />
     </aside>
 
-    <main id="main" class="mx-auto w-full min-w-0 max-w-3xl py-8">
-      <article data-pagefind-body class="docs-prose prose max-w-none">
-        <h1>{title}</h1>
-        <slot />
-      </article>
+    <div class="mx-auto flex w-full min-w-0 max-w-5xl items-start gap-10 px-4 sm:px-6 lg:px-10">
+      <main id="main" class="mx-auto w-full min-w-0 max-w-3xl flex-1 py-10 pb-16">
+        <article data-pagefind-body class="docs-prose prose max-w-none">
+          <h1>{title}</h1>
+          <slot />
+        </article>
 
-      <nav
-        aria-label="Pagination"
-        class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
+        <nav
+          aria-label="Pagination"
+          class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
+        >
+          {
+            prev ? (
+              <a href={prev.href} rel="prev" class="hover:text-accent">
+                {"<"} {prev.title}
+              </a>
+            ) : (
+              <span />
+            )
+          }
+          {
+            next && (
+              <a href={next.href} rel="next" class="hover:text-accent">
+                {next.title} {">"}
+              </a>
+            )
+          }
+        </nav>
+      </main>
+
+      <aside
+        class="sticky top-(--nav-h) hidden max-h-[calc(100dvh-var(--nav-h))] w-56 shrink-0 overflow-y-auto py-10 xl:block"
       >
-        {
-          prev ? (
-            <a href={prev.href} rel="prev" class="hover:text-accent">
-              {"<"} {prev.title}
-            </a>
-          ) : (
-            <span />
-          )
-        }
-        {
-          next && (
-            <a href={next.href} rel="next" class="hover:text-accent">
-              {next.title} {">"}
-            </a>
-          )
-        }
-      </nav>
-    </main>
-
-    <aside
-      class="hidden py-8 xl:sticky xl:top-(--nav-h) xl:block xl:h-[calc(100dvh-var(--nav-h))] xl:overflow-y-auto"
-    >
-      <Toc headings={headings} />
-    </aside>
+        <Toc headings={headings} />
+      </aside>
+    </div>
   </div>
 </BaseLayout>
+
+<script>
+  const sidebar = document.getElementById("docs-sidebar");
+  const backdrop = document.getElementById("docs-backdrop");
+  const toggle = document.getElementById("docs-nav-toggle");
+
+  if (sidebar && backdrop && toggle) {
+    const desktop = window.matchMedia("(min-width: 64rem)");
+
+    const setOpen = (open: boolean): void => {
+      sidebar.dataset.open = String(open);
+      backdrop.hidden = !open;
+      toggle.setAttribute("aria-expanded", String(open));
+      document.documentElement.classList.toggle("overflow-hidden", open);
+    };
+
+    toggle.addEventListener("click", () => {
+      setOpen(toggle.getAttribute("aria-expanded") !== "true");
+    });
+    backdrop.addEventListener("click", () => setOpen(false));
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && sidebar.dataset.open === "true") {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+    desktop.addEventListener("change", (event) => {
+      if (event.matches) setOpen(false);
+    });
+
+    const current = sidebar.querySelector<HTMLElement>('[aria-current="page"]');
+    if (current) {
+      sidebar.scrollTop = current.offsetTop - sidebar.clientHeight / 2;
+    }
+  }
+</script>

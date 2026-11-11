@@ -15,6 +15,7 @@
   --danger: oklch(59.4% 0.1991 359);
   --success: oklch(73.29% 0.1958 125.18);
   --warning: oklch(82.03% 0.1405 50.71);
+  --scrollbar: oklch(70.50% 0.006 40.24);
 
   --syntax-bg: var(--surface);
   --syntax-plain: var(--foreground);
@@ -69,6 +70,38 @@ body {
 
 html {
   scroll-padding-top: calc(var(--nav-h) + 1rem);
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar);
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  background-clip: padding-box;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .docs-prose {
