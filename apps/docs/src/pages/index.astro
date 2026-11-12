@@ -1,16 +1,51 @@
 ---
+import { LucideGraduationCap } from "@lucide/astro";
+import type Camera from "@lucide/astro/icons/camera";
+import { WordmarkImage } from "@motion/ui";
+import ExploreCard from "@/components/ExploreCard.astro";
 import DocLayout from "@/layouts/DocLayout.astro";
 import { buildIndex, getDocs } from "@/lib/docs";
 
 const index = buildIndex(await getDocs());
 
-const start = index.flat[0];
 const sections = index.nav.flatMap((group) => {
   const first = group.items[0];
   return group.label && first
     ? [{ label: group.label, href: first.href, count: group.items.length }]
     : [];
 });
+
+const exploreItems = [
+  {
+    title: "learn with practice",
+    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
+    icon: LucideGraduationCap,
+    href: "/learn/overview/",
+  },
+  {
+    title: "learn with practice",
+    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
+    icon: LucideGraduationCap,
+    href: "/learn/overview/",
+  },
+  {
+    title: "learn with practice",
+    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
+    icon: LucideGraduationCap,
+    href: "/learn/overview/",
+  },
+  {
+    title: "learn with practice",
+    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
+    icon: LucideGraduationCap,
+    href: "/learn/overview/",
+  },
+] as const satisfies {
+  icon: typeof Camera;
+  title: string;
+  desc: string;
+  href: string;
+}[];
 ---
 
 <DocLayout
@@ -21,70 +56,36 @@ const sections = index.nav.flatMap((group) => {
   currentId=""
 >
   <div class="mx-auto w-full max-w-5xl px-5 py-16 sm:px-8 lg:px-10 lg:py-24 ">
-    <section aria-labelledby="home-title" class="text-center flex items-center-safe justify-center-safe flex-col">
+    <section aria-labelledby="home-title" class="text-center flex items-center-safe justify-center-safe flex-col relative">
       <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-accent">
         Documentation
       </p>
-<!--       
-      <h1
+      <WordmarkImage client:load 
+        controller={{
+          configView: {
+            once: false,
+            amount: 0.5
+          },
+        }}
+
+        img="./public/app-wordmark.webp" 
+        className="w-full md:h-72 h-42 -mt-20"
+      />
+       
+      <!-- <h1
         id="home-title"
         class="text-4xl font-bold tracking-tighter sm:text-4xl max-w-2xl text-pretty"
       >
         Welcome to Motion Provider Docs
-      </h1>
-      <p class="mt-5 max-w-xl text-base text-muted text-pretty">
+      </h1> -->
+      <p class="max-w-xl text-base text-muted text-pretty -mt-16">
         Motion Provider is an open-source Preset-driven animation engine for the web and React, powered by
         the Web Animations API.
-      </p> -->
-      {
-        start && (
-          <div class="mt-8 flex flex-wrap gap-3">
-            <a
-              href={start.href}
-              class="rounded-md bg-accent px-4 py-2 text-sm font-semibold text-background transition-opacity hover:opacity-90"
-            >
-              Get started
-            </a>
-            <a
-              href="https://github.com/Motion-Provider/motion-provider"
-              rel="noreferrer"
-              target="_blank"
-              class="rounded-md border border-border px-4 py-2 text-sm font-medium transition-colors hover:border-accent hover:text-accent"
-            >
-              GitHub
-            </a>
-          </div>
-        )
-      }
+      </p> 
     </section>
-
-    {
-      sections.length > 0 && (
-        <section aria-labelledby="home-sections" class="mt-16">
-          <h2
-            id="home-sections"
-            class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted"
-          >
-            Explore
-          </h2>
-          <ul class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {sections.map((section) => (
-              <li>
-                <a
-                  href={section.href}
-                  class="block h-full rounded-lg border border-border bg-surface p-5 transition-colors hover:border-accent"
-                  data-astro-prefetch
-                >
-                  <span class="block font-medium">{section.label}</span>
-                  <span class="mt-1 block text-sm text-muted">
-                    {section.count} {section.count === 1 ? "page" : "pages"}
-                  </span>
-                </a>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )
-    }
+    <section aria-label="explore" id="explore" class="flex items-start justify-center gap-3 mt-12">
+      {exploreItems.map((item) => <ExploreCard {...item} />)}
+    </section>
+   
   </div>
 </DocLayout>

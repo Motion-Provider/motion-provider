@@ -13,13 +13,14 @@
     "@astrojs/mdx": "^8.1.3",
     "@astrojs/react": "^7.1.5",
     "@astrojs/sitemap": "^3.7.4",
+    "@lucide/astro": "^1.72.0",
+    "@motion/ui": "*",
     "astro": "^7.4.8",
+    "clsx": "^2.1.1",
+    "motion-provider": "*",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "clsx": "^2.1.1",
-    "tailwind-merge": "^3.7.0",
-    "motion-provider": "*",
-    "@motion/ui": "*"
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

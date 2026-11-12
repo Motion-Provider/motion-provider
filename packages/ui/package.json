@@ -8,6 +8,10 @@
     "build": "tsc -p tsconfig.json"
   },
   "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
     "./wordmark": {
       "types": "./dist/wordmark.d.ts",
       "import": "./dist/wordmark.js"
