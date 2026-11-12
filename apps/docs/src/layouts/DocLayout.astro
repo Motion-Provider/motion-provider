@@ -110,41 +110,38 @@ const { title, description, nav, currentId, headings, prev, next } =
   if (sidebar && toggle) {
     const desktop = window.matchMedia("(min-width: 64rem)");
 
+    const getSidebarPositions = (): Record<string, unknown> => {
+      try {
+        return JSON.parse(
+          sessionStorage.getItem(sidebarScrollKey) ?? "{}",
+        ) as Record<string, unknown>;
+      } catch {
+        return {};
+      }
+    };
+
     const saveSidebarPosition = (): void => {
       try {
-        sessionStorage.setItem(sidebarScrollKey, String(sidebar.scrollTop));
+        const positions = getSidebarPositions();
+
+        positions[window.location.pathname] = sidebar.scrollTop;
+        sessionStorage.setItem(sidebarScrollKey, JSON.stringify(positions));
       } catch {
         // Storage can be unavailable in restricted browsing contexts.
       }
     };
 
     const restoreSidebarPosition = (): void => {
-      let savedPosition: number | undefined;
-
-      try {
-        const storedPosition = sessionStorage.getItem(sidebarScrollKey);
-
-        if (storedPosition !== null) {
-          const position = Number(storedPosition);
-
-          if (Number.isFinite(position) && position >= 0) {
-            savedPosition = position;
-          }
-        }
-      } catch {
-        // Fall back to centering the active link when storage is unavailable.
-      }
-
-      const navigationType = performance.getEntriesByType("navigation")[0]
-        ?.type;
+      const savedPosition = getSidebarPositions()[window.location.pathname];
 
       requestAnimationFrame(() => {
-        if (savedPosition !== undefined) {
+        if (
+          typeof savedPosition === "number" &&
+          Number.isFinite(savedPosition) &&
+          savedPosition >= 0
+        ) {
           sidebar.scrollTo({ top: savedPosition, behavior: "instant" });
-
-          if (navigationType === "reload") {
-            return;
-          }
+          return;
         }
 
         const activeLink = sidebar.querySelector<HTMLAnchorElement>(
@@ -157,14 +154,6 @@ const { title, description, nav, currentId, headings, prev, next } =
 
         const sidebarRect = sidebar.getBoundingClientRect();
         const activeRect = activeLink.getBoundingClientRect();
-        const isActiveVisible =
-          activeRect.top >= sidebarRect.top &&
-          activeRect.bottom <= sidebarRect.bottom;
-
-        if (savedPosition !== undefined && isActiveVisible) {
-          return;
-        }
-
         const centeredTop =
           sidebar.scrollTop +
           activeRect.top -
