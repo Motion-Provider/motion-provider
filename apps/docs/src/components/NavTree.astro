@@ -7,12 +7,13 @@ interface Props {
 }
 
 const { groups, currentId } = Astro.props;
+const filteredGroups = groups.filter((g) => g.label);
 ---
 
 <nav aria-label="Documentation" class="relative">
   <ul class="space-y-6">
     {
-      groups.map((group) => (
+      filteredGroups.map((group) => (
         <li>
           {group.label && (
             <p class="mb-2 px-2 text-xs font-semibold uppercase tracking-wide text-muted">

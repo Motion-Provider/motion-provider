@@ -19,7 +19,6 @@ const items = Astro.props.headings.filter(
         {items.map((h) => (
           <li 
             id={`hash-${h.slug}`}
-            data-toc
             data-active="false"
             class={cn("pl-4 pr-4 border-l max-w-60 -mt-1.5",
               "hover:border-l-foreground/50 data-[active=true]:border-l-accent data-[active=false]:border-l-border",
