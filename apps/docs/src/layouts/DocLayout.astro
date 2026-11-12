@@ -32,29 +32,31 @@ const { title, description, nav, currentId, headings, prev, next } =
   <div
     class="grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]"
   >
-  <div>
+    <div>
+      <div
+        id="docs-backdrop"
+        aria-hidden="true"
+        hidden
+        class="fixed inset-x-0 bottom-0 top-(--nav-h) z-30 bg-black/50 backdrop-blur-[1px] lg:hidden"
+      ></div>
 
-  <aside
-    id="docs-sidebar"
-    aria-label="Documentation navigation"
-    data-open="false"
-    class={
-      cn(
-        "-translate-x-full motion-reduce:transition-none",
-        "docs-sidebar bg-surface/20 invisible fixed left-0 top-(--nav-h) z-40", 
-        "h-[calc(100dvh-var(--nav-h))] w-(--sidebar-w) max-w-[85vw] min-w-min", 
-        "overflow-y-scroll overscroll-contain border-r border-border", 
-        "px-4 py-6 transition-[transform,visibility] duration-200",
-        "data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:top-(--nav-h)",
-        "lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none tracking-tight"
-        )
-      }
-    >
-    <!-- <div class="sticky top-0 w-full bg-linear-to-b from-surface to-transparent z-10 h-8"></div>
-    <div class="sticky bottom-0 w-full bg-linear-to-t from-surface to-transparent z-10 h-8"></div> -->
-    <NavTree groups={nav} currentId={currentId} />
-  </aside>
-</div>
+      <aside
+        id="docs-sidebar"
+        aria-label="Documentation navigation"
+        data-open="false"
+        class={cn(
+          "-translate-x-full motion-reduce:transition-none",
+          "docs-sidebar bg-surface/20 invisible fixed left-0 top-(--nav-h) z-40",
+          "h-[calc(100dvh-var(--nav-h))] w-(--sidebar-w) max-w-[85vw] min-w-min",
+          "overflow-y-scroll overscroll-contain border-r border-border",
+          "px-4 py-6 transition-[transform,visibility] duration-200",
+          "data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:top-(--nav-h)",
+          "lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none tracking-tight",
+        )}
+      >
+        <NavTree groups={nav} currentId={currentId} />
+      </aside>
+    </div>
 
     <main
       id="main"
@@ -92,7 +94,7 @@ const { title, description, nav, currentId, headings, prev, next } =
 
     <aside
       aria-label="Page contents"
- class="hidden min-w-0 self-start border-l border-border xl:sticky xl:top-(--nav-h) xl:block xl:px-5 xl:py-10 mr-auto"
+      class="mr-auto hidden min-w-0 self-start border-l border-border xl:sticky xl:top-(--nav-h) xl:block xl:px-5 xl:py-10"
     >
       <Toc headings={headings} />
     </aside>
@@ -103,15 +105,100 @@ const { title, description, nav, currentId, headings, prev, next } =
   const sidebar = document.getElementById("docs-sidebar");
   const backdrop = document.getElementById("docs-backdrop");
   const toggle = document.getElementById("docs-nav-toggle");
+  const sidebarScrollKey = "motion-provider:docs-sidebar-scroll";
 
-  if (sidebar && backdrop && toggle) {
+  if (sidebar && toggle) {
     const desktop = window.matchMedia("(min-width: 64rem)");
+
+    const saveSidebarPosition = (): void => {
+      try {
+        const positions = JSON.parse(
+          sessionStorage.getItem(sidebarScrollKey) ?? "{}",
+        ) as Record<string, number>;
+
+        positions[window.location.pathname] = sidebar.scrollTop;
+        sessionStorage.setItem(sidebarScrollKey, JSON.stringify(positions));
+      } catch {
+        // Storage can be unavailable in restricted browsing contexts.
+      }
+    };
+
+    const restoreSidebarPosition = (): void => {
+      let savedPosition: number | undefined;
+
+      try {
+        const positions = JSON.parse(
+          sessionStorage.getItem(sidebarScrollKey) ?? "{}",
+        ) as Record<string, unknown>;
+        const position = positions[window.location.pathname];
+
+        if (typeof position === "number" && Number.isFinite(position)) {
+          savedPosition = position;
+        }
+      } catch {
+        // Fall back to centering the active link when storage is unavailable.
+      }
+
+      requestAnimationFrame(() => {
+        if (savedPosition !== undefined) {
+          sidebar.scrollTo({ top: savedPosition, behavior: "instant" });
+          return;
+        }
+
+        const activeLink = sidebar.querySelector<HTMLAnchorElement>(
+          'a[aria-current="page"]',
+        );
+
+        if (!activeLink) {
+          return;
+        }
+
+        const sidebarRect = sidebar.getBoundingClientRect();
+        const activeRect = activeLink.getBoundingClientRect();
+        const centeredTop =
+          sidebar.scrollTop +
+          activeRect.top -
+          sidebarRect.top -
+          (sidebar.clientHeight - activeRect.height) / 2;
+        const maxScrollTop = sidebar.scrollHeight - sidebar.clientHeight;
+
+        sidebar.scrollTo({
+          top: Math.max(0, Math.min(centeredTop, maxScrollTop)),
+          behavior: "instant",
+        });
+      });
+    };
+
+    restoreSidebarPosition();
+
+    let saveFrame = 0;
+
+    sidebar.addEventListener(
+      "scroll",
+      () => {
+        if (saveFrame) {
+          return;
+        }
+
+        saveFrame = requestAnimationFrame(() => {
+          saveFrame = 0;
+          saveSidebarPosition();
+        });
+      },
+      { passive: true },
+    );
+
+    window.addEventListener("pagehide", saveSidebarPosition);
 
     const setOpen = (open: boolean): void => {
       const shouldOpen = open && !desktop.matches;
 
       sidebar.dataset.open = String(shouldOpen);
-      backdrop.hidden = !shouldOpen;
+
+      if (backdrop) {
+        backdrop.hidden = !shouldOpen;
+      }
+
       toggle.setAttribute("aria-expanded", String(shouldOpen));
 
       document.documentElement.classList.toggle(
@@ -140,7 +227,7 @@ const { title, description, nav, currentId, headings, prev, next } =
       setOpen(toggle.getAttribute("aria-expanded") !== "true");
     });
 
-    backdrop.addEventListener("click", () => {
+    backdrop?.addEventListener("click", () => {
       closeMenu();
     });
 
