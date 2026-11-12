@@ -1,5 +1,5 @@
 ---
-title: "Presets, Modules & the initial/animate Pair"
+title: "Presets & Modules"
 description: ""
 order: 110
 draft: true

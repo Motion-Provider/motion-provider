@@ -1,8 +1,5 @@
 {
-  "extends": [
-    "astro/tsconfigs/strict",
-    "@motion/typescript-config/astro.json"
-  ],
+  "extends": ["astro/tsconfigs/strict", "@motion/typescript-config/astro.json"],
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
@@ -10,10 +7,6 @@
       "@assets/*": ["../../public/*"]
     }
   },
-  "include": [
-    ".astro/types.d.ts",
-    "src/**/*",
-    "../../docs/examples/**/*"
-  ],
+  "include": [".astro/types.d.ts", "src/**/*", "../../docs/examples/**/*"],
   "exclude": ["node_modules", "dist"]
 }

@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import { cn } from "@/lib/cn";
 import NavAstro from "../components/Nav.astro";
 import NavTree from "../components/NavTree.astro";
 import Toc from "../components/Toc.astro";
@@ -27,27 +28,33 @@ const { title, description, nav, currentId, headings, prev, next } =
   >
     Skip to content
   </a>
-
   <NavAstro />
-
-  <div
-    id="docs-backdrop"
-    aria-hidden="true"
-    class="fixed inset-0 top-(--nav-h) z-30 bg-background/60 backdrop-blur-sm lg:hidden"
-    hidden
-  ></div>
-
   <div
     class="grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]"
   >
-    <aside
-      id="docs-sidebar"
-      aria-label="Documentation navigation"
-      data-open="false"
-      class="docs-sidebar bg-surface/20 invisible fixed left-0 top-(--nav-h) z-40 h-[calc(100dvh-var(--nav-h))] w-(--sidebar-w) max-w-[85vw] -translate-x-full overflow-y-scroll overscroll-contain  border-r border-border px-4 py-6 transition-[transform,visibility] duration-200 motion-reduce:transition-none data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:top-(--nav-h) lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none"
+  <div>
+
+  <aside
+    id="docs-sidebar"
+    aria-label="Documentation navigation"
+    data-open="false"
+    class={
+      cn(
+        "-translate-x-full motion-reduce:transition-none",
+        "docs-sidebar bg-surface/20 invisible fixed left-0 top-(--nav-h) z-40", 
+          "h-[calc(100dvh-var(--nav-h))] w-(--sidebar-w) max-w-[85vw] min-w-min", 
+          "overflow-y-scroll overscroll-contain border-r border-border", 
+          "px-4 py-6 transition-[transform,visibility] duration-200",
+          "data-[open=true]:visible data-[open=true]:translate-x-0 lg:visible lg:sticky lg:top-(--nav-h)",
+          "lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none tracking-tight"
+        )
+      }
     >
-      <NavTree groups={nav} currentId={currentId} />
-    </aside>
+    <!-- <div class="sticky top-0 w-full bg-linear-to-b from-surface to-transparent z-10 h-8"></div>
+    <div class="sticky bottom-0 w-full bg-linear-to-t from-surface to-transparent z-10 h-8"></div> -->
+    <NavTree groups={nav} currentId={currentId} />
+  </aside>
+</div>
 
     <main
       id="main"
@@ -85,7 +92,7 @@ const { title, description, nav, currentId, headings, prev, next } =
 
     <aside
       aria-label="Page contents"
-      class="hidden min-w-0 self-start border-l border-border xl:sticky xl:top-(--nav-h) xl:block xl:px-5 xl:py-10 mr-auto"
+ class="hidden min-w-0 self-start border-l border-border xl:sticky xl:top-(--nav-h) xl:block xl:px-5 xl:py-10 mr-auto"
     >
       <Toc headings={headings} />
     </aside>
