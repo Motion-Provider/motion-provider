@@ -14,11 +14,12 @@
     "@astrojs/react": "^7.1.5",
     "@astrojs/sitemap": "^3.7.4",
     "astro": "^7.4.8",
-    "motion-provider": "*",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "clsx": "^2.1.1",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.0",
+    "motion-provider": "*",
+    "@motion/ui": "*"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",

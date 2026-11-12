@@ -19,12 +19,13 @@
     "@shikijs/langs": "^4.5.0",
     "clsx": "^2.1.1",
     "lucide-react": "^1.48.0",
-    "motion-provider": "*",
     "next": "^16.4.3",
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "react-error-boundary": "^6.1.6",
-    "tailwind-merge": "^3.7.0"
+    "tailwind-merge": "^3.7.0",
+    "motion-provider": "*",
+    "@motion/ui": "*"
   },
   "devDependencies": {
     "@motion/typescript-config": "*",

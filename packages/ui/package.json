@@ -7,13 +7,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.json"
   },
-  "main": "./dist/index.js",
-  "module": "./dist/index.js",
-  "types": "./dist/index.d.ts",
   "exports": {
     "./wordmark": {
-      "types": "./dist/wordmark/index.d.ts",
-      "import": "./dist/wordmark/index.js"
+      "types": "./dist/wordmark.d.ts",
+      "import": "./dist/wordmark.js"
     }
   },
   "files": [
@@ -28,7 +25,6 @@
     "react": "^19.0.0"
   },
   "devDependencies": {
-    "esbuild": "^0.28.2",
     "typescript": "^7.0.2"
   }
 }

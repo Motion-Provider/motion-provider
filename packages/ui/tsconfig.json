@@ -2,7 +2,14 @@
   "extends": "@motion/typescript-config/react-library.json",
   "compilerOptions": {
     "outDir": "dist",
-    "rootDir": "src"
+    "rootDir": "src",
+    "jsx": "react-jsx",
+    "declaration": true,
+    "noEmit": false,
+    "emitDeclarationOnly": false,
+    "allowImportingTsExtensions": false,
+    "incremental": false,
+    "composite": false
   },
   "include": ["src"]
 }
