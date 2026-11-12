@@ -12,7 +12,7 @@ export default defineConfig({
   trailingSlash: "always",
   build: { format: "directory" },
   integrations: [mdx(), react(), sitemap()],
-  prefetch: { defaultStrategy: "hover" },
+  prefetch: { prefetchAll: true },
   markdown: {
     shikiConfig: { theme: syntaxTheme },
   },

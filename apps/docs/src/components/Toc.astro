@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from "astro";
+import { cn } from "@/lib/cn";
 
 interface Props {
   headings: readonly MarkdownHeading[];
@@ -13,11 +14,19 @@ const items = Astro.props.headings.filter(
 {
   items.length > 0 && (
     <nav aria-label="On this page" class="text-sm">
-      <p class="mb-2 font-semibold">On this page</p>
-      <ul class="space-y-1">
+      <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">On this page</p>
+      <ul class="space-y-1.5">
         {items.map((h) => (
-          <li class={h.depth === 3 ? "pl-3" : ""}>
-            <a href={`#${h.slug}`} class="text-muted hover:text-foreground">
+          <li 
+            id={`hash-${h.slug}`}
+            data-toc
+            data-active="false"
+            class={cn("pl-4 pr-4 border-l max-w-60 -mt-1.5",
+              "hover:border-l-foreground/50 data-[active=true]:border-l-accent data-[active=false]:border-l-border",
+              h.depth === 3 ? "pl-7 -mr-3" : "border-l border-border"
+            )}
+          >
+            <a href={`#${h.slug}`} class="text-foreground/80 tracking-tighter hover:text-accent transition-colors duration-300 truncate">
               {h.text}
             </a>
           </li>
@@ -26,3 +35,25 @@ const items = Astro.props.headings.filter(
     </nav>
   )
 }
+
+<script>
+  const prefix = "hash-";
+
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash;
+    const NODE_ID = `${prefix}${hash.slice(1)}`;
+
+    const el = document.getElementById(NODE_ID);
+    
+    if(el) {
+        const listItems = document.querySelectorAll<HTMLElement>("li[data-active=true]"); 
+        
+        listItems.forEach((item) => {
+          item.dataset.active = "false";
+        })
+
+        el.dataset.active = "true";
+      }
+  })
+
+</script>

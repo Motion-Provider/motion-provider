@@ -25,7 +25,8 @@ const { groups, currentId } = Astro.props;
                 <a
                   href={item.href}
                   aria-current={item.id === currentId ? "page" : undefined}
-                  class="block truncate rounded px-2 py-1 text-sm hover:bg-surface-secondary aria-[current=page]:bg-surface-secondary aria-[current=page]:font-medium aria-[current=page]:text-accent"
+                  class="block truncate rounded-md px-2 py-1 text-sm hover:text-accent transition-colors duration-150 aria-[current=page]:bg-surface aria-[current=page]:font-medium aria-[current=page]:text-accent"
+                  data-astro-prefetch
                 >
                   {item.title}
                 </a>

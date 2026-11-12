@@ -32,7 +32,7 @@ const { title, description, nav, currentId, headings, prev, next } =
   <div
     class="grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]"
   >
-    <div>
+    <div class="sticky top-(--nav-h) left-0">
       <div
         id="docs-backdrop"
         aria-hidden="true"
@@ -60,8 +60,8 @@ const { title, description, nav, currentId, headings, prev, next } =
 
     <main
       id="main"
-      tabindex="-1"
       class="mx-auto w-full min-w-0 max-w-3xl px-5 py-10 pb-16 sm:px-8 lg:px-10"
+      transition:animate="fade"
     >
       <article data-pagefind-body class="docs-prose prose max-w-none">
         <h1>{title}</h1>
@@ -94,7 +94,13 @@ const { title, description, nav, currentId, headings, prev, next } =
 
     <aside
       aria-label="Page contents"
-      class="mr-auto hidden min-w-0 self-start border-l border-border xl:sticky xl:top-(--nav-h) xl:block xl:px-5 xl:py-10"
+      class={
+        cn(
+          "mr-auto hidden min-w-min self-start xl:sticky xl:top-24",
+          "xl:block xl:mt-[calc(var(--nav-h)+2rem)]] xl:max-h-[calc(50dvh-var(--nav-h))]",
+          "py-2 overflow-hidden ",
+        )
+      }
     >
       <Toc headings={headings} />
     </aside>
@@ -127,7 +133,6 @@ const { title, description, nav, currentId, headings, prev, next } =
         positions[window.location.pathname] = sidebar.scrollTop;
         sessionStorage.setItem(sidebarScrollKey, JSON.stringify(positions));
       } catch {
-        // Storage can be unavailable in restricted browsing contexts.
       }
     };
 
