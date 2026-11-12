@@ -7,21 +7,35 @@ import Toc from "../components/Toc.astro";
 import type { NavGroup, NavItem } from "../lib/docs";
 import BaseLayout from "./BaseLayout.astro";
 
-interface Props {
+interface BaseProps {
   title: string;
   description: string;
   nav: readonly NavGroup[];
   currentId: string;
+}
+
+interface DocProps extends BaseProps {
+  landing?: false | undefined;
   headings: readonly MarkdownHeading[];
   prev?: NavItem | undefined;
   next?: NavItem | undefined;
 }
 
-const { title, description, nav, currentId, headings, prev, next } =
-  Astro.props;
+interface LandingProps extends BaseProps {
+  landing: true;
+}
+
+type Props = DocProps | LandingProps;
+
+const props = Astro.props;
+const { title, description, nav, currentId } = props;
+const doc = props.landing ? undefined : props;
 ---
 
-<BaseLayout title={`${title} · Motion Provider Docs`} description={description}>
+<BaseLayout
+  title={doc ? `${title} · Motion Provider Docs` : title}
+  description={description}
+>
   <a
     href="#main"
     class="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-60 focus:rounded focus:bg-surface focus:px-3 focus:py-2"
@@ -30,7 +44,10 @@ const { title, description, nav, currentId, headings, prev, next } =
   </a>
   <NavAstro />
   <div
-    class="grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)] xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]"
+    class={cn(
+      "grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)]",
+      doc && "xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]",
+    )}
   >
     <div class="sticky top-(--nav-h) left-0">
       <div
@@ -60,222 +77,58 @@ const { title, description, nav, currentId, headings, prev, next } =
 
     <main
       id="main"
-      class="mx-auto w-full min-w-0 max-w-3xl px-5 py-10 pb-16 sm:px-8 lg:px-10"
+      class={cn(
+        "mx-auto w-full min-w-0",
+        doc && "max-w-3xl px-5 py-10 pb-16 sm:px-8 lg:px-10",
+      )}
       transition:animate="fade"
     >
-      <article data-pagefind-body class="docs-prose prose max-w-none">
-        <h1>{title}</h1>
-        <slot />
-      </article>
+      {
+        doc ? (
+          <>
+            <article data-pagefind-body class="docs-prose prose max-w-none">
+              <h1>{title}</h1>
+              <slot />
+            </article>
 
-      <nav
-        aria-label="Pagination"
-        class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
-      >
-        {
-          prev ? (
-            <a href={prev.href} rel="prev" class="hover:text-accent">
-              {"<"} {prev.title}
-            </a>
-          ) : (
-            <span />
-          )
-        }
+            <nav
+              aria-label="Pagination"
+              class="mt-12 flex justify-between gap-4 border-t border-border pt-6 text-sm"
+            >
+              {doc.prev ? (
+                <a href={doc.prev.href} rel="prev" class="hover:text-accent">
+                  {"<"} {doc.prev.title}
+                </a>
+              ) : (
+                <span />
+              )}
 
-        {
-          next && (
-            <a href={next.href} rel="next" class="hover:text-accent">
-              {next.title} {">"}
-            </a>
-          )
-        }
-      </nav>
-    </main>
-
-    <aside
-      aria-label="Page contents"
-      class={
-        cn(
-          "mr-auto hidden min-w-min self-start xl:sticky xl:top-24",
-          "xl:block xl:mt-[calc(var(--nav-h)+2rem)]] xl:max-h-[calc(50dvh-var(--nav-h))]",
-          "py-2 overflow-hidden ",
+              {doc.next && (
+                <a href={doc.next.href} rel="next" class="hover:text-accent">
+                  {doc.next.title} {">"}
+                </a>
+              )}
+            </nav>
+          </>
+        ) : (
+          <slot />
         )
       }
-    >
-      <Toc headings={headings} />
-    </aside>
+    </main>
+
+    {
+      doc && (
+        <aside
+          aria-label="Page contents"
+          class={cn(
+            "mr-auto hidden min-w-min self-start xl:sticky xl:top-24",
+            "xl:block xl:mt-[calc(var(--nav-h)+2rem)]] xl:max-h-[calc(50dvh-var(--nav-h))]",
+            "py-2 overflow-hidden ",
+          )}
+        >
+          <Toc headings={doc.headings} />
+        </aside>
+      )
+    }
   </div>
 </BaseLayout>
-
-<script>
-  const sidebar = document.getElementById("docs-sidebar");
-  const backdrop = document.getElementById("docs-backdrop");
-  const toggle = document.getElementById("docs-nav-toggle");
-  const sidebarScrollKey = "motion-provider:docs-sidebar-scroll";
-
-  if (sidebar && toggle) {
-    const desktop = window.matchMedia("(min-width: 64rem)");
-
-    const getSidebarPositions = (): Record<string, unknown> => {
-      try {
-        return JSON.parse(
-          sessionStorage.getItem(sidebarScrollKey) ?? "{}",
-        ) as Record<string, unknown>;
-      } catch {
-        return {};
-      }
-    };
-
-    const saveSidebarPosition = (): void => {
-      try {
-        const positions = getSidebarPositions();
-
-        positions[window.location.pathname] = sidebar.scrollTop;
-        sessionStorage.setItem(sidebarScrollKey, JSON.stringify(positions));
-      } catch {
-      }
-    };
-
-    const restoreSidebarPosition = (): void => {
-      const savedPosition = getSidebarPositions()[window.location.pathname];
-
-      requestAnimationFrame(() => {
-        if (
-          typeof savedPosition === "number" &&
-          Number.isFinite(savedPosition) &&
-          savedPosition >= 0
-        ) {
-          sidebar.scrollTo({ top: savedPosition, behavior: "instant" });
-          return;
-        }
-
-        const activeLink = sidebar.querySelector<HTMLAnchorElement>(
-          'a[aria-current="page"]',
-        );
-
-        if (!activeLink) {
-          return;
-        }
-
-        const sidebarRect = sidebar.getBoundingClientRect();
-        const activeRect = activeLink.getBoundingClientRect();
-        const centeredTop =
-          sidebar.scrollTop +
-          activeRect.top -
-          sidebarRect.top -
-          (sidebar.clientHeight - activeRect.height) / 2;
-        const maxScrollTop = sidebar.scrollHeight - sidebar.clientHeight;
-
-        sidebar.scrollTo({
-          top: Math.max(0, Math.min(centeredTop, maxScrollTop)),
-          behavior: "instant",
-        });
-      });
-    };
-
-    restoreSidebarPosition();
-
-    let saveFrame = 0;
-
-    sidebar.addEventListener(
-      "scroll",
-      () => {
-        if (saveFrame) {
-          return;
-        }
-
-        saveFrame = requestAnimationFrame(() => {
-          saveFrame = 0;
-          saveSidebarPosition();
-        });
-      },
-      { passive: true },
-    );
-
-    window.addEventListener("pagehide", saveSidebarPosition);
-
-    const setOpen = (open: boolean): void => {
-      const shouldOpen = open && !desktop.matches;
-
-      sidebar.dataset.open = String(shouldOpen);
-
-      if (backdrop) {
-        backdrop.hidden = !shouldOpen;
-      }
-
-      toggle.setAttribute("aria-expanded", String(shouldOpen));
-
-      document.documentElement.classList.toggle(
-        "overflow-hidden",
-        shouldOpen,
-      );
-
-      if (shouldOpen) {
-        const activeLink =
-          sidebar.querySelector<HTMLElement>('a[aria-current="page"]') ??
-          sidebar.querySelector<HTMLElement>("a[href]");
-
-        activeLink?.focus({ preventScroll: true });
-      }
-    };
-
-    const closeMenu = (restoreFocus = false): void => {
-      setOpen(false);
-
-      if (restoreFocus && !desktop.matches) {
-        toggle.focus();
-      }
-    };
-
-    toggle.addEventListener("click", () => {
-      setOpen(toggle.getAttribute("aria-expanded") !== "true");
-    });
-
-    backdrop?.addEventListener("click", () => {
-      closeMenu();
-    });
-
-    sidebar.addEventListener("click", (event) => {
-      if (
-        !desktop.matches &&
-        event.target instanceof Element &&
-        event.target.closest("a")
-      ) {
-        closeMenu();
-      }
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (desktop.matches || sidebar.dataset.open !== "true") {
-        return;
-      }
-
-      if (event.key === "Escape") {
-        event.preventDefault();
-        closeMenu(true);
-        return;
-      }
-
-      if (event.key === "Tab") {
-        const focusable = sidebar.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), [tabindex]:not([tabindex="-1"])',
-        );
-
-        const first = focusable[0];
-        const last = focusable[focusable.length - 1];
-
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last?.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first?.focus();
-        }
-      }
-    });
-
-    desktop.addEventListener("change", () => {
-      closeMenu();
-    });
-  }
-</script>
