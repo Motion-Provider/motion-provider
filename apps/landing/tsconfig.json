@@ -2,7 +2,8 @@
   "extends": "@motion/typescript-config/nextjs.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@assets/*": ["../../public/*"]
     }
   },
   "include": [

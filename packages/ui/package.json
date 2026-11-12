@@ -1,0 +1,34 @@
+{
+  "name": "@motion/ui",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "sideEffects": false,
+  "scripts": {
+    "build": "tsc -p tsconfig.json"
+  },
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    "./wordmark": {
+      "types": "./dist/wordmark/index.d.ts",
+      "import": "./dist/wordmark/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "engines": {
+    "node": ">=20"
+  },
+  "peerDependencies": {
+    "motion-provider": "*",
+    "react": "^19.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.2",
+    "typescript": "^7.0.2"
+  }
+}
