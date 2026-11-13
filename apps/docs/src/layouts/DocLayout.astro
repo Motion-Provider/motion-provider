@@ -49,14 +49,13 @@ const doc = props.landing ? undefined : props;
       doc && "xl:grid-cols-[var(--sidebar-w)_minmax(0,1fr)_var(--toc-w)]",
     )}
   >
-    <div class="sticky top-(--nav-h) left-0">
+    <div class="sticky top-(--nav-h) left-0 z-40">
       <div
         id="docs-backdrop"
         aria-hidden="true"
         hidden
         class="fixed inset-x-0 bottom-0 top-(--nav-h) z-30 bg-black/50 backdrop-blur-[1px] lg:hidden"
       ></div>
-
       <aside
         id="docs-sidebar"
         aria-label="Documentation navigation"
@@ -132,3 +131,36 @@ const doc = props.landing ? undefined : props;
     }
   </div>
 </BaseLayout>
+
+<script>
+  const setOpen = (open: boolean): void => {
+    const sidebar = document.getElementById("docs-sidebar");
+    const backdrop = document.getElementById("docs-backdrop");
+    const toggle = document.getElementById("docs-nav-toggle");
+
+    if (!sidebar || !backdrop) return;
+
+    sidebar.dataset["open"] = String(open);
+    backdrop.hidden = !open;
+    toggle?.setAttribute("aria-expanded", String(open));
+  };
+
+  document.addEventListener("click", (event: MouseEvent) => {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const sidebar = document.getElementById("docs-sidebar");
+    if (!sidebar) return;
+
+    const isOpen = sidebar.dataset["open"] === "true";
+
+    if (target.closest("#docs-nav-toggle")) {
+      setOpen(!isOpen);
+      return;
+    }
+
+    if (isOpen && !target.closest("#docs-sidebar")) {
+      setOpen(false);
+    }
+  });
+</script>

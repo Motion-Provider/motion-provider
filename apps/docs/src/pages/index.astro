@@ -1,10 +1,10 @@
 ---
-import { LucideGraduationCap } from "@lucide/astro";
-import type Camera from "@lucide/astro/icons/camera";
 import { WordmarkImage } from "@motion/ui";
 import ExploreCard from "@/components/ExploreCard.astro";
+import exploreData from "@/data/explore.data";
 import DocLayout from "@/layouts/DocLayout.astro";
 import { buildIndex, getDocs } from "@/lib/docs";
+import { Image } from "astro:assets";
 
 const index = buildIndex(await getDocs());
 
@@ -14,38 +14,6 @@ const sections = index.nav.flatMap((group) => {
     ? [{ label: group.label, href: first.href, count: group.items.length }]
     : [];
 });
-
-const exploreItems = [
-  {
-    title: "learn with practice",
-    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
-    icon: LucideGraduationCap,
-    href: "/learn/overview/",
-  },
-  {
-    title: "learn with practice",
-    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
-    icon: LucideGraduationCap,
-    href: "/learn/overview/",
-  },
-  {
-    title: "learn with practice",
-    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
-    icon: LucideGraduationCap,
-    href: "/learn/overview/",
-  },
-  {
-    title: "learn with practice",
-    desc: "Learn motion provider with practicing on real-world components. Expand your knowledge and improve your skills.",
-    icon: LucideGraduationCap,
-    href: "/learn/overview/",
-  },
-] as const satisfies {
-  icon: typeof Camera;
-  title: string;
-  desc: string;
-  href: string;
-}[];
 ---
 
 <DocLayout
@@ -55,37 +23,36 @@ const exploreItems = [
   nav={index.nav}
   currentId=""
 >
-  <div class="mx-auto w-full max-w-5xl px-5 py-16 sm:px-8 lg:px-10 lg:py-24 ">
+  <div class="mx-auto w-full max-w-5xl px-3 py-20 sm:px-8 lg:px-10 lg:py-24 z-0">
     <section aria-labelledby="home-title" class="text-center flex items-center-safe justify-center-safe flex-col relative">
       <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-accent">
         Documentation
       </p>
-      <WordmarkImage client:load 
+      <WordmarkImage 
+        client:load 
         controller={{
           configView: {
             once: false,
             amount: 0.5
           },
         }}
-
-        img="./public/app-wordmark.webp" 
-        className="w-full md:h-72 h-42 -mt-20"
+        img="/app-wordmark.webp" 
+        className="w-full md:h-72 h-34 md:-mt-20 -mt-8"
       />
-       
-      <!-- <h1
-        id="home-title"
-        class="text-4xl font-bold tracking-tighter sm:text-4xl max-w-2xl text-pretty"
-      >
-        Welcome to Motion Provider Docs
-      </h1> -->
-      <p class="max-w-xl text-base text-muted text-pretty -mt-16">
+      <p class="md:max-w-xl max-w-xs md:text-base text-sm text-muted text-pretty md:-mt-16 -mt-8">
         Motion Provider is an open-source Preset-driven animation engine for the web and React, powered by
         the Web Animations API.
       </p> 
     </section>
-    <section aria-label="explore" id="explore" class="flex items-start justify-center gap-3 mt-12">
-      {exploreItems.map((item) => <ExploreCard {...item} />)}
+    <section aria-label="explore" id="explore" class="flex items-start justify-center gap-3 mt-12 max-w-full md:flex-row flex-col">
+      {exploreData.map((item) => <ExploreCard {...item} />)}
     </section>
-   
+    <section 
+      aria-label="explore-framework" 
+      id="frameworks" 
+      class="flex flex-wrap"
+    >
+    <Image src="/tanstack.svg" width={80} height={80} alt="Frameworks" class="size-24" />
+    </section>
   </div>
 </DocLayout>

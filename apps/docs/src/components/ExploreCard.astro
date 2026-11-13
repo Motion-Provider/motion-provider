@@ -1,11 +1,6 @@
 ﻿---
-import {
-  LucideArrowRight,
-  LucideArrowUpRight,
-  type LucideProps,
-} from "@lucide/astro";
+import { LucideArrowUpRight, type LucideProps } from "@lucide/astro";
 import type Camera from "@lucide/astro/icons/camera";
-import type { AnchorHTMLAttributes } from "react";
 
 export type Props = LucideProps & {
   icon: typeof Camera;
@@ -17,10 +12,10 @@ export type Props = LucideProps & {
 const { icon: Icon, desc, title, href, ...iconProps } = Astro.props;
 ---
 
-<div class="w-full h-60 bg-surface/50 p-6 tracking-tight group relative rounded-2xl hover:bg-surface transition-colors duration-150 shadow-2xl">
-    <Icon {...iconProps} class="size-8 text-accent"/>
-    <LucideArrowUpRight class="absolute right-6 top-6 invisible group-hover:visible text-accent" />
+<div class="w-full min-h-60 h-auto bg-surface/50 p-6 tracking-tight group relative rounded-2xl hover:bg-surface transition-colors duration-150 shadow-2xl">
+    <Icon {...iconProps} class="size-8.5 md:size-8 text-accent md:mb-0 mb-6"/>
+    <LucideArrowUpRight class="absolute right-6 top-6 md:invisible visible md:group-hover:visible text-accent" />
     <h2 class="mt-3 text-lg font-semibold capitalize">{title}</h2>
     <p class="mt-2 text-muted text-pretty text-sm">{desc}</p>
-    <a href={href} class="flex items-center gap-2 mt-3 text-accent hover:underline absolute inset-0 size-full"></a>
+    <a href={href} class="flex items-center gap-2 mt-3 text-accent hover:underline absolute inset-0 size-full" />
 </div>

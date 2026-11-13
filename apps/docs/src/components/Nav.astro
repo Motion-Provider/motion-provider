@@ -20,8 +20,8 @@ const navItems: NavItem[] = [
 ] as const;
 ---
 
-<header class="sticky top-0 z-50 h-11.5 w-full border-border border-b bg-surface/20  backdrop-blur pl-2 overflow-hidden pt-1">
-  <nav aria-label="Primary" class="relative flex h-full items-start gap-2 pl-2.75 pt-0.75">
+<header class="sticky top-0 z-50 h-11.5 w-full border-border border-b bg-surface/20 backdrop-blur pl-2 overflow-hidden pt-1">
+  <nav aria-label="Primary" class="relative flex md:items-start md:justify-center justify-between items-center gap-2 pl-2.75 md:pr-0 pr-2.75 pt-0.75 size-full">
     <a href="/">
       <Image
         src={Logo}
@@ -37,7 +37,7 @@ const navItems: NavItem[] = [
       aria-controls="docs-sidebar"
       aria-expanded="false"
       aria-label="Toggle documentation menu"
-      class="-ml-1 inline-flex size-9 shrink-0 items-center justify-center rounded-md text-[#a5a198] transition-colors hover:bg-white/5 hover:text-white lg:hidden"
+      class="inline-flex size-9 shrink-0 items-center justify-center rounded-md text-[#a5a198] transition-colors hover:bg-white/5 hover:text-white lg:hidden ml-auto"
     >
       <svg
         viewBox="0 0 24 24"
@@ -74,7 +74,7 @@ const navItems: NavItem[] = [
 
     
 
-    <div class="ml-auto flex shrink-0 items-center gap-2 -mt-1">
+    <div class="ml-auto hidden shrink-0 items-center gap-2 -mt-1 md:flex">
     <label class="hidden h-11.5 w-64 max-w-[calc(100vw-2rem)] items-center gap-2 border-l border-[#2a2822] bg-transparent px-3 text-[#a5a198] transition-colors focus-within:border-[#51483a] md:flex">
       <svg
         viewBox="0 0 24 24"
