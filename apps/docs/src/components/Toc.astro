@@ -25,7 +25,7 @@ const items = Astro.props.headings.filter(
               h.depth === 3 ? "pl-7 -mr-3" : "border-l border-border"
             )}
           >
-            <a href={`#${h.slug}`} class="text-foreground/80 tracking-tighter hover:text-accent transition-colors duration-300 truncate">
+            <a href={`#${h.slug}`} class="text-foreground/80 tracking-tighter hover:text-accent transition-colors duration-300 h-auto line-clamp-2">
               {h.text}
             </a>
           </li>

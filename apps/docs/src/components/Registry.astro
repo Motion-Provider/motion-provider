@@ -1,0 +1,13 @@
+﻿---
+import SandboxLayout from "@/layouts/SandboxLayout.astro";
+import type { WrapperProps } from "@/lib/sandboxTypes";
+import Sandbox from "./Sandbox.tsx";
+
+type Props = WrapperProps;
+
+const { slug, title, description } = Astro.props;
+---
+
+<SandboxLayout title={title} description={description}>
+    <Sandbox slug={slug} client:only="react" />
+</SandboxLayout>

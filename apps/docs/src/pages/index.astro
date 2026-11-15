@@ -1,10 +1,11 @@
 ---
 import { WordmarkImage } from "@motion/ui";
 import ExploreCard from "@/components/ExploreCard.astro";
+import FrameworkCard from "@/components/FrameworkCard.astro";
 import exploreData from "@/data/explore.data";
+import frameworksData from "@/data/frameworks.data";
 import DocLayout from "@/layouts/DocLayout.astro";
 import { buildIndex, getDocs } from "@/lib/docs";
-import { Image } from "astro:assets";
 
 const index = buildIndex(await getDocs());
 
@@ -50,9 +51,40 @@ const sections = index.nav.flatMap((group) => {
     <section 
       aria-label="explore-framework" 
       id="frameworks" 
-      class="flex flex-wrap"
+      class="mt-12"
     >
-    <Image src="/tanstack.svg" width={80} height={80} alt="Frameworks" class="size-24" />
+      <h2 class="text-muted text-xs font-semibold uppercase tracking-wide">Explore By Frontend Framework</h2>
+      <ul aria-label="explore" id="explore" class="flex items-start justify-center mt-4 max-w-full flex-wrap *:last:w-full">
+        {frameworksData.map((item) => <FrameworkCard {...item} />)}
+      </ul>  
     </section>
+      {
+      sections.length > 0 && (
+        <section aria-labelledby="home-sections" class="mt-16">
+          <h2
+            id="home-sections"
+            class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted"
+          >
+            Discover
+          </h2>
+          <ul class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
+            {sections.map((section) => (
+              <li>
+                <a
+                  href={section.href}
+                  class="block h-full rounded-lg border border-border bg-surface p-5 transition-colors hover:border-accent"
+                  data-astro-prefetch
+                >
+                  <span class="block font-medium">{section.label}</span>
+                  <span class="mt-1 block text-sm text-muted">
+                    {section.count} {section.count === 1 ? "page" : "pages"}
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )
+    }
   </div>
 </DocLayout>

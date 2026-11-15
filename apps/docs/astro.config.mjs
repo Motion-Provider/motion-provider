@@ -21,7 +21,7 @@ export default defineConfig({
       name: "Sora",
       cssVariable: "--font-primary",
       provider: fontProviders.google(),
-      weights: [400, 500, 600, 700, 800],
+      weights: [300, 400, 500, 600, 700, 800],
       display: "swap",
     },
     {

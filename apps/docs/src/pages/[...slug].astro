@@ -1,7 +1,12 @@
 ---
 import { render } from "astro:content";
 import type { GetStaticPaths } from "astro";
+import ImageMdx from "@/components/mdx/ImageMdx.astro";
 import Callout from "../components/mdx/Callout.astro";
+import Code from "../components/mdx/Code.astro";
+import Details from "../components/mdx/Details.astro";
+import Summary from "../components/mdx/Summary.astro";
+import Registry from "../components/Registry.astro";
 import DocLayout from "../layouts/DocLayout.astro";
 import {
   buildIndex,
@@ -26,7 +31,14 @@ export const getStaticPaths = (async () => {
   }));
 }) satisfies GetStaticPaths;
 
-const mdxComponents = { Callout };
+const mdxComponents = {
+  Callout,
+  Registry,
+  code: Code,
+  details: Details,
+  summary: Summary,
+  img: ImageMdx,
+};
 const { entry, index } = Astro.props;
 const { Content, headings } = await render(entry);
 const { prev, next } = getNeighbors(index.flat, entry.id);

@@ -1,0 +1,19 @@
+﻿---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"details">;
+
+const { class: className, ...props } = Astro.props;
+---
+
+<details
+  {...props}
+  class:list={[
+    "group my-6 overflow-hidden rounded-lg border border-foreground/15 bg-foreground/3",
+    "transition-colors open:bg-foreground/5 motion-reduce:transition-none",
+    "[&>summary+*]:mt-4 [&>:not(summary)]:px-4 [&>:last-child:not(summary)]:mb-4",
+    className,
+  ]}
+>
+  <slot />
+</details>

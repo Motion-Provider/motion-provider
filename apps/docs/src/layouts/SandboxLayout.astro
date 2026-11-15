@@ -1,0 +1,15 @@
+---
+import type { WrapperProps } from "@/lib/sandboxTypes";
+
+type Props = Pick<WrapperProps, "title" | "description">;
+
+const { title, description } = Astro.props;
+---
+
+<section aria-label={title} class="my-8 p-2 bg-surface/50 rounded-2xl">
+    <div class="flex flex-col gap-2">
+        <span>{title}</span>
+        {description && <span>{description}</span>}
+    </div>
+    <slot />
+</section>

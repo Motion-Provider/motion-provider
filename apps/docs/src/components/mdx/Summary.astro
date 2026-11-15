@@ -1,0 +1,26 @@
+﻿---
+import { ChevronRight } from "@lucide/astro";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"summary">;
+
+const { class: className, ...props } = Astro.props;
+---
+
+<summary
+  {...props}
+  class:list={[
+    "flex cursor-pointer list-none items-center gap-3 px-4 py-3 font-medium select-none",
+    "transition-colors hover:bg-foreground/5 motion-reduce:transition-none",
+    "group-open:border-b group-open:border-foreground/15",
+    "focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent",
+    "[&::-webkit-details-marker]:hidden",
+    className,
+  ]}
+>
+  <ChevronRight
+    class="size-4 shrink-0 text-accent transition-transform duration-200 group-open:rotate-90 motion-reduce:transition-none"
+    aria-hidden="true"
+  />
+  <span class="min-w-0 flex-1 text-sm"><slot /></span>
+</summary>

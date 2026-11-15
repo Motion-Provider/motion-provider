@@ -1,0 +1,52 @@
+﻿---
+import { Image } from "astro:assets";
+import type { HTMLAttributes } from "astro/types";
+
+type Props = Omit<HTMLAttributes<"img">, "src" | "alt"> & {
+  src: ImageMetadata | string;
+  alt?: string | null;
+};
+
+const {
+  src,
+  alt,
+  title,
+  class: className,
+  width,
+  height,
+  ...rest
+} = Astro.props;
+
+const imgClass = [
+  "mx-auto h-auto max-w-full rounded-lg border border-foreground/15 bg-foreground/[0.03]",
+  className,
+]
+  .filter(Boolean)
+  .join(" ");
+---
+
+<figure class="not-prose my-8">
+  {
+    typeof src === "string" ? (
+      <img
+        src={src}
+        alt={alt ?? ""}
+        width={width}
+        height={height}
+        loading="lazy"
+        decoding="async"
+        class={imgClass}
+        {...rest}
+      />
+    ) : (
+      <Image src={src} alt={alt ?? ""} class={imgClass} {...rest} />
+    )
+  }
+  {
+    title && (
+      <figcaption class="mx-auto mt-3 max-w-prose text-center text-sm text-balance text-foreground/70">
+        {title}
+      </figcaption>
+    )
+  }
+</figure>

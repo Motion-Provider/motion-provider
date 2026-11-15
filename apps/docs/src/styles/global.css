@@ -76,7 +76,6 @@ body {
   min-width: 320px;
   overflow-x: clip;
   background: var(--background);
-  color: var(--foreground);
   font-family: var(--font-primary);
 }
 
@@ -147,7 +146,7 @@ body {
 
 .docs-prose :is(p, li, blockquote) {
   overflow-wrap: anywhere;
-  color: var(--foreground);
+  color: var(--muted);
 }
 
 .docs-prose pre {

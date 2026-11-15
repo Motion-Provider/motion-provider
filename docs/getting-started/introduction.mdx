@@ -5,6 +5,89 @@ order: 10
 draft: true
 ---
 
-## Introduction
+**Motion Provider is meticulously crafted, opinionated provider for React and web animation engine powered within browser's native [WAAPI](https://developer.mozilla.org/en-US/docs/Web/API/Web_Animations_API/Web_Animations_API_Concepts) considered with the term “Human-first motion”**. 
+
+As the name suggests, it easily provides motion for any component you choose. It is primarily aimed at the most widely used elements when designing a site,
+
+- **Texts**
+- **Images**
+- **Containers**
+- **Vectors** 
+
+## Limitations and Considerations
+
+Like any other library, the Motion Provider has limitations. It is not designed for those who want to create complex animations. **It doesn't include physics-based APis, Layout & presence nor gestures.** Out of the box, all of these apparent shortcomings actually give it an advantage in area of [bundle size](https://developer.mozilla.org/en-US/docs/Learn_web_development/Extensions/Client-side_tools/Package_management).
+
+Therefore,
+
+![Animation Complexity Scale](https://ytpmpkgcjlcdidphswzv.supabase.co/storage/v1/object/public/banner/motion-provider-animation-complexity-scale-35d74f50.webp)
+
+If you intend to use Motion Provider as a wrapper for extremely basic single-type animations such as doing nothing but fade in animation for the elements, don't. Stick to native CSS animations. 
+
+<Callout type="warning" title="Warning">
+    On the contrary, we recommend you to not use Motion Provider for, 
+
+    **highly complex, physics-based animations or gestures.** 
+</Callout>
+
+For those types of animations, we instead, strongly recommend opting in to [Motion (formerly Framer Motion)](https://motion.dev/). If you're migrating to Motion Provider from Framer or scaling up and then migrating when the complexity increases, **you may benefit from the similarity of the APIs**. *Motion Provider was inspired by Motion's characteristics, which allow you to easily switch between the two*.
+
+ 
+## Why you should opt-in MP?
+
+It's because it comes with everything you might need, **allowing you to create basic to mid-level animations** of almost anything in a browser.
+
+- **0 deps** — literally nothing but native browser APIs
+- **Reusability** — configure once, use across your app
+- **Clear DX** — Thought in mind the developer over AI 
+- **Flexible** — Change anything in any time, effortlessly
+
+Motion Provider supports scroll-driven animation, viewport triggers, animation chaining, and imperative controllers. It also supports reduced-motion preferences yet it is not limited to these features. 
+
+## How it started?
+
+Its codebase never written by AI. Back in 2024, While Motion Provider was still in its early stages, it was carefully developed based on the idea, “What if most used major APIs of other pioneering animation libraries were brought together under a single umbrella?”, in response to the fragmented structure of other existing libraries. **Heavily inspired by motion(formerly Framer Motion) and its structure.** 
+
+Of course, I failed at first, but gradually, it became worthwhile for me to continue as it evolved into something better.  
+
+Basically, Motion Provider is the combination of copy-paste animation libraries blended with widely used most majority of APIs such as **in-view, scroll-based animations without needing to define anything outside the used component** including the CSS objects to animate between which makes it convenient to distribute, centralize and manage at one or more registries across your project. 
+
+## What kind of animations it provides?
+
+Throughout all motion provider components `MotionContainer` `MotionChain` `MotionText` `MotionImage`controversially — you will be able to use every possible major animation using so-called **presets**. Mixing them enables MP to reflect until the end-user's viewport. 
+
+Breaking down all in categories:
+
+- Filter & color
+- Clip-path & geometric reveals
+- Mask & directional reveals
+- Rotation, flip & spin
+- Opacity, fade & blink
+- Scale, zoom & emphasis
+- Slide & 2D movement
+- Skew
+- 3D translation
+
+Motion Provider currently exposes **69 actual animation presets across 10 functional categories**. The registry contains 70 entries because it also includes `default`, an empty/no-op animation definition.
+
+<details>
+<summary>Preview all categories including presets</summary>
+
+|  Category  |  Total presets  |  Presets  |
+| --- | --- | --- |
+|  Filter & color  |  10  |  `colorShift`, `filterBlurIn`, `filterBlurOut`, `filterBrightnessFade`, `filterContrastShift`, `filterGrayscaleFade`, `filterHueRotate`, `filterInvertColors`, `filterSaturateIncrease`, `filterSepiaTone`  |
+|  Clip-path & geometric reveals  |  10  |  `clipCircle`, `clipDown`, `clipPop`, `clipUp`, `transformClipDiamond`, `transformClipPentagon`, `transformClipSquare`, `transformClipStar`, `transformClipTriangle`, `transformClipVShaped`  |
+|  Mask & directional reveals  |  10  |  `maskGradient`, `maskGradientPerforate`, `transformMaskDown`, `transformMaskGradient`, `transformMaskLeft`, `transformMaskRight`, `transformRevealUp`, `transformRevealDown`, `transformRevealLeft`, `transformRevealRight`  |
+|  Rotation, flip & spin  |  8  |  `rotateClockwise`, `rotateFlipX`, `rotateFlipY`, `rotateIn`, `rotateOut`, `rotateRoll`, `rotating360`, `spin`  |
+|  Opacity, fade & blink  |  8  |  `fadeDown`, `fadeIn`, `fadeLeft`, `fadeOut`, `fadeRight`, `fadeUp`, `opacity`, `flash`  |
+|  Scale, zoom & emphasis  |  5  |  `heartbeat`, `hover`, `microWobble`, `scaleZoomIn`, `scaleZoomOut`  |
+|  Slide & 2D movement  |  5  |  `slideDown`, `slideLeft`, `slideRight`, `slideUp`, `snailTrail`  |
+|  Text & typography  |  5  |  `neonGlow`, `textShimmer`, `transformTextGlow`, `transformTextGradient`, `typingEffect`  |
+|  Skew  |  4  |  `skewX30`, `skewX45`, `skewY30`, `skewY45`  |
+|  3D translation  |  4  |  `translate3dIn`, `translate3dOut`, `translate3dRotate`, `translate3dZoom`  |
+|  **Total**  |  **69**  |  **69 actual animation presets across 10 categories**  |
+
+</details>
+
 
 

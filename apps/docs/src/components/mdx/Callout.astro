@@ -1,4 +1,6 @@
 ---
+import { Info, Lightbulb, OctagonAlert, TriangleAlert } from "@lucide/astro";
+
 type CalloutType = "note" | "tip" | "warning" | "danger";
 
 interface Props {
@@ -14,13 +16,36 @@ const styles: Record<CalloutType, string> = {
   warning: "border-warning bg-warning/10",
   danger: "border-danger bg-danger/10",
 };
+
+const icons: Record<CalloutType, typeof Info> = {
+  note: Info,
+  tip: Lightbulb,
+  warning: TriangleAlert,
+  danger: OctagonAlert,
+};
+
+const iconColors: Record<CalloutType, string> = {
+  note: "text-accent",
+  tip: "text-success",
+  warning: "text-warning",
+  danger: "text-danger",
+};
+
+const Icon = icons[type];
 ---
 
 <aside
   role="note"
   class={`not-prose my-6 rounded-r-lg border-l-4 p-4 ${styles[type]}`}
 >
-  {title && <p class="mb-1 font-semibold">{title}</p>}
+  {
+    title && (
+      <p class="mb-1 flex items-center gap-2 font-semibold">
+        <Icon class={`size-4 shrink-0 ${iconColors[type]}`} aria-hidden="true" />
+        {title}
+      </p>
+    )
+  }
   <div class="text-sm *:first:mt-0 *:last:mb-0">
     <slot />
   </div>

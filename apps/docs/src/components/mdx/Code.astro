@@ -1,0 +1,17 @@
+﻿---
+import type { HTMLAttributes } from "astro/types";
+
+type Props = HTMLAttributes<"code">;
+
+const { class: className, ...props } = Astro.props;
+---
+
+<code
+  {...props}
+  class:list={[
+    "before:content-none after:content-none",
+    "[:not(pre)>&]:rounded-full [:not(pre)>&]:border [:not(pre)>&]:border-accent/50 [:not(pre)>&]:bg-accent/20 [:not(pre)>&]:px-1.5 [:not(pre)>&]:py-0.5 [:not(pre)>&]:text-accent font-light",
+    className,
+  ]}>
+  <slot />
+</code>
