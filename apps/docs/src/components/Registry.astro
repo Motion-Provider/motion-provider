@@ -1,13 +1,30 @@
 ﻿---
+import { Image } from "astro:assets";
 import SandboxLayout from "@/layouts/SandboxLayout.astro";
 import type { WrapperProps } from "@/lib/sandboxTypes";
+import Loader from "../assets/loader.svg";
 import Sandbox from "./Sandbox.tsx";
 
 type Props = WrapperProps;
 
-const { slug, title, description } = Astro.props;
+const { slug, title } = Astro.props;
 ---
 
-<SandboxLayout title={title} description={description}>
-    <Sandbox slug={slug} client:only="react" />
+<SandboxLayout title={title}>
+    <Sandbox slug={slug} client:only="react">
+        <div
+            slot="fallback"
+            class="flex h-80 items-center justify-center"
+            role="status"
+            aria-label="Loading demo"
+        >
+        <Image
+            src={Loader}
+            alt="Component Loader"
+            height={48}
+            width={48}
+            class="size-10 animate-spin motion-reduce:animate-none"
+        />
+        </div>
+    </Sandbox>
 </SandboxLayout>

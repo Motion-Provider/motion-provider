@@ -4,6 +4,7 @@ import type { GetStaticPaths } from "astro";
 import ImageMdx from "@/components/mdx/ImageMdx.astro";
 import Callout from "../components/mdx/Callout.astro";
 import Code from "../components/mdx/Code.astro";
+import CodeCopy from "../components/mdx/CodeCopy.astro";
 import Details from "../components/mdx/Details.astro";
 import Summary from "../components/mdx/Summary.astro";
 import Registry from "../components/Registry.astro";
@@ -54,4 +55,5 @@ const { prev, next } = getNeighbors(index.flat, entry.id);
   next={next}
 >
   <Content components={mdxComponents} />
+  <CodeCopy />
 </DocLayout>

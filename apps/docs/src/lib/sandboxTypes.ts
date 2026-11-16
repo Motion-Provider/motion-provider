@@ -4,8 +4,7 @@ import type { ComponentType } from "react";
 export type Slug = string;
 
 export interface WrapperProps {
-  title: string;
-  description?: string;
+  title?: string;
   slug: Slug;
 }
 

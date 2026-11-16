@@ -1,15 +1,31 @@
 ---
 import type { WrapperProps } from "@/lib/sandboxTypes";
 
-type Props = Pick<WrapperProps, "title" | "description">;
+type Props = Pick<WrapperProps, "title">;
 
-const { title, description } = Astro.props;
+const { title } = Astro.props;
 ---
 
-<section aria-label={title} class="my-8 p-2 bg-surface/50 rounded-2xl">
-    <div class="flex flex-col gap-2">
-        <span>{title}</span>
-        {description && <span>{description}</span>}
+<section aria-label={title} class="my-8 bg-surface/20 rounded-2xl relative overflow-hidden border border-border/50">
+    {title && <span class="absolute z-50 bottom-1.5 left-3 tracking-tighter text-muted max-w-3xs truncate">{title}</span>}
+    <div
+      class="absolute inset-0 h-full w-full overflow-hidden [--pattern-scales:var(--color-white)]/10 -z-10"
+      style={
+        {
+          "--scales-size": "8px",
+          "--scales-line-width": "1px",
+          "--scales-angle": "315deg",
+          "--pattern-scales": "var(--color-surface-secondary)",
+          "opacity": "1",
+        } as React.CSSProperties
+      }
+    >
+      <div
+        class="h-full w-full bg-[repeating-linear-gradient(var(--scales-angle),var(--pattern-scales)_0,var(--pattern-scales)_var(--scales-line-width),transparent_0,transparent_50%)]"
+        style={{
+          backgroundSize: "var(--scales-size) var(--scales-size)",
+        }}
+      />
     </div>
     <slot />
 </section>

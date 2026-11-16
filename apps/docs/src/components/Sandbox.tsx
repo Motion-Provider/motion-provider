@@ -9,7 +9,7 @@ import { getComponent } from "@/lib/getComponent";
 import type { Slug } from "@/lib/sandboxTypes";
 
 const buttonClass =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none absolute top-3 right-3 cursor-pointer active:scale-95";
 
 interface SandboxProps {
   slug: Slug;
@@ -28,7 +28,9 @@ function Demo({ slug, controller }: DemoProps) {
   }, [controller]);
 
   return (
-    <Component controller={controller} className="md:mb-20 md:pb-0 pb-16" />
+    <div className="w-full h-80 grid place-items-center-safe overflow-y-scroll gap-3 z-50">
+      <Component controller={controller} />
+    </div>
   );
 }
 
@@ -47,7 +49,7 @@ export default function Sandbox({ slug }: SandboxProps) {
         fallbackRender={({ resetErrorBoundary }) => (
           <div
             role="alert"
-            className="flex min-h-64 flex-col items-center justify-center gap-3 rounded-lg border border-danger/40 bg-danger/10 p-6"
+            className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-danger/40 bg-danger/10 p-6"
           >
             <p className="text-sm text-foreground">Failed to load demo.</p>
             <button
@@ -62,7 +64,7 @@ export default function Sandbox({ slug }: SandboxProps) {
       >
         <Suspense
           fallback={
-            <div className="flex min-h-64 items-center justify-center">
+            <div className="flex h-80 items-center justify-center">
               <svg
                 role="status"
                 aria-label="Loading demo"
