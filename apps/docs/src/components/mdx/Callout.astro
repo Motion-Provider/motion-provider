@@ -42,7 +42,7 @@ const Icon = icons[type];
     title && (
       <p class="mb-1 flex items-center gap-2 font-semibold">
         <Icon class={`size-4 shrink-0 ${iconColors[type]}`} aria-hidden="true" />
-        {title}
+        <span class="text-foreground">{title}</span> 
       </p>
     )
   }

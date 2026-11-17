@@ -45,7 +45,7 @@ export default function Cas2({ controller }: ModuleProps) {
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
-      <div className="flex flex-1 gap-2 items-center relative">
+      <div className="flex gap-2 items-center relative">
         <MotionImage
           animation={{
             mode: ["fadeIn", "rotateFlipY"],
@@ -59,7 +59,7 @@ export default function Cas2({ controller }: ModuleProps) {
             delayLogic: "sinusoidal",
           }}
           alt="demo"
-          wrapperClassName="size-full rounded-lg overflow-hidden object-cover"
+          wrapperClassName="size-60 rounded-lg overflow-hidden object-cover"
           controller={controller}
         />
       </div>

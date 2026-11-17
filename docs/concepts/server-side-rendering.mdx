@@ -1,0 +1,161 @@
+---
+title: "Server-Side Rendering"
+description: "What Motion Provider renders on the server, how hydration starts playback, and how to use it from Server Components."
+order: 150
+draft: true
+---
+
+**Motion Provider renders on the server and animates on the client.** The server produces static HTML that already carries each element's `initial` state. After hydration, the browser's native WAAPI takes over and plays the animation.
+
+Nothing in the render path touches `window`, `document` or the viewport, so you do not need dynamic imports, mount guards or a provider wrapper.
+
+- **No browser globals in render**, safe for `renderToString` and any SSR framework
+- **Deterministic markup**, server and client output match, so hydration reports no mismatch
+- **Client boundaries included**, every component ships with its own `"use client"` directive (special add-on for Next.js)
+- **Zero dependencies**, React ^18 is the only peer dependency
+
+## What the server renders
+
+Every component writes its [initial state](/concepts/motion-state/) into inline `style`. The table shows the rest.
+
+| Component | Server HTML | Playback starts on the client |
+| --- | --- | --- |
+| `MotionContainer`, `Motion` | The element with its `initial` style | When 50% is in view, once |
+| `MotionText` | A visually hidden copy of the full text, plus `aria-hidden` tokens with the `initial` style | When in view |
+| `MotionChain` | One wrapper per child with the `initial` style | Right after hydration |
+| `MotionImage` | The real `img` hidden at `opacity: 0`, your `fallback`, and an empty tile grid | After the image has loaded |
+| `MotionLink` | A plain `a` element | Not applicable, handlers attach on hydration |
+
+<Callout type="note" title="Text stays readable">
+`MotionText` always ships the unsplit string for assistive technology and crawlers. Only the visual tokens are hidden from the accessibility tree, so **splitting a heading into characters does not change what search engines index.**
+</Callout>
+
+## From HTML to animation
+
+1. **Server render**, components produce HTML with the `initial` state inline. Delays are computed from a seeded algorithm and text is split with a fixed locale, so the output never varies between runs.
+2. **Hydration**, React attaches to the existing markup. Nothing animates yet.
+3. **Effects**, after commit, the engine creates the WAAPI animation, applies your `controller` policy (in view, `trigger`, scroll) and plays it.
+
+<details>
+  <summary>The initial state is part of the HTML, expand to see the list</summary>
+
+  A state that starts at `opacity: 0` keeps its element invisible until hydration finishes. **If JavaScript fails or loads late, the element stays hidden. Keep critical content such as your LCP element out of presets that start hidden**, or choose one whose `initial` state is visible.
+
+  _Avoid using these for critical above-the-fold content (such as your LCP element)_
+
+  ○ `fadeDown`
+
+  ○ `fadeIn`
+
+  ○ `fadeLeft`
+
+  ○ `fadeRight`
+
+  ○ `fadeUp`
+
+  ○ `textShimmer`
+
+  ○ `snailTrail`
+  
+
+</details>
+
+Elements below the fold remain at their `initial` state until they enter the viewport. That is intended, and the reason the default entry policy waits for visibility.
+
+## Server Components
+
+Motion components are client modules, so a Server Component can render them directly. No `"use client"` file is required on your side.
+
+```tsx
+// app/page.tsx — a Server Component
+import { MotionContainer, MotionText } from "motion-provider";
+
+export default function Page() {
+  return (
+    <main>
+      <MotionText
+        elementType="h1"
+        animation={{ mode: "fadeUp", duration: 0.6 }}
+        config={{ mode: "words" }}
+      >
+        Human-first motion
+      </MotionText>
+      <MotionContainer animation={{ mode: ["fadeUp", "filterBlurIn"] }}>
+        Rendered on the server, animated on the client.
+      </MotionContainer>
+    </main>
+  );
+}
+```
+
+Props cross from server to client, so they must be serializable.
+
+| Works from a Server Component | Needs a Client Component |
+| --- | --- |
+| `animation`, `definition`, `timing`, `config` as plain objects | `onMotionComplete`, `onMotionError` |
+| Declarative `controller` objects such as `{ trigger: true }` | Controllers from `useController()` |
+| String children and class names | `config.customLogic`, and the `navigate` and `onReverse` props of `MotionLink` |
+| Presets from `motion-provider/presets` | DOM nodes such as `configView.root` or `scroll.source` |
+
+<Callout type="warning" title="Functions cannot cross the boundary">
+Passing a callback or a controller instance from a Server Component fails at the serialization step. Move that part into a small Client Component and render it from the server.
+</Callout>
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export function Hero({ children }: { children: React.ReactNode }) {
+  const controller = useController();
+
+  return (
+    <MotionContainer
+      animation={{ mode: "fadeIn" }}
+      controller={controller}
+      onMotionComplete={(result) => console.log(result.status)}
+    >
+      {children}
+    </MotionContainer>
+  );
+}
+```
+
+### Centralizing on the server
+
+`createMotionRegistry` lives in a module with no React import and no directive, so you can call it from Server Components and Node scripts alike. Spread the result into any component.
+
+```tsx
+// motion.ts
+import { createMotionRegistry } from "motion-provider";
+
+export const { getMotionAnimation } = createMotionRegistry({
+  title: {
+    type: "MotionText",
+    props: { animation: { mode: "fadeUp" }, config: { mode: "words" } },
+  },
+});
+
+// page.tsx
+<MotionText {...getMotionAnimation("title")}>Hello</MotionText>;
+```
+
+See the [CAS](/concepts/centralized-animation-system/) for typing and key lookups.
+
+## Reduced motion on the server
+
+The server cannot read `prefers-reduced-motion`, so the HTML is identical for every visitor. The engine resolves the preference in the browser: visitors who prefer reduced motion skip playback and receive the `animate` state as soon as the effects run.
+
+<Callout type="tip" title="useReducedMotion is hydration-safe">
+`useReducedMotion()` returns `false` on the server and during hydration, then switches to the real value. A visitor who prefers reduced motion triggers one extra render after hydration, and no mismatch warning. See [Reduced Motion Policy](/concepts/reduced-motion-policy/).
+</Callout>
+
+## API highlights
+
+| API | Import | Server behavior |
+| --- | --- | --- |
+| `MotionContainer`, `MotionText`, `MotionChain`, `MotionImage`, `MotionLink`, `Motion` | `motion-provider` | Render HTML on the server, animate after hydration |
+| `createMotionConfig`, `createMotionRegistry`, `getMotionAnimation` | `motion-provider` | Pure functions, safe in Server Components and Node |
+| Presets | `motion-provider/presets` | Plain data, no React |
+| `useController`, `useAnimationMixer` | `motion-provider` | Hooks, Client Components only |
+| `useReducedMotion` | `motion-provider` | Returns `false` as the server snapshot |

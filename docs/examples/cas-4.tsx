@@ -66,7 +66,7 @@ const data = createMotionConfig({
         delayLogic: "sinusoidal",
       },
       alt: "demo",
-      wrapperClassName: "size-full rounded-lg overflow-hidden object-cover",
+      wrapperClassName: "size-60 rounded-lg overflow-hidden object-cover",
     },
   },
 });
@@ -117,7 +117,7 @@ export default function Cas4() {
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
-      <div className="flex flex-1 gap-2 items-center relative">
+      <div className="flex gap-2 items-center relative">
         <MotionImage {...getMotionAnimation("image")} controller={controller} />
       </div>
     </section>
