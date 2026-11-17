@@ -5,7 +5,7 @@ order: 210
 draft: true
 ---
 
-Motion Provider is designed to fit into an existing React application. Its components render ordinary HTML or SVG elements, while the animation lifecycle is attached after React commits. **No global provider or application-wide wrapper is required.**
+Motion Provider is designed to fit into an existing React application. Its components render ordinary HTML or SVG elements, while the animation lifecycle is attached after React commits. **No global provider or application-wide wrapper is required.** The initial visual state is rendered into the HTML; WAAPI playback starts on the client.
 
 ## Shared animation control
 
@@ -84,7 +84,7 @@ Without `navigate`, `MotionLink` uses normal location navigation. It preserves m
 
 ## Framework and component boundaries
 
-- **Next.js:** Keep hooks such as `useController()` inside Client Components. Motion components can be rendered within the usual Server Component tree; the animation effect attaches on the client.
+- **Next.js:** Keep hooks such as `useController()` inside Client Components. Motion components can be rendered within the usual Server Component tree; WAAPI effects attach after hydration.
 - **Custom components:** Animate their rendered DOM by placing a Motion Provider component around their markup. `elementType` accepts intrinsic HTML/SVG tags, not arbitrary React components.
 - **Centralized configuration:** Use `createMotionConfig()` and `createMotionRegistry()` to share typed animation props. The configuration itself is plain data and can be defined outside a Client Component.
 - **Accessibility:** Motion components respect the reduced-motion preference by default. See [Reduced Motion Policy](/concepts/reduced-motion-policy) for overrides and the `useReducedMotion()` hook.
