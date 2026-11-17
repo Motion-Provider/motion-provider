@@ -1,0 +1,47 @@
+---
+title: "Setup & Installation"
+description: ""
+order: 30
+draft: true
+---
+
+You can start using Motion Provider in seconds. **No need for an external provider or client boundary wrappers**.
+Choose your favorite package manager to start using Motion Provider which **supported by all major package managers**.
+
+**For NPM:** 
+
+```bash
+npm i motion-provider 
+```
+
+**For Yarn:**
+
+```bash
+yarn add motion-provider
+```
+
+**For Pnpm:**
+
+```bash
+pnpm add motion-provider
+```
+
+## Quick Usage
+
+Here is the simple usage of the MP with motion container,
+
+```tsx
+import { MotionContainer } from "motion-provider"; 
+
+<MotionContainer 
+  className="size-16 rounded-full bg-orange-400"
+  animation={{ 
+    mode: ["fadeIn", "filterBlurIn"] 
+  }}
+/>
+```
+
+<Callout type="tip" title="Information">
+  This guideline will walk through tailwindcss for styling. 
+</Callout>
+<Registry slug="motion-demo" title="Container that fades in" description="First ever motion preset demo" />

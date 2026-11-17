@@ -1,0 +1,187 @@
+---
+title: "Motion State"
+description: "How Motion Provider describes where an element starts and ends: MotionState, AnimationModule, keyframes, transforms and mixing."
+order: 120
+draft: true
+---
+
+**Motion state is the data that describes an animation: where an element starts and where it ends.** It is a plain object of CSS properties, with no timing, no React and no DOM attached. Timing lives elsewhere (`duration`, `delay`, `easing`), so the same state can be reused at any speed.
+
+Every preset in Motion Provider is nothing more than a pair of motion states. Once you can read one, you can write your own, mix several, or store them in a [registry](/registry/overview/).
+
+- **Plain data** — serializable objects, safe to define at module scope or share with Server Components
+- **Two halves** — `initial` is where the element starts, `animate` is where it rests
+- **Composable** — merge states by listing them in `mode`
+- **Typed** — `MotionState` and `AnimationModule` are exported from the package root
+
+## The shape
+
+A single state is a `MotionState`: CSS property names mapped to a value or an array of keyframes. A start/end pair is an `AnimationModule`.
+
+```ts
+type MotionValue = string | number;
+
+type MotionState = Readonly<
+  Record<string, MotionValue | readonly MotionValue[]>
+>;
+
+interface AnimationModule {
+  readonly initial: MotionState;
+  readonly animate: MotionState;
+}
+```
+
+Property names are written in camelCase (`backgroundColor`, `clipPath`) or as custom properties (`--progress`). Numbers and strings are both valid. Strings are handed to the browser as is, so any CSS value works.
+
+<Callout type="note" title="State is not timing">
+    `MotionState` never carries `duration`, `delay` or `easing`. Those belong to the `animation` prop of `MotionContainer`, the `timing` prop of `Motion`, or a named `transition`. All timing values are in **seconds**.
+</Callout>
+
+## Defining a state
+
+Declare the module with `satisfies AnimationModule`. You keep literal types, and TypeScript rejects anything the engine cannot compile.
+
+```tsx
+import { Motion } from "motion-provider";
+import type { AnimationModule } from "motion-provider";
+
+const pulseIn = {
+  initial: { opacity: 0, scale: 0.8 },
+  animate: { opacity: 1, scale: [0.8, 1.15, 1] },
+} as const satisfies AnimationModule;
+
+export function Dot() {
+  return (
+    <Motion
+      className="size-16 rounded-full bg-accent"
+      definition={pulseIn}
+      timing={{ duration: 0.8, easing: "easeOut" }}
+    />
+  );
+}
+```
+
+<Registry slug="motion-state/custom-state" title="Custom state" description="A custom AnimationModule with a keyframe array" />
+
+### How each property resolves
+
+The engine reads every property found in `initial` or `animate` and builds one track per property.
+
+| You write | The engine does |
+| --- | --- |
+| Value in both halves | Animates from the `initial` value to the `animate` value |
+| Value only in `animate` | Applies it with no motion, there is nothing to start from |
+| Value only in `initial` | Holds it for the whole animation |
+| Array in `animate` | Treats the array as the **entire** track, evenly spaced |
+| Property in neither | Throws `UNDEFINED_KEYFRAME` |
+
+<Callout type="warning" title="Arrays override initial">
+When `animate` holds an array, the `initial` value of that property is ignored. The first item of the array is the real starting point and the one rendered before playback. Keep `initial` equal to that first item so the state reads honestly.
+</Callout>
+
+## Transforms and units
+
+Transform shorthands are first-class properties. You write `x`, `scale` or `rotate`, and the engine composes a single `transform` string for you.
+
+| Shorthand | CSS function | Default unit |
+| --- | --- | --- |
+| `x`, `y`, `z` | `translateX`, `translateY`, `translateZ` | `px` |
+| `scale`, `scaleX`, `scaleY`, `scaleZ` | `scale*` | none |
+| `rotate`, `rotateX`, `rotateY`, `rotateZ` | `rotate*` | `deg` |
+| `skewX`, `skewY` | `skewX`, `skewY` | `deg` |
+| `perspective` | `perspective` | `px` |
+
+Bare numbers also receive `px` on length-like properties such as `width`, `height`, `margin*`, `padding*`, `gap`, `fontSize` and border radii. Every other numeric property, `opacity` and `lineHeight` included, stays unitless.
+
+Shorthands with arrays of different lengths are merged on a shared timeline, so `x` with three keyframes and `y` with two stay independently spaced.
+
+<Callout type="danger" title="Shorthands vanish next to a transform string">
+When a state defines an explicit `transform`, every shorthand beside it (`x`, `scale`, `rotate` and so on) is **silently dropped**. Pick one style per state. This also applies when mixing: `transformClipStar` sets `transform`, so mixing it with `slideUp` discards the `y` of `slideUp`.
+</Callout>
+
+<Callout type="warning" title="Composition order is fixed">
+Shorthands always compose as translate, scale, rotate, skew, then `perspective` last. Because CSS applies `perspective()` to the functions that follow it, a trailing one has no visible effect on the rest. For a 3D scene, write an explicit `transform` string that starts with `perspective(...)`.
+</Callout>
+
+Shorthand tracks of unequal length need compatible units wherever the engine has to interpolate between them. A mismatch such as `"10%"` to `"100px"` throws `TRANSFORM_UNITS`. Zero is exempt, and complex expressions belong in an explicit `transform`.
+
+## Mixing states
+
+`mode` accepts a preset name, an `AnimationModule`, or an array mixing both. States merge in order and **the last one wins per property**.
+
+```tsx
+import { MotionContainer } from "motion-provider";
+
+<MotionContainer animation={{ mode: ["fadeUp", "slideUp"], duration: 0.6 }} />;
+// opacity: 0 → 1 (from fadeUp)
+// y: "100%" → 0   (slideUp replaced fadeUp's y)
+```
+
+<Registry slug="motion-state/mixed-state" title="Mixed state" description="Two presets and one custom state merged by mode" />
+
+The winning property replaces the other state's property **as a whole**. Arrays are never merged item by item. See [Mixing Presets](/concepts/mixing-presets/) for patterns.
+
+For direct access outside a component prop, `useAnimationMixer` returns the merged `AnimationModule`:
+
+```tsx
+import { Motion, useAnimationMixer } from "motion-provider";
+import { fadeUp, slideUp } from "motion-provider/presets";
+
+function Card() {
+  const state = useAnimationMixer({ animations: [fadeUp, slideUp] });
+  return <Motion definition={state} />;
+}
+```
+
+<Callout type="tip" title="Import presets by name">
+`motion-provider/presets` exports every preset as an individual `AnimationModule`. Pass them to `Motion` through `definition` and your bundler keeps only the ones you import. The string names accepted by `mode` resolve through the full registry instead.
+</Callout>
+
+<Callout type="warning" title="reverse swaps the halves">
+`useAnimationMixer({ reverse: true })` swaps `initial` and `animate`. A multi-keyframe array that lands in `initial` collapses to its first item, so `scale: [1, 1.2, 1]` stops pulsing. To play the same keyframes backwards, drive the animation with a controller and call `controller.reverse()`.
+</Callout>
+
+## From state to screen
+
+1. **Render** — `Motion` writes the compiled `initial` state into the element's inline `style`. The element never flashes its final look before playback starts.
+2. **Play** — after hydration, the engine creates one WAAPI animation per track with `fill: "both"`, so the resting state persists after the animation finishes.
+3. **Unmount** — the engine cancels the animation and restores the original inline values of **only** the properties it owned.
+
+State identity is **by value, not by reference**. An inline object literal with the same content does not restart playback, so no `useMemo` is needed. Keep states JSON-serializable data.
+
+<Callout type="warning" title="A hidden initial state needs JavaScript">
+The initial state is part of the server-rendered HTML. A state starting at `opacity: 0` keeps its content invisible until hydration, and for good if JavaScript fails. Avoid hidden initial states on critical above-the-fold content such as your LCP element. See [Server-Side Rendering](/concepts/server-side-rendering/).
+</Callout>
+
+<Callout type="tip" title="Reduced motion shows the animate state">
+For visitors who prefer reduced motion, the engine skips playback and applies the `animate` state directly (or `initial` when reversed). Always design `animate` as a complete, readable resting state. See [Reduced Motion Policy](/concepts/reduced-motion-policy/).
+</Callout>
+
+## Errors
+
+Malformed states throw a `MotionError` with a stable code.
+
+| Code | Cause |
+| --- | --- |
+| `INVALID_ANIMATION` | `initial` or `animate` is missing |
+| `UNDEFINED_KEYFRAME` | A property is `undefined` in both halves |
+| `INVALID_KEYFRAMES` | An empty array, or a non-finite number inside an array |
+| `EMPTY_MODES` | `mode` is an empty array |
+| `UNKNOWN_MODE` | A string in `mode` is not a registered preset |
+| `TRANSFORM_UNITS` | Incompatible units between shorthand tracks |
+
+<Callout type="danger" title="onMotionError will not catch these">
+States compile while the component renders, so these errors throw during render. Catch them with a React error boundary. `onMotionError` only reports runtime failures such as an unavailable or rejected WAAPI animation, and the destination state is shown when that happens.
+</Callout>
+
+## API highlights
+
+| API | Import | Role |
+| --- | --- | --- |
+| `MotionState` | `motion-provider` | Type of one half: properties mapped to values or keyframes |
+| `AnimationModule` | `motion-provider` | Type of a `{ initial, animate }` pair |
+| `Motion` | `motion-provider` | Plays a state passed through `definition` |
+| `MotionContainer` | `motion-provider` | Resolves `animation.mode` into a merged state |
+| `useAnimationMixer` | `motion-provider` | Returns the merged `AnimationModule` |
+| Presets | `motion-provider/presets` | 69 ready-made, tree-shakeable states |
+| `createMotionConfig` | `motion-provider` | Centralizes states inside registry entries |

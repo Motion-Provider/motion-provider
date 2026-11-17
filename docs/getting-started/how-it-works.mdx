@@ -1,0 +1,117 @@
+---
+title: "How Motion Provider Works"
+description: "Explaining how MP works under the hood"
+order: 40
+draft: true
+---
+
+## Under the hood
+
+MP has couple of layers in order to work. Under the hood things are totally isolated until everything wraps up to the point where React hydrates the modules.
+
+**The main modules can be group in 3 categories:**
+
+- **Animation Resolvers with registry**
+- **Playback drivers**
+- **The animation engine itself at the top of WAAPI** 
+
+<Callout type="note" title="Dedicated Section">
+    [In the landing page under the related section](/), we have a dedicated area for each of these categories illustrating the big picture and how they work, visually.
+</Callout>
+
+![Motion Provider Diagram](/docs/motion-provider-diagram.png)
+
+### Animation Resolvers with registry
+
+The point where React wires the animations by compiling them altogether. It understands the given `mode` prop afterwards resolves it by merging the given values of mode(s). 
+
+Example: 
+
+```tsx
+import { MotionContainer } from "motion-provider"
+
+<MotionContainer 
+    animation={{ 
+        mode: ["fadeIn", "filterBlurIn"]
+    }}
+/>
+```
+
+This will resolve the given modes into this object respectively by choosing the written presets from the registry:
+
+from:
+
+```ts
+const fadeIn = {
+  animate: {
+    opacity: 1,
+  },
+  initial: {
+    opacity: 0,
+  },
+} 
+
+const filterBlurIn = {
+  animate: {
+    filter: "blur(0px)",
+  },
+  initial: {
+    filter: "blur(10px)",
+  }
+}
+```
+
+to:
+
+```ts
+const compiled = {
+    animate: {
+        opacity: 1,
+        filter: "blur(0px)",
+    },
+    initial: {
+        opacity: 0,
+        filter: "blur(10px)",
+    }
+};
+```
+
+Then the merged object will be passed to the other layers alongside timing and other modules enabling you to control the animated element.
+
+### Playback drivers
+
+This is where the [CAS](/concepts/cas) is being used. It uses the native WAAPI to play/pause the animation by binding them. Registers browser's native APIs to make in-view and scroll-based animations called "drivers". 
+
+### The animation engine
+
+It consist of branched modules to process all other utilities to compile the animation and ensure that whether it's ready to animate or not. Subscibes browser events to emit the undergoing various functionalities such as:
+
+- Checks preference of reduced motion.
+- Exposes `AnimationHandle` API handler fns with the types below:
+- Controls the given props are valid otherwise shows the related error right back to you.
+
+```ts
+export interface AnimationHandle {
+  readonly finished: Promise<AnimationResult>;
+  readonly playState: AnimationPlayState;
+  readonly duration: number;
+  /** Current local timeline time in seconds. */
+  readonly currentTime: number;
+  /** Full effect time including delay/repeats/endDelay, in seconds. */
+  readonly totalDuration: number;
+  play(): Promise<AnimationResult>;
+  reverse(fromTime?: number): Promise<AnimationResult>;
+  pause(): void;
+  finish(): void;
+  cancel(): void;
+  reset(): void;
+  seek(progress: number): void;
+  setPlaybackRate(rate: number): void;
+  dispose(): void;
+}
+```
+
+
+
+
+
