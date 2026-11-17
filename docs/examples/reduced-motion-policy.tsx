@@ -33,7 +33,7 @@ export default function ReducedMotionPolicyDemo({
         </span>
       </p>
 
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         {policies.map(({ label, policy, detail }) => (
           <div
             key={policy}
