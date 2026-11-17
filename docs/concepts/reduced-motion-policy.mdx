@@ -24,7 +24,7 @@ Every animated component accepts the `reducedMotion` prop:
 />
 ```
 
-The policy is available on `Motion`, `MotionContainer`, `MotionChain`, `MotionText`, and `MotionImage`. Keep `user` as the default for general interface motion; reserve `never` for cases where motion is essential to understanding the interaction.
+The policy is available on `Motion`, `MotionContainer`, `MotionChain`, `MotionText`, and `MotionImage`. Keep `user` for ordinary interface motion. Use `never` sparingly: it deliberately overrides the user's accessibility preference.
 
 <Callout type="warning" title="Do not use motion as the only feedback">
   Reduced motion can remove the transition entirely. Make sure state changes, progress, and interaction feedback remain clear without animation.
