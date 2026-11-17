@@ -3,7 +3,7 @@ import type { ModuleProps } from "./types";
 
 export default function Cas2({ controller }: ModuleProps) {
   return (
-    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
+    <section className="size-full flex items-center justify-center tracking-tighter md:px-6 gap-4 md:gap-8">
       <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
         <MotionContainer
           elementType="span"
@@ -12,7 +12,7 @@ export default function Cas2({ controller }: ModuleProps) {
             transition: "gentle",
             duration: 0.5,
           }}
-          className="font-light text-sm -mb-12"
+          className="font-light md:text-sm text-xs -mb-12"
           controller={controller}
         >
           Motion CAS
@@ -28,7 +28,7 @@ export default function Cas2({ controller }: ModuleProps) {
             mode: "chars",
             delayLogic: "chaotic",
           }}
-          className="mt-0 capitalize"
+          className="mt-0 capitalize md:text-3xl text-lg"
           controller={controller}
         >
           Make stuffs alive
@@ -39,13 +39,13 @@ export default function Cas2({ controller }: ModuleProps) {
             mode: "fadeUp",
             transition: "gentle",
           }}
-          className="max-w-2xs -mt-4"
+          className="md:max-w-2xs max-w-42 text-pretty -mt-4 md:text-sm text-xs"
           controller={controller}
         >
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
-      <div className="flex gap-2 items-center relative">
+      <div>
         <MotionImage
           animation={{
             mode: ["fadeIn", "rotateFlipY"],
@@ -59,7 +59,7 @@ export default function Cas2({ controller }: ModuleProps) {
             delayLogic: "sinusoidal",
           }}
           alt="demo"
-          wrapperClassName="size-60 rounded-lg overflow-hidden object-cover"
+          wrapperClassName="md:size-60 size-40 rounded-lg overflow-hidden object-cover"
           controller={controller}
         />
       </div>

@@ -18,7 +18,7 @@ const data = createMotionConfig({
         transition: "gentle",
         duration: 0.5,
       },
-      className: "font-light text-sm -mb-12",
+      className: "font-light md:text-sm text-xs -mb-12",
     },
   },
   title: {
@@ -35,7 +35,7 @@ const data = createMotionConfig({
         mode: "chars",
         delayLogic: "chaotic",
       },
-      className: "mt-0 capitalize",
+      className: "mt-0 capitalize md:text-3xl text-lg",
     },
   },
   desc: {
@@ -47,7 +47,7 @@ const data = createMotionConfig({
         transition: "gentle",
         delay: 0.88,
       },
-      className: "max-w-2xs -mt-4",
+      className: "md:max-w-2xs max-w-42 text-pretty -mt-4 md:text-sm text-xs",
     },
   },
   image: {
@@ -66,7 +66,8 @@ const data = createMotionConfig({
         delayLogic: "sinusoidal",
       },
       alt: "demo",
-      wrapperClassName: "size-60 rounded-lg overflow-hidden object-cover",
+      wrapperClassName:
+        "md:size-60 size-40 rounded-lg overflow-hidden object-cover",
     },
   },
 });
@@ -92,7 +93,7 @@ export default function Cas4() {
   };
 
   return (
-    <section className="size-full flex items-center justify-center px-6 tracking-tighter relative">
+    <section className="size-full flex items-center justify-center tracking-tighter md:px-6 gap-4 md:gap-8">
       <div className="flex absolute top-12 left-3 gap-3 *:hover:text-accent z-50 bg-surface-secondary *:cursor-pointer px-3 text-xs text-surface-secondary-foreground backdrop-blur-xl rounded-md py-2">
         {actions.map((action) => (
           <button key={action} type="button" onClick={animate(action)}>

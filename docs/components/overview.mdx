@@ -1,0 +1,273 @@
+---
+title: "Overview"
+description: "Meet the six Motion Provider components, what each one is for, and the controller model they all share."
+order: 310
+draft: true
+---
+
+**Motion Provider ships six components, and each one covers a single job.** You pick the component by the shape of what you animate, then describe the motion with [motion state](/concepts/motion-state/) and let the browser's native WAAPI play it.
+
+All six render plain HTML, accept regular DOM props, work in [Server Components](/concepts/server-side-rendering/) and need **no provider or wrapper** around your app.
+
+| Component | Animates | Starts by default | Reach for it when |
+| --- | --- | --- | --- |
+| `MotionContainer` | One element, from named presets | In view, once | You want presets by name, mixed freely |
+| `Motion` | One element, from a direct definition | In view, once | You hold an `AnimationModule` and want per-preset tree shaking |
+| `MotionText` | A string, split into characters or words | In view, once | Headlines and paragraphs that reveal piece by piece |
+| `MotionChain` | A list of children, staggered | Right after hydration | Cards, list items and grids that enter in sequence |
+| `MotionImage` | An image, sliced into tiles | After the image loads | Pixel-tile reveals driven by hover or click |
+| `MotionLink` | Navigation, preceded by an exit | On click | Page transitions that must finish before the route changes |
+
+## Shared foundations
+
+Four components speak the same language. `MotionContainer`, `MotionText`, `MotionChain` and `MotionImage` take an `animation` object, and `Motion` takes the same data split into `definition` and `timing`.
+
+```tsx
+<MotionContainer
+  animation={{
+    mode: ["fadeUp", "filterBlurIn"], // presets, objects, or a mix
+    transition: "bounceSoft",         // optional named timing preset
+    duration: 0.8,                    // seconds, overrides the transition
+  }}
+/>
+```
+
+- **`mode`** accepts a preset name, an `AnimationModule`, or an array of both. The last entry wins per property.
+- **`transition`** names a duration and easing pair, such as `snappy` or `bounceSoft`. Any timing field you set in `animation` overrides it.
+- **Timing fields** are `duration`, `delay`, `endDelay`, `easing`, `iterations`, `direction` and `fill`, all in **seconds**.
+
+<Callout type="note" title="Easings are curves, not springs">
+Names such as `backOut` and `anticipate` resolve to cubic-bezier curves, and you can pass your own as a four-number tuple. Motion Provider has no spring solver, so bounce and elastic presets are curves, not simulations.
+</Callout>
+
+The five animation components share these props. `MotionLink` takes its own, and `MotionImage` has no `elementType`.
+
+| Prop | Purpose |
+| --- | --- |
+| `elementType` | Intrinsic tag to render, such as `section` or `li`. Defaults vary per component |
+| `controller` | Decides **when** the animation plays. See [Controllers](#controllers) |
+| `reducedMotion` | `"user"` (default), `"always"` or `"never"` |
+| `onMotionComplete` | Called with `{ status: "finished" \| "cancelled" }` |
+| `onMotionError` | Receives runtime failures, such as WAAPI being unavailable |
+| `style`, `className`, DOM props | Forwarded to the rendered element |
+
+<Callout type="warning" title="Tags only, not components">
+`elementType` takes an intrinsic HTML or SVG tag name as a string. To animate a custom component, wrap it in an element and animate the wrapper.
+</Callout>
+
+## MotionContainer
+
+The default choice. It resolves preset names, mixes them, and animates a single element. Reach for it first.
+
+```tsx
+<MotionContainer animation={{ mode: "fadeUp", duration: 0.8 }}>
+  Hello
+</MotionContainer>
+```
+<Registry slug="components-1" title="Preset sampler" description="Four MotionContainers, each with a different mode" />
+
+## Motion
+
+`Motion` is the engine under `MotionContainer`. It takes an `AnimationModule` directly through `definition` and your timing through `timing`, so nothing resolves by string at runtime. Import presets from `motion-provider/presets` and your bundler keeps only the ones you use.
+
+```tsx
+import { Motion } from "motion-provider";
+import { slideUp, heartbeat } from "motion-provider/presets";
+
+<Motion definition={slideUp} timing={{ duration: 0.7, easing: "backOut" }} />;
+<Motion definition={heartbeat} timing={{ duration: 0.8, iterations: 3 }} />
+```
+
+<Registry slug="components-2" title="Direct definitions" description="Presets passed straight to Motion" />
+
+<Callout type="tip" title="Which one: Motion or MotionContainer?">
+Both share the same engine and props. Use `Motion` when you import presets or write your own modules, and `MotionContainer` when you want to refer to presets by string name or keep them in a [registry](/registry/overview/).
+`<Motion />` is more like **minimalist and lightweight 5.4k size(gzipped)** while `<MotionContainer />` is more like a **full-featured component with 8.2k size(gzipped).**
+</Callout>
+
+## MotionText
+
+`MotionText` splits a string into **characters** or **words** and animates each token with an incremental delay. Assistive technology receives one unsplit copy, and the visual tokens are hidden from it.
+
+```tsx
+<MotionText
+  elementType="h2"
+  animation={{ mode: "fadeUp", duration: 0.5 }}
+  config={{ mode: "chars", delayLogic: "linear", duration: 0.04 }}
+>
+  Human-first motion
+</MotionText>
+```
+
+<Registry slug="components-3" title="Text splitting" description="Characters and words with different stagger algorithms" />
+
+- **`config.mode`** — `"chars"` (default, emoji and combining marks stay whole) or `"words"`
+- **`config.duration`** — seconds between tokens, independent of `animation.duration`
+- **`wrapperClassName`** styles the wrapper, while **`className`** styles every token
+
+<Callout type="warning" title="Children must be a string">
+Pass the text as a plain string. JSX children throw `INVALID_TEXT`, because the splitter needs the raw characters.
+</Callout>
+
+## MotionChain
+
+`MotionChain` wraps **every child** in its own animated element and staggers their delays. Give it one shared `animation`, or an `animations` array with exactly one entry per child.
+
+```tsx
+<ul>
+  <MotionChain
+    elementType="li"
+    animation={{ mode: ["fadeUp", "filterBlurIn"] }}
+    config={{ delayLogic: "linear", duration: 0.12 }}
+  >
+    {steps.map((step) => (
+      <span key={step}>{step}</span>
+    ))}
+  </MotionChain>
+</ul>
+```
+
+<Registry slug="components-4" title="Staggered chain" description="Three children entering one after another" />
+
+`MotionChain` returns siblings without a parent, so it sits inside your own `ul`, `div` or grid. React keys survive reordering.
+
+<details>
+<summary>All 21 stagger algorithms (delayLogic)</summary>
+
+`linear`, `exponential`, `sinusoidal`, `custom`, `square`, `triangle`, `sawtooth`, `cosine`, `fibonacci`, `pendulum`, `perlin`, `chaotic`, `bounce`, `spiral`, `quantum`, `jitter`, `shuffle`, `wave`, `pingpong`, `harmonic` and `randomWalk`.
+
+</details>
+
+<Callout type="tip" title="Deterministic and bounded">
+Delays are seeded (`seed`, default `12345`), so server and client agree, and `maxDelay` caps every delay at 60 seconds by default. Use `customLogic` with `delayLogic: "custom"` when you need your own curve.
+</Callout>
+
+## MotionImage
+
+`MotionImage` renders a real, accessible `img` and lays an **N×N grid of background tiles** on top. Each tile animates with its own delay, and `fn` turns the reveal into a hover or click interaction.
+
+```tsx
+<MotionImage
+  alt="Gradient landscape"
+  wrapperClassName="aspect-video w-72"
+  animation={{ mode: ["scaleZoomIn", "fadeIn"] }}
+  config={{ img: "/photo.jpg", pieces: 36, fn: "hover" }}
+/>
+```
+
+<Registry slug="components-5" title="Tiled image" description="A 6×6 grid revealed by hovering" />
+
+- **`pieces`** must be a positive perfect square, at most 1600
+- **`fn`** is `"hover"` or `"click"`. Without it, tiles follow the `controller`
+- **`fallback`** renders while the image loads
+
+<Callout type="note" title="Keyboard users get a button">
+When `fn` is set, the component adds a **Reveal image** button in the bottom-right corner that plays every tile at once, so the reveal never depends on a pointer.
+</Callout>
+
+<Callout type="warning" title="Reserve the space">
+The real `img` takes its size from the wrapper. Give `wrapperClassName` explicit dimensions or an `aspect-ratio`, especially with `loading="lazy"`, to prevent layout shift.
+</Callout>
+
+## MotionLink
+
+`MotionLink` is an anchor that **plays the exit first**. On click it reverses the animations registered on its `controller`, waits for their real completion, then navigates.
+
+```tsx
+const controller = useController();
+
+<>
+  <MotionContainer animation={{ mode: "fadeUp" }} controller={controller} />
+  <MotionLink
+    href="/pricing"
+    controller={controller}
+    navigate={(href) => router.push(href)}
+  >
+    Pricing
+  </MotionLink>
+</>;
+```
+
+<Registry slug="components-6" title="Exit before navigating" description="Click the link and watch the exit finish first" />
+
+- **`navigate`** receives the `href` so you can hand off to your router. Without it, `location.assign` runs.
+- **`onReverse`** adds your own exit work, and the link waits for it too.
+- **`timeout`** (default `10000`) caps the wait, reports `EXIT_TIMEOUT` and navigates anyway. **`timer`** sets a minimum wait. Both are in **milliseconds**, unlike every other timing value.
+
+<Callout type="note" title="Normal links stay normal">
+Modified clicks, `download`, `target="_blank"`, external origins and non-HTTP protocols skip the exit and behave like a regular anchor. Without a `controller` or `onReverse`, it is a plain anchor.
+</Callout>
+
+## Controllers
+
+The `controller` prop decides **when** an animation plays. It takes one of two forms.
+
+### Declarative
+
+A plain object of flags. It is serializable, so it works from Server Components.
+
+| Field | Effect |
+| --- | --- |
+| `configView` | In-view options: `amount` (default `0.5`), `once` (default `true`), `margin`, `root` |
+| `trigger` | `true` plays, `false` reverses. Replaces in-view detection |
+| `reverse` | Plays the animation backwards |
+| `isAnimationStopped` | Jumps straight to the finished state |
+| `scroll` | Scrubs progress with scroll position |
+| `controls` | Adds an imperative controller on top |
+
+When several are set, the first match wins in this order: `isAnimationStopped`, `scroll`, `trigger`, then in-view.
+
+<Registry slug="components-7" title="Repeating in-view" description="once: false reverses the animation when it leaves" />
+
+<Registry slug="components-8" title="Scroll scrubbing" description="Progress follows the scrollbar" />
+
+### Imperative
+
+`useController()` returns a stable store with `play`, `reverse`, `pause`, `finish`, `reset`, `cancel`, `seek(progress)` and `setPlaybackRate(rate)`. One controller can drive any number of components at once, and commands never re-render React.
+
+```tsx
+const controller = useController();
+
+<>
+  <MotionContainer animation={{ mode: "fadeUp" }} controller={controller} />
+  <button type="button" onClick={() => controller.play()}>
+    Play
+  </button>
+</>;
+```
+
+<Callout type="danger" title="A controller instance never autoplays">
+Passing an imperative controller switches off in-view detection. The animation waits for `controller.play()`. To combine a driver with commands, pass `{ configView, controls: controller }`, and the commands take over after the first call.
+</Callout>
+
+<Callout type="warning" title="Chains start immediately">
+`MotionChain` defaults to `trigger: true` and plays right after hydration, while `MotionText` waits for the viewport. Set `controller={{}}` on a chain to get in-view behavior.
+</Callout>
+
+## Errors
+
+Invalid usage throws a `MotionError` during render, so wrap risky areas in an error boundary.
+
+| Code | Component | Cause |
+| --- | --- | --- |
+| `INVALID_ELEMENT` | `Motion`, `MotionContainer` | `elementType` is not an intrinsic tag |
+| `INVALID_TEXT` | `MotionText` | Children are not a string |
+| `CHAIN_EMPTY` | `MotionChain` | No children |
+| `CHAIN_ANIMATION` | `MotionChain` | Neither or both of `animation` and `animations` |
+| `CHAIN_LENGTH` | `MotionChain` | `animations` does not match the child count |
+| `IMAGE_SOURCE` | `MotionImage` | `config.img` is empty |
+| `IMAGE_PIECES` | `MotionImage` | `pieces` is not a perfect square up to 1600 |
+| `EXIT_TIMEOUT` | `MotionLink` | Exit exceeded `timeout`, reported through `onMotionError` |
+
+## API highlights
+
+| API | Import | Role |
+| --- | --- | --- |
+| `MotionContainer`, `Motion` | `motion-provider` | Animate one element |
+| `MotionText`, `MotionChain`, `MotionImage` | `motion-provider` | Split, stagger and tile |
+| `MotionLink` | `motion-provider` | Exit-then-navigate anchor |
+| `useController` | `motion-provider` | Imperative playback store |
+| `useReducedMotion` | `motion-provider` | Reactive reduced-motion preference |
+| Presets | `motion-provider/presets` | 69 tree-shakeable `AnimationModule` objects |
+
+Continue with the dedicated pages: [MotionContainer](/components/motion-container/), [Motion](/components/motion/), [MotionText](/components/motion-text/), [MotionChain](/components/motion-chain/), [MotionImage](/components/motion-image/) and [MotionLink](/components/motion-link/).

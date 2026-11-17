@@ -19,13 +19,11 @@ const policies = [
   },
 ] as const;
 
-export default function ReducedMotionPolicyDemo({
-  controller,
-}: ModuleProps) {
+export default function ReducedMotionPolicyDemo({ controller }: ModuleProps) {
   const prefersReducedMotion = useReducedMotion();
 
   return (
-    <div className="w-full max-w-2xl space-y-5">
+    <div className="w-full max-w-2xl space-y-5 px-3">
       <p className="text-sm text-muted" aria-live="polite">
         System preference:{" "}
         <span className="font-medium text-foreground">

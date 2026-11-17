@@ -369,9 +369,7 @@ const actions = [
 export default function MarketingSection() {
   const controller = useController();
 
-   const animate = (action: Action) => (): void => {
-    controller[action]();
-  };
+   const animate = (action: Action) => (): void => controller[action];
   
   return (      
     <section className="size-full flex items-center justify-center px-6 tracking-tighter">
