@@ -1,0 +1,130 @@
+---
+title: "Next.js"
+description: "Use Motion Provider with the Next.js App Router and React Server Components."
+order: 220
+draft: true
+---
+
+Motion Provider works with the **Next.js App Router** without turning your pages or layouts into Client Components. Its animated components already define their own client boundary: Next.js can render them from a Server Component, include their initial state in the HTML, and start WAAPI playback after hydration.
+
+Install the package:
+
+```bash
+npm install motion-provider
+```
+
+## Render from a Server Component
+
+Import Motion Provider components directly in an App Router page. You do not need to add `"use client"` to the page just to animate its content:
+
+```tsx
+// app/page.tsx
+import { MotionContainer, MotionText } from "motion-provider";
+
+export default function Page() {
+  return (
+    <main>
+      <MotionText
+        elementType="h1"
+        animation={{ mode: "fadeUp", duration: 0.6 }}
+        config={{ mode: "words" }}
+      >
+        Build interfaces that move.
+      </MotionText>
+
+      <MotionContainer animation={{ mode: ["fadeUp", "filterBlurIn"] }}>
+        Rendered on the server, animated after hydration.
+      </MotionContainer>
+    </main>
+  );
+}
+```
+
+<Registry slug="nextjs-app-router" title="App Router rendering" />
+
+See [Server-Side Rendering](/concepts/server-side-rendering/) for details about the initial HTML, hydration, and content visibility.
+
+## Add client-side control
+
+Add `"use client"` only when your own component needs React hooks, event handlers, or browser APIs. For example, create the controller inside that boundary and share it with the animated components:
+
+```tsx
+// app/components/interactive-panel.tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export function InteractivePanel() {
+  const controller = useController();
+
+  return (
+    <section>
+      <MotionContainer
+        controller={controller}
+        animation={{ mode: "fadeUp" }}
+      >
+        Controlled content
+      </MotionContainer>
+
+      <button type="button" onClick={() => void controller.play()}>
+        Play
+      </button>
+      <button type="button" onClick={() => controller.pause()}>
+        Pause
+      </button>
+      <button type="button" onClick={() => controller.reset()}>
+        Reset
+      </button>
+    </section>
+  );
+}
+```
+
+A Server Component can render `<InteractivePanel />` as part of its page. Keep the client boundary as small as the interaction allows.
+
+## Coordinate navigation
+
+For exit animations with the App Router, use `MotionLink` inside a Client Component. Share the controller with the elements that should reverse, then connect its `navigate` prop to `router.push()`:
+
+```tsx
+"use client";
+
+import { MotionContainer, MotionLink, useController } from "motion-provider";
+import { useRouter } from "next/navigation";
+
+export function AnimatedNavigation() {
+  const router = useRouter();
+  const controller = useController();
+
+  return (
+    <>
+      <MotionContainer
+        controller={controller}
+        animation={{ mode: "fadeUp" }}
+      >
+        Current page
+      </MotionContainer>
+
+      <MotionLink
+        href="/about"
+        controller={controller}
+        navigate={(href) => router.push(href)}
+      >
+        About
+      </MotionLink>
+    </>
+  );
+}
+```
+
+`MotionLink` waits for the registered animations to reverse before calling `navigate`. Without a custom `navigate`, it falls back to `window.location.assign()`.
+
+<Callout type="warning" title="Keep runtime values inside Client Components">
+  A controller returned by `useController()`, callbacks, and router instances cannot cross the Server-to-Client serialization boundary. Create and use them inside a Client Component. Plain animation props and serializable configuration can be passed from a Server Component.
+</Callout>
+
+## Next.js integration notes
+
+- Use the default `user` reduced-motion policy; see [Reduced Motion Policy](/concepts/reduced-motion-policy/).
+- Keep `createMotionConfig()` data in a shared module when you want typed animation props reusable by Server and Client Components. Keep any function-valued options inside the client boundary.
+- Motion Provider targets intrinsic HTML and SVG elements. Wrap custom React components with a Motion Provider component rather than passing them to `elementType`.
