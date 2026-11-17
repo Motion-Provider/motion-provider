@@ -7,6 +7,402 @@ draft: true
 
 ## Intro
 
-The term of CAS comes 
+The term CAS consist of 3 primary elements:
+
+- **C** — Controlled (using `useController`)
+- **A** — Animation (animation object that we pass in MP components `animation={{ }}`)
+- **S** — System (means collective, more than one with `createMotionRegistry()`)    
+
+By utilizing all these, you're going to be able to create a CAS system which allows the MP component to oriantate simultaneously. 
+
+I don't think that anyone ever has created or used such system through the animations, it's probably a new thing though 😀
+
+## Creating CAS
+
+Let's create an interface for a marketing side where things moves simultaneously. I guess it'd be the best fit to explain how CAS implemented/works.
+
+Creating CAS requires 3 element given above plus a suitable area of your site to be animated, most likely a section where element may look stacked.  
+
+Assuming we got something like this: 
+
+```tsx
+<section className="size-full flex items-center justify-center px-6 tracking-tighter">
+    <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+        <span className="font-light text-sm">Motion CAS</span>
+        <h2 className="mt-0 capitalize">Make stuffs alive</h2>
+        <p className="max-w-2xs -mt-4">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </p>
+        </div>
+        <div className="flex flex-1 gap-2 items-center relative">
+        <img className="size-full rounded-lg" />
+    </div>
+</section>
+```
+
+<Registry slug="cas-1" title="CAS — plain UI"/>
+
+Consider the CAS is a gate keeper of your elements and if you're not in the gate, you won't be able to see the elements.
+The CAS sees 4 passenger depending on what are being carried:
+
+- texts
+- images
+
+Therefore, there is potential for 4 different animations.
+
+- `span`
+- `h2`
+- `p`
+- `img`
+
+Let's build the core layer and prepare the animations for CAS.
+
+## Building the Core Layer
+
+4 animations for each to go:
+
+```tsx
+<section className="size-full flex items-center justify-center px-6 tracking-tighter">
+    <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+        <MotionContainer
+            elementType="span"
+            animation={{
+                mode: ["fadeUp", "filterBlurIn"],
+                transition: "gentle",
+                duration: 0.5,
+            }}
+            className="font-light text-sm"
+        >
+            Motion CAS
+        </MotionContainer>
+        <MotionText
+            elementType="h2"
+            animation={{
+                mode: ["textShimmer", "transformTextGlow"],
+                duration: 0.88,
+                transition: "bounceSoft",
+            }}
+            config={{
+                mode: "chars",
+                delayLogic: "chaotic",
+            }}
+            className="mt-0 capitalize"
+        >
+            Make stuffs alive
+        </MotionText>
+        <MotionContainer
+            elementType="p"
+            animation={{
+                mode: "fadeUp",
+                transition: "gentle",
+            }}
+            className="max-w-2xs -mt-4"
+        >
+            Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </MotionContainer>
+    </div>
+    <div className="flex flex-1 gap-2 items-center relative">
+        <MotionImage
+            animation={{
+                mode: ["fadeIn", "flash"],
+                transition: "gentle",
+                duration: 0.92,
+            }}
+            config={{
+                img: "SOURCE_IMG_URL",
+                pieces: 49,
+                duration: 0.42,
+            }}
+            alt="demo"
+            wrapperClassName="size-full rounded-lg"
+        />
+    </div>
+</section>
+```
+
+This will create our baseline of CAS:
+
+<Registry slug="cas-2" title="CAS — animation implemented"/>
+
+Looks nice but we must add `delay` to make it look smooth. Now everything loads at the same time. This may disrupt the UX a bit and cause potential bugs depending on the user device.
+
+<Callout type="note" title="In addition to the timing">
+    We recommend adding a `delay` if the visible area contains more than two-thirds MP animated elements. This is not only for the sequence, but also to schedule the animations in order and prevent harm to CPU performance. 
+    Adding a delay will make the transition between batched elements less prone to lag.    
+</Callout>
 
 
+## Adding delay
+
+Starting from the first visible element which our case is badge `span` and move down to the last visible element `p`. Finally, we will end with the `img` element. 
+
+```tsx
+    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
+      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+        <MotionContainer
+          animation={{
+            mode: ["fadeUp", "filterBlurIn"],
+            transition: "gentle",
+            duration: 0.5,
+            delay: 0, // Delibarately added, it's already default to '0'
+          }}
+        >
+          Motion CAS
+        </MotionContainer>
+        <MotionText
+          animation={{
+            mode: ["textShimmer", "transformTextGlow"],
+            duration: 0.88,
+            transition: "bounceSoft",
+            delay: 0.44, // +0.44s later will be shown  
+          }}
+        >
+          Make stuffs alive
+        </MotionText>
+        <MotionContainer
+          animation={{
+            mode: "fadeUp",
+            transition: "gentle",
+            delay: 0.88, // +0.88s later will be shown
+          }}
+        >
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </MotionContainer>
+      </div>
+      <div className="flex flex-1 gap-2 items-center relative">
+        <MotionImage
+          animation={{
+            mode: ["fadeIn", "rotateFlipY"],
+            transition: "gentle",
+            duration: 0.92,
+            delay: 1.2, // +1.2s later will be shown
+          }}
+        />
+      </div>
+    </section>
+```
+
+In CAS, its fair practice to not add `delay` to the first element which enter the viewport. The remaining ones, delayed 0.44 seconds apart.
+
+<Registry slug="cas-3" title="CAS — delay added"/>
+
+Lovely, it's now almost done as it looks ugly in the developer's scope. MP designed in mind to not make your JSX messy. That is why we have an easy way to pass animation registries down to your element that you already animated.  
+
+## Adding the registry
+
+The registry allows you to pass the animation props down to your element in one line keeping the other things clean, reusable, readable and maintainable.
+
+You can create a file called `motion.data.ts` under `@/constants` or `@/data` folder.
+
+```ts
+// @/constants/motion.data.ts
+import { createMotionConfig } from "motion-provider";
+
+export default createMotionConfig({
+  badge: {
+    type: "MotionContainer",
+    props: {
+      elementType: "span",
+      animation: {
+        mode: ["fadeUp", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.5,
+      },
+      className: "font-light text-sm -mb-12",
+    },
+  },
+  title: {
+    type: "MotionText",
+    props: {
+      elementType: "h2",
+      animation: {
+        mode: ["textShimmer", "transformTextGlow"],
+        duration: 0.88,
+        transition: "bounceSoft",
+        delay: 0.44,
+      },
+      config: {
+        mode: "chars",
+        delayLogic: "chaotic",
+      },
+      className: "mt-0 capitalize",
+    },
+  },
+  desc: {
+    type: "MotionContainer",
+    props: {
+      elementType: "p",
+      animation: {
+        mode: "fadeUp",
+        transition: "gentle",
+        delay: 0.88,
+      },
+      className: "max-w-2xs -mt-4",
+    },
+  },
+  image: {
+    type: "MotionImage",
+    props: {
+      animation: {
+        mode: ["fadeIn", "rotateFlipY"],
+        transition: "gentle",
+        duration: 0.92,
+        delay: 1.2,
+      },
+      config: {
+        img: "SOURCE_IMG_URL",
+        pieces: 36,
+        duration: 0.42,
+        delayLogic: "sinusoidal",
+      },
+      alt: "demo",
+      wrapperClassName: "size-full rounded-lg overflow-hidden object-cover",
+    },
+  },
+})
+```
+
+`createMotionConfig` will walk you through the process of adding registry to your elements with full type safety. The object key is the animation name so name it in respect to your elements semantic purpose. 
+
+<Callout type="note" title="Info">
+    The object store that you pass to `createMotionConfig()` is a plain object, so it's safe to define it at the module level. However, we recommend defining it at the section or page level, as the lookup algorithm is O(n). 
+    Unlike defining at the page level, defining at the app level is not honored by the memory and convenience.
+</Callout>
+
+Now let's add our getter. 
+
+```ts
+// @/lib/motion/marketing-section.ts
+import { createMotionRegistry } from "motion-provider";
+import data from "@/constants/motion.data";
+
+// type-safe, will show the key list and error when something missed
+export const { getMotionAnimation } = createMotionRegistry(data); 
+```
+
+Using all in our component:
+
+
+```tsx
+import { getMotionAnimation } from "@/lib/motion/marketing-section.ts";
+
+export default function MarketingSection() {
+  return (
+    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
+      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+        <MotionContainer {...getMotionAnimation("badge")}>
+          Motion CAS
+        </MotionContainer>
+        <MotionText {...getMotionAnimation("title")}>
+          Make stuffs alive
+        </MotionText>
+        <MotionContainer {...getMotionAnimation("desc")}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </MotionContainer>
+      </div>
+      <div className="flex flex-1 gap-2 items-center relative">
+        <MotionImage {...getMotionAnimation("image")} />
+      </div>
+    </section>
+  );
+}
+```
+
+From 42 lines to 15 lines, that's a big DX improvement. The result is the same with the previous example:
+
+<Registry slug="cas-3" title="CAS — with registry"/>
+
+The images from my IDE while implementing the registry: 
+
+![IDE Screenshot](/docs/typesafety-ide.png)
+
+## Creating the controller
+
+Now the final step is to finish CAS implementation. We're going to need one more API called `useController()` to achieve this.
+If you're on Next.js do not forget to add `use client` in the file as it becomes a client component with the added hook.
+
+
+```tsx
+import { useController } from "motion-provider";
+
+export default function MarketingSection() {
+  const controller = useController();
+  
+  return (
+    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
+      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+        <MotionContainer {...getMotionAnimation("badge")} controller={controller}>
+          Motion CAS
+        </MotionContainer>
+        <MotionText {...getMotionAnimation("title")} controller={controller}>
+          Make stuffs alive
+        </MotionText>
+        <MotionContainer {...getMotionAnimation("desc")} controller={controller}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </MotionContainer>
+      </div>
+      <div className="flex flex-1 gap-2 items-center relative">
+        <MotionImage {...getMotionAnimation("image")} controller={controller} />
+      </div>
+    </section>
+  );
+}
+```
+
+Now we can bind the controller to the elements:
+
+```tsx
+import { 
+    useController,   
+    type AnimationController,
+} from "motion-provider";
+
+// extend the typea as you add more actions 
+type Action = keyof Pick<AnimationController, "pause" | "onReverse" | "play">;
+
+const actions = [
+  "play",
+  "pause",
+  "onReverse",
+] as const satisfies readonly Action[];
+
+export default function MarketingSection() {
+  const controller = useController();
+
+   const animate = (action: Action) => (): void => {
+    controller[action]();
+  };
+  
+  return (      
+    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
+
+        {actions.map((action) => (
+          <button key={action} type="button" onClick={animate(action)}>
+            {action}
+          </button>
+        ))}
+
+      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+        <MotionContainer {...getMotionAnimation("badge")} controller={controller}>
+          Motion CAS
+        </MotionContainer>
+        <MotionText {...getMotionAnimation("title")} controller={controller}>
+          Make stuffs alive
+        </MotionText>
+        <MotionContainer {...getMotionAnimation("desc")} controller={controller}>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+        </MotionContainer>
+      </div>
+      <div className="flex flex-1 gap-2 items-center relative">
+        <MotionImage {...getMotionAnimation("image")} controller={controller} />
+      </div>
+    </section>
+  )
+}
+```
+
+It turns into:
+
+<Registry slug="cas-4" title="CAS — with controller"/>
+
+Wola! The rest is up to your imagination whether you wire the controller with an event listener just like we did or an external API triggering the exposed bindings. 

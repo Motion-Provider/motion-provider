@@ -7,7 +7,7 @@ const { title } = Astro.props;
 ---
 
 <section aria-label={title} class="my-8 bg-surface/20 rounded-2xl relative overflow-hidden border border-border/50">
-    {title && <span class="absolute z-50 bottom-1.5 left-3 tracking-tighter text-muted max-w-3xs truncate">{title}</span>}
+    {title && <span class="absolute text-xs z-50 top-3 left-3 tracking-tighter text-muted max-w-3xs truncate">{title}</span>}
     <div
       class="absolute inset-0 h-full w-full overflow-hidden [--pattern-scales:var(--color-white)]/10 -z-10"
       style={

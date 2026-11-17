@@ -77,8 +77,10 @@ Presets can be composed by passing more than one entry to `mode`. Each module co
 
 The order is significant when two modules define the same CSS property. Later entries overwrite earlier entries for that property in both state maps; properties that do not conflict remain part of the combined animation.
 
-<Callout type="warning" title="Watch for property conflicts">
-  Combining two presets does not create separate timelines or independently timed effects. They resolve into one animation definition with one timing configuration. When presets both set `opacity`, `transform`, or another shared property, the later preset takes precedence. Choose the order deliberately.
+<Callout type="danger" title="Watch for property conflicts">
+  Combining two presets **does not create separate timelines or independently timed effects!** 
+  
+  They resolve into [one animation definition](/getting-started/how-it-works/#animation-resolvers-with-registry) with one timing configuration. When presets both set `opacity`, `transform`, or another shared property, the later preset takes precedence. Choose the order deliberately.
 </Callout>
 
 ## Using a module directly with Motion
