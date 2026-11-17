@@ -1,0 +1,39 @@
+---
+title: "Reduced Motion Policy"
+description: "Respect the user's motion preference with Motion Provider."
+order: 160
+draft: true
+---
+
+Motion Provider respects the operating system's `prefers-reduced-motion` setting by default. When reduced motion is active, an animation skips playback and immediately applies its destination state.
+
+## Choosing a policy
+
+Every animated component accepts the `reducedMotion` prop:
+
+| Value | Behavior |
+| --- | --- |
+| `user` | Follows the system preference. Default. |
+| `always` | Always skips animation playback. |
+| `never` | Always plays the animation, regardless of the system preference. |
+
+```tsx
+<MotionContainer
+  animation={{ mode: "fadeUp" }}
+  reducedMotion="user"
+/>
+```
+
+The policy is available on `Motion`, `MotionContainer`, `MotionChain`, `MotionText`, and `MotionImage`. Keep `user` as the default for general interface motion; reserve `never` for cases where motion is essential to understanding the interaction.
+
+<Callout type="warning" title="Do not use motion as the only feedback">
+  Reduced motion can remove the transition entirely. Make sure state changes, progress, and interaction feedback remain clear without animation.
+</Callout>
+
+## Try each policy
+
+The example compares the system setting with forced reduced and full motion. Change your operating system's reduced-motion preference to see the `user` column respond.
+
+<Registry slug="reduced-motion-policy" title="Reduced Motion Policy" />
+
+Use `useReducedMotion()` when your own client-side UI needs to read the current system preference. It returns a boolean and subscribes to preference changes; it does not override the policy of an animated component.
