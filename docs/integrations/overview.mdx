@@ -1,0 +1,94 @@
+---
+title: "Overview"
+description: "Integrate Motion Provider with React components and application routing."
+order: 210
+draft: true
+---
+
+Motion Provider is designed to fit into an existing React application. Its components render ordinary HTML or SVG elements, while the animation lifecycle is attached after React commits. **No global provider or application-wide wrapper is required.**
+
+## Shared animation control
+
+Use `useController()` when multiple elements need to play, pause, reverse, or reset together. Pass the same controller to each animated component:
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export function Intro() {
+  const controller = useController();
+
+  return (
+    <section>
+      <MotionContainer
+        controller={controller}
+        animation={{ mode: "fadeUp" }}
+      >
+        Title
+      </MotionContainer>
+
+      <MotionContainer
+        controller={controller}
+        animation={{ mode: "fadeIn", delay: 0.2 }}
+      >
+        Description
+      </MotionContainer>
+
+      <button onClick={() => void controller.reverse()}>
+        Reverse section
+      </button>
+    </section>
+  );
+}
+```
+
+<Registry slug="integrations-overview" title="Shared controller" />
+
+## Router integration
+
+`MotionLink` coordinates an exit animation before navigation. Supply the controller shared with the elements that should reverse, then pass your router's navigation function through `navigate`:
+
+```tsx
+"use client";
+
+import { MotionContainer, MotionLink, useController } from "motion-provider";
+import { useRouter } from "next/navigation";
+
+export function AnimatedNavigation() {
+  const router = useRouter();
+  const controller = useController();
+
+  return (
+    <>
+      <MotionContainer
+        controller={controller}
+        animation={{ mode: "fadeUp" }}
+      >
+        Current page content
+      </MotionContainer>
+
+      <MotionLink
+        href="/about"
+        controller={controller}
+        navigate={(href) => router.push(href)}
+      >
+        About
+      </MotionLink>
+    </>
+  );
+}
+```
+
+Without `navigate`, `MotionLink` uses normal location navigation. It preserves modified clicks, downloads, external links, and alternate targets.
+
+## Framework and component boundaries
+
+- **Next.js:** Keep hooks such as `useController()` inside Client Components. Motion components can be rendered within the usual Server Component tree; the animation effect attaches on the client.
+- **Custom components:** Animate their rendered DOM by placing a Motion Provider component around their markup. `elementType` accepts intrinsic HTML/SVG tags, not arbitrary React components.
+- **Centralized configuration:** Use `createMotionConfig()` and `createMotionRegistry()` to share typed animation props. The configuration itself is plain data and can be defined outside a Client Component.
+- **Accessibility:** Motion components respect the reduced-motion preference by default. See [Reduced Motion Policy](/concepts/reduced-motion-policy) for overrides and the `useReducedMotion()` hook.
+
+<Callout type="note" title="Keep controllers inside the client boundary">
+  An `AnimationController` is a runtime object, not serializable configuration. Create it with `useController()` in a Client Component and pass it to the animated components that it coordinates.
+</Callout>
