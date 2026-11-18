@@ -97,7 +97,7 @@ When the link is activated, `MotionLink` reverses the animations registered with
 
 ## Animate Query-driven states
 
-Motion Provider can animate the UI produced by TanStack Query without changing how queries are declared. Render distinct states for the initial pending, error, and success results:
+Motion Provider can animate the UI produced by TanStack Query without changing how queries are declared. The example uses TanStack Query v5's `isPending` result flag; with v4, use `isLoading` for the initial loading state. Render distinct states for the initial pending, error, and success results:
 
 ```tsx
 import { useQuery } from "@tanstack/react-query";
@@ -178,4 +178,4 @@ Keep animation definitions and plain configuration objects in shared modules. Cr
 | `createMotionConfig()` / `createMotionRegistry()` | Keep reusable, typed animation props in a shared configuration module. |
 | `useReducedMotion()` | Read the user's system preference in React; components also respect it by default. |
 
-Use the default `reducedMotion="user"` policy for ordinary interface motion. See [Reduced Motion Policy](/concepts/reduced-motion-policy/) for overrides and [Server-Side Rendering](/concepts/server-side-rendering/) for hydration details.
+Use the default `reducedMotion="user"` policy for ordinary interface motion. See [Reduced Motion Policy](/concepts/reduced-motion-policy/) for overrides and [Server-Side Rendering](/concepts/server-side-rendering/) for hydration details. For framework-specific behavior, refer to the official [TanStack Router navigation guide](https://tanstack.com/router/latest/docs/guide/navigation), [TanStack Query guide](https://tanstack.com/query/latest/docs/framework/react/guides/queries), and [TanStack Start SSR guide](https://tanstack.com/start/latest/docs/framework/react/guide/selective-ssr).
