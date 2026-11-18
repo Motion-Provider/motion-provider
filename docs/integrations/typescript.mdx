@@ -1,9 +1,189 @@
 ---
-title: "Typescript"
-description: ""
+title: "TypeScript"
+description: "Use Motion Provider's exported types to define animations and reusable component props with TypeScript."
 order: 250
 draft: true
 ---
 
-## Typescript
+Motion Provider ships its TypeScript declarations with the package. Import runtime APIs and their corresponding types directly from `motion-provider`; no separate `@types` package or declaration setup is required.
 
+The root entry point exports the component props, animation models, timing types, controller types, and configuration helpers. Individual preset modules are available from `motion-provider/presets`.
+
+## Define typed animation modules
+
+An `AnimationModule` describes the initial and destination states. Use TypeScript's `satisfies` operator to validate the shape without widening the values of your definition:
+
+```tsx
+import { Motion, type AnimationModule } from "motion-provider";
+
+const reveal = {
+  initial: {
+    opacity: 0,
+    y: 24,
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+  },
+} satisfies AnimationModule;
+
+export function Reveal() {
+  return (
+    <Motion
+      definition={reveal}
+      timing={{ duration: 0.6, easing: "ease-out" }}
+    >
+      Content
+    </Motion>
+  );
+}
+```
+
+A state accepts CSS property values as strings or numbers. Use an array when a property needs multiple keyframes. The `Motion` component consumes a module through `definition`, while `timing` controls its playback.
+
+You can also import a ready-made module by name:
+
+```tsx
+import { Motion } from "motion-provider";
+import { fadeUp } from "motion-provider/presets";
+
+<Motion definition={fadeUp} timing={{ duration: 0.5 }} />;
+```
+
+Importing only the presets you use keeps the definition explicit and allows unused preset modules to be excluded by your bundler.
+
+## Type preset-based animation props
+
+Components such as `MotionContainer`, `MotionText`, and `MotionImage` resolve preset names through their `animation` prop. Derive the prop type from the component when defining reusable animation objects:
+
+```tsx
+import {
+  MotionContainer,
+  type MotionContainerProps,
+} from "motion-provider";
+
+const heroAnimation = {
+  mode: ["fadeUp", "filterBlurIn"] as const,
+  transition: "gentle",
+  duration: 0.7,
+} satisfies MotionContainerProps["animation"];
+
+export function Hero() {
+  return (
+    <MotionContainer elementType="section" animation={heroAnimation}>
+      Build interfaces that move.
+    </MotionContainer>
+  );
+}
+```
+
+This validates preset names, transition names, and timing options against the library's public types. The `mode` property accepts a single preset, an `AnimationModule`, or a readonly array of either. Timing values such as `duration`, `delay`, and `endDelay` are expressed in seconds.
+
+<Callout type="note" title="Use the component prop types">
+  Prefer `MotionContainerProps["animation"]` or the corresponding component prop type over recreating the library's animation interfaces in your application. Your definitions stay aligned with the installed package version.
+</Callout>
+
+## Share typed animation configuration
+
+Use `createMotionConfig()` to declare reusable component props, then bind a type-safe getter with `createMotionRegistry()`:
+
+```tsx
+// motion.config.ts
+import {
+  createMotionConfig,
+  createMotionRegistry,
+} from "motion-provider";
+
+const motionConfig = createMotionConfig({
+  pageTitle: {
+    type: "MotionText",
+    props: {
+      elementType: "h1",
+      animation: { mode: "fadeUp", duration: 0.6 },
+      config: { mode: "words" },
+    },
+  },
+  introSection: {
+    type: "MotionContainer",
+    props: {
+      elementType: "section",
+      animation: { mode: "fadeIn" },
+    },
+  },
+});
+
+export const { getMotionAnimation } =
+  createMotionRegistry(motionConfig);
+```
+
+Retrieve the props at the component call site:
+
+```tsx
+import { MotionText } from "motion-provider";
+import { getMotionAnimation } from "./motion.config";
+
+export function PageTitle() {
+  return (
+    <MotionText {...getMotionAnimation("pageTitle")}>
+      Typed animation configuration
+    </MotionText>
+  );
+}
+```
+
+The configuration preserves its literal keys and each entry's component-specific props. TypeScript checks the key passed to `getMotionAnimation()` and the props declared for that entry. The registry is local to the configuration you provide; it does not create a global registration system.
+
+<Callout type="warning" title="Use the matching component">
+  Each entry declares its component in `type`. Spread its returned props into that same component—for example, use a `MotionText` entry with `MotionText`, not `MotionContainer`. The getter types the props, but it does not render or select the component for you.
+</Callout>
+
+## Type runtime controls
+
+The animation components are typed React components, but hooks and runtime controllers still belong in a Client Component. `useController()` returns an `AnimationController` that can be shared by the elements it coordinates:
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export function ControlledPanel() {
+  const controller = useController();
+
+  return (
+    <section>
+      <MotionContainer
+        animation={{ mode: "fadeUp" }}
+        controller={controller}
+        onMotionComplete={({ status }) => console.log(status)}
+      >
+        Controlled content
+      </MotionContainer>
+
+      <button type="button" onClick={() => void controller.play()}>
+        Play
+      </button>
+      <button type="button" onClick={() => void controller.reverse()}>
+        Reverse
+      </button>
+    </section>
+  );
+}
+```
+
+<Callout type="warning" title="Do not pass controllers across server boundaries">
+  An `AnimationController` is a runtime object, not serializable configuration. Create it with `useController()` inside a Client Component. Plain animation definitions and configuration objects can remain in shared modules and be used by Server Components.
+</Callout>
+
+## API highlights
+
+| API | Purpose |
+| --- | --- |
+| `AnimationModule`, `MotionState`, `MotionValue` | Describe initial and destination styles, including keyframes. |
+| `Timing`, `MotionAnimationProps` | Type playback options and preset-based animation props. |
+| `MotionContainerProps`, `MotionTextProps`, `MotionChainProps`, `MotionImageProps`, `MotionLinkProps` | Expose the component-specific prop contracts. |
+| `AnimationController`, `AnimationResult`, `ControlAction` | Type playback controls and animation results. |
+| `createMotionConfig()`, `createMotionRegistry()` | Declare reusable props and create a key-safe getter. |
+| `createMotionGetter()`, `getMotionAnimation()` | Create a function-only getter or retrieve props from a config and key. |
+| `useController()`, `useAnimation()`, `useAnimationMixer()`, `useReducedMotion()` | Access typed client-side control, preset mixing, and reduced-motion state. |
+
+For the full behavior of each feature, see [Presets & Modules](/concepts/presets-and-modules/), [Server-Side Rendering](/concepts/server-side-rendering/), and [Reduced Motion Policy](/concepts/reduced-motion-policy/).
