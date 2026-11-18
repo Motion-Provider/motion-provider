@@ -1,26 +1,17 @@
 ---
 title: "Astro"
-description: "Integrate Motion Provider with Astro through server-rendered React islands and client hydration."
+description: "Use Motion Provider in Astro through hydrated React islands."
 order: 230
 draft: true
 ---
 
-Motion Provider is a React library, so Astro renders it through the official [React integration](https://docs.astro.build/en/guides/integrations-guide/react/). Motion components can render their initial HTML on the server; the browser attaches WAAPI playback after the React island hydrates.
+Motion Provider is a React library, so Astro uses it through the [React integration](https://docs.astro.build/en/guides/integrations-guide/react/). Motion components are safe to server-render: Astro can output their initial HTML, then the browser starts WAAPI playback when the island hydrates.
 
-## Set up React
-
-Add Astro's React integration, then install Motion Provider:
-
-```sh
-npx astro add react
-npm install motion-provider
-```
-
-The integration command configures `@astrojs/react` in `astro.config.*`. Confirm that your project uses React 19 or later within the supported React 19 range: Motion Provider declares `react: ^19.0.0` as its peer dependency.
+[Follow this guide to install the package](/getting-started/installation)
 
 ## Render a Motion island
 
-Import components directly into an `.astro` file and add an Astro hydration directive:
+Import Motion Provider components directly into an `.astro` file and choose when each React island should hydrate:
 
 ```astro
 ---
@@ -38,99 +29,27 @@ import { MotionContainer, MotionText } from "motion-provider";
   </MotionText>
 
   <MotionContainer
-    elementType="section"
-    animation={{ mode: "fadeIn" }}
+    animation={{ mode: "fadeUp" }}
     client:visible
   >
-    Hydrated when this section approaches the viewport.
+    Hydrated when this section enters the viewport.
   </MotionContainer>
 </main>
 ```
 
-Astro renders the initial state as HTML and controls when the React code is sent to the browser. Motion Provider then controls the animation itself. For `MotionContainer`, the default in-view policy starts playback at 50% visibility and runs once. With `client:visible`, hydration must happen before that animation policy can run.
+## Choose a hydration strategy
 
-## Choose when to hydrate
+- **`client:load`** — hydrate immediately. Use it for above-the-fold content whose animation should start as soon as possible.
+- **`client:visible`** — hydrate when the island approaches the viewport. Prefer it for below-the-fold sections. Add a margin to hydrate slightly before it becomes visible: `client:visible={{ rootMargin: "200px" }}`.
+- **`client:idle`** — hydrate when the browser is idle, for lower-priority interactive content.
+- **No directive** — Astro renders static HTML without hydrating the component, so Motion Provider animations will not run.
 
-- **`client:load`** — hydrate immediately. Use it for visible, high-priority content that should animate as soon as possible.
-- **`client:visible`** — hydrate when the island enters or approaches the viewport. Prefer it for below-the-fold sections. Use `client:visible={{ rootMargin: "200px" }}` to hydrate shortly before the element becomes visible.
-- **`client:idle`** — hydrate when the browser is idle. Use it for lower-priority interactive islands.
-- **`client:media`** — hydrate only when a media query matches, useful when the island is relevant only at a particular viewport size or device capability.
-- **No directive** — render static HTML without hydrating React. Motion Provider's animation effects will not run.
-
-See Astro's [client directives reference](https://docs.astro.build/en/reference/directives-reference/) for the exact behavior and options of each strategy.
-
-<Callout type="note" title="Hydration and animation visibility are separate">
-  `client:visible` decides when Astro hydrates the React island. Motion Provider's in-view controller decides when an already-hydrated element plays. They are separate visibility checks, not interchangeable triggers.
-</Callout>
+Astro's directive decides when React hydrates; Motion Provider's in-view trigger still decides when an animation plays. With `client:visible`, the island must hydrate first, then Motion Provider can start its animation when its visibility condition is met.
 
 ## Keep server rendering enabled
 
-Motion Provider's components are safe to server-render. Keep Astro's default React SSR enabled so the initial state is present in the HTML while the island waits for hydration. **You do not normally need `client:only="react"`**; that option skips server rendering and should be reserved for components that genuinely cannot render on the server.
+Motion Provider renders deterministically without accessing browser globals during render, so **you normally do not need `client:only="react"`**. Keeping SSR preserves the initial HTML while the island waits to hydrate. Reserve `client:only` for a custom React component that genuinely cannot render on the server.
 
-Choose initial states carefully. A preset such as `fadeUp` starts at `opacity: 0`, so the content remains hidden until JavaScript hydrates and playback begins. Avoid hidden initial states for critical above-the-fold or LCP content.
+For hooks, controllers, event handlers, or browser APIs, put the logic in a React `.tsx` component and hydrate that component from Astro. The `"use client"` directive is a Next.js convention; Astro uses `client:*` directives instead.
 
-<Callout type="warning" title="Do not hide critical content behind hydration">
-  If JavaScript is delayed, disabled, or fails to load, elements that start at `opacity: 0` can remain invisible. Keep essential content visible in its initial state, or use a non-hidden presentation for your LCP element.
-</Callout>
-
-## Add interactive controls
-
-Astro's `client:*` directives are the hydration boundary. Put React hooks, event handlers, and controller logic in a `.tsx` component, then hydrate that component from an Astro page:
-
-```tsx
-// src/components/ControlledPanel.tsx
-import { MotionContainer, useController } from "motion-provider";
-
-export default function ControlledPanel() {
-  const controller = useController();
-
-  return (
-    <section>
-      <MotionContainer
-        animation={{ mode: "fadeUp" }}
-        controller={controller}
-      >
-        Controlled content
-      </MotionContainer>
-
-      <button type="button" onClick={() => void controller.play()}>
-        Play
-      </button>
-      <button type="button" onClick={() => void controller.reverse()}>
-        Reverse
-      </button>
-    </section>
-  );
-}
-```
-
-Import and hydrate the component from Astro:
-
-```astro
----
-import ControlledPanel from "../components/ControlledPanel";
----
-
-<ControlledPanel client:load />
-```
-
-Do not add Next.js's `"use client"` directive to make an Astro island interactive. Astro's `client:*` directive determines hydration. Keep `useController()` and the controller instance inside the hydrated React component; use plain animation props when no runtime control is needed.
-
-<Callout type="warning" title="Astro children are not always React nodes">
-  Astro's React integration passes children from an `.astro` template as plain strings by default. Components that need a real React child tree—such as `MotionChain` with multiple children—should be composed inside a `.tsx` React component. Astro also offers the experimental `experimentalReactChildren` integration option, but it adds runtime cost.
-</Callout>
-
-## API highlights
-
-| API | Use in an Astro project |
-| --- | --- |
-| `MotionContainer` | Animate an HTML or SVG element with named presets or inline modules. |
-| `MotionText` | Animate text by `words` or `chars`; keep the accessible, unsplit text available. |
-| `MotionChain` | Stagger React children with a shared `animation` or a matching `animations` array. Compose its child tree in React. |
-| `MotionImage` | Animate an image using `config.img` and a positive, perfect-square `config.pieces` value. |
-| `Motion` | Apply a direct `AnimationModule` through `definition` and optional `timing`. |
-| `MotionLink` | Reverse coordinated animations before navigating; provide `navigate` when an application-specific navigation adapter is required. |
-| `useController()` | Coordinate play, reverse, pause, finish, reset, and other controls in a hydrated React component. |
-| `useReducedMotion()` | Read and subscribe to the user's system motion preference in React. |
-
-Motion components respect the user's `prefers-reduced-motion` setting by default. Use the `reducedMotion` prop to select `"user"`, `"always"`, or `"never"`; see [Reduced Motion Policy](/concepts/reduced-motion-policy/). For details about the initial HTML and hydration lifecycle, see [Server-Side Rendering](/concepts/server-side-rendering/).
+See [Server-Side Rendering](/concepts/server-side-rendering/) and [Reduced Motion Policy](/concepts/reduced-motion-policy/) for Motion Provider's rendering and accessibility behavior. Astro's [client directives reference](https://docs.astro.build/en/reference/directives-reference/) covers the available hydration options.
