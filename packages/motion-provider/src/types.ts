@@ -39,6 +39,7 @@ export type AnimationObjProps = AnimationModule["initial"];
 export type TransitionConfig = Timing;
 export type Animations = Record<string, AnimationModule>;
 export type Transitions = Record<string, Timing>;
+
 /** Declarative control retained for compatibility. Commands can be supplied through controls. */
 export interface MotionControllerProps {
   configView?: ViewOptions;
@@ -96,6 +97,8 @@ type DomProps = Omit<
     | "y"
     | "width"
     | "height"
+    | "textAnchor"
+    | "dominantBaseline"
   >;
 export interface MotionBaseProps extends DomProps {
   elementType?: MotionElementType;
