@@ -5,12 +5,13 @@ import { cn } from "@/lib/cn";
 import NavAstro from "../components/Nav.astro";
 import NavTree from "../components/NavTree.astro";
 import Toc from "../components/Toc.astro";
-import type { NavGroup, NavItem } from "../lib/docs";
+import type { NavGroup, NavItem, NavSection } from "../lib/docs";
 import BaseLayout from "./BaseLayout.astro";
 
 interface BaseProps {
   title: string;
   description: string;
+  section: NavSection;
   nav: readonly NavGroup[];
   currentId: string;
 }
@@ -29,7 +30,7 @@ interface LandingProps extends BaseProps {
 type Props = DocProps | LandingProps;
 
 const props = Astro.props;
-const { title, description, nav, currentId } = props;
+const { title, description, section, nav, currentId } = props;
 const doc = props.landing ? undefined : props;
 ---
 
@@ -43,7 +44,7 @@ const doc = props.landing ? undefined : props;
   >
     Skip to content
   </a>
-  <NavAstro />
+  <NavAstro section={section} />
   <div
     class={cn(
       "grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)]",

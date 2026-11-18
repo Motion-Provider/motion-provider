@@ -1,6 +1,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 
 export type DocEntry = CollectionEntry<"docs">;
+export type NavSection = "docs" | "api" | "learn";
 
 export interface NavItem {
   readonly id: string;
@@ -23,15 +24,34 @@ const ROOT_ID = "index";
 
 export function docHref(id: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  return id === ROOT_ID ? `${base}` : `${base}/${id}`;
+  return id === ROOT_ID ? base : `${base}/${id}`;
 }
 
-function groupKey(id: string): string {
-  const i = id.indexOf("/");
-  return i === -1 ? "" : id.slice(0, i);
+export function getSection(id: string): NavSection {
+  if (id === "api" || id.startsWith("api/")) return "api";
+  if (id === "learn" || id.startsWith("learn/")) return "learn";
+  return "docs";
+}
+
+function groupKey(id: string, section: NavSection): string {
+  const relativeId =
+    section === "docs"
+      ? id
+      : id === section
+        ? ""
+        : id.slice(section.length + 1);
+
+  if (!relativeId) return section === "docs" ? "" : section;
+
+  const separator = relativeId.indexOf("/");
+  if (separator === -1) return section === "docs" ? "" : section;
+
+  return relativeId.slice(0, separator);
 }
 
 function humanize(key: string): string {
+  if (key === "api") return "API";
+
   const text = key.replace(/-/g, " ");
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
@@ -43,20 +63,27 @@ export async function getDocs(): Promise<DocEntry[]> {
   );
 }
 
-export function buildIndex(entries: readonly DocEntry[]): DocsIndex {
-  const sorted = [...entries].sort(
-    (a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id),
-  );
+export function buildIndex(
+  entries: readonly DocEntry[],
+  section: NavSection,
+): DocsIndex {
+  const sorted = entries
+    .filter((entry) => getSection(entry.id) === section)
+    .sort(
+      (a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id),
+    );
 
   const groups = new Map<string, NavItem[]>();
+
   for (const entry of sorted) {
-    const key = groupKey(entry.id);
+    const key = groupKey(entry.id, section);
     const item: NavItem = {
       id: entry.id,
       href: docHref(entry.id),
       title: entry.data.title,
     };
     const list = groups.get(key);
+
     if (list) {
       list.push(item);
     } else {
@@ -77,9 +104,10 @@ export function getNeighbors(
   flat: readonly NavItem[],
   id: string,
 ): { prev: NavItem | undefined; next: NavItem | undefined } {
-  const i = flat.findIndex((item) => item.id === id);
+  const index = flat.findIndex((item) => item.id === id);
+
   return {
-    prev: i > 0 ? flat[i - 1] : undefined,
-    next: i >= 0 ? flat[i + 1] : undefined,
+    prev: index > 0 ? flat[index - 1] : undefined,
+    next: index >= 0 ? flat[index + 1] : undefined,
   };
 }
