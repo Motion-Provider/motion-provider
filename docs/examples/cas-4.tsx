@@ -72,7 +72,7 @@ const data = createMotionConfig({
   },
 });
 
-const { getMotionAnimation } = createMotionRegistry(data);
+const { getAnimation } = createMotionRegistry(data);
 
 type Action = keyof Pick<AnimationController, "pause" | "onReverse" | "play">;
 
@@ -102,24 +102,18 @@ export default function Cas4() {
         ))}
       </div>
       <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
-        <MotionContainer
-          {...getMotionAnimation("badge")}
-          controller={controller}
-        >
+        <MotionContainer {...getAnimation("badge")} controller={controller}>
           Motion CAS
         </MotionContainer>
-        <MotionText {...getMotionAnimation("title")} controller={controller}>
+        <MotionText {...getAnimation("title")} controller={controller}>
           Make stuffs alive
         </MotionText>
-        <MotionContainer
-          {...getMotionAnimation("desc")}
-          controller={controller}
-        >
+        <MotionContainer {...getAnimation("desc")} controller={controller}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
       <div className="flex gap-2 items-center relative">
-        <MotionImage {...getMotionAnimation("image")} controller={controller} />
+        <MotionImage {...getAnimation("image")} controller={controller} />
       </div>
     </section>
   );

@@ -176,10 +176,10 @@ const galleryMotion = createMotionConfig({
   },
 });
 
-const { getMotionAnimation } = createMotionRegistry(galleryMotion);
+const { getAnimation } = createMotionRegistry(galleryMotion);
 
-const heroImageAnimation = getMotionAnimation("heroImage");
-const editorialImageAnimation = getMotionAnimation("editorialImage");
+const heroImageAnimation = getAnimation("heroImage");
+const editorialImageAnimation = getAnimation("editorialImage");
 
 const heroImage =
   "https://images.unsplash.com/photo-1470770841072-f978cf4d019e?auto=format&fit=crop&w=1800&q=85";
@@ -196,7 +196,7 @@ export default function GalleryShowcasePage() {
         <section className="relative px-6 pb-24 pt-16 sm:px-10 lg:px-20 lg:pb-32 lg:pt-40">
           <div className="mx-auto grid max-w-[100rem] items-center gap-14 lg:grid-cols-[1.05fr_0.95fr]">
             <div className="flex flex-col items-start">
-              <MotionContainer {...getMotionAnimation("heroEyebrow")}>
+              <MotionContainer {...getAnimation("heroEyebrow")}>
                 <Chip
                   color="accent"
                   variant="soft"
@@ -208,11 +208,11 @@ export default function GalleryShowcasePage() {
                 </Chip>
               </MotionContainer>
 
-              <MotionText {...getMotionAnimation("heroTitle")}>
+              <MotionText {...getAnimation("heroTitle")}>
                 Find beauty in the ordinary.
               </MotionText>
 
-              <MotionContainer {...getMotionAnimation("heroDescription")}>
+              <MotionContainer {...getAnimation("heroDescription")}>
                 <p className="mt-7 max-w-xl text-base leading-relaxed text-muted sm:text-lg">
                   A collection of moments, places and perspectives. Explore
                   imagery from photographers who see the world a little
@@ -655,7 +655,7 @@ export default function GalleryShowcasePage() {
                 BEHIND EVERY FRAME
               </p>
 
-              <MotionText {...getMotionAnimation("editorialText")}>
+              <MotionText {...getAnimation("editorialText")}>
                 Photography is more than a moment.
               </MotionText>
 
@@ -681,7 +681,7 @@ export default function GalleryShowcasePage() {
           id="creators"
           className="px-6 py-28 sm:px-10 lg:px-20 lg:py-36"
         >
-          <MotionContainer {...getMotionAnimation("cta")}>
+          <MotionContainer {...getAnimation("cta")}>
             <div className="glass relative mx-auto flex max-w-[100rem] flex-col items-center overflow-hidden rounded-[2rem] px-7 py-24 text-center sm:px-16">
               <div className="absolute -right-24 -top-24 size-80 rounded-full bg-accent/10 blur-3xl" />
 

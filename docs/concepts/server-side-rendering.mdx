@@ -129,7 +129,7 @@ export function Hero({ children }: { children: React.ReactNode }) {
 // motion.ts
 import { createMotionRegistry } from "motion-provider";
 
-export const { getMotionAnimation } = createMotionRegistry({
+export const { getAnimation } = createMotionRegistry({
   title: {
     type: "MotionText",
     props: { animation: { mode: "fadeUp" }, config: { mode: "words" } },
@@ -137,7 +137,7 @@ export const { getMotionAnimation } = createMotionRegistry({
 });
 
 // page.tsx
-<MotionText {...getMotionAnimation("title")}>Hello</MotionText>;
+<MotionText {...getAnimation("title")}>Hello</MotionText>;
 ```
 
 See the [CAS](/concepts/centralized-animation-system/) for typing and key lookups.
@@ -155,7 +155,7 @@ The server cannot read `prefers-reduced-motion`, so the HTML is identical for ev
 | API | Import | Server behavior |
 | --- | --- | --- |
 | `MotionContainer`, `MotionText`, `MotionChain`, `MotionImage`, `MotionLink`, `Motion` | `motion-provider` | Render HTML on the server, animate after hydration |
-| `createMotionConfig`, `createMotionRegistry`, `getMotionAnimation` | `motion-provider` | Pure functions, safe in Server Components and Node |
+| `createMotionConfig`, `createMotionRegistry`, `getAnimation` | `motion-provider` | Pure functions, safe in Server Components and Node |
 | Presets | `motion-provider/presets` | Plain data, no React |
 | `useController`, `useAnimationMixer` | `motion-provider` | Hooks, Client Components only |
 | `useReducedMotion` | `motion-provider` | Returns `false` as the server snapshot |

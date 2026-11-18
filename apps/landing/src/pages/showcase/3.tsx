@@ -174,7 +174,7 @@ const agencyMotion = createMotionConfig({
   },
 });
 
-const { getMotionAnimation } = createMotionRegistry(agencyMotion);
+const { getAnimation } = createMotionRegistry(agencyMotion);
 
 const faqItems = [
   {
@@ -599,7 +599,7 @@ export default function AgencyShowcasePage() {
         </section>
         {/* Testimonial */}
         <section className="px-6 py-28 sm:px-10 lg:px-20 lg:py-36">
-          <MotionContainer {...getMotionAnimation("testimonial")}>
+          <MotionContainer {...getAnimation("testimonial")}>
             <div className="mx-auto max-w-[100rem] rounded-[2rem] px-7 py-20 sm:px-16 lg:px-24">
               <div className="grid gap-12 lg:grid-cols-[0.35fr_1.65fr]">
                 <div>
@@ -648,7 +648,7 @@ export default function AgencyShowcasePage() {
               </p>
             </div>
 
-            <MotionChain {...getMotionAnimation("faq")}>
+            <MotionChain {...getAnimation("faq")}>
               {faqItems.map((item) => (
                 <details
                   key={item.question}
@@ -669,7 +669,7 @@ export default function AgencyShowcasePage() {
         </section>
         {/* CTA */}
         <section id="contact" className="px-6 py-28 sm:px-10 lg:px-20 lg:py-36">
-          <MotionContainer {...getMotionAnimation("cta")}>
+          <MotionContainer {...getAnimation("cta")}>
             <div className="relative mx-auto flex max-w-[100rem] flex-col items-center overflow-hidden rounded-[2rem] bg-foreground px-7 py-24 text-center text-background sm:px-16">
               <div className="absolute -left-24 -top-40 size-96 rounded-full bg-accent/15 blur-[100px]" />
               <div className="absolute -bottom-40 -right-24 size-96 rounded-full bg-accent/10 blur-[100px]" />

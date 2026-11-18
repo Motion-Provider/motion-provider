@@ -1,5 +1,5 @@
 export {
   createMotionGetter,
   createMotionRegistry,
-  getMotionAnimation,
+  getAnimation,
 } from "./config.js";

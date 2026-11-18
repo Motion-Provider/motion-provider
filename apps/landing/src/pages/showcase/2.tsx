@@ -149,7 +149,7 @@ const shopMotion = createMotionConfig({
   },
 });
 
-const { getMotionAnimation } = createMotionRegistry(shopMotion);
+const { getAnimation } = createMotionRegistry(shopMotion);
 
 const questions = [
   {
@@ -600,7 +600,7 @@ export default function ShopShowcasePage() {
               </p>
             </div>
 
-            <MotionChain {...getMotionAnimation("faqGrid")}>
+            <MotionChain {...getAnimation("faqGrid")}>
               {questions.map((item) => (
                 <details
                   key={item.question}
@@ -625,7 +625,7 @@ export default function ShopShowcasePage() {
           id="checkout"
           className="px-6 py-28 sm:px-10 lg:px-20 lg:py-36"
         >
-          <MotionContainer {...getMotionAnimation("cta")}>
+          <MotionContainer {...getAnimation("cta")}>
             <div className="glass mx-auto flex max-w-[100rem] flex-col items-center rounded-[2rem] px-7 py-24 text-center sm:px-16">
               <ShoppingBag className="size-9 text-accent" />
 

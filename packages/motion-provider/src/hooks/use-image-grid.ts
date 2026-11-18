@@ -5,15 +5,11 @@ import { useEffect, useMemo, useRef } from "react";
 import { animateElement } from "../engine/animate.js";
 import { isController } from "../engine/controller.js";
 import { report } from "../engine/errors.js";
+import type { AnimationHandle, Timing } from "../engine/types.js";
 import { bindPlayback } from "../internal/playback.js";
 import { resolveAnimation } from "../internal/resolve.js";
 import { dataKey, parseData } from "../internal/stable.js";
-import type {
-  AnimationHandle,
-  AnimationModule,
-  MotionImageProps,
-  Timing,
-} from "../types.js";
+import type { AnimationModule, MotionImageProps } from "../types.js";
 import { calculateDelays } from "../utils.js";
 import { useLatest } from "./use-latest.js";
 /** Tile effects live outside React state. Pointer activity only plays the affected handles. */

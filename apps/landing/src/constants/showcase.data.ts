@@ -183,18 +183,18 @@ export default createMotionConfig({
 import config from "@/motion/hero.config";
 import { createMotionRegistry } from "motion-provider";
 
-export const { getMotionAnimation } = createMotionRegistry(config);
+export const { getAnimation } = createMotionRegistry(config);
 
 
 // src/app.tsx
 
-import { getMotionAnimation } from "@/lib/motion";
+import { getAnimation } from "@/lib/motion";
 
 export default App() {
   return (
     <>
-      <MotionText {...getMotionAnimation("appHeroTitle")} />
-      <MotionContainer {...getMotionAnimation("appHeroDescription")} />
+      <MotionText {...getAnimation("appHeroTitle")} />
+      <MotionContainer {...getAnimation("appHeroDescription")} />
     </>
   );
 };
@@ -235,14 +235,14 @@ import { spin } from "@/motion/presets";
   MotionContainer, 
   useController,
 } from "motion-provider";
-import { getMotionAnimation } from "@/lib/motion";
+import { getAnimation } from "@/lib/motion";
 
-const titleMotion = getMotionAnimation("appHeroTitle");
-const descMotion = getMotionAnimation("appHeroDescription");
+const titleMotion = getAnimation("appHeroTitle");
+const descMotion = getAnimation("appHeroDescription");
 
 export default function Page() {
   const controller = useController();
-  const link = getMotionAnimation("appHeroLink");
+  const link = getAnimation("appHeroLink");
 
   return (
     <>

@@ -271,31 +271,31 @@ import { createMotionRegistry } from "motion-provider";
 import data from "@/constants/motion.data";
 
 // type-safe, will show the key list and error when something missed
-export const { getMotionAnimation } = createMotionRegistry(data); 
+export const { getAnimation } = createMotionRegistry(data); 
 ```
 
 Using all in our component:
 
 
 ```tsx
-import { getMotionAnimation } from "@/lib/motion/marketing-section.ts";
+import { getAnimation } from "@/lib/motion/marketing-section.ts";
 
 export default function MarketingSection() {
   return (
     <section>
       <div>
-        <MotionContainer {...getMotionAnimation("badge")}>
+        <MotionContainer {...getAnimation("badge")}>
           Motion CAS
         </MotionContainer>
-        <MotionText {...getMotionAnimation("title")}>
+        <MotionText {...getAnimation("title")}>
           Make stuffs alive
         </MotionText>
-        <MotionContainer {...getMotionAnimation("desc")}>
+        <MotionContainer {...getAnimation("desc")}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
       <div className="flex flex-1 gap-2 items-center relative">
-        <MotionImage {...getMotionAnimation("image")} />
+        <MotionImage {...getAnimation("image")} />
       </div>
     </section>
   );
@@ -325,18 +325,18 @@ export default function MarketingSection() {
   return (
     <section>
       <div>
-        <MotionContainer {...getMotionAnimation("badge")} controller={controller}>
+        <MotionContainer {...getAnimation("badge")} controller={controller}>
           Motion CAS
         </MotionContainer>
-        <MotionText {...getMotionAnimation("title")} controller={controller}>
+        <MotionText {...getAnimation("title")} controller={controller}>
           Make stuffs alive
         </MotionText>
-        <MotionContainer {...getMotionAnimation("desc")} controller={controller}>
+        <MotionContainer {...getAnimation("desc")} controller={controller}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
       <div className="flex flex-1 gap-2 items-center relative">
-        <MotionImage {...getMotionAnimation("image")} controller={controller} />
+        <MotionImage {...getAnimation("image")} controller={controller} />
       </div>
     </section>
   );
@@ -375,18 +375,18 @@ export default function MarketingSection() {
         ))}
 
       <div>
-        <MotionContainer {...getMotionAnimation("badge")} controller={controller}>
+        <MotionContainer {...getAnimation("badge")} controller={controller}>
           Motion CAS
         </MotionContainer>
-        <MotionText {...getMotionAnimation("title")} controller={controller}>
+        <MotionText {...getAnimation("title")} controller={controller}>
           Make stuffs alive
         </MotionText>
-        <MotionContainer {...getMotionAnimation("desc")} controller={controller}>
+        <MotionContainer {...getAnimation("desc")} controller={controller}>
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
       <div className="flex flex-1 gap-2 items-center relative">
-        <MotionImage {...getMotionAnimation("image")} controller={controller} />
+        <MotionImage {...getAnimation("image")} controller={controller} />
       </div>
     </section>
   )

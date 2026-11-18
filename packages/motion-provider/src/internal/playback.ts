@@ -1,7 +1,8 @@
 import { isController } from "../engine/controller.js";
 import { observeInView } from "../engine/in-view.js";
 import { bindScroll } from "../engine/scroll.js";
-import type { AnimationHandle, ControllerInput } from "../types.js";
+import type { AnimationHandle } from "../engine/types.js";
+import type { ControllerInput } from "../types.js";
 
 /** Apply one driver's policy to a set of handles. Used by tiled images and gallery slides. */
 export function bindPlayback(

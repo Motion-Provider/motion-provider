@@ -100,7 +100,8 @@ type DomProps = Omit<
     | "textAnchor"
     | "dominantBaseline"
   >;
-export interface MotionBaseProps extends DomProps {
+
+interface MotionBaseProps extends DomProps {
   elementType?: MotionElementType;
   controller?: ControllerInput;
   /** User preference is respected by default. */
@@ -110,14 +111,17 @@ export interface MotionBaseProps extends DomProps {
   /** Base static style. Animation-owned CSS properties override it only while mounted. */
   style?: CSSProperties;
 }
+
 export interface MotionContainerProps extends MotionBaseProps {
   animation: MotionAnimationProps;
 }
+
 export interface MotionProps extends MotionBaseProps {
   /** Direct definitions allow per-preset tree shaking without a string registry. */
   definition: AnimationModule;
   timing?: Timing;
 }
+
 export interface MotionChainProps extends MotionBaseProps {
   animations?: readonly MotionAnimationProps[];
   /** Shared animation is an alternative to one animation per child. */
@@ -131,7 +135,8 @@ export interface MotionTextProps
   config?: MotionTextConfigProps;
   wrapperClassName?: string;
 }
-export type ImageHTMLProps = Pick<
+
+type ImageHTMLProps = Pick<
   ImgHTMLAttributes<HTMLImageElement>,
   | "alt"
   | "loading"
@@ -145,6 +150,7 @@ export type ImageHTMLProps = Pick<
   | "onLoad"
   | "onError"
 >;
+
 export interface MotionImageProps
   extends Omit<
       HTMLAttributes<HTMLDivElement>,
@@ -161,6 +167,7 @@ export interface MotionImageProps
   onMotionComplete?: (result: AnimationResult) => void;
   ref?: Ref<HTMLDivElement>;
 }
+
 export interface MotionLinkProps
   extends AnchorHTMLAttributes<HTMLAnchorElement> {
   href: string;

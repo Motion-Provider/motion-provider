@@ -8,7 +8,7 @@ export {
   createMotionConfig,
   createMotionGetter,
   createMotionRegistry,
-  getMotionAnimation,
+  getAnimation,
 } from "./config.js";
 export { useReducedMotion } from "./hooks/use-reduced-motion.js";
 export {

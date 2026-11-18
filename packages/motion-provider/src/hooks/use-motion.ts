@@ -7,13 +7,9 @@ import { isController } from "../engine/controller.js";
 import { report } from "../engine/errors.js";
 import { observeInView } from "../engine/in-view.js";
 import { bindScroll } from "../engine/scroll.js";
+import type { AnimationHandle, Timing } from "../engine/types.js";
 import { dataKey, parseData } from "../internal/stable.js";
-import type {
-  AnimationHandle,
-  AnimationModule,
-  MotionProps,
-  Timing,
-} from "../types.js";
+import type { AnimationModule, MotionProps } from "../types.js";
 import { useLatest } from "./use-latest.js";
 
 /** Attach effects after commit; cleanup owns every animation, observer, and scroll subscription. */

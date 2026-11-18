@@ -57,21 +57,19 @@ const config = createMotionConfig({
     },
   },
 });
-const { getMotionAnimation } = createMotionRegistry(config);
-<MotionText {...getMotionAnimation("title")}>Title</MotionText>;
-<MotionContainer {...getMotionAnimation("description")}>
-  Description
-</MotionContainer>;
+const { getAnimation } = createMotionRegistry(config);
+<MotionText {...getAnimation("title")}>Title</MotionText>;
+<MotionContainer {...getAnimation("description")}>Description</MotionContainer>;
 <MotionImage
-  {...getMotionAnimation("image")}
+  {...getAnimation("image")}
   config={{
-    ...getMotionAnimation("image").config,
+    ...getAnimation("image").config,
     img: "/photo.png",
   }}
 />;
-<MotionChain {...getMotionAnimation("chain")}>One</MotionChain>;
+<MotionChain {...getAnimation("chain")}>One</MotionChain>;
 // @ts-expect-error Config names are an exact key union.
-getMotionAnimation("notRegistered");
+getAnimation("notRegistered");
 createMotionConfig({
   bad: {
     type: "MotionContainer",
@@ -84,4 +82,4 @@ createMotionConfig({
   },
 });
 // @ts-expect-error The exact returned component props are retained.
-const invalid: "words" = getMotionAnimation("title").config.mode;
+const invalid: "words" = getAnimation("title").config.mode;

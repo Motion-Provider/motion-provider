@@ -2,11 +2,8 @@ import animations from "../constants/animations.js";
 import transitions from "../constants/transitions.js";
 import { invariant } from "../engine/errors.js";
 import { mixAnimations } from "../engine/keyframes.js";
-import type {
-  AnimationModule,
-  MotionAnimationProps,
-  Timing,
-} from "../types.js";
+import type { Timing } from "../engine/types.js";
+import type { AnimationModule, MotionAnimationProps } from "../types.js";
 
 /**
  * @description Resolves the compatibility registry at the React adapter boundary,

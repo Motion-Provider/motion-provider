@@ -204,12 +204,12 @@ test("request-isolated config getters reject inherited and missing keys", () => 
 			},
 		}),
 	);
-	assert.equal(a.getMotionAnimation("hero").animation.mode, "fadeIn");
-	assert.equal(b.getMotionAnimation("hero").animation.mode, "fadeOut");
-	assert.throws(() => a.getMotionAnimation("missing"), {
+	assert.equal(a.getAnimation("hero").animation.mode, "fadeIn");
+	assert.equal(b.getAnimation("hero").animation.mode, "fadeOut");
+	assert.throws(() => a.getAnimation("missing"), {
 		code: "UNKNOWN_CONFIG_KEY",
 	});
-	assert.throws(() => a.getMotionAnimation("toString"), {
+	assert.throws(() => a.getAnimation("toString"), {
 		code: "UNKNOWN_CONFIG_KEY",
 	});
 });

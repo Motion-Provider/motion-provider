@@ -112,7 +112,7 @@ const motionConfig = createMotionConfig({
   },
 });
 
-export const { getMotionAnimation } =
+export const { getAnimation } =
   createMotionRegistry(motionConfig);
 ```
 
@@ -120,18 +120,18 @@ Retrieve the props at the component call site:
 
 ```tsx
 import { MotionText } from "motion-provider";
-import { getMotionAnimation } from "./motion.config";
+import { getAnimation } from "./motion.config";
 
 export function PageTitle() {
   return (
-    <MotionText {...getMotionAnimation("pageTitle")}>
+    <MotionText {...getAnimation("pageTitle")}>
       Typed animation configuration
     </MotionText>
   );
 }
 ```
 
-The configuration preserves its literal keys and each entry's component-specific props. TypeScript checks the key passed to `getMotionAnimation()` and the props declared for that entry. The registry is local to the configuration you provide; it does not create a global registration system.
+The configuration preserves its literal keys and each entry's component-specific props. TypeScript checks the key passed to `getAnimation()` and the props declared for that entry. The registry is local to the configuration you provide; it does not create a global registration system.
 
 <Callout type="warning" title="Use the matching component">
   Each entry declares its component in `type`. Spread its returned props into that same component—for example, use a `MotionText` entry with `MotionText`, not `MotionContainer`. The getter types the props, but it does not render or select the component for you.
@@ -183,7 +183,7 @@ export function ControlledPanel() {
 | `MotionContainerProps`, `MotionTextProps`, `MotionChainProps`, `MotionImageProps`, `MotionLinkProps` | Expose the component-specific prop contracts. |
 | `AnimationController`, `AnimationResult`, `ControlAction` | Type playback controls and animation results. |
 | `createMotionConfig()`, `createMotionRegistry()` | Declare reusable props and create a key-safe getter. |
-| `createMotionGetter()`, `getMotionAnimation()` | Create a function-only getter or retrieve props from a config and key. |
+| `createMotionGetter()`, `getAnimation()` | Create a function-only getter or retrieve props from a config and key. |
 | `useController()`, `useAnimation()`, `useAnimationMixer()`, `useReducedMotion()` | Access typed client-side control, preset mixing, and reduced-motion state. |
 
 For the full behavior of each feature, see [Presets & Modules](/concepts/presets-and-modules/), [Server-Side Rendering](/concepts/server-side-rendering/), and [Reduced Motion Policy](/concepts/reduced-motion-policy/).
