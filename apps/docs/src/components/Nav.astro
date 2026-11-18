@@ -2,23 +2,26 @@
 import { Image } from "astro:assets";
 import Logo from "@assets/brand-lockup.png";
 import { cn } from "@/lib/cn";
+import type { NavSection } from "../lib/docs";
 
-const pathname = Astro.url.pathname;
-const isApi = pathname.startsWith("/api/");
-const isLearn = pathname.startsWith("/learn/");
+interface Props {
+  section: NavSection;
+}
 
 type NavItem = {
+  key: NavSection;
   label: string;
   href: string;
-  active: boolean;
   external?: boolean;
 };
 
-const navItems: NavItem[] = [
-  { label: "Docs", href: "/", active: !isApi && !isLearn },
-  { label: "API", href: "/api/overview", active: isApi },
-  { label: "Learn", href: "/api/learn", active: isLearn },
-] as const;
+const { section } = Astro.props;
+
+const navItems: readonly NavItem[] = [
+  { key: "docs", label: "Docs", href: "/" },
+  { key: "api", label: "API", href: "/api/overview" },
+  { key: "learn", label: "Learn", href: "/learn" },
+];
 ---
 
 <header class="sticky top-0 z-50 h-11.5 w-full border-border border-b bg-surface/20 backdrop-blur pl-2 overflow-hidden pt-1">
@@ -55,15 +58,15 @@ const navItems: NavItem[] = [
     </button>
     <div class="hidden h-full shrink-0 items-center gap-0.75 lg:flex pl-4">
       {
-        navItems.map((item: NavItem) => (
+        navItems.map((item) => (
           <a
             href={item.href}
-            aria-current={item.active ? "page" : undefined}
-            target={item?.external ? "_blank" : undefined}
-            rel={item?.external ? "noreferrer" : undefined}
+            aria-current={item.key === section ? "page" : undefined}
+            target={item.external ? "_blank" : undefined}
+            rel={item.external ? "noreferrer" : undefined}
             class={cn(
               "relative inline-flex h-full items-center px-3.25 text-[13px] leading-none transition-colors duration-150 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-[#eb5600] after:transition-transform after:duration-150",
-              item.active
+              item.key === section
                 ? "font-medium text-accent after:scale-x-100"
                 : "text-[#a5a198] after:scale-x-0 hover:text-white",
             )}
@@ -74,31 +77,31 @@ const navItems: NavItem[] = [
       }
     </div>
     <div class="ml-auto hidden shrink-0 items-center gap-2 -mt-1 md:flex">
-    <label class="hidden h-11.5 w-64 max-w-[calc(100vw-2rem)] items-center gap-2 border-l border-[#2a2822] bg-transparent px-3 text-[#a5a198] transition-colors focus-within:border-[#51483a] md:flex">
-      <svg
-        viewBox="0 0 24 24"
-        class="size-4 shrink-0"
-        fill="none"
-        stroke="currentColor"
-        stroke-width="1.7"
-        stroke-linecap="round"
-        aria-hidden="true"
-      >
-        <circle cx="10.8" cy="10.8" r="6.3"></circle>
-        <path d="m15.5 15.5 4 4"></path>
-      </svg>
-      <input
-        id="docs-search"
-        type="search"
-        aria-label="Search documentation"
-        placeholder="Search docs..."
-        autocomplete="off"
-        class="h-full min-w-0 flex-1  bg-transparent text-[13px] text-[#e9e6df] outline-none placeholder:text-[#aaa49a] [&::-webkit-search-cancel-button]:hidden"
-      />
-      <kbd class="inline-flex h-5 shrink-0 items-center rounded border border-[#39352c] px-1.5 font-sans text-[10px] leading-none text-[#aaa49a]">
-        ⌘K
-      </kbd>
-    </label>
+      <label class="hidden h-11.5 w-64 max-w-[calc(100vw-2rem)] items-center gap-2 border-l border-[#2a2822] bg-transparent px-3 text-[#a5a198] transition-colors focus-within:border-[#51483a] md:flex">
+        <svg
+          viewBox="0 0 24 24"
+          class="size-4 shrink-0"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.7"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <circle cx="10.8" cy="10.8" r="6.3"></circle>
+          <path d="m15.5 15.5 4 4"></path>
+        </svg>
+        <input
+          id="docs-search"
+          type="search"
+          aria-label="Search documentation"
+          placeholder="Search docs..."
+          autocomplete="off"
+          class="h-full min-w-0 flex-1 bg-transparent text-[13px] text-[#e9e6df] outline-none placeholder:text-[#aaa49a] [&::-webkit-search-cancel-button]:hidden"
+        />
+        <kbd class="inline-flex h-5 shrink-0 items-center rounded border border-[#39352c] px-1.5 font-sans text-[10px] leading-none text-[#aaa49a]">
+          ⌘K
+        </kbd>
+      </label>
     </div>
   </nav>
 </header>

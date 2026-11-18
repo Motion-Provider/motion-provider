@@ -7,7 +7,7 @@ import frameworksData from "@/data/frameworks.data";
 import DocLayout from "@/layouts/DocLayout.astro";
 import { buildIndex, getDocs } from "@/lib/docs";
 
-const index = buildIndex(await getDocs());
+const index = buildIndex(await getDocs(), "docs");
 
 const sections = index.nav.flatMap((group) => {
   const first = group.items[0];
@@ -21,6 +21,7 @@ const sections = index.nav.flatMap((group) => {
   landing
   title="Motion Provider"
   description="An open-source React animation library for rapid development."
+  section="docs"
   nav={index.nav}
   currentId=""
 >
