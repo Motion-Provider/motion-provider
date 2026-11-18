@@ -1,0 +1,60 @@
+---
+title: "Astro"
+description: "Use Motion Provider in Astro through hydrated React islands."
+order: 230
+draft: true
+---
+
+Motion Provider is a React library, so Astro uses it through the [React integration](https://docs.astro.build/en/guides/integrations-guide/react/). Motion components are safe to server-render: Astro can output their initial HTML, then the browser starts WAAPI playback when the island hydrates.
+
+## Install
+
+```bash
+npx astro add react
+npm install motion-provider
+```
+
+## Render a Motion island
+
+Import Motion Provider components directly into an `.astro` file and choose when each React island should hydrate:
+
+```astro
+---
+import { MotionContainer, MotionText } from "motion-provider";
+---
+
+<main>
+  <MotionText
+    elementType="h1"
+    animation={{ mode: "fadeUp", duration: 0.6 }}
+    config={{ mode: "words" }}
+    client:load
+  >
+    Interfaces that move.
+  </MotionText>
+
+  <MotionContainer
+    animation={{ mode: "fadeUp" }}
+    client:visible
+  >
+    Hydrated when this section enters the viewport.
+  </MotionContainer>
+</main>
+```
+
+## Choose a hydration strategy
+
+- **`client:load`** — hydrate immediately. Use it for above-the-fold content whose animation should start as soon as possible.
+- **`client:visible`** — hydrate when the island approaches the viewport. Prefer it for below-the-fold sections. Add a margin to hydrate slightly before it becomes visible: `client:visible={{ rootMargin: "200px" }}`.
+- **`client:idle`** — hydrate when the browser is idle, for lower-priority interactive content.
+- **No directive** — Astro renders static HTML without hydrating the component, so Motion Provider animations will not run.
+
+Astro's directive decides when React hydrates; Motion Provider's in-view trigger still decides when an animation plays. With `client:visible`, the island must hydrate first, then Motion Provider can start its animation when its visibility condition is met.
+
+## Keep server rendering enabled
+
+Motion Provider renders deterministically without accessing browser globals during render, so **you normally do not need `client:only="react"`**. Keeping SSR preserves the initial HTML while the island waits to hydrate. Reserve `client:only` for a custom React component that genuinely cannot render on the server.
+
+For hooks, controllers, event handlers, or browser APIs, put the logic in a React `.tsx` component and hydrate that component from Astro. The `"use client"` directive is a Next.js convention; Astro uses `client:*` directives instead.
+
+See [Server-Side Rendering](/concepts/server-side-rendering/) and [Reduced Motion Policy](/concepts/reduced-motion-policy/) for Motion Provider's rendering and accessibility behavior. Astro's [client directives reference](https://docs.astro.build/en/reference/directives-reference/) covers the available hydration options.
