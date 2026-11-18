@@ -16,7 +16,8 @@ type NavItem = {
 
 const navItems: NavItem[] = [
   { label: "Docs", href: "/", active: !isApi && !isLearn },
-  { label: "API", href: "/api/overview/", active: isApi },
+  { label: "API", href: "/api/overview", active: isApi },
+  { label: "Learn", href: "/api/learn", active: isLearn },
 ] as const;
 ---
 
@@ -72,9 +73,6 @@ const navItems: NavItem[] = [
         ))
       }
     </div>
-
-    
-
     <div class="ml-auto hidden shrink-0 items-center gap-2 -mt-1 md:flex">
     <label class="hidden h-11.5 w-64 max-w-[calc(100vw-2rem)] items-center gap-2 border-l border-[#2a2822] bg-transparent px-3 text-[#a5a198] transition-colors focus-within:border-[#51483a] md:flex">
       <svg
