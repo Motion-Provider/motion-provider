@@ -15,7 +15,7 @@ const GridImage = dynamic(
 export default function CtaSection() {
   return (
     <section
-      className="w-full h-[50vh] justify-self-center relative max-w-7xl overflow-visible mb-28 mt-56"
+      className="w-full h-[60vh] justify-self-center relative max-w-7xl overflow-visible mb-28 md:mt-48 mt-56"
       id="cta-playground"
     >
       <Wrapper>
