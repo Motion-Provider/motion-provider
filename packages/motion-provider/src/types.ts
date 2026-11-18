@@ -21,7 +21,14 @@ import type {
   ViewOptions,
 } from "./engine/types.js";
 
-export type * from "./engine/types.js";
+export type {
+  AnimationController,
+  AnimationModule,
+  AnimationResult,
+  ControlAction,
+  MotionState,
+} from "./engine/types.js";
+
 export type AnimationKeys = keyof typeof animations;
 export type TransitionKeys = keyof typeof transitions;
 export type DelayLogic = (typeof delays)[number];
