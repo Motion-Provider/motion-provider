@@ -23,7 +23,7 @@ const ROOT_ID = "index";
 
 export function docHref(id: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
-  return id === ROOT_ID ? `${base}/` : `${base}/${id}/`;
+  return id === ROOT_ID ? `${base}` : `${base}/${id}`;
 }
 
 function groupKey(id: string): string {

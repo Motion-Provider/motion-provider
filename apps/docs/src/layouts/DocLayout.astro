@@ -79,13 +79,14 @@ const doc = props.landing ? undefined : props;
       id="main"
       class={cn(
         "mx-auto w-full min-w-0",
-        doc && "max-w-3xl px-5 py-10 pb-16 sm:px-8 lg:px-10",
+        doc && "max-w-3xl px-5 py-10 pb-16 sm:px-8 lg:px-10 relative",
       )}
       transition:animate="fade"
     >
-      {
-        doc ? (
-          <>
+    {
+      doc ? (
+        <>
+          <div class="md:bg-accent/20 blur-3xl -top-24 hidden -translate-x-1/2 left-1/2 md:block absolute w-72 h-32"></div>
             <article data-pagefind-body class="prose docs-prose max-w-none tracking-tight">
               <h1>{title}</h1>
               <slot />
@@ -106,7 +107,6 @@ const doc = props.landing ? undefined : props;
         )
       }
     </main>
-
     {
       doc && (
         <aside

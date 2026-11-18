@@ -117,6 +117,29 @@ import { MotionContainer } from "motion-provider";
 // y: "100%" → 0   (slideUp replaced fadeUp's y)
 ```
 
+Mixing a custom defined animation object(by you) with a set of preset or one can be given as instance like the one shown below,
+
+```tsx
+import { MotionContainer, type AnimationModule } from "motion-provider";
+
+const tint = {
+  initial: { filter: "hue-rotate(90deg)" },
+  animate: { filter: "hue-rotate(0deg)" },
+} as const satisfies AnimationModule;
+
+export default function MixedState({ controller }: ModuleProps) {
+  return (
+    <MotionContainer
+      className="size-16 rounded-xl bg-accent"
+      animation={{ mode: ["fadeUp", "scaleZoomIn", tint], duration: 0.9 }}
+      controller={controller}
+    />
+  );
+}
+```
+
+This renders,
+
 <Registry slug="mixed-state" title="Mixed state" description="Two presets and one custom state merged by mode" />
 
 The winning property replaces the other state's property **as a whole**. Arrays are never merged item by item. See [Mixing Presets](/concepts/mixing-presets/) for patterns.

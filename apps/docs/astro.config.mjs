@@ -9,7 +9,7 @@ import syntaxTheme from "./src/lib/highlight.theme.ts";
 export default defineConfig({
   site: "https://docs.motionprovider.dev",
   output: "static",
-  trailingSlash: "always",
+  trailingSlash: "never",
   build: { format: "directory" },
   integrations: [mdx(), react(), sitemap()],
   prefetch: { prefetchAll: true },

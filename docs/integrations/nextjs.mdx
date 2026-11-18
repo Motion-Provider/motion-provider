@@ -5,17 +5,15 @@ order: 220
 draft: true
 ---
 
-Motion Provider works with the **Next.js App Router** without turning your pages or layouts into Client Components. Its animated components already define their own client boundary: Next.js can render them from a Server Component, include their initial state in the HTML, and start WAAPI playback after hydration.
+**Motion Provider works with the Next.js App Router without turning your pages or layouts into Client Components.** No need to mention the Pages Router since every component you import is already a Client Component. 
 
-Install the package:
+Its animated components already define their own client boundary. Next.js can render them from a Server Component, include their initial state in the HTML and start WAAPI playback _after hydration_.
 
-```bash
-npm install motion-provider
-```
+[Follow this guide to install the package](/getting-started/installation)
 
 ## Render from a Server Component
 
-Import Motion Provider components directly in an App Router page. You do not need to add `"use client"` to the page just to animate its content:
+Import Motion Provider components directly in an App Router page. **You do not need to add** `"use client"` **to the page just to animate its content**:
 
 ```tsx
 // app/page.tsx
@@ -46,7 +44,13 @@ See [Server-Side Rendering](/concepts/server-side-rendering/) for details about 
 
 ## Add client-side control
 
-Add `"use client"` only when your own component needs React hooks, event handlers, or browser APIs. For example, create the controller inside that boundary and share it with the animated components:
+Add `"use client"` only when your own component needs: 
+
+- **React hooks** 
+- **Event handlers**
+- **Browser APIs**
+
+For example, create the controller inside that boundary and share it with the animated components:
 
 ```tsx
 // app/components/interactive-panel.tsx

@@ -1,4 +1,4 @@
-﻿import JavaScriptIcon from "../assets/icons/javascript.svg";
+﻿import type JavaScriptIcon from "../assets/icons/javascript.svg";
 import NextjsIcon from "../assets/icons/nextjs.svg";
 import ReactIcon from "../assets/icons/react.svg";
 import TanStackIcon from "../assets/icons/tanstack.svg";
@@ -23,11 +23,11 @@ export interface FrameworkItem {
 
 export default [
   {
-    icon: JavaScriptIcon,
-    title: "JavaScript",
-    desc: "Use Motion Provider in any vanilla JavaScript project, no framework required.",
-    href: "/integrations/javascript",
-    color: "#F7DF1E",
+    icon: TypeScriptIcon,
+    title: "TypeScript",
+    desc: "Fully typed API with strict generics and autocompletion out of the box.",
+    href: "/integrations/typescript",
+    color: "#3178C6",
   },
   {
     icon: NextjsIcon,
@@ -49,12 +49,5 @@ export default [
     desc: "Animate TanStack Router transitions and Query-driven UI states.",
     href: "/integrations/tanstack",
     color: "#fff",
-  },
-  {
-    icon: TypeScriptIcon,
-    title: "TypeScript",
-    desc: "Fully typed API with strict generics and autocompletion out of the box.",
-    href: "/integrations/typescript",
-    color: "#3178C6",
   },
 ] as readonly FrameworkItem[];

@@ -25,18 +25,20 @@ Creating CAS requires 3 element given above plus a suitable area of your site to
 
 Assuming we got something like this: 
 
+<Callout type="tip" title="Note">
+  For convenience, I've stripped out the CSS classes for better readability.
+</Callout>
+
 ```tsx
-<section className="size-full flex items-center justify-center px-6 tracking-tighter">
-    <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
-        <span className="font-light text-sm">Motion CAS</span>
-        <h2 className="mt-0 capitalize">Make stuffs alive</h2>
-        <p className="max-w-2xs -mt-4">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </p>
-        </div>
-        <div className="flex flex-1 gap-2 items-center relative">
-        <img className="size-full rounded-lg" />
-    </div>
+<section>
+      <div>
+        <span>Motion CAS</span>
+        <h2>Make stuffs alive</h2>
+        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+      </div>
+      <div>
+        <img />
+      </div>
 </section>
 ```
 
@@ -62,60 +64,57 @@ Let's build the core layer and prepare the animations for CAS.
 4 animations for each to go:
 
 ```tsx
-<section className="size-full flex items-center justify-center px-6 tracking-tighter">
-    <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
-        <MotionContainer
-            elementType="span"
-            animation={{
-                mode: ["fadeUp", "filterBlurIn"],
-                transition: "gentle",
-                duration: 0.5,
-            }}
-            className="font-light text-sm"
-        >
-            Motion CAS
-        </MotionContainer>
-        <MotionText
-            elementType="h2"
-            animation={{
-                mode: ["textShimmer", "transformTextGlow"],
-                duration: 0.88,
-                transition: "bounceSoft",
-            }}
-            config={{
-                mode: "chars",
-                delayLogic: "chaotic",
-            }}
-            className="mt-0 capitalize"
-        >
-            Make stuffs alive
-        </MotionText>
-        <MotionContainer
-            elementType="p"
-            animation={{
-                mode: "fadeUp",
-                transition: "gentle",
-            }}
-            className="max-w-2xs -mt-4"
-        >
-            Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </MotionContainer>
+<section>
+    <div>
+      <MotionContainer
+        elementType="span"
+        animation={{
+          mode: ["fadeUp", "filterBlurIn"],
+          transition: "gentle",
+          duration: 0.5,
+        }}
+      >
+        Motion CAS
+      </MotionContainer>
+      <MotionText
+        elementType="h2"
+        animation={{
+          mode: ["textShimmer", "transformTextGlow"],
+          duration: 0.88,
+          transition: "bounceSoft",
+        }}
+        config={{
+          mode: "chars",
+          delayLogic: "chaotic",
+        }}
+      >
+        Make stuffs alive
+      </MotionText>
+      <MotionContainer
+        elementType="p"
+        animation={{
+          mode: "fadeUp",
+          transition: "gentle",
+        }}
+        controller={controller}
+      >
+        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+      </MotionContainer>
     </div>
-    <div className="flex flex-1 gap-2 items-center relative">
-        <MotionImage
-            animation={{
-                mode: ["fadeIn", "flash"],
-                transition: "gentle",
-                duration: 0.92,
-            }}
-            config={{
-                img: "SOURCE_IMG_URL",
-                pieces: 49,
-                duration: 0.42,
-            }}
-            alt="demo"
-            wrapperClassName="size-full rounded-lg"
-        />
+    <div>
+      <MotionImage
+        animation={{
+          mode: ["fadeIn", "rotateFlipY"],
+          transition: "gentle",
+          duration: 0.92,
+        }}
+        config={{
+          img: "/photo.jpg",
+          pieces: 36,
+          duration: 0.42,
+          delayLogic: "sinusoidal",
+        }}
+      />
     </div>
 </section>
 ```
@@ -137,8 +136,8 @@ Looks nice but we must add `delay` to make it look smooth. Now everything loads 
 Starting from the first visible element which our case is badge `span` and move down to the last visible element `p`. Finally, we will end with the `img` element. 
 
 ```tsx
-    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
-      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+    <section>
+      <div>
         <MotionContainer
           animation={{
             mode: ["fadeUp", "filterBlurIn"],
@@ -169,7 +168,7 @@ Starting from the first visible element which our case is badge `span` and move 
           Lorem ipsum dolor sit amet consectetur adipisicing elit.
         </MotionContainer>
       </div>
-      <div className="flex flex-1 gap-2 items-center relative">
+      <div>
         <MotionImage
           animation={{
             mode: ["fadeIn", "rotateFlipY"],
@@ -207,8 +206,7 @@ export default createMotionConfig({
         mode: ["fadeUp", "filterBlurIn"],
         transition: "gentle",
         duration: 0.5,
-      },
-      className: "font-light text-sm -mb-12",
+      }
     },
   },
   title: {
@@ -224,8 +222,7 @@ export default createMotionConfig({
       config: {
         mode: "chars",
         delayLogic: "chaotic",
-      },
-      className: "mt-0 capitalize",
+      }
     },
   },
   desc: {
@@ -236,8 +233,7 @@ export default createMotionConfig({
         mode: "fadeUp",
         transition: "gentle",
         delay: 0.88,
-      },
-      className: "max-w-2xs -mt-4",
+      }
     },
   },
   image: {
@@ -254,9 +250,7 @@ export default createMotionConfig({
         pieces: 36,
         duration: 0.42,
         delayLogic: "sinusoidal",
-      },
-      alt: "demo",
-      wrapperClassName: "size-full rounded-lg overflow-hidden object-cover",
+      }
     },
   },
 })
@@ -288,8 +282,8 @@ import { getMotionAnimation } from "@/lib/motion/marketing-section.ts";
 
 export default function MarketingSection() {
   return (
-    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
-      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+    <section>
+      <div>
         <MotionContainer {...getMotionAnimation("badge")}>
           Motion CAS
         </MotionContainer>
@@ -312,7 +306,7 @@ From 42 lines to 15 lines, that's a big DX improvement. The result is the same w
 
 <Registry slug="cas-3" title="CAS — with registry"/>
 
-The images from my IDE while implementing the registry: 
+The images from my IDE while implementing the registry illustrate the type safety,
 
 ![IDE Screenshot](/docs/typesafety-ide.png)
 
@@ -329,8 +323,8 @@ export default function MarketingSection() {
   const controller = useController();
   
   return (
-    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
-      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+    <section>
+      <div>
         <MotionContainer {...getMotionAnimation("badge")} controller={controller}>
           Motion CAS
         </MotionContainer>
@@ -372,7 +366,7 @@ export default function MarketingSection() {
    const animate = (action: Action) => (): void => controller[action];
   
   return (      
-    <section className="size-full flex items-center justify-center px-6 tracking-tighter">
+    <section>
 
         {actions.map((action) => (
           <button key={action} type="button" onClick={animate(action)}>
@@ -380,7 +374,7 @@ export default function MarketingSection() {
           </button>
         ))}
 
-      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
+      <div>
         <MotionContainer {...getMotionAnimation("badge")} controller={controller}>
           Motion CAS
         </MotionContainer>
