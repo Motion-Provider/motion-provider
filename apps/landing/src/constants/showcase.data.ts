@@ -228,7 +228,7 @@ import { spin } from "@/motion/presets";
     type: "hook",
     title: "useController()",
     tagline: "One hook to control all animations.",
-    desc: "Introducing the controlled animation system which allows you to control the animation lifecycle with a line of code.",
+    desc: "Introducing the centralized animation system which allows you to control the animation lifecycle with a line of code.",
     imgSrc: "/assets/backgrounds/motion-hooks-illustration.webp",
     snippet: `import {
   MotionText, 

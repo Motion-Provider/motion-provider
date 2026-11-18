@@ -1,8 +1,8 @@
 ﻿import {
   CircleFadingPlay,
   LucideCircleQuestionMark,
+  LucideGitPullRequestArrow,
   LucideGraduationCap,
-  LucideWandSparkles,
 } from "@lucide/astro";
 
 export interface ExploreItem {
@@ -32,9 +32,9 @@ export default [
     desc: "Go through guideline to get started with dedicated playground to animate even faster than any AI model you can imagine, visually and literally! You will learn how easy modularization that Motion Provider gives.",
   },
   {
-    title: "for agents",
-    href: "/agents/overview",
-    icon: LucideWandSparkles,
-    desc: "Enable AI assistants like Claude, Cursor, and Windsurf to understand Motion Provider. Integrate skills for your agent and many more.",
+    title: "Add CAS to your app",
+    href: "/concepts/centralized-animation-system",
+    icon: LucideGitPullRequestArrow,
+    desc: "Learn how to integrate the Centralized Animation System (CAS) into your app in minutes, allowing you to create batch animations with full control and ownership.",
   },
 ] as const satisfies readonly ExploreItem[];

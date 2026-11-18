@@ -1,6 +1,6 @@
-﻿import type JavaScriptIcon from "../assets/icons/javascript.svg";
+﻿import AstroIcon from "../assets/icons/astro.svg";
+import type JavaScriptIcon from "../assets/icons/javascript.svg";
 import NextjsIcon from "../assets/icons/nextjs.svg";
-import ReactIcon from "../assets/icons/react.svg";
 import TanStackIcon from "../assets/icons/tanstack.svg";
 import TypeScriptIcon from "../assets/icons/typescript.svg";
 
@@ -34,14 +34,14 @@ export default [
     title: "Next.js",
     desc: "Drop-in setup for the App Router, including Server and Client Component boundaries.",
     href: "/integrations/nextjs",
-    color: "#fff",
+    color: "var(--color-accent)",
   },
   {
-    icon: ReactIcon,
+    icon: AstroIcon,
     title: "React",
-    desc: "Provider and hooks for declarative, component-driven animations.",
-    href: "/integrations/react",
-    color: "#61DAFB",
+    desc: "Fully typed API with strict generics and autocompletion out of the box.",
+    href: "/integrations/astro",
+    color: "#fff",
   },
   {
     icon: TanStackIcon,

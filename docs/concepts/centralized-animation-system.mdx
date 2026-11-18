@@ -19,7 +19,7 @@ I don't think that anyone ever has created or used such system through the anima
 
 ## Creating CAS
 
-Let's create an interface for a marketing side where things moves simultaneously. I guess it'd be the best fit to explain how CAS implemented/works.
+Let's create an interface for a marketing site where things moves simultaneously. I guess it'd be the best fit to explain how CAS implemented/works.
 
 Creating CAS requires 3 element given above plus a suitable area of your site to be animated, most likely a section where element may look stacked.  
 
@@ -126,7 +126,7 @@ This will create our baseline of CAS:
 Looks nice but we must add `delay` to make it look smooth. Now everything loads at the same time. This may disrupt the UX a bit and cause potential bugs depending on the user device.
 
 <Callout type="note" title="In addition to the timing">
-    We recommend adding a `delay` if the visible area contains more than two-thirds MP animated elements. This is not only for the sequence, but also to schedule the animations in order and prevent harm to CPU performance. 
+    We recommend adding a `delay` if the visible area contains more than two-thirds MP animated elements. This is not only for the sequence, but also to schedule the animations in order and prevent potential harm to CPU performance. 
     Adding a delay will make the transition between batched elements less prone to lag.    
 </Callout>
 
