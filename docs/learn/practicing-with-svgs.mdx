@@ -13,6 +13,8 @@ Take a look at the final result:
 
 To achieve this, we're going to need to setup the baseline using the desired SVG props illustrating what we imagine to draw.  
 
+## Baseline
+
 It was like this in Motion so I simply copied the SVG props directly from their docs 😈
 
 ```ts
@@ -85,7 +87,7 @@ Now, we got the baseline. This could be anything you imagine to apply path drawi
 Next, we're going to need the animation properties since we don't have any presets for this type of animation.    
 
 <Callout type="tip" title="About the preset">
-I actually decided to add it as a preset so if you're reading this tutorial, I have already added it to the preset registry, you can call it `drawPath` in any MP component you want without manually defining it 😀   
+I actually decided to add it as a preset, so if you're reading this tutorial, rest assured that I have already added it to the preset registry. You can then call it `drawPath` in any MP component you wish, without having to define it manually.   
 </Callout>
 
 
@@ -160,12 +162,15 @@ export default function PathDrawing() {
 }
 ```
 
+## Animating the shapes with MotionChain
+
 Afterwards, we're going to utilize `<MotionChain />` to animate the shapes by simply wrapping the SVG elements with it.
 
 <Callout type="danger" title="Crtical Point">
 While doing so, to enable custom timing we should opt-in `animations` rather than `animation` prop because `animation`
 allows you to set exactly 1:1 animation for each element you passed as children while `animations` allows you to set custom props arbitrarily.
 </Callout>
+
 ```tsx
 <MotionChain
   animations={shapes.map((_, i) => ({
@@ -198,6 +203,8 @@ allows you to set exactly 1:1 animation for each element you passed as children 
 And it turns to: 
 
 <Registry slug="learn/practicing-with-svgs/1" title="Full Animated Path Drawing" />
+
+## Bonus
 
 Effortlessly play with the `delayLogic` or `transition` props to see various type of intervals and transitions among the animated SVG elements.   
 

@@ -1,6 +1,5 @@
 import { type Key, Label, ListBox, Select } from "@heroui/react";
 import {
-  type AnimationModule,
   type DelayLogic,
   MotionChain,
   type TransitionKeys,
@@ -64,15 +63,6 @@ const transitionItems = [
   "springy",
   "sudden",
 ] as const;
-
-const draw = {
-  initial: {
-    strokeDashoffset: "1",
-  },
-  animate: {
-    strokeDashoffset: "0",
-  },
-} as const satisfies AnimationModule;
 
 const strokePalette = [
   "var(--color-success)",
@@ -157,7 +147,7 @@ export default function Component({ controller }: ModuleProps) {
         <MotionChain
           key={`${selectedDelay}-${selectedTransition}`}
           animations={shapes.map((_, i) => ({
-            mode: draw,
+            mode: "drawPath",
             delay: i * 0.25,
             duration: 0.88,
             transition: selectedTransition as TransitionKeys,

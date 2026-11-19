@@ -1,15 +1,6 @@
-import { type AnimationModule, MotionChain } from "motion-provider";
+import { MotionChain } from "motion-provider";
 import type { ModuleProps } from "../../types";
 import { shapeDefinitions } from "./data";
-
-const draw = {
-  initial: {
-    strokeDashoffset: "1",
-  },
-  animate: {
-    strokeDashoffset: "0",
-  },
-} as const satisfies AnimationModule;
 
 const strokePalette = [
   "var(--color-success)",
@@ -39,7 +30,7 @@ export default function ({ controller }: ModuleProps) {
       <title id="path-drawing-title">Practicing with SVG</title>
       <MotionChain
         animations={shapes.map((_, i) => ({
-          mode: draw,
+          mode: "drawPath",
           delay: i * 0.25,
           duration: 0.88,
           transition: "gentle",
