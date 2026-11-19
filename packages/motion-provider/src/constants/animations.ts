@@ -72,5 +72,6 @@ const animations = {
   translate3dRotate: presets.translate3dRotate,
   translate3dZoom: presets.translate3dZoom,
   typingEffect: presets.typingEffect,
+  drawPath: presets.drawPath,
 } as const;
 export default animations;
