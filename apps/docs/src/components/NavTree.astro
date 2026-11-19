@@ -1,16 +1,19 @@
 ---
-import type { NavGroup } from "../lib/docs";
+import type { NavGroup, NavSection } from "../lib/docs";
+import NavList from "./NavList.astro";
 
 interface Props {
   groups: readonly NavGroup[];
   currentId: string;
+  section: NavSection;
 }
 
-const { groups, currentId } = Astro.props;
+const { groups, currentId, section } = Astro.props;
 const filteredGroups = groups.filter((g) => g.label);
 ---
 
 <nav aria-label="Documentation" class="relative">
+  <NavList section={section} className="flex md:hidden z-40" />
   <ul class="space-y-6">
     {
       filteredGroups.map((group) => (

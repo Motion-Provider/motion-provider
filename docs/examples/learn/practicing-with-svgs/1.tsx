@@ -1,43 +1,69 @@
-import { type AnimationModule, MotionContainer } from "motion-provider";
+import { type AnimationModule, MotionChain } from "motion-provider";
 import type { ModuleProps } from "../../types";
+import { shapeDefinitions } from "./data";
 
-const pathAnimation = {
+const draw = {
   initial: {
-    pathLength: 0,
+    strokeDashoffset: "1",
   },
   animate: {
-    pathLength: 1,
+    strokeDashoffset: "0",
   },
-} satisfies AnimationModule;
+} as const satisfies AnimationModule;
+
+const strokePalette = [
+  "var(--color-success)",
+  "var(--color-danger)",
+  "var(--color-accent)",
+] as const;
+
+const shapes = shapeDefinitions.map((shape) => ({
+  id: shape.id,
+  elementType: shape.elementType,
+  props: {
+    ...shape.props,
+    stroke: strokePalette[Math.floor(Math.random() * strokePalette.length)]!,
+  },
+}));
 
 export default function ({ controller }: ModuleProps) {
   return (
     <svg
-      viewBox="0 0 600 600"
       width={600}
       height={600}
-      className="max-w-[80vw]"
+      viewBox="0 0 600 600"
+      className="size-60 max-w-full mt-12"
+      role="img"
+      aria-labelledby="path-drawing-title"
     >
-      <title className="sr-only">Motion Circle</title>
-      <MotionContainer
-        animation={{
-          mode: [pathAnimation],
+      <title id="path-drawing-title">Practicing with SVG</title>
+      <MotionChain
+        animations={shapes.map((_, i) => ({
+          mode: draw,
+          delay: i * 0.25,
+          duration: 0.88,
           transition: "gentle",
-          duration: 1,
+        }))}
+        config={{
+          duration: 0.24,
+          delayLogic: "sinusoidal",
         }}
-        elementType="circle"
-        className="circle-path"
-        cx="100"
-        cy="100"
-        r="80"
-        stroke="var(--color-accent)"
-        style={{
-          strokeWidth: 10,
-          strokeLinecap: "round",
-          fill: "transparent",
-        }}
+        elementType="g"
         controller={controller}
-      />
+      >
+        {shapes.map(({ id, elementType: Component, props }) => (
+          <Component
+            key={id}
+            {...props}
+            style={{
+              strokeWidth: 10,
+              strokeLinecap: "round",
+              strokeDasharray: "1 1",
+              fill: "none",
+            }}
+          />
+        ))}
+      </MotionChain>
     </svg>
   );
 }

@@ -69,9 +69,7 @@ export function buildIndex(
 ): DocsIndex {
   const sorted = entries
     .filter((entry) => getSection(entry.id) === section)
-    .sort(
-      (a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id),
-    );
+    .sort((a, b) => a.data.order - b.data.order || a.id.localeCompare(b.id));
 
   const groups = new Map<string, NavItem[]>();
 

@@ -1,27 +1,14 @@
 ---
 import { Image } from "astro:assets";
 import Logo from "@assets/brand-lockup.png";
-import { cn } from "@/lib/cn";
 import type { NavSection } from "../lib/docs";
+import NavList from "./NavList.astro";
 
 interface Props {
   section: NavSection;
 }
 
-type NavItem = {
-  key: NavSection;
-  label: string;
-  href: string;
-  external?: boolean;
-};
-
 const { section } = Astro.props;
-
-const navItems: readonly NavItem[] = [
-  { key: "docs", label: "Docs", href: "/" },
-  { key: "api", label: "API", href: "/api/overview" },
-  { key: "learn", label: "Learn", href: "/learn" },
-];
 ---
 
 <header class="sticky top-0 z-50 h-11.5 w-full border-border border-b bg-surface/20 backdrop-blur pl-2 overflow-hidden pt-1">
@@ -56,26 +43,7 @@ const navItems: readonly NavItem[] = [
         <path d="M4 6h16M4 12h16M4 18h16"></path>
       </svg>
     </button>
-    <div class="hidden h-full shrink-0 items-center gap-0.75 lg:flex pl-4">
-      {
-        navItems.map((item) => (
-          <a
-            href={item.href}
-            aria-current={item.key === section ? "page" : undefined}
-            target={item.external ? "_blank" : undefined}
-            rel={item.external ? "noreferrer" : undefined}
-            class={cn(
-              "relative inline-flex h-full items-center px-3.25 text-[13px] leading-none transition-colors duration-150 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-[#eb5600] after:transition-transform after:duration-150",
-              item.key === section
-                ? "font-medium text-accent after:scale-x-100"
-                : "text-[#a5a198] after:scale-x-0 hover:text-white",
-            )}
-          >
-            {item.label}
-          </a>
-        ))
-      }
-    </div>
+    <NavList section={section} className="hidden md:flex" />
     <div class="ml-auto hidden shrink-0 items-center gap-2 -mt-1 md:flex">
       <label class="hidden h-11.5 w-64 max-w-[calc(100vw-2rem)] items-center gap-2 border-l border-[#2a2822] bg-transparent px-3 text-[#a5a198] transition-colors focus-within:border-[#51483a] md:flex">
         <svg

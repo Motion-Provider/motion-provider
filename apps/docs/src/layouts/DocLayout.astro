@@ -2,7 +2,7 @@
 import type { MarkdownHeading } from "astro";
 import NavigationButton from "@/components/NavigationButton.astro";
 import { cn } from "@/lib/cn";
-import NavAstro from "../components/Nav.astro";
+import Nav from "../components/Nav.astro";
 import NavTree from "../components/NavTree.astro";
 import Toc from "../components/Toc.astro";
 import type { NavGroup, NavItem, NavSection } from "../lib/docs";
@@ -44,7 +44,7 @@ const doc = props.landing ? undefined : props;
   >
     Skip to content
   </a>
-  <NavAstro section={section} />
+  <Nav section={section} />
   <div
     class={cn(
       "grid min-h-[calc(100dvh-var(--nav-h))] w-full grid-cols-1 items-start lg:grid-cols-[var(--sidebar-w)_minmax(0,1fr)]",
@@ -56,8 +56,8 @@ const doc = props.landing ? undefined : props;
         id="docs-backdrop"
         aria-hidden="true"
         hidden
-        class="fixed inset-x-0 bottom-0 top-(--nav-h) z-30 bg-black/50 backdrop-blur-[1px] lg:hidden"
-      ></div>
+        class="fixed inset-x-0 bottom-0 top-(--nav-h) z-30 bg-black/80 backdrop-blur-[1px] lg:hidden"
+      />
       <aside
         id="docs-sidebar"
         aria-label="Documentation navigation"
@@ -72,7 +72,7 @@ const doc = props.landing ? undefined : props;
           "lg:z-auto lg:h-[calc(100dvh-var(--nav-h))] lg:w-auto lg:max-w-none lg:translate-x-0 lg:transition-none tracking-tight",
         )}
       >
-        <NavTree groups={nav} currentId={currentId} />
+        <NavTree groups={nav} currentId={currentId} section={section} />
       </aside>
     </div>
 

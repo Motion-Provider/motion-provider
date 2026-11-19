@@ -5,6 +5,210 @@ order: 10
 draft: true
 ---
 
-This guide is being prepared.
+In this tutorial, we're going to do exactly the same thing [what Motion(framer Motion) did in their docs](https://motion.dev/docs/react-svg-animation#animate-viewbox) but this time we will do it with less code and abstraction utilizing SVGs to animate shapes in an app. 
 
-<Registry slug="learn/practicing-with-svgs/1" title="Practicing with SVGs" />
+Take a look at the final result: 
+
+<Registry slug="learn/practicing-with-svgs/1" title="Path drawing" />
+
+To achieve this, we're going to need to setup the baseline using the desired SVG props illustrating what we imagine to draw.  
+
+It was like this in Motion so I simply copied the SVG props directly from their docs 😈
+
+```ts
+const shapeDefinitions = [
+  {
+    id: "circle-1",
+    elementType: "circle",
+    props: { pathLength: 1, cx: 100, cy: 100, r: 80 },
+  },
+  {
+    id: "line-1",
+    elementType: "line",
+    props: { pathLength: 1, x1: 220, y1: 30, x2: 360, y2: 170 },
+  },
+  {
+    id: "line-2",
+    elementType: "line",
+    props: { pathLength: 1, x1: 220, y1: 170, x2: 360, y2: 30 },
+  },
+  {
+    id: "rect-1",
+    elementType: "rect",
+    props: { pathLength: 1, x: 410, y: 30, width: 140, height: 140, rx: 20 },
+  },
+  {
+    id: "circle-2",
+    elementType: "circle",
+    props: { pathLength: 1, cx: 100, cy: 300, r: 80 },
+  },
+  {
+    id: "line-3",
+    elementType: "line",
+    props: { pathLength: 1, x1: 220, y1: 230, x2: 360, y2: 370 },
+  },
+  {
+    id: "line-4",
+    elementType: "line",
+    props: { pathLength: 1, x1: 220, y1: 370, x2: 360, y2: 230 },
+  },
+  {
+    id: "rect-2",
+    elementType: "rect",
+    props: { pathLength: 1, x: 410, y: 230, width: 140, height: 140, rx: 20 },
+  },
+  {
+    id: "circle-3",
+    elementType: "circle",
+    props: { pathLength: 1, cx: 100, cy: 500, r: 80 },
+  },
+  {
+    id: "line-5",
+    elementType: "line",
+    props: { pathLength: 1, x1: 220, y1: 430, x2: 360, y2: 570 },
+  },
+  {
+    id: "line-6",
+    elementType: "line",
+    props: { pathLength: 1, x1: 220, y1: 570, x2: 360, y2: 430 },
+  },
+  {
+    id: "rect-3",
+    elementType: "rect",
+    props: { pathLength: 1, x: 410, y: 430, width: 140, height: 140, rx: 20 },
+  },
+] as const;
+```
+
+Now, we got the baseline. This could be anything you imagine to apply path drawing animation effect to your svg elements, up to your (or your AI's) imagination.
+ 
+Next, we're going to need the animation properties since we don't have any presets for this type of animation.    
+
+<Callout type="tip" title="About the preset">
+I actually decided to add it as a preset so if you're reading this tutorial, I have already added it to the preset registry, you can call it `pathDraw` in any MP component you want without manually defining it 😀   
+</Callout>
+
+
+```ts
+import { type AnimationModule } from "motion-provider";
+
+const draw = {
+  initial: {
+    strokeDashoffset: "1",
+  },
+  animate: {
+    strokeDashoffset: "0",
+  },
+} as const satisfies AnimationModule;
+
+```
+
+Merging all these may lead us to something like this:
+
+<Registry slug="learn/practicing-with-svgs/2" title="Baseline" />
+
+Full code reveal (only React): 
+
+```tsx
+import type { ComponentProps } from "react";
+
+// shapeDefinitions is same
+
+const SVGElements = {
+  circle: "circle",
+  line: "line",
+  rect: "rect",
+} as const;
+
+
+const shapes = shapeDefinitions.map((shape) => ({
+  ...shape,
+  stroke: "var(--color-accent, #8b5cf6)",
+}));
+
+export default function PathDrawing() {
+  return (
+    <svg
+      width={600}
+      height={600}
+      viewBox="0 0 600 600"
+      className="size-60 max-w-full mt-12"
+      role="img"
+      aria-label="SVG shapes illustration"
+    >
+      {shapes.map(({ id, elementType, props, stroke }) => {
+        const Component = SVGElements[elementType];
+
+        return (
+          <Component
+            key={id}
+            {...props}
+            pathLength={1}
+            stroke={stroke}
+            style={{
+              strokeWidth: 10,
+              strokeLinecap: "round",
+              strokeDasharray: "1 1",
+              strokeDashoffset: 0,
+              fill: "none",
+            }}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+```
+
+Afterwards, we're going to utilize `<MotionChain />` to animate the shapes by simply wrapping the SVG elements with it.
+
+<Callout type="danger" title="Crtical Point">
+While doing so, to enable custom timing we should opt-in `animations` rather than `animation` prop because `animation`
+allows you to set exactly 1:1 animation for each element you passed as children while `animations` allows you to set custom props arbitrarily.
+</Callout>
+```tsx
+<MotionChain
+  animations={shapes.map((_, i) => ({
+    mode: draw,
+    delay: i * 0.25, // setting custom delay for each item
+    duration: 0.88,
+    transition: "gentle",
+  }))}
+  config={{
+    duration: 0.24,
+    delayLogic: "sinusoidal",
+  }}
+  elementType="g"
+>
+  {shapes.map(({ id, elementType: Component, props }) => (
+    <Component
+      key={id}
+      {...props}
+      style={{
+        strokeWidth: 10,
+        strokeLinecap: "round",
+        strokeDasharray: "1 1",
+        fill: "none",
+      }}
+    />
+  ))}
+</MotionChain>
+```
+
+And it turns to: 
+
+<Registry slug="learn/practicing-with-svgs/1" title="Full Animated Path Drawing" />
+
+Effortlessly play with the `delayLogic` or `transition` props to see various type of intervals and transitions among the animated SVG elements.   
+
+<Registry slug="learn/practicing-with-svgs/3" title="Custom transitions and delays" />
+
+
+
+
+
+
+
+
+
+
