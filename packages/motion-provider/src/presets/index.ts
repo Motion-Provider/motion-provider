@@ -713,10 +713,10 @@ export const typingEffect = {
 } as const satisfies AnimationModule;
 
 export const drawPath = {
-  animate: {
-    pathLength: 1,
-  },
   initial: {
-    pathLength: 0,
+    strokeDashoffset: "1",
+  },
+  animate: {
+    strokeDashoffset: "0",
   },
 } as const satisfies AnimationModule;
