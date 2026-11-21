@@ -87,22 +87,20 @@ export default function Component({ controller }: ModuleProps) {
 
   return (
     <>
-      <div className="flex absolute bottom-3 left-3 w-full h-fit items-end justify-center gap-1">
+      <div className="flex absolute bottom-3 left-3 w-full h-fit items-end md:justify-start justify-center gap-1">
         <Select
           className="w-36 dark"
           placeholder="Select delay"
           value={selectedDelay}
           onChange={(v) => setSelectedDelay(v)}
         >
-          <Label className="font-secondary md:text-sm text-xs">
-            delayLogic
-          </Label>
+          <Label className="font-secondary text-xs">delayLogic</Label>
           <Select.Trigger>
-            <Select.Value className="md:text-sm text-xs" />
+            <Select.Value className="text-xs" />
             <Select.Indicator />
           </Select.Trigger>
           <Select.Popover className="dark">
-            <ListBox className="max-h-60 overflow-y-scroll md:text-sm text-xs">
+            <ListBox className="max-h-60 overflow-y-scroll text-xs">
               {delayItems.map((delay) => (
                 <ListBox.Item key={delay} id={delay} textValue={delay}>
                   {delay}
@@ -113,18 +111,18 @@ export default function Component({ controller }: ModuleProps) {
           </Select.Popover>
         </Select>
         <Select
-          className="w-36 dark md:text-sm text-xs"
+          className="w-36 dark text-xs"
           placeholder="Select delay"
           value={selectedTransition}
           onChange={(v) => setSelectedTransition(v)}
         >
-          <Label className="font-secondary">transition</Label>
+          <Label className="font-secondary text-xs">transition</Label>
           <Select.Trigger>
-            <Select.Value className="md:text-sm text-xs" />
+            <Select.Value className="text-xs" />
             <Select.Indicator />
           </Select.Trigger>
           <Select.Popover className="dark">
-            <ListBox className="max-h-60 overflow-y-scroll md:text-sm text-xs">
+            <ListBox className="max-h-60 overflow-y-scroll text-xs">
               {transitionItems.map((delay) => (
                 <ListBox.Item key={delay} id={delay} textValue={delay}>
                   {delay}

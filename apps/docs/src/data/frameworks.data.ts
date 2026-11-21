@@ -11,14 +11,11 @@ export type TechSlug =
   | "tanstack"
   | "typescript";
 
-export type HexColor = `#${string}`;
-
 export interface FrameworkItem {
   icon: typeof JavaScriptIcon;
   desc: string;
   title: string;
   href: `/integrations/${TechSlug}`;
-  color: HexColor;
 }
 
 export default [
@@ -27,27 +24,23 @@ export default [
     title: "TypeScript",
     desc: "Fully typed API with strict generics and autocompletion out of the box.",
     href: "/integrations/typescript",
-    color: "#3178C6",
   },
   {
     icon: NextjsIcon,
     title: "Next.js",
     desc: "Drop-in setup for the App Router, including Server and Client Component boundaries.",
     href: "/integrations/nextjs",
-    color: "var(--color-accent)",
   },
   {
     icon: AstroIcon,
     title: "React",
     desc: "Fully typed API with strict generics and autocompletion out of the box.",
     href: "/integrations/astro",
-    color: "#fff",
   },
   {
     icon: TanStackIcon,
     title: "TanStack",
     desc: "Animate TanStack Router transitions and Query-driven UI states.",
     href: "/integrations/tanstack",
-    color: "#fff",
   },
 ] as readonly FrameworkItem[];
