@@ -1,0 +1,631 @@
+---
+title: "Designing Micro Animations"
+description: ""
+order: 20
+draft: false
+---
+
+In this chapter, we will **practice adding micro interactivity to reusable CTA button**, which are an absolute must and indispensable of any website.
+
+<Callout title="Disclaimer" type="note">
+    Throughout the chapter, we're going to be **utilizing a well-known React component library called [HeroUI](https://heroui.com/)**. Since their APIs are almost identical, consider them interchangeable.      
+</Callout>
+
+Take a look at the final result:
+
+<Registry slug="learn/micro-animations/cta-button-micro" title="CTA button — animates on hover" />
+
+
+## Defining The Component
+
+Assuming that we are working on a React projec, the most likely directory planning would definetely include `@/components` folder to stack our UI components. 
+
+So we can create a fully customizable and dynamic button component right inside that folder called `cta-button.tsx` or something concerning to this.
+
+```tsx
+import { Button, type ButtonProps, cn } from "@heroui/react";
+
+interface Props extends ButtonProps {
+  label?: string;
+}
+
+function Icon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn("lucide lucide-arrow-up-right preview-icon", className)}
+    >
+      <title className="sr-only">Navigate</title>
+      <path d="M7 7h10v10" />
+      <path d="M7 17 17 7" />
+    </svg>
+  );
+}
+
+export default function CtaButton({
+  label = "Get Started",
+  variant = "danger-soft",
+  size = "md",
+  ...props
+}: Props) {
+  return (
+    <Button variant={variant} size={size} {...props}>
+      {label} <Icon />
+    </Button>
+  );
+}
+```
+
+<Registry slug="learn/micro-animations/1" title="CTA button primitive" />
+
+## Deciding What to Animate
+
+2 things are cohesive to the button itself:
+
+- The string `label`
+- The svg icon `<Icon />`
+
+Therefore, let’s add animations to each one individually and, at the same time, lay the groundwork for managing these animations collectively.  
+
+Starting from the label which is `string` typed, perfect candidate to be animated using `<MotionText />` MP component,
+
+```tsx
+<MotionText
+    animation={{
+        mode: ["slideUp", "filterBlurIn", "fadeIn"],
+        duration: 0.44,
+        transition: "bounceSoft",
+    }}
+    config={{
+        mode: "chars",
+        delayLogic: "sinusoidal",
+        duration: 0.09,
+    }}
+>
+    {label}
+</MotionText>
+```
+
+A bulk animation via `mode: "chars"` and `delayLogic: "sinusoidal"`. Triggering the animation might produce visuals that are specific to our CTA button.
+
+Next, our SVG can be rendered using `<MotionChain />` for the `path` elements that we already practiced with [in the previous chapter](learn/practicing-with-svgs), 
+
+```tsx
+function Icon({
+  className,
+  controller,
+}: {
+  className?: string;
+  controller?: AnimationController;
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn("lucide lucide-arrow-up-right preview-icon", className)}
+    >
+      <title className="sr-only">Navigate</title>
+      <MotionChain
+        animation={{
+          mode: "fadeIn",
+          transition: "gentle",
+          duration: 0.8,
+        }}
+        elementType="g"
+        config={{
+          duration: 0.24,
+        }}
+        controller={controller}
+      >
+          <path key="path-1" d="M7 7h10v10" />
+          <path key="path-2" d="M7 17 17 7" />
+      </MotionChain>
+    </svg>
+  );
+}
+```
+
+All turns out to,
+
+<Registry slug="learn/micro-animations/2" title="First Phase — animation applied (re-render)" />
+
+
+## Adding Interactivity
+
+We can add a little bit of creativity by intergating some sort of second layer like 
+the label and svg icon in order to switch among them. 
+
+And to do that, first we should add event handler to determine the start and end 
+points of transition. 
+
+### Event HandIer Implementation 
+
+In our case, the outermost wrapper component is the `<Button />` covering the part 
+of other animated elements. So we can use it as a base to trigger callbacks wired to 
+`useController()` to [centralize the animation system — CAS](/concepts/centralized-animation-system).       
+
+
+```tsx
+export default function CtaButton({
+  label = "Get Started",
+  variant = "danger-soft",
+  size = "md",
+}: Props) {
+  const controller = useController(); // Add the CAS controller
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      className="relative overflow-hidden"
+      onMouseEnter={() => controller.play()} // Binding the controller
+      onMouseLeave={() => controller.onReverse()} // Binding the controller
+    >
+      <MotionText
+        animation={{
+          mode: ["slideUp", "filterBlurIn", "fadeIn"],
+          duration: 0.44,
+          transition: "bounceSoft",
+        }}
+        config={{
+          mode: "chars",
+          delayLogic: "sinusoidal",
+          duration: 0.09,
+        }}
+        controller={controller} // Wire the controller to the MP components
+      >
+        {label}
+      </MotionText>
+      <Icon
+        controller={controller} // Wire the controller to the MP components
+      />
+    </Button>
+  );
+}
+```
+
+It creates a straightforward CAS effect to our MP components like this,
+
+<Registry slug="learn/micro-animations/3" title="Second Phase — CAS implemented (hover)" />
+
+### Adding Second Animation Layer
+
+Up next, we're going to add a second animation layer to our CTA button and collocate them subsequently to animate between those layers.
+
+The start times of these two animations must be opposite to each other so that it looks as if there is a transition effect. 
+In this particular case, we can utilize `reverse` MP prop dedicated to achieve such things,
+
+```tsx
+<MotionText
+  animation={{
+    mode: ["slideUp", "filterBlurIn", "fadeIn"],
+    duration: 0.44,
+    direction: "reverse", // initially, whatever written in mode will work reversally 
+    transition: "bounceSoft",
+  }}
+  config={{
+    mode: "chars",
+    delayLogic: "sinusoidal",
+    duration: 0.09,
+  }}
+  controller={controller}
+>
+  {label}
+</MotionText>
+```
+
+Similarly, after adding a second SVG element, the CAS we'll connect together is complete, 
+
+```tsx 
+import { Button, type ButtonProps, cn } from "@heroui/react";
+import {
+  type AnimationController,
+  MotionChain,
+  MotionContainer,
+  MotionText,
+  useController,
+} from "motion-provider";
+import type { ModuleProps } from "../../types";
+
+interface Props extends ButtonProps, ModuleProps {
+  label?: string;
+}
+
+function Icon({
+  className,
+  controller,
+}: {
+  className?: string;
+  controller?: AnimationController;
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn("lucide lucide-arrow-up-right preview-icon", className)}
+    >
+      <title className="sr-only">Navigate</title>
+      <MotionChain
+        controller={controller}
+        elementType="g"
+        animation={{
+          mode: ["fadeIn", "slideDown"],
+          duration: 0.44,
+          direction: "reverse",
+          transition: "bounceSoft",
+          delay: 0.25,
+        }}
+        config={{
+          duration: 0.24,
+        }}
+      >
+        <path key="path-1" d="M7 7h10v10" />
+        <path key="path-2" d="M7 17 17 7" />
+      </MotionChain>
+    </svg>
+  );
+}
+
+function Flame({
+  className,
+  controller,
+}: {
+  className?: string;
+  controller?: AnimationController;
+}) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn("lucide lucide-flame preview-icon", className)}
+    >
+      <title className="sr-only">Navigate</title>
+      <MotionContainer
+        elementType="path"
+        animation={{
+          mode: ["fadeIn", "slideUp"],
+          duration: 0.44,
+          transition: "bounceSoft",
+          delay: 0.75,
+        }}
+        controller={controller}
+        d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"
+      />
+    </svg>
+  );
+}
+
+export default function CtaButton({
+  label = "Get Started",
+  variant = "danger-soft",
+  size = "lg",
+}: Props) {
+  const controller = useController();
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      className="relative overflow-hidden text-sm"
+      onMouseEnter={() => controller.play()}
+      onMouseLeave={() => controller.onReverse()}
+    >
+      <div className="relative">
+        <MotionContainer
+          animation={{
+            mode: ["slideDown", "filterBlurIn", "fadeIn"],
+            duration: 0.44,
+            transition: "bounceSoft",
+          }}
+          controller={controller}
+          className="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2"
+        >
+          Take Action
+        </MotionContainer>
+        <MotionText
+          animation={{
+            mode: ["slideUp", "filterBlurIn", "fadeIn"],
+            duration: 0.44,
+            direction: "reverse",
+            transition: "bounceSoft",
+          }}
+          config={{
+            mode: "chars",
+            delayLogic: "sinusoidal",
+            duration: 0.09,
+          }}
+          controller={controller}
+        >
+          {label}
+        </MotionText>
+      </div>
+      <div className="relative">
+        <Icon controller={controller} className="size-5 shrink-0" />
+        <Flame
+          className="absolute top-0 size-5 shrink-0"
+          controller={controller}
+        />
+      </div>
+    </Button>
+  );
+}
+```
+
+Yields,
+
+<Registry slug="learn/micro-animations/cta-button-micro" title="CTA button — animates on hover" />
+
+<Callout type="note" title="About the delay prop">
+  At the top, we added a viable delay prop to scatter the animation timing of SVG's and texts to make them physically visible in a way that all visually distinguishable.     
+</Callout>
+
+
+## Adding More Absctraction to Clarity
+
+Inside the JSX, things may look crowded which is not practical in most cases. To prevent this behavior we can move the animation configurations outside the JSX using [Motion Registry](/registry/create-motion-config) APIs. 
+
+Creating a motion registry, 
+
+```tsx
+import { createMotionConfig } from "motion-provider"
+
+const data = createMotionConfig({
+  icon: {
+    type: "MotionChain",
+    props: {
+      animation: {
+        mode: ["fadeIn", "slideDown"],
+        duration: 0.44,
+        direction: "reverse",
+        transition: "bounceSoft",
+        delay: 0.25,
+      },
+      config: {
+        duration: 0.24,
+      },
+      elementType: "g",
+    },
+  },
+  flame: {
+    type: "MotionContainer",
+    props: {
+      elementType: "path",
+      animation: {
+        mode: ["fadeIn", "slideUp"],
+        duration: 0.44,
+        transition: "bounceSoft",
+        delay: 0.75,
+      },
+    },
+  },
+  textTo: {
+    type: "MotionContainer",
+    props: {
+      animation: {
+        mode: ["slideDown", "filterBlurIn", "fadeIn"],
+        duration: 0.44,
+        transition: "bounceSoft",
+      },
+    },
+  },
+  textFrom: {
+    type: "MotionText",
+    props: {
+      animation: {
+        mode: ["slideUp", "filterBlurIn", "fadeIn"],
+        duration: 0.44,
+        direction: "reverse",
+        transition: "bounceSoft",
+      },
+      config: {
+        mode: "chars",
+        delayLogic: "sinusoidal",
+        duration: 0.09,
+      },
+    },
+  },
+});
+```
+
+Then, initializing the getter enables us to reach the keys properly with full type support,
+
+
+```tsx
+import { createMotionRegistry } from "motion-provider";
+
+/* .. */
+
+const { getAnimation } = createMotionRegistry(data); 
+```
+
+Afterwards, simply passing it to our motion components with a little bit of destructuring,
+
+```tsx
+const { getAnimation } = createMotionRegistry(data);
+
+export default function CtaButton({
+  label = "Get Started",
+  variant = "danger-soft",
+  size = "lg",
+}: Props) {
+  const controller = useController();
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      className="relative overflow-hidden text-sm"
+      onMouseEnter={() => controller.play()}
+      onMouseLeave={() => controller.onReverse()}
+    >
+      <div className="relative">
+        <MotionContainer
+          {...getAnimation("textTo")}
+          controller={controller}
+          className="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2"
+        >
+          Take Action
+        </MotionContainer>
+        <MotionText {...getAnimation("textFrom")} controller={controller}>
+          {label}
+        </MotionText>
+      </div>
+      <div className="relative">
+        <Icon
+          animation={{
+            ...getAnimation("icon"),
+            controller,
+          }}
+          className="size-5 shrink-0"
+        />
+        <Flame
+          className="absolute top-0 size-5 shrink-0"
+          animation={{
+            ...getAnimation("flame"),
+            controller,
+          }}
+        />
+      </div>
+    </Button>
+  );
+}
+```
+
+<Registry slug="learn/micro-animations/4" title="CTA button primitive (hover)" />
+
+## Second Variation
+
+Besides the micro animations we did above, we can simplify it by reducing the animation count to 2. Using 2 `<MotionContainer />` MP components would be enough. 
+
+So, we can remove `MotionText` as well as the `MotionChain` from the icons and the texts then wrap 2 set of elements like this, 
+
+```tsx
+import { Button, type ButtonProps, cn } from "@heroui/react";
+import { MotionContainer, useController } from "motion-provider";
+
+interface Props extends ButtonProps, ModuleProps {
+  label?: string;
+}
+
+function Icon({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn("lucide lucide-arrow-up-right preview-icon", className)}
+    >
+      <title className="sr-only">Navigate</title>
+      <path key="path-1" d="M7 7h10v10" />
+      <path key="path-2" d="M7 17 17 7" />
+    </svg>
+  );
+}
+
+function Flame({ className }: { className?: string }) {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      className={cn("lucide lucide-flame preview-icon", className)}
+    >
+      <title className="sr-only">Navigate</title>
+      <path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4" />
+    </svg>
+  );
+}
+
+export default function CtaButton({
+  label = "Get Started",
+  variant = "danger",
+  size = "lg",
+}: Props) {
+  const controller = useController();
+
+  return (
+    <Button
+      variant={variant}
+      size={size}
+      className="relative overflow-hidden text-sm"
+      onMouseEnter={() => controller.play()}
+      onMouseLeave={() => controller.onReverse()}
+    >
+      <MotionContainer
+        animation={{
+          mode: ["slideUp", "filterBlurIn", "fadeIn"],
+          duration: 0.44,
+          direction: "reverse",
+          transition: "gentle",
+        }}
+        controller={controller}
+        className="flex gap-2 items-center"
+      >
+        <span>{label}</span>
+        <Icon className="size-5 shrink-0" />
+      </MotionContainer>
+      <MotionContainer
+        animation={{
+          mode: ["slideDown", "filterBlurIn", "fadeIn"],
+          duration: 0.44,
+          transition: "gentle",
+        }}
+        className="absolute top-1/2 -translate-x-1/2 left-1/2 -translate-y-1/2 flex gap-2 items-center"
+        controller={controller}
+      >
+        <span>Take Action</span>
+        <Flame className="size-5 shrink-0" />
+      </MotionContainer>
+    </Button>
+  );
+}
+```
+
+This gives us much more simplified version compared to the first variation,
+
+<Registry slug="learn/micro-animations/5" title="CTA button simplified animation (hover)" />
+
+
+
+

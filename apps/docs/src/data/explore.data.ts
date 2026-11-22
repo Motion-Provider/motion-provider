@@ -22,7 +22,7 @@ export default [
   {
     title: "learn with practicing",
     desc: "We crafted a complete set of instructions to speed up learning curve of the Motion Provider based on real-world components. You will learn everything to animate any site from scratch.",
-    href: "/learn/overview",
+    href: "/learn",
     icon: LucideGraduationCap,
   },
   {
