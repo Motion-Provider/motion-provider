@@ -1,0 +1,128 @@
+---
+title: "MotionChain"
+description: "Stagger direct React children with one shared animation or an animation definition for each item."
+order: 340
+draft: true
+---
+
+**Use `MotionChain` when a group of elements should enter in sequence.** It turns each direct child into its own animated element, then adds a calculated delay to that child's animation. The component returns the animated elements as siblings; it does not render a group wrapper.
+
+## Shared animation
+
+Pass `animation` to apply the same motion definition to every child. Use `elementType` to choose the native element created around each child.
+
+```tsx
+import { MotionChain } from "motion-provider";
+
+const steps = ["Discover", "Design", "Deliver"];
+
+export function WorkflowList() {
+  return (
+    <ul className="grid w-64 gap-2">
+      <MotionChain
+        elementType="li"
+        className="rounded-lg border border-accent/20 bg-accent/10 px-4 py-3 text-sm font-medium text-accent"
+        animation={{ mode: ["fadeUp", "filterBlurIn"], duration: 0.5 }}
+        config={{ delayLogic: "linear", duration: 0.12 }}
+      >
+        {steps.map((step) => (
+          <span key={step}>{step}</span>
+        ))}
+      </MotionChain>
+    </ul>
+  );
+}
+```
+
+<Registry slug="components/motion-chain/shared-animation" title="Shared animation" />
+
+Each child becomes an `li` inside the list. Keep the semantic parent in your own markup and let `MotionChain` provide the repeated item elements.
+
+## Animation per child
+
+Use `animations` when items need different definitions or durations. Its entries map to the children in `React.Children.toArray(children)` order.
+
+```tsx
+import { MotionChain } from "motion-provider";
+
+const stages = [
+  { id: "plan", label: "Plan" },
+  { id: "build", label: "Build" },
+  { id: "ship", label: "Ship" },
+];
+
+export function ProjectStages() {
+  return (
+    <ol className="grid w-64 gap-2">
+      <MotionChain
+        elementType="li"
+        className="rounded-lg border border-accent/20 bg-accent/10 px-4 py-3 text-sm font-medium text-accent"
+        animations={[
+          { mode: "fadeUp", duration: 0.5 },
+          { mode: ["scaleZoomIn", "filterBlurIn"], duration: 0.65 },
+          { mode: "slideUp", duration: 0.5, delay: 0.08 },
+        ]}
+        config={{ delayLogic: "wave", duration: 0.14 }}
+      >
+        {stages.map((stage) => (
+          <span key={stage.id}>{stage.label}</span>
+        ))}
+      </MotionChain>
+    </ol>
+  );
+}
+```
+
+<Registry slug="components/motion-chain/per-item-animations" title="Per-item animations" />
+
+The `animations` array must contain exactly one definition for every child. Use stable React keys when the collection can be reordered; the component retains valid child keys on its generated elements.
+
+<Callout type="note" title="Match the normalized children">
+  `MotionChain` uses `React.Children.toArray(children)` to determine its items. Nested arrays are flattened and `null`, `undefined`, and boolean children are omitted. A fragment is still one child, so its contents are not animated individually. Match `animations` to this normalized list rather than the original source array.
+</Callout>
+
+<Callout type="warning" title="Choose exactly one animation prop">
+  Provide either `animation` or `animations`, never both. An empty child collection, a missing animation definition, or an array with the wrong number of entries throws a `MotionError` during render.
+</Callout>
+
+## Stagger timing
+
+The `config` prop controls the delay added between items. Its `duration` is the stagger interval in **seconds**; it is independent of each item's `animation.duration`.
+
+| Option | Purpose |
+| --- | --- |
+| `delayLogic` | Stagger algorithm. Defaults to `"linear"`. |
+| `duration` | Base stagger interval in seconds. Defaults to `0.1`. |
+| `customLogic` | Custom `(index: number) => number` delay function; supplying it selects the `"custom"` algorithm. Return seconds. |
+| `seed` | Seed for algorithms that use seeded ordering or variation. Defaults to `12345`. |
+| `maxDelay` | Maximum generated stagger offset in seconds. Defaults to `60`. |
+
+Available `delayLogic` values are `linear`, `exponential`, `sinusoidal`, `cosine`, `square`, `triangle`, `sawtooth`, `fibonacci`, `pendulum`, `perlin`, `chaotic`, `bounce`, `spiral`, `quantum`, `jitter`, `shuffle`, `wave`, `pingpong`, `harmonic`, `randomWalk`, and `custom`.
+
+The generated offset is added to the item's own `animation.delay`, including when that delay is explicitly `0`. `maxDelay` bounds the generated offset; it does not replace an item's explicit delay.
+
+<Callout type="note" title="Custom delay functions">
+  Set `customLogic` to calculate an offset from the zero-based item index. Passing the function automatically selects `custom`; setting `delayLogic: "custom"` without a function is invalid.
+</Callout>
+
+## Playback and element props
+
+When `controller` is omitted, `MotionChain` uses `{ trigger: true }`, so its children start after hydration instead of waiting to enter the viewport. Pass `controller={{}}` to use the default in-view behavior, or pass an `AnimationController` from `useController()` for imperative playback in a Client Component.
+
+`elementType` defaults to `"div"` and accepts an intrinsic HTML or SVG tag, not a custom React component. `className`, `style`, accessibility attributes, and the other supported DOM props are forwarded to **every generated item**. Put group-level layout and spacing on the parent element.
+
+<Callout type="warning" title="Props are repeated, not applied to a parent">
+  `MotionChain` creates one wrapper per child. Avoid passing a unique `id` to the component because that same ID would be assigned to every generated element. Place unique IDs and group-level attributes on your own parent instead.
+</Callout>
+
+The shared motion props also apply to each item: `reducedMotion` defaults to `"user"` and respects the system preference, while `onMotionComplete` and `onMotionError` are handled by the individual animated elements.
+
+## API highlights
+
+| API | Import | Purpose |
+| --- | --- | --- |
+| `MotionChain` | `motion-provider` | Stagger a collection of children |
+| `MotionChainProps` | `motion-provider` | Component prop contract |
+| `MotionChainConfigProps`, `DelayLogic` | `motion-provider` | Type stagger options and supported algorithms |
+| `MotionAnimationProps`, `AnimationModule` | `motion-provider` | Type shared or per-item animation definitions |
+| `AnimationController`, `useController()` | `motion-provider` | Control playback imperatively |
