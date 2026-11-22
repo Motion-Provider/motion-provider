@@ -34,6 +34,7 @@ export function Intro() {
 }
 ```
 
+<Registry slug="components/motion-container/1" title="Basic usage of MotionContainer" />
 
 
 By default, the component renders a `div`. Set `elementType` when the semantic element should be something else, such as `section`, `article`, `button`, `svg`, or `path`.
@@ -67,6 +68,8 @@ export function AnimatedCard() {
   );
 }
 ```
+
+<Registry slug="components/motion-container/2" title="Basic usage of MotionContainer" />
 
 When you provide an array, Motion Provider merges the modules in order. Later modules take precedence when they define the same CSS property; properties that do not overlap are retained. This lets you combine independent effects without creating a new preset for every combination.
 
@@ -111,6 +114,8 @@ Pass a declarative controller object to change that behavior:
 </MotionContainer>
 ```
 
+<Registry slug="components/motion-container/3" title="Controlling via configView" />
+
 | Controller field | Behavior |
 | --- | --- |
 | `configView` | Configures the visibility threshold, repeat behavior, root margin, and optional observer root |
@@ -149,6 +154,8 @@ export function ControlledPanel() {
   );
 }
 ```
+
+Learn how to control MP components with dedicated examples thoroughly [following to the CAS system](/concepts/centralized-animation-system)
 
 <Callout type="warning" title="Imperative controllers disable the in-view trigger">
   Passing the controller returned by `useController()` makes playback command-driven. The element waits for a controller method such as `play()`; it does not also enter automatically when visible. Use a declarative controller with `controls` when you need both an in-view driver and imperative commands.
