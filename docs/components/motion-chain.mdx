@@ -77,6 +77,10 @@ export function ProjectStages() {
 
 The `animations` array must contain exactly one definition for every child. Use stable React keys when the collection can be reordered; the component retains valid child keys on its generated elements.
 
+<Callout type="note" title="Match the normalized children">
+  `MotionChain` uses `React.Children.toArray(children)` to determine its items. Nested arrays are flattened and `null`, `undefined`, and boolean children are omitted. A fragment is still one child, so its contents are not animated individually. Match `animations` to this normalized list rather than the original source array.
+</Callout>
+
 <Callout type="warning" title="Choose exactly one animation prop">
   Provide either `animation` or `animations`, never both. An empty child collection, a missing animation definition, or an array with the wrong number of entries throws a `MotionError` during render.
 </Callout>
