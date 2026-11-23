@@ -11,7 +11,7 @@ const { slug, title } = Astro.props;
 ---
 
 <SandboxLayout title={title}>
-    <Sandbox slug={slug} client:only="react">
+    <Sandbox slug={slug} client:visible>
         <div
             slot="fallback"
             class="flex h-80 items-center justify-center"

@@ -2,6 +2,7 @@
 import { WordmarkImage } from "@motion/ui";
 import ExploreCard from "@/components/ExploreCard.astro";
 import FrameworkCard from "@/components/FrameworkCard.astro";
+import Registry from "@/components/Registry.astro";
 import exploreData from "@/data/explore.data";
 import frameworksData from "@/data/frameworks.data";
 import DocLayout from "@/layouts/DocLayout.astro";
@@ -15,6 +16,12 @@ const sections = index.nav.flatMap((group) => {
     ? [{ label: group.label, href: first.href, count: group.items.length }]
     : [];
 });
+
+const learnSlugs = [
+  "animating-lists/animated-search-filter",
+  "micro-animations/cta-button-micro",
+  "practicing-with-svgs/3",
+];
 ---
 
 <DocLayout
@@ -59,6 +66,17 @@ const sections = index.nav.flatMap((group) => {
         {frameworksData.map((item) => <FrameworkCard {...item} />)}
       </ul>  
     </section>
+    <section 
+      aria-label="learn" 
+      id="learn" 
+      class="mt-12"
+    >
+      <h2 class="text-muted text-xs font-semibold uppercase tracking-wide">practice with real world use cases</h2>
+      <ul aria-label="explore" id="explore" class="mt-4 max-w-full grid grid-cols-2 grid-rows-1 h-fit">
+        {learnSlugs.map((slug) => <Registry slug={`learn/${slug}`} client:visible />)}
+      </ul>
+    </section>
+
     {
       sections.length > 0 && (
         <section aria-labelledby="home-sections" class="mt-16">

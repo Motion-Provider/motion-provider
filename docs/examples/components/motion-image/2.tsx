@@ -14,8 +14,8 @@ export default function ClickReveal() {
   return (
     <MotionImage
       alt="Blue abstract landscape with a circular sun"
-      wrapperClassName="aspect-video w-72 overflow-hidden rounded-xl"
-      animation={{ mode: ["clipDown", "filterBlurIn"], duration: 0.7 }}
+      wrapperClassName="aspect-video w-72 overflow-hidden rounded-xl z-50"
+      animation={{ mode: ["fadeIn", "filterBlurIn"], duration: 0.7 }}
       config={{
         img,
         pieces: 64,

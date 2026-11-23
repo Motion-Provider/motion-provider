@@ -9,7 +9,7 @@ import { getComponent } from "@/lib/getComponent";
 import type { Slug } from "@/lib/sandboxTypes";
 
 const buttonClass =
-  "inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none absolute top-3 right-3 cursor-pointer active:scale-95";
+  "inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent disabled:pointer-events-none disabled:opacity-50 motion-reduce:transition-none absolute top-3 right-3 cursor-pointer active:scale-95 z-50";
 
 interface SandboxProps {
   slug: Slug;

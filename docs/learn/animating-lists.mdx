@@ -7,8 +7,12 @@ draft: false
 
 In this chapter, we're going to take a look at some of the widely used rendering method of items in cards and render them in sequence. 
 
+Take a look at the final result:
+
+<Registry slug="learn/animating-lists/animated-search-filter" title="Animates on keystrokes (type something)" />
+
 <Callout type="warning" title="Disclaimer">
-    <b>Please do not repeat this practice if you DO have large amount of items(eg. 250+)</b> in your list as it schedules more animations in browser's memory which may exhaust the UX. 
+    <b>Please do not repeat this practice if you DO have large amount of static items(eg. 250+)</b> in your list as it schedules more animations in browser's memory which may exhaust the UX. Use alongside virtual renderer or something equivelent. 
 </Callout>
 
 ## Defining The Baseline
@@ -44,7 +48,7 @@ export function List() {
 }
 ```
 
-<Registry slug="learn/animating-lists/1" label="asd" />
+<Registry slug="learn/animating-lists/1" title="The baseline" />
 
 ## Animating The List Items
 
@@ -59,7 +63,7 @@ It is good practice to work with `<MotionChain />` over `<MotionContainer />` pe
 
 So we can simply wrap the mapped items using `MotionChain` for convenience — just like this,
 
-<Registry slug="learn/animating-lists/2" label="asd" />
+<Registry slug="learn/animating-lists/2" title="Viewport-enter — Collectively (re-render)" />
 
 ```tsx
  <div className="w-84 h-60  overflow-y-scroll dark my-8 scrollbar">
@@ -87,10 +91,10 @@ All of the items appears with a smooth `fadeUp` animation but only for one time 
 ### Integrating In View Animations
 
 Utilizing `configView` prop will enable the MP component to trigger items when they appear on the viewport but since the `MotionChain`
-applies the animations to all items, one item's changes will reset the entire animation collectively so we should use MotionContainer for 
+applies the animations to all items, one item's changes will reset the entire animation collectively so we should use `MotionContainer` for 
 individual effects.   
 
-<Registry slug="learn/animating-lists/3" label="asd" />
+<Registry slug="learn/animating-lists/3" title="Viewport-enter — Individually (scroll)" />
 
 ```tsx
 <div className="w-84 h-60 overflow-y-scroll dark my-8 scrollbar">
@@ -115,7 +119,7 @@ individual effects.
 
 To implement the scroll-based animation, we can define the `scroll` inside `controller` and bound it to the container of items.
 
-<Registry slug="learn/animating-lists/4" label="asd" />
+<Registry slug="learn/animating-lists/4" title="Scroll-driven (Scroll)" />
 
 ```tsx
 "use client"
@@ -155,6 +159,170 @@ Each card independently tracks its position within the parent's scroll viewport,
 
 Using `mode: "view"` ensures that animations are driven individually rather than by the container's overall scroll progress.
 
-## Animating On Search Keystrokes
+## Animating With Search On Keystrokes (advanced)
 
-<Registry slug="learn/animating-lists/5" label="asd" />
+We talked about Motion Provider is not supporting layout animations or gestures with physics by design. 
+However, this limitations are not a reason to build something dynamic. 
+
+As a workaround, I dug around a bit to find something that could be replicated using built-in solutions.
+The result is surprisingly solid.
+
+Think about this, 
+
+
+```tsx
+import { Card, Description, Label } from "@heroui/react";
+import { type AnimationResult, MotionContainer } from "motion-provider";
+import { memo, useCallback, useEffect, useState } from "react";
+import data from "./data";
+
+type Contact = (typeof data)[number];
+
+type ListItem = {
+  item: Contact;
+  isExiting: boolean;
+};
+const Item = memo(function Item({
+  item,
+  isExiting,
+  onExited,
+}: {
+  item: Contact;
+  isExiting: boolean;
+  onExited: (id: Contact["id"]) => void;
+}) {
+  const handleMotionComplete = useCallback(
+    ({ status }: AnimationResult) => {
+      if (status === "finished" && isExiting) {
+        onExited(item.id);
+      }
+    },
+    [isExiting, item.id, onExited],
+  );
+
+  return (
+    <MotionContainer
+      animation={{
+        mode: "fadeDown",
+        duration: 0.48,
+      }}
+      controller={{
+        trigger: !isExiting,
+      }}
+      onMotionComplete={handleMotionComplete}
+    >
+      <Card>
+        <Label>
+          {item.first_name}{" "}
+          <span>{item.last_name}</span>
+        </Label>
+        <Description>{item.email}</Description>
+      </Card>
+    </MotionContainer>
+  );
+});
+```
+
+The most important detail is that now, we are tracking the animation state by listening the changes with the callback using `onMotionComplete`.
+
+By doing so, we get informed about the animation accessing `finished` or `cancelled` props and conditionally calling another callback that will be called outside of this component. 
+
+The rest are mostly covers React knowledge, 
+
+<Callout type="tip" title="About debouncing">
+  I am currently using a custom hook called `useDebouncedValue()` but I haven't added it into the snippet below to not make this chapter fairy-tale long. You can install similar hook from [usehooks.com](https://usehooks.com/usedebounce) 
+</Callout>
+
+And the result is shown below — **try to search my name Burak**,
+
+<Registry slug="learn/animating-lists/animated-search-filter" label="asd" />
+
+```tsx
+export function List() {
+  const [query, setQuery] = useState("");
+  const [items, setItems] = useState<ListItem[]>(() =>
+    data.map((item) => ({ item, isExiting: false })),
+  );
+
+  const debouncedQuery = useDebouncedValue(300, query);
+
+  useEffect(() => {
+    const term = debouncedQuery.trim().toLowerCase();
+
+    setItems((prev) => {
+      const previousItems = new Map(
+        prev.map((entry) => [entry.item.id, entry]),
+      );
+
+      return data.flatMap((item) => {
+        const matches = `${item.first_name} ${item.last_name} ${item.email}`
+          .toLowerCase()
+          .includes(term);
+
+        const previous = previousItems.get(item.id);
+
+        if (matches) {
+          if (previous && !previous.isExiting) return [previous];
+          return [{ item, isExiting: false }];
+        }
+
+        if (!previous) return [];
+        if (previous.isExiting) return [previous];
+
+        return [{ item: previous.item, isExiting: true }];
+      });
+    });
+  }, [debouncedQuery]);
+
+  const handleExited = useCallback((id: Contact["id"]) => {
+    setItems((current) => current.filter((entry) => entry.item.id !== id));
+  }, []);
+
+  const hasVisibleItems = items.some((item) => !item.isExiting);
+
+  return (
+    <div className="dark my-4 flex w-84 flex-col gap-3 relative h-60 overflow-y-scroll">
+      <SearchField
+        aria-label="Search contacts"
+        value={query}
+        onChange={setQuery}
+        onClear={() => setQuery("")}
+        className="sticky top-0 z-50 w-full"
+      >
+        <SearchField.Group>
+          <SearchField.SearchIcon />
+          <SearchField.Input placeholder="Search by name or email..." />
+          <SearchField.ClearButton />
+        </SearchField.Group>
+      </SearchField>
+
+      <div className="flex flex-col gap-2 ">
+         {items.map(({ item, isExiting }) => (
+          <Item
+            item={item}
+            isExiting={isExiting}
+            onExited={handleExited}
+            key={item.id}
+          />
+        ))}
+
+        {!hasVisibleItems && (
+          <span className="py-4 mt-18 text-center absolute -translate-x-1/2 -translate-y-1/2 left-1/2 right-1/2 w-full">
+            No matching contacts found.
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+```
+
+
+Breaking down things,
+
+| Responsibility | Implementation |
+| --- | --- |
+| Entry animation | Motion Provider |
+| Exit animation | Motion Provider reverse |
+| Rendering isolation | React memoization |
+| Search updates | Debounced state |
