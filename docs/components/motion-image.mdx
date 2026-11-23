@@ -1,0 +1,272 @@
+---
+title: "MotionImage"
+description: "Reveal an image through an animated grid of independently timed tiles."
+order: 360
+draft: true
+---
+
+**Use `MotionImage` to reveal an image through an animated grid of tiles.** The component loads a real image, divides its visual surface into an `N × N` grid, and animates each tile with the same preset-based animation and a calculated stagger.
+
+The original image element remains in the markup for its image semantics and loading behavior. The visual tile grid is hidden from assistive technology.
+
+## Basic usage
+
+Import `MotionImage` from the package root. Provide an image URL and a valid tile count through `config`, then define the animation shared by every tile:
+
+```tsx
+import { MotionImage } from "motion-provider";
+
+const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+    <defs>
+      <linearGradient id="scene" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#6366f1" />
+        <stop offset="1" stop-color="#ec4899" />
+      </linearGradient>
+    </defs>
+    <rect width="320" height="180" fill="url(#scene)" />
+    <circle cx="240" cy="60" r="28" fill="#fff" fill-opacity=".85" />
+    <path d="M0 180L110 80L180 140L240 100L320 180Z" fill="#0f172a" fill-opacity=".55" />
+  </svg>
+`;
+
+const img = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+export function HoverReveal() {
+  return (
+    <MotionImage
+      alt="Abstract gradient landscape"
+      wrapperClassName="aspect-video w-72 overflow-hidden rounded-xl"
+      animation={{ mode: ["scaleZoomIn", "fadeIn"], duration: 0.5 }}
+      config={{
+        img,
+        pieces: 36,
+        fn: "hover",
+        delayLogic: "wave",
+        duration: 0.03,
+      }}
+    />
+  );
+}
+```
+
+<Registry slug="components/motion-image/1" title="Reveal tiles on hover" />
+
+The example creates a **6 × 6 grid** because `pieces: 36`. Moving the pointer over a tile reveals that tile and its surrounding neighborhood. The `animation` prop accepts the same preset, module, and timing options used by `MotionContainer`.
+
+<Callout type="warning" title="pieces is a square-grid count">
+  `pieces` is the total number of tiles, not the number of columns. It must be a positive perfect square no greater than `1600`: for example, `36` creates a 6 × 6 grid and `64` creates an 8 × 8 grid. Values such as `20` or `50` are rejected.
+</Callout>
+
+## Choose the reveal interaction
+
+Set `config.fn` to choose pointer-driven reveal behavior:
+
+| Value | Behavior |
+| --- | --- |
+| `"hover"` | Moving over a tile reveals a 3 × 3 neighborhood around it. |
+| `"click"` | Clicking a tile reveals the same neighborhood. |
+| Omitted | The tile grid follows the configured controller, using in-view playback by default. |
+
+When `fn` is enabled, the component adds a **Reveal image** button. It reveals every tile at once and provides a keyboard-accessible alternative to pointer interaction.
+
+```tsx
+import { MotionImage } from "motion-provider";
+
+const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+    <rect width="320" height="180" fill="#172554" />
+    <circle cx="160" cy="90" r="58" fill="#38bdf8" />
+    <path d="M0 150L80 95L145 145L220 70L320 150V180H0Z" fill="#0f172a" />
+  </svg>
+`;
+
+const img = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+export function ClickReveal() {
+  return (
+    <MotionImage
+      alt="Blue abstract landscape with a circular sun"
+      wrapperClassName="aspect-video w-72 overflow-hidden rounded-xl"
+      animation={{ mode: ["clipDown", "filterBlurIn"], duration: 0.7 }}
+      config={{
+        img,
+        pieces: 64,
+        fn: "click",
+        delayLogic: "sinusoidal",
+        duration: 0.04,
+      }}
+      fallback={
+        <div className="size-full animate-pulse bg-surface-secondary" />
+      }
+    />
+  );
+}
+```
+
+<Registry slug="components/motion-image/2" title="Reveal tiles on click" />
+
+Each pointer interaction plays the nearby tile handles. The built-in button plays all tiles, so visitors who do not use a pointer can still reveal the full image.
+
+<Callout type="note" title="Pointer mode and controller mode are alternatives">
+  Setting `fn` enables manual tile interaction instead of automatic in-view or trigger playback. Omit `fn` when the image should reveal as a coordinated grid from its `controller` policy.
+</Callout>
+
+## Reveal when the image enters the viewport
+
+Without `fn`, `MotionImage` uses its controller to drive the grid. By default, the component observes the wrapper and starts the tiles when at least **50% of it is visible**, once. Use a declarative controller to adjust the visibility threshold or repeat behavior.
+
+```tsx
+import { MotionImage } from "motion-provider";
+
+const svg = `
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180">
+    <defs>
+      <linearGradient id="mountain" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#0f766e" />
+        <stop offset="1" stop-color="#a3e635" />
+      </linearGradient>
+    </defs>
+    <rect width="320" height="180" fill="url(#mountain)" />
+    <circle cx="250" cy="42" r="22" fill="#fef3c7" />
+    <path d="M0 180L95 65L150 130L215 82L320 180Z" fill="#134e4a" />
+  </svg>
+`;
+
+const img = `data:image/svg+xml,${encodeURIComponent(svg)}`;
+
+export function InViewImage() {
+  return (
+    <MotionImage
+      alt="Layered green mountain landscape at sunrise"
+      loading="lazy"
+      wrapperClassName="aspect-video w-72 overflow-hidden rounded-xl"
+      animation={{
+        mode: ["fadeIn", "scaleZoomIn"],
+        transition: "gentle",
+        duration: 0.8,
+      }}
+      config={{
+        img,
+        pieces: 49,
+        delayLogic: "linear",
+        duration: 0.055,
+      }}
+      controller={{
+        configView: {
+          amount: 0.3,
+          once: true,
+          margin: "0px 0px -10% 0px",
+        },
+      }}
+      fallback={
+        <div className="size-full animate-pulse bg-surface-secondary" />
+      }
+    />
+  );
+}
+```
+
+<Registry slug="components/motion-image/3" title="Reveal when in view" />
+
+The controller applies to the image grid as a whole. For imperative playback, pass an `AnimationController` created with `useController()` from a Client Component. The controller registers each tile animation, so commands such as `play()`, `reverse()`, and `reset()` act on the collection.
+
+## Tile count and stagger timing
+
+The `config` prop combines the image source and grid interaction with the stagger options inherited from `MotionChainConfigProps`. All timing values are in **seconds**.
+
+| Option | Purpose |
+| --- | --- |
+| `img` | Required nonempty image URL. |
+| `pieces` | Required positive perfect square up to `1600`; determines the total tile count. |
+| `fn` | Optional `"hover"` or `"click"` interaction. |
+| `delayLogic` | Algorithm used to calculate tile stagger offsets. Defaults to `"linear"`. |
+| `duration` | Base stagger interval between tiles. Defaults to `0.08` seconds. |
+| `customLogic` | Custom `(index: number) => number` function; supplying it selects the `"custom"` algorithm. Return seconds. |
+| `seed` | Seed for deterministic delay variation. Defaults to `12345`. |
+| `maxDelay` | Upper bound for generated tile delays. Defaults to `60` seconds. |
+
+The `animation` prop is separate from this config. Its `duration` controls each tile's animation; `config.duration` controls the delay interval assigned between tiles. The calculated stagger is added to the animation's own `delay`.
+
+<Callout type="warning" title="Keep the grid proportional to the image">
+  Every tile is a separate DOM element with its own WAAPI animation. Larger grids create more nodes and animation handles. Use a modest count for large images or multiple images on the same page; a 40 × 40 grid is the hard limit, not a recommended default.
+</Callout>
+
+## Image loading, sizing, and styling
+
+`MotionImage` uses a real `img` element for image loading and accessibility, then uses the selected `currentSrc` as the background source for its visual tiles. It supports the following native image props:
+
+| Prop | Purpose |
+| --- | --- |
+| `alt` | Alternative text for the image. Defaults to an empty string. |
+| `loading` | Native loading strategy; defaults to `"eager"`. Use `"lazy"` for off-screen images. |
+| `decoding` | Native decoding hint; defaults to `"async"`. |
+| `srcSet`, `sizes` | Responsive source selection. Tiles use the selected image source. |
+| `fetchPriority` | Native fetch priority hint. |
+| `crossOrigin`, `referrerPolicy` | Native image request settings. |
+| `draggable` | Controls native image dragging. |
+| `onLoad`, `onError` | Native image load and error callbacks. |
+
+The wrapper and tiles have separate styling targets:
+
+- **`wrapperClassName`** styles the outer `div`. Give it a width and height or an aspect ratio.
+- **`className`** styles each generated tile, not the wrapper.
+- **`style`** and other div attributes are forwarded to the wrapper. The wrapper is positioned relatively by default.
+- **`fallback`** renders over the grid while the image is not ready. It remains available if the image request fails.
+
+<Callout type="warning" title="Reserve the wrapper's dimensions">
+  The image is visually hidden while the tiles are prepared. Set an explicit size or aspect ratio on `wrapperClassName`, especially when using `loading="lazy"`. Without reserved space, the layout can collapse or shift while the image loads.
+</Callout>
+
+Always provide meaningful `alt` text for informative images. Use `alt=""` only when the image is decorative and its information is already represented elsewhere.
+
+## Accessibility and rendering
+
+The original `img` remains in the DOM with its `alt` text. The generated tile grid uses `aria-hidden="true"`, so assistive technology does not encounter dozens of repeated image fragments. When pointer interaction is enabled, the **Reveal image** button provides a keyboard-operated way to complete the reveal.
+
+`MotionImage` renders its image element and fallback on the server; the tile grid is populated after the browser loads the image. The component includes its own Client Component boundary, so it can be rendered from a Server Component without adding `"use client"` to the page. Keep props crossing the Server-to-Client boundary serializable: image configuration and declarative controller objects are suitable, while callbacks and controllers created with `useController()` belong in a Client Component.
+
+The default `reducedMotion="user"` policy respects the visitor's operating-system preference. When reduced motion is active, tile animations are skipped and the destination state is applied. Use `"always"` to skip motion for everyone or `"never"` to opt out deliberately.
+
+<Callout type="warning" title="Provide a fallback for important imagery">
+  The real image is rendered with `opacity: 0` while the tile grid is loading. If the image is delayed or fails, it will not become visible as a normal fallback image. Supply the `fallback` prop to avoid an empty region and handle `onError` when the application needs to report a failed image request.
+</Callout>
+
+## Component props
+
+| Prop | Description |
+| --- | --- |
+| `animation` | Required preset, module, or composed animation applied to every tile. |
+| `config` | Required image URL, tile count, interaction mode, and stagger options. |
+| `wrapperClassName` | Class applied to the outer wrapper. |
+| `className` | Class applied to every generated tile. |
+| `fallback` | React content shown while the image is not ready. |
+| `controller` | Declarative playback options or an `AnimationController` instance. |
+| `reducedMotion` | `"user"` (default), `"always"`, or `"never"`. |
+| `onMotionComplete` | Called when all tile animations have finished. |
+| `onMotionError` | Receives a tile animation runtime error. |
+| `ref` | Forwarded to the outer `div`. |
+
+Invalid image configuration throws a `MotionError` during render:
+
+| Code | Cause |
+| --- | --- |
+| `IMAGE_SOURCE` | `config.img` is not a nonempty string. |
+| `IMAGE_PIECES` | `config.pieces` is not a positive perfect square up to `1600`. |
+| `IMAGE_INTERACTION` | `config.fn` is not `"hover"` or `"click"`. |
+
+These configuration errors should be handled by a React error boundary. `onMotionError` is for runtime animation failures, not invalid render-time props.
+
+## API highlights
+
+| API | Import | Purpose |
+| --- | --- | --- |
+| `MotionImage` | `motion-provider` | Render an accessible image with an animated tile grid. |
+| `MotionImageProps` | `motion-provider` | Type image loading, styling, animation, and controller props. |
+| `MotionImageConfigProps` | `motion-provider` | Type image source, tile count, interaction, and stagger config. |
+| `MotionAnimationProps` | `motion-provider` | Type the preset or module animation applied to each tile. |
+| `MotionChainConfigProps`, `DelayLogic` | `motion-provider` | Type the shared stagger options and delay algorithms. |
+| `AnimationController`, `useController()` | `motion-provider` | Coordinate tile playback from a Client Component. |
+| `useReducedMotion()` | `motion-provider` | Read the current system reduced-motion preference. |
+
+See [MotionChain](/components/motion-chain/) for stagger algorithms, [MotionContainer](/components/motion-container/) for the shared animation and controller options, and [Server-Side Rendering](/concepts/server-side-rendering/) for the server-to-client lifecycle.
