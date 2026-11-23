@@ -46,12 +46,16 @@ export default function Sandbox({ slug }: SandboxProps) {
     <>
       <ErrorBoundary
         key={slug}
-        fallbackRender={({ resetErrorBoundary }) => (
+        fallbackRender={({ resetErrorBoundary, error }) => {
+          const isErrorMsg = error instanceof Error;
+          const errorMsg = isErrorMsg ?? null;
+
           <div
             role="alert"
             className="flex h-80 flex-col items-center justify-center gap-3 rounded-lg border border-danger/40 bg-danger/10 p-6"
           >
             <p className="text-sm text-foreground">Failed to load demo.</p>
+            {errorMsg && <span>{JSON.stringify(errorMsg)}</span>}
             <button
               type="button"
               onClick={resetErrorBoundary}
@@ -59,8 +63,8 @@ export default function Sandbox({ slug }: SandboxProps) {
             >
               Retry
             </button>
-          </div>
-        )}
+          </div>;
+        }}
       >
         <Suspense
           fallback={

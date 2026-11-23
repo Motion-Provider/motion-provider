@@ -1,0 +1,160 @@
+---
+title: "Animating List Items"
+description: ""
+order: 30
+draft: false
+---
+
+In this chapter, we're going to take a look at some of the widely used rendering method of items in cards and render them in sequence. 
+
+<Callout type="warning" title="Disclaimer">
+    <b>Please do not repeat this practice if you DO have large amount of items(eg. 250+)</b> in your list as it schedules more animations in browser's memory which may exhaust the UX. 
+</Callout>
+
+## Defining The Baseline
+
+We're going to implement animations over items in the card and an easy to do that is reusing the component library that we already have in an app. 
+
+<Callout title="Notice" type="note">
+    Throughout the chapter, we're going to be **utilizing a well-known React component library called [HeroUI](https://heroui.com/)**. Since their APIs are almost identical, consider them interchangeable.      
+</Callout>
+
+```tsx
+import { Description, Label, ListBox } from "@heroui/react";
+import data from "./data"
+
+export function List() {
+  return (
+    <div className="w-80 h-60 dark overflow-y-scroll my-8 scrollbar">
+      <ListBox>
+        {data.map((item) => (
+          <ListBox.Item key={item.id} className="justify-between">
+            <Label>
+              {item.first_name}{" "}
+              <span className="text-accent">{item.last_name}</span>
+            </Label>
+            <Description className="w-12 overflow-x-hidden truncate">
+              {item.email}
+            </Description>
+          </ListBox.Item>
+        ))}
+      </ListBox>
+    </div>
+  );
+}
+```
+
+<Registry slug="learn/animating-lists/1" label="asd" />
+
+## Animating The List Items
+
+We will work on 2 type of animation in this tutorial, 
+
+- Animating individually when the item has entered the viewport
+- Animating items on scroll  
+
+### Viewport Animation
+
+It is good practice to work with `<MotionChain />` over `<MotionContainer />` per item as the chain applies given animation to each children element automatically while on the other hand container assigns the animation to the wrapped element. 
+
+So we can simply wrap the mapped items using `MotionChain` for convenience — just like this,
+
+<Registry slug="learn/animating-lists/2" label="asd" />
+
+```tsx
+ <div className="w-84 h-60  overflow-y-scroll dark my-8 scrollbar">
+    <MotionChain animation={{ mode: "fadeUp" }} controller={controller}>
+      {data.map((item) => (
+        <Card
+          key={item.id}
+          className="flex-row items-center justify-between bg-transparent hover:bg-accent/10"
+        >
+          <Label>
+            {item.first_name}{" "}
+            <span className="text-accent">{item.last_name}</span>
+          </Label>
+          <Description className="max-w-2xs truncate">
+            {item.email}
+          </Description>
+        </Card>
+      ))}
+    </MotionChain>
+</div>
+```
+
+All of the items appears with a smooth `fadeUp` animation but only for one time triggers solely when the component itself re-renders.
+
+### Integrating In View Animations
+
+Utilizing `configView` prop will enable the MP component to trigger items when they appear on the viewport but since the `MotionChain`
+applies the animations to all items, one item's changes will reset the entire animation collectively so we should use MotionContainer for 
+individual effects.   
+
+<Registry slug="learn/animating-lists/3" label="asd" />
+
+```tsx
+<div className="w-84 h-60 overflow-y-scroll dark my-8 scrollbar">
+  {data.map((item) => (
+    <MotionContainer
+      animation={{ mode: "fadeUp", duration: 0.36 }}
+      controller={{
+        configView: {
+          once: false,
+          amount: 0.12,
+        },
+      }}
+      key={item.id}
+    >
+      {/* Card JSX */}
+    </MotionContainer>
+  ))}
+</div>
+```
+
+### Parent-driven Scroll Animation
+
+To implement the scroll-based animation, we can define the `scroll` inside `controller` and bound it to the container of items.
+
+<Registry slug="learn/animating-lists/4" label="asd" />
+
+```tsx
+"use client"
+
+export default function ListBox() {
+  const [scrollRoot, setScrollRoot] = useState<HTMLDivElement | null>(null);
+
+  return (
+    <div
+      ref={setScrollRoot}
+      className="w-84 h-60 overflow-y-scroll dark my-8 scrollbar"
+    >
+      {data.map((item) => (
+        <MotionContainer
+          key={item.id}
+          animation={{ mode: "fadeUp", duration: 0.36 }}
+          controller={{
+            scroll: {
+              source: scrollRoot,
+              axis: "y",
+              mode: "view",
+              start: 0.1,
+              end: 0.6,
+            },
+          }}
+        >
+          {/* Card JSX */}
+        </MotionContainer>
+      ))}
+    </div>
+  );
+}
+```
+
+The scrollable parent element is captured using a callback ref and shared with every `MotionContainer` through the `scroll.source` option. 
+Each card independently tracks its position within the parent's scroll viewport, synchronizing its animation progress with its visibility. 
+
+Using `mode: "view"` ensures that animations are driven individually rather than by the container's overall scroll progress.
+
+## Animating On Search Keystrokes
+
+<Registry slug="learn/animating-lists/5" label="asd" />
