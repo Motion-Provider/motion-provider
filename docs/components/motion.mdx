@@ -1,0 +1,211 @@
+---
+title: "Motion"
+description: "Animate a native HTML or SVG element from a directly imported preset or custom AnimationModule."
+order: 330
+draft: true
+---
+
+**Use `Motion` when you already have an `AnimationModule` and want to animate one element directly.** It applies the module's initial state to a native HTML or SVG element, then plays its destination state with the browser's Web Animations API (WAAPI).
+
+Unlike `MotionContainer`, `Motion` does not resolve preset names or compose a `mode` array. You import the exact preset module you need, or define the state yourself, and pass it through `definition`.
+
+## Basic usage
+
+Import `Motion` from the package root and the preset from `motion-provider/presets`. The `definition` prop is required:
+
+```tsx
+import { Motion } from "motion-provider";
+import { slideUp } from "motion-provider/presets";
+
+export function RevealCard() {
+  return (
+    <Motion
+      elementType="article"
+      className="max-w-sm rounded-xl border border-accent/20 bg-accent/5 p-5"
+      definition={slideUp}
+      timing={{ duration: 0.7, easing: "ease-out" }}
+    >
+      <h2 className="font-semibold">Direct animation</h2>
+      <p className="mt-1 text-sm text-muted">
+        One element, one imported animation module.
+      </p>
+    </Motion>
+  );
+}
+```
+
+<Registry slug="components/motion/1" title="Animate with an imported preset" />
+
+The component renders a `div` by default. Set `elementType` to a native HTML or SVG tag when the element has a different semantic role. Its regular DOM attributes, children, and ref are forwarded to the animated element.
+
+<Callout type="note" title="Motion receives a module, not a preset name">
+  Pass the imported `slideUp` module to `definition`. A string such as `"slideUp"` is not valid here, and `Motion` does not accept `animation`, `mode`, or named `transition` props. Use `MotionContainer` when you prefer resolving and composing presets by name.
+</Callout>
+
+## Define a custom animation
+
+An `AnimationModule` is a pair of plain state objects: `initial` describes the rendered starting styles, and `animate` describes the destination styles. Values can be strings or numbers; arrays in the destination state define evenly spaced keyframes.
+
+Use `satisfies AnimationModule` to validate a custom definition without widening its literal types:
+
+```tsx
+import { Motion, type AnimationModule } from "motion-provider";
+
+const pulseIn = {
+  initial: {
+    opacity: 0,
+    scale: 0.84,
+  },
+  animate: {
+    opacity: 1,
+    scale: [0.84, 1.06, 1],
+  },
+} as const satisfies AnimationModule;
+
+export function CustomReveal() {
+  return (
+    <Motion
+      className="grid size-20 place-items-center rounded-2xl bg-accent text-sm font-semibold text-background"
+      definition={pulseIn}
+      timing={{ duration: 0.8, easing: "ease-out" }}
+    >
+      Ready
+    </Motion>
+  );
+}
+```
+
+<Registry slug="components/motion/2" title="Custom AnimationModule" />
+
+The `initial` and `animate` objects are not timing configurations. Keep duration, delay, easing, iteration count, and playback direction in the separate `timing` prop. See [Motion State](/concepts/motion-state/) for property conversion, keyframe rules, and transform behavior.
+
+<Callout type="warning" title="Keep keyframe starting values aligned">
+  When `animate` contains an array for a property, that array defines the complete track, including its first frame. Keep the matching `initial` value equal to the first array entry so the server-rendered starting style matches the animation's actual start.
+</Callout>
+
+## Timing
+
+The optional `timing` prop accepts a `Timing` object. All numeric time values use **seconds**; the engine converts them to the units required by WAAPI.
+
+| Field | Purpose |
+| --- | --- |
+| `duration` | Length of one animation iteration. |
+| `delay`, `endDelay` | Time before playback and after the active interval. |
+| `easing` / `ease` | Easing string or cubic-bezier tuple. |
+| `iterations` | Number of times the animation repeats. |
+| `direction` | Playback direction, such as `"normal"` or `"alternate"`. |
+| `fill` | How the animation applies styles outside its active interval. |
+
+For example, `duration: 0.8` means 800 milliseconds. If `timing` is omitted, the engine uses its default timing values.
+
+<Callout type="note" title="Timing is not a transition preset">
+  `Motion` accepts a plain `Timing` object, not the named transition strings supported by `MotionContainer`. Import a preset for the state and describe its playback with `timing`.
+</Callout>
+
+## Control playback
+
+Without a `controller`, `Motion` observes the element with `IntersectionObserver`. Playback starts when at least **50% of the element is visible** and runs once by default. Use a declarative controller object to configure the visibility threshold, repeat behavior, trigger, or scroll-driven progress.
+
+For event-driven playback, create an `AnimationController` with `useController()` inside a Client Component. The controller exposes `play()`, `reverse()`, `pause()`, `finish()`, `reset()`, `cancel()`, `seek()`, and `setPlaybackRate()`.
+
+```tsx
+"use client";
+
+import { Motion, useController } from "motion-provider";
+import { heartbeat } from "motion-provider/presets";
+
+export function ControllableBadge() {
+  const controller = useController();
+
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <Motion
+        className="size-16 rounded-full bg-accent"
+        definition={heartbeat}
+        timing={{ duration: 0.8, iterations: 2 }}
+        controller={controller}
+      />
+      <div className="flex gap-2">
+        <button type="button" onClick={() => void controller.play()}>
+          Play
+        </button>
+        <button type="button" onClick={() => void controller.reverse()}>
+          Reverse
+        </button>
+        <button type="button" onClick={() => controller.reset()}>
+          Reset
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+<Registry slug="components/motion/3" title="Imperative playback controls" />
+
+<Callout type="warning" title="An imperative controller replaces automatic in-view playback">
+  When you pass the controller returned by `useController()`, the component waits for controller commands. It does not also start from its viewport observer. Use a declarative controller object when the element should still be driven by visibility or a trigger.
+</Callout>
+
+## Component props
+
+`MotionProps` combines the direct animation inputs with the component's shared motion options and native element attributes.
+
+| Prop | Description |
+| --- | --- |
+| `definition` | Required `AnimationModule` containing `initial` and `animate` states. |
+| `timing` | Optional `Timing` object for WAAPI playback. |
+| `elementType` | Intrinsic HTML or SVG tag to render; defaults to `"div"`. |
+| `controller` | Declarative playback options or an `AnimationController` instance. |
+| `reducedMotion` | `"user"` (default), `"always"`, or `"never"`. |
+| `onMotionComplete` | Receives an `AnimationResult` with `status: "finished" | "cancelled"`. |
+| `onMotionError` | Receives a runtime animation error. |
+| `ref` | Forwarded to the rendered HTML or SVG element. |
+
+Standard DOM props such as `className`, `style`, `id`, accessibility attributes, event handlers, and children are forwarded to the rendered element. Animation-owned properties in the initial state take precedence over matching properties in the supplied `style`.
+
+<Callout type="warning" title="Use intrinsic elements">
+  `elementType` accepts native HTML and SVG tag names, not React components. To animate a custom React component, render it inside a native element and apply `Motion` to that wrapper.
+</Callout>
+
+## Presets and bundle size
+
+The `motion-provider/presets` entry point exports presets as individual `AnimationModule` values. Import only the modules you use and pass them to `definition`. This keeps the animation dependency explicit and allows an ESM-aware bundler to remove unused exports.
+
+Choose between the two single-element APIs based on how you want to describe motion:
+
+| Use `Motion` | Use `MotionContainer` |
+| --- | --- |
+| You import a specific preset or define an `AnimationModule`. | You want to refer to presets by string name. |
+| You pass one module through `definition`. | You compose presets and modules through `animation.mode`. |
+| You provide a `Timing` object. | You can use named transitions or inline timing. |
+| You want direct control over the state object. | You want the convenience of the preset registry. |
+
+Both components use the same WAAPI engine and share controller, reduced-motion, callback, and native-element behavior.
+
+## Rendering and accessibility
+
+`Motion` renders the element and its `initial` styles into server HTML. After hydration, the browser creates the WAAPI animation and applies the configured playback behavior. The component includes its own Client Component boundary, so it can be rendered directly from a Server Component without adding `"use client"` to the page.
+
+Keep values passed across a Server-to-Client boundary serializable. Plain animation modules, timing objects, declarative controller options, children, and class names can be defined in shared modules or Server Components. Callback functions, DOM references, and controllers returned by `useController()` belong inside a Client Component.
+
+<Callout type="warning" title="Hidden initial states affect server-rendered content">
+  If the module starts with `opacity: 0`, the element remains invisible until hydration starts playback. Avoid hidden-start definitions for LCP-critical content or important text that must remain visible when JavaScript is delayed or unavailable. Use a visible initial state when that content must never disappear.
+</Callout>
+
+The default `reducedMotion="user"` policy respects the visitor's operating-system preference. When reduced motion is active, playback is skipped and the destination state is applied. Use `"always"` to skip motion for everyone, or `"never"` to opt out of the preference deliberately.
+
+## API highlights
+
+| API | Import | Purpose |
+| --- | --- | --- |
+| `Motion` | `motion-provider` | Animate one native HTML or SVG element from a direct definition. |
+| `MotionProps` | `motion-provider` | Type the component's definition, timing, controller, and DOM props. |
+| `AnimationModule`, `MotionState`, `MotionValue` | `motion-provider` | Describe initial and destination styles, including keyframes. |
+| `Timing` | `motion-provider` | Type WAAPI duration, easing, delay, iterations, direction, and fill options. |
+| Presets such as `fadeUp`, `slideUp`, `heartbeat` | `motion-provider/presets` | Reuse individual, tree-shakeable animation modules. |
+| `AnimationController`, `useController()` | `motion-provider` | Type and create imperative playback controls. |
+| `useAnimationMixer()` | `motion-provider` | Combine imported modules into one `AnimationModule`. |
+| `useReducedMotion()` | `motion-provider` | Read the current system reduced-motion preference. |
+
+For custom state structure and keyframe behavior, continue to [Motion State](/concepts/motion-state/). For preset composition and the registry-based alternative, see [MotionContainer](/components/motion-container/).
