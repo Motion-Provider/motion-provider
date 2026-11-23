@@ -1,0 +1,211 @@
+---
+title: "MotionText"
+description: "Split a string into accessible character or word tokens and animate them in sequence."
+order: 350
+draft: true
+---
+
+**Use `MotionText` to reveal a string one character or word at a time.** The component splits the supplied string into tokens, then delegates each token to `MotionChain` so the same animation can play with a calculated stagger.
+
+`MotionText` renders a native wrapper and keeps the original, unsplit string available to assistive technology. It does not require a provider or a parent Client Component.
+
+## Basic usage
+
+Import `MotionText` from the package root and provide an `animation`. Character splitting is the default:
+
+```tsx
+import { MotionText } from "motion-provider";
+
+export function CharacterReveal() {
+  return (
+    <MotionText
+      elementType="h2"
+      wrapperClassName="text-3xl font-semibold tracking-tight"
+      className="inline-block"
+      animation={{ mode: "fadeUp", duration: 0.55 }}
+      config={{
+        mode: "chars",
+        delayLogic: "linear",
+        duration: 0.035,
+      }}
+    >
+      Motion, one character at a time.
+    </MotionText>
+  );
+}
+```
+
+<Registry slug="components/motion-text/1" title="Character reveal" />
+
+The outer element defaults to `span`. Set `elementType` to a semantic HTML or SVG tag when the text belongs in a heading, paragraph, label, or another native element.
+
+<Callout type="note" title="The string is the component's content">
+  `children` must be a string. `MotionText` does not accept nested elements or rich JSX content. Use separate `MotionText` instances for independently animated phrases, or use [MotionChain](/components/motion-chain/) when each item needs its own markup.
+</Callout>
+
+## Choose how the text is split
+
+Set `config.mode` to control what receives an individual animation:
+
+| Mode | Behavior |
+| --- | --- |
+| `"chars"` | Splits into grapheme clusters. This is the default and keeps supported emoji and combining sequences together. |
+| `"words"` | Splits into words while retaining the original whitespace, including repeated spaces and line breaks. |
+
+Use character splitting for short headings and expressive display text. Word splitting is usually a better fit for sentences and longer copy because it creates fewer animated elements.
+
+```tsx
+import { MotionText } from "motion-provider";
+
+export function WordReveal() {
+  return (
+    <MotionText
+      elementType="p"
+      wrapperClassName="max-w-xl text-base leading-relaxed"
+      className="inline-block"
+      animation={{
+        mode: ["fadeIn", "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.65,
+      }}
+      config={{
+        mode: "words",
+        delayLogic: "wave",
+        duration: 0.1,
+      }}
+    >
+      Thoughtful motion makes an interface feel clear, responsive, and alive.
+    </MotionText>
+  );
+}
+```
+
+<Registry slug="components/motion-text/2" title="Word reveal" />
+
+The original whitespace remains part of the visual token sequence, so words wrap naturally instead of being joined into a single line.
+
+## Compose the animation
+
+The `animation` prop uses the same `MotionAnimationProps` contract as `MotionContainer`. Its required `mode` accepts a preset name, an `AnimationModule`, or an array containing either. Modules in an array are composed in order; later modules take precedence when they animate the same property.
+
+```tsx
+import {
+  MotionText,
+  type AnimationModule,
+} from "motion-provider";
+
+const lift = {
+  initial: {
+    opacity: 0,
+    transform: "translateY(12px)",
+  },
+  animate: {
+    opacity: 1,
+    transform: "translateY(0px)",
+  },
+} as const satisfies AnimationModule;
+
+export function ComposedText() {
+  return (
+    <MotionText
+      elementType="h2"
+      wrapperClassName="text-2xl font-semibold"
+      className="inline-block"
+      animation={{
+        mode: [lift, "filterBlurIn"],
+        transition: "gentle",
+        duration: 0.7,
+      }}
+      config={{
+        mode: "words",
+        delayLogic: "linear",
+        duration: 0.075,
+        space: "0.02em",
+      }}
+    >
+      Combine a custom module with a built-in preset.
+    </MotionText>
+  );
+}
+```
+
+<Registry slug="components/motion-text/3" title="Composed word animation" />
+
+### Animation timing and token spacing
+
+Animation timing and stagger timing control different parts of the sequence. All timing values are expressed in **seconds**.
+
+| Option | Purpose |
+| --- | --- |
+| `animation.duration` | Duration of each token's animation. |
+| `animation.delay` | Base delay before the animation starts. |
+| `animation.transition` | Named transition or inline timing configuration. |
+| `config.duration` | Stagger interval between tokens. Defaults to `0.1` seconds. |
+| `config.delayLogic` | Algorithm used to calculate each token's stagger offset. Defaults to `"linear"`. |
+| `config.customLogic` | Custom `(index: number) => number` delay function. Supplying it selects the `"custom"` algorithm; return seconds. |
+| `config.seed` | Seed for delay algorithms that use deterministic variation. |
+| `config.maxDelay` | Upper bound for generated stagger offsets, in seconds. |
+| `config.space` | Additional right margin applied to each visual token. Accepts a number or CSS length string. |
+
+`config.duration` does not change the animation's own duration. The engine adds the calculated stagger offset to each token's `animation.delay`. For the available delay algorithms and their behavior, see [MotionChain](/components/motion-chain/#stagger-timing).
+
+<Callout type="warning" title="Character mode creates one animation per grapheme">
+  Every character or word becomes its own animated element. Avoid character-splitting long paragraphs: it increases the number of DOM nodes and animations. Prefer `mode: "words"` for longer text, and keep character reveals focused on short phrases.
+</Callout>
+
+## Styling and component props
+
+`MotionText` separates the wrapper's styling from the styling of its animated tokens:
+
+- **`wrapperClassName`** styles the outer element selected by `elementType`.
+- **`className`** is applied to every visual token. It does not style the outer element.
+- **Native DOM props** such as `id`, `style`, `aria-*`, and event handlers are forwarded to the outer element.
+
+| Prop | Description |
+| --- | --- |
+| `children` | Required string to split and animate. |
+| `animation` | Required preset, module, or composition with optional timing. |
+| `elementType` | Native HTML or SVG wrapper tag. Defaults to `"span"`. |
+| `config` | Splitting mode, stagger options, and per-token right margin. |
+| `className` | Class applied to each visual token. |
+| `wrapperClassName` | Class applied to the outer wrapper. |
+| `controller` | Declarative playback options or an `AnimationController` instance. |
+| `reducedMotion` | `"user"` (default), `"always"`, or `"never"`. |
+| `onMotionComplete` | Receives the completion result from each token animation. |
+| `onMotionError` | Receives an error from a token animation. |
+
+The default playback policy starts when the text enters the viewport (at least 50% visible) and plays once. Pass a declarative `controller` to configure visibility or trigger-based playback, or share an `AnimationController` created with `useController()` from a Client Component. See [MotionContainer](/components/motion-container/) for the shared playback options.
+
+<Callout type="note" title="Completion is reported per token">
+  `onMotionComplete` is forwarded to the individual token animations. It is not a single callback that fires once after the entire string has finished.
+</Callout>
+
+## Accessibility and rendering
+
+The rendered markup contains two text representations:
+
+1. The complete original string in a visually hidden element.
+2. The animated token sequence inside an `aria-hidden="true"` element.
+
+Screen readers therefore receive one uninterrupted copy instead of announcing each character or word separately. The unsplit text is also present in server-rendered HTML.
+
+Like the other Motion Provider components, `MotionText` renders its initial state on the server and starts WAAPI playback after hydration. It includes its own Client Component boundary, so it can be imported directly into a Server Component when its props are serializable.
+
+<Callout type="warning" title="Consider the initial state of important content">
+  A preset whose initial state uses `opacity: 0` keeps the visual tokens hidden until hydration starts the animation. Avoid hidden-start animations for LCP-critical headings or content that must remain visible when JavaScript is delayed. Choose a definition with a visible initial state when that matters.
+</Callout>
+
+The default `reducedMotion="user"` policy respects the visitor's system preference. When reduced motion is requested, playback is skipped and the destination state is applied. Use `"always"` to skip motion for everyone or `"never"` to opt out deliberately.
+
+## API highlights
+
+| API | Import | Purpose |
+| --- | --- | --- |
+| `MotionText` | `motion-provider` | Split and animate a string as characters or words. |
+| `MotionTextProps` | `motion-provider` | Component prop contract, including inherited motion and DOM props. |
+| `MotionTextConfigProps` | `motion-provider` | Type the split mode, stagger options, and token spacing. |
+| `SplittedTextModes` | `motion-provider` | Type the supported `"chars"` and `"words"` modes. |
+| `MotionAnimationProps`, `AnimationModule`, `Timing` | `motion-provider` | Type preset compositions, custom modules, and timing. |
+| `AnimationController`, `AnimationResult`, `useController()` | `motion-provider` | Type and create imperative playback controls. |
+
+See [MotionChain](/components/motion-chain/) for stagger behavior, [MotionContainer](/components/motion-container/) for shared animation and controller options, and [Server-Side Rendering](/concepts/server-side-rendering/) for the server-to-client rendering lifecycle.
