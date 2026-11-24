@@ -1,29 +1,23 @@
-"use client";
-
+import { Pause, Play, Rewind, RotateCcw } from "lucide-react";
 import { MotionContainer, useController } from "motion-provider";
 
 export default function DeploymentPreview() {
   const controller = useController({ stopAnimation: true });
 
+  const controls = [
+    { label: "Replay", Icon: Play, onClick: () => void controller.play() },
+    { label: "Pause", Icon: Pause, onClick: () => controller.pause() },
+    {
+      label: "Reverse",
+      Icon: Rewind,
+      onClick: () => void controller.reverse(),
+    },
+    { label: "Reset", Icon: RotateCcw, onClick: () => controller.reset() },
+  ];
+
   return (
-    <article className="w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface text-foreground shadow-xl shadow-black/10">
-      <header className="flex items-start justify-between gap-4 border-b border-border p-5">
-        <div>
-          <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
-            Release preview
-          </p>
-          <h3 className="mt-1 text-lg font-semibold">Checkout service</h3>
-          <p className="mt-1 text-sm text-muted">
-            Coordinate the rollout summary from one controller.
-          </p>
-        </div>
-
-        <span className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium">
-          staging
-        </span>
-      </header>
-
-      <div className="grid gap-3 p-5">
+    <article className="grid w-full min-w-0 max-w-md grid-cols-[minmax(0,1fr)_auto] rounded-2xl border border-border bg-surface text-foreground shadow-xl shadow-black/10">
+      <div className="grid min-w-0 content-center gap-2 p-2">
         <MotionContainer
           animation={{
             mode: ["fadeUp", "filterBlurIn"],
@@ -31,17 +25,10 @@ export default function DeploymentPreview() {
           }}
           controller={controller}
         >
-          <section className="rounded-xl border border-border bg-background p-4">
-            <div className="flex items-center justify-between gap-3">
-              <div>
-                <p className="text-sm font-semibold">API rollout</p>
-                <p className="mt-1 text-xs text-muted">8 instances · eu-central</p>
-              </div>
-              <span
-                aria-label="Healthy"
-                className="size-2.5 rounded-full bg-emerald-500"
-                role="img"
-              />
+          <section>
+            <div>
+              <p className="text-sm font-semibold">API rollout</p>
+              <p className="text-xs text-muted">8 instances · eu-central</p>
             </div>
           </section>
         </MotionContainer>
@@ -54,8 +41,8 @@ export default function DeploymentPreview() {
           }}
           controller={controller}
         >
-          <section className="rounded-xl border border-border bg-background p-4">
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+          <section className="rounded-lg border border-border bg-background px-3 py-2">
+            <dl className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-2 gap-y-1 text-xs">
               <dt className="text-muted">Changed files</dt>
               <dd className="text-right font-medium">14</dd>
               <dt className="text-muted">Bundle delta</dt>
@@ -67,36 +54,20 @@ export default function DeploymentPreview() {
         </MotionContainer>
       </div>
 
-      <footer className="grid grid-cols-2 gap-2 border-t border-border bg-background/60 p-4 sm:grid-cols-4">
-        <button
-          type="button"
-          className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-background transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => void controller.play()}
-        >
-          Replay
-        </button>
-        <button
-          type="button"
-          className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => controller.pause()}
-        >
-          Pause
-        </button>
-        <button
-          type="button"
-          className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => void controller.reverse()}
-        >
-          Reverse
-        </button>
-        <button
-          type="button"
-          className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => controller.reset()}
-        >
-          Reset
-        </button>
-      </footer>
+      <div className="flex flex-col justify-center gap-1 rounded-r-2xl border-l border-border bg-background/60 p-2">
+        {controls.map(({ label, Icon, onClick }) => (
+          <button
+            key={label}
+            type="button"
+            aria-label={label}
+            title={label}
+            className="grid size-7 place-items-center rounded-md border border-border first:border-accent first:bg-accent first:text-background hover:border-accent hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-accent"
+            onClick={onClick}
+          >
+            <Icon aria-hidden="true" className="size-3.5" />
+          </button>
+        ))}
+      </div>
     </article>
   );
 }
