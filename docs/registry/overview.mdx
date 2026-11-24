@@ -5,30 +5,74 @@ order: 810
 draft: false
 ---
 
-A motion registry gives application components named access to shared animation props.
+**A motion registry gives application code typed, named access to reusable animation props.** Store shared props in a config and retrieve an entry where you render the matching motion component.
 
-## Example
+## Define, bind, and render
 
-Define a notice once and look it up where the notice renders. The registry keeps the component type and its props together in the configuration.
+1. Use [`createMotionConfig(config)`](/registry/create-motion-config) to keep each entry's component type, supported props, and literal key together.
+2. Call [`createMotionRegistry(config)`](/registry/create-motion-registry) to bind a `getAnimation(key)` method to that config. Use [`getAnimation(config, key)`](/registry/get-motion-animation) for an explicit one-off lookup.
+3. Spread the retrieved props onto the corresponding component and supply children at the render site.
+
+The config supports `MotionContainer`, `MotionChain`, `MotionText`, `MotionImage`, and `MotionLink` entries. Lookups return **component props**. The render site selects and mounts the component.
+
+## Reuse the activity-card entrance
+
+The activity summary retrieves the same animation props for a design review and sprint-planning update. Both cards reuse the entrance definition and provide their own content.
 
 ```tsx
 "use client";
 
-import { MotionContainer, createMotionConfig, createMotionRegistry } from "motion-provider";
+import {
+  MotionContainer,
+  createMotionConfig,
+  createMotionRegistry,
+} from "motion-provider";
 
 const config = createMotionConfig({
-  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+  activityCard: {
+    type: "MotionContainer",
+    props: { animation: { mode: "fadeUp", duration: 0.55 } },
+  },
 });
-const registry = createMotionRegistry(config);
 
-export default function Demo() {
-  const props = registry.getAnimation("notice");
-  return <MotionContainer {...props}>Notice</MotionContainer>;
+const { getAnimation } = createMotionRegistry(config);
+
+export default function ActivitySummary() {
+  return (
+    <section
+      aria-label="Activity summary"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Workspace
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Activity summary</h3>
+      <p className="mt-1 text-xs text-muted">
+        New activity cards share one entrance definition.
+      </p>
+      <div className="mt-3 grid gap-2">
+        <MotionContainer
+          {...getAnimation("activityCard")}
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+        >
+          <p className="font-medium">Design review</p>
+          <p className="mt-1 text-xs text-muted">4 comments · Today</p>
+        </MotionContainer>
+        <MotionContainer
+          {...getAnimation("activityCard")}
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+        >
+          <p className="font-medium">Sprint planning</p>
+          <p className="mt-1 text-xs text-muted">2 updates · Yesterday</p>
+        </MotionContainer>
+      </div>
+    </section>
+  );
 }
 ```
 
 <Registry slug="registry/overview" title="Registry overview" />
 
-<Callout type="note" title="Behavior">
-Registry instances are scoped to the configuration you pass. Two features can use the same key in separate registries.
+<Callout type="note" title="Definitions and playback are separate">
+  A registry shares configuration. Pass the same [controller](/controllers/overview) to components that should share playback commands.
 </Callout>

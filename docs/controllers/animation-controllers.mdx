@@ -5,30 +5,85 @@ order: 720
 draft: false
 ---
 
-One controller can play, pause, reverse, reset, cancel, or finish its registered animations.
+**An `AnimationController` broadcasts commands to its registered targets.** Motion components handle registration and cleanup. Read `controls.size` to inspect the current number of registered animation handles.
 
-## Example
+## Playback commands
 
-Play both labels, pause them midway, or finish them immediately. play() and reverse() return promises for the group’s results.
+| Method | Effect |
+| --- | --- |
+| `play()` | Plays forward or resumes forward playback. |
+| `reverse()` | Plays backwards from the group's current position or from the group end when it has no elapsed time. |
+| `pause()` | Holds the current frame. |
+| `finish()` | Settles the current effect at its endpoint. |
+| `reset()` | Returns to the starting frame and pauses. |
+| `cancel()` | Cancels effects and restores the underlying styles. |
+| `seek(progress)` | Pauses at normalized progress. See [Scrubbing with seek](/controllers/scrubbing-with-seek). |
+| `setPlaybackRate(rate)` | Applies a finite rate to the current handles. |
+
+`play()` and `reverse()` return `Promise<AnimationResult[]>`. The results reflect the handles in the group at command time. Each result has a `status` of `"finished"` or `"cancelled"`. An empty group resolves with an empty array.
+
+## Review a publishing preview
+
+Play the two campaign elements, pause them midway, or finish them immediately. Pause and finish affect the whole group despite its different durations.
 
 ```tsx
 "use client";
 
 import { MotionContainer, useController } from "motion-provider";
 
-export default function Demo() {
+export default function MediaPreview() {
   const controls = useController();
   return (
-    <section className="grid gap-3">
-      <button type="button" onClick={() => controls.play()}>Play</button>
-      <button type="button" onClick={() => controls.pause()}>Pause</button>
-      <button type="button" onClick={() => controls.finish()}>Finish</button>
-      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
-        Preview
-      </MotionContainer>
-      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 1.1 }}>
-        Details
-      </MotionContainer>
+    <section
+      aria-label="Publishing preview"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Campaign studio
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Publishing preview</h3>
+      <p className="mt-1 text-xs text-muted">
+        Review the two entrance effects as a group.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => void controls.play()}
+        >
+          Play
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controls.pause()}
+        >
+          Pause
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controls.finish()}
+        >
+          Finish
+        </button>
+      </div>
+      <div className="mt-3 grid gap-2">
+        <MotionContainer
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+          animation={{ mode: "fadeUp", duration: 1.4 }}
+          controller={controls}
+        >
+          01 · Homepage hero
+        </MotionContainer>
+        <MotionContainer
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+          animation={{ mode: "slideUp", duration: 2.1 }}
+          controller={controls}
+        >
+          02 · Product announcement
+        </MotionContainer>
+      </div>
     </section>
   );
 }
@@ -36,6 +91,6 @@ export default function Demo() {
 
 <Registry slug="controllers/animation-controllers" title="Animation controllers" />
 
-<Callout type="note" title="Behavior">
-The controller registers mounted targets. A later registration receives the last stored command.
+<Callout type="note" title="New handles receive the last stored command">
+  When a target mounts, it receives the most recent command. `setPlaybackRate()` applies to the handles already registered and leaves the command snapshot unchanged.
 </Callout>

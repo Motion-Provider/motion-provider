@@ -5,11 +5,19 @@ order: 730
 draft: false
 ---
 
-useSyncExternalStore connects React to the controller’s command notifications.
+**Use `useSyncExternalStore` to show which command the controller last received.** The controller applies playback commands directly to its handles. React can subscribe only where the interface needs the command.
 
-## Example
+## Read the command store
 
-Play or pause to update the displayed command. The subscription returns its own cleanup function.
+- **`subscribe(listener)`** registers a callback and returns an unsubscribe function. React handles cleanup when passed the method directly.
+- **`getSnapshot()`** returns a `ControlAction` such as `"play"` or `"pause"`. It returns `undefined` before the first command.
+- A third argument to `useSyncExternalStore` supplies the **server snapshot**. Return `undefined` for a controller that starts without an initial command.
+
+When a user seeks, the snapshot becomes `"pause"`. The store does not publish frame timestamps. For the result of a specific run, await `play()` or `reverse()`, or use [`onMotionComplete`](/event-handlers/on-motion-complete).
+
+## Inspect a message preview
+
+Play, pause, or reset the preview and watch the **Last command** readout. After playback completes naturally, the result still reads `play` until you issue another command.
 
 ```tsx
 "use client";
@@ -17,17 +25,62 @@ Play or pause to update the displayed command. The subscription returns its own 
 import { MotionContainer, useController } from "motion-provider";
 import { useSyncExternalStore } from "react";
 
-export default function Demo() {
+export default function PlaybackInspector() {
   const controls = useController();
-  const command = useSyncExternalStore(controls.subscribe, controls.getSnapshot, () => undefined);
+  const command = useSyncExternalStore(
+    controls.subscribe,
+    controls.getSnapshot,
+    () => undefined,
+  );
   return (
-    <section className="grid gap-3">
-      <button type="button" onClick={() => controls.play()}>Play</button>
-      <button type="button" onClick={() => controls.pause()}>Pause</button>
-      <output>{command ?? "Ready"}</output>
-      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
-        Preview
-      </MotionContainer>
+    <section
+      aria-label="Inspect playback commands"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Prototype
+      </p>
+      <h3 className="mt-1 text-base font-semibold">
+        Inspect playback commands
+      </h3>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => void controls.play()}
+        >
+          Play
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controls.pause()}
+        >
+          Pause
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controls.reset()}
+        >
+          Reset
+        </button>
+      </div>
+      <div className="mt-3 flex items-center justify-between gap-2 rounded-xl border border-border bg-surface-secondary px-3 py-2.5">
+        <span>Last command</span>
+        <output className="rounded-full bg-accent/10 px-2 py-1 font-secondary text-xs text-accent">
+          {command ?? "ready"}
+        </output>
+      </div>
+      <div className="mt-2 overflow-hidden">
+        <MotionContainer
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+          animation={{ mode: "slideUp", duration: 1.4 }}
+          controller={controls}
+        >
+          New message · Design review
+        </MotionContainer>
+      </div>
     </section>
   );
 }
@@ -35,6 +88,6 @@ export default function Demo() {
 
 <Registry slug="controllers/subscribing-to-state" title="Subscribing to controller state" />
 
-<Callout type="note" title="Behavior">
-getSnapshot() starts as undefined. It tracks the latest command, so natural completion does not change play to finished.
+<Callout type="note" title="Label snapshots as commands">
+  A command snapshot records what you asked the controller to do. A finished effect can still have `"play"` as its last command.
 </Callout>

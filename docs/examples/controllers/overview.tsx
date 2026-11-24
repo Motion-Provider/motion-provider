@@ -2,18 +2,52 @@
 
 import { MotionContainer, useController } from "motion-provider";
 
-export default function Demo() {
+export default function OrderSummary() {
   const controls = useController();
   return (
-    <section className="grid gap-3">
-      <button type="button" onClick={() => controls.play()}>Play</button>
-      <button type="button" onClick={() => controls.reverse()}>Reverse</button>
-      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
-        Preview
-      </MotionContainer>
-      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 1.1 }}>
-        Details
-      </MotionContainer>
+    <section
+      aria-label="Order #0281"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Orders
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Order #0281</h3>
+      <p className="mt-1 text-xs text-muted">
+        The payment and dispatch updates share playback.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => void controls.play()}
+        >
+          Show update
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => void controls.reverse()}
+        >
+          Rewind update
+        </button>
+      </div>
+      <div className="mt-3 grid gap-2">
+        <MotionContainer
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+          animation={{ mode: "fadeUp", duration: 0.35 }}
+          controller={controls}
+        >
+          <span className="text-success">Payment confirmed</span>
+        </MotionContainer>
+        <MotionContainer
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+          animation={{ mode: "fadeUp", duration: 0.7 }}
+          controller={controls}
+        >
+          Dispatch scheduled for Friday
+        </MotionContainer>
+      </div>
     </section>
   );
 }

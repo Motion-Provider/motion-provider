@@ -5,30 +5,88 @@ order: 820
 draft: false
 ---
 
-Shared configuration can supply animation defaults while each render site supplies its own content and overrides.
+**A centralized animation system can share definitions through a registry and coordinate playback through a controller.** Use configuration for defaults, then apply render-specific timing where the interaction requires it.
 
-## Example
+## Share defaults and override timing
 
-Bind a getter to the shared configuration. This notice keeps the shared preset and overrides its duration locally.
+- **Define** the shared component props with [`createMotionConfig()`](/registry/create-motion-config).
+- **Bind** a lookup with `createMotionGetter(config)` when render sites need a function they can import.
+- **Coordinate** related elements by passing them the same [`AnimationController`](/controllers/animation-controllers).
+
+Apply a render-specific `animation` prop after spreading the shared props. Spread the nested `animation` object before setting `delay` or `duration` to preserve its preset and any other unchanged fields. Timing is expressed in **seconds**.
+
+## Preview a checkout summary
+
+The delivery and total rows read the same shared entry. The total starts `0.12` seconds later and uses a longer duration. **Replay summary** resets and plays the group with one controller.
 
 ```tsx
 "use client";
 
-import { MotionContainer, createMotionConfig, createMotionGetter } from "motion-provider";
+import {
+  MotionContainer,
+  createMotionConfig,
+  createMotionGetter,
+  useController,
+} from "motion-provider";
 
 const config = createMotionConfig({
-  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+  summaryRow: {
+    type: "MotionContainer",
+    props: { animation: { mode: "fadeUp", duration: 0.4 } },
+  },
 });
-const getProps = createMotionGetter(config);
 
-export default function Demo() {
-  const props = getProps("notice");
-  return <MotionContainer {...props} animation={{ ...props.animation, duration: 1 }}>Notice</MotionContainer>;
+const getAnimation = createMotionGetter(config);
+
+export default function CheckoutSummary() {
+  const controls = useController();
+  const row = getAnimation("summaryRow");
+  return (
+    <section
+      aria-label="Preview checkout summary"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Checkout
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Preview checkout summary</h3>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => {
+            controls.reset();
+            void controls.play();
+          }}
+        >
+          Replay summary
+        </button>
+      </div>
+      <div className="mt-3 grid gap-2">
+        <MotionContainer
+          {...row}
+          controller={controls}
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+        >
+          Delivery · Friday
+        </MotionContainer>
+        <MotionContainer
+          {...row}
+          animation={{ ...row.animation, delay: 0.12, duration: 0.65 }}
+          controller={controls}
+          className="flex justify-between rounded-xl border border-accent/25 bg-accent/10 px-3 py-2.5 font-semibold"
+        >
+          <span>Total</span>
+          <span>€110.70</span>
+        </MotionContainer>
+      </div>
+    </section>
+  );
 }
 ```
 
 <Registry slug="registry/cas-extended" title="Extending a centralized animation system" />
 
-<Callout type="note" title="Behavior">
-Spread the nested animation object before overriding duration so the preset mode survives the override.
+<Callout type="tip" title="Keep local overrides at the call site">
+  When a delay is specific to this checkout layout, apply it where that row renders. Other consumers can continue using the shared entry's default timing.
 </Callout>

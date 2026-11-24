@@ -5,25 +5,68 @@ order: 410
 draft: false
 ---
 
-Motion Provider exposes hooks for playback commands, declarative playback flags, mixing definitions, and reading the system motion preference.
+**Motion Provider hooks let React components choose what to animate, when to play it, and how to respond to the user's motion preference.** Import them from `motion-provider` inside the component that owns the interaction.
 
-## Example
+## Choose a hook
 
-Use useController when a button should start an effect. Use useAnimation for state flags, useAnimationMixer for keyframes, and useReducedMotion for preference-aware UI.
+| Hook | Use it when | Returns |
+| --- | --- | --- |
+| [`useController()`](/hooks/use-controller) | A button or another event should command playback. | A stable `AnimationController`. |
+| [`useAnimation(flags)`](/hooks/use-animation) | React state already describes the desired direction or stopped state. | Declarative controller props, or the original controller when you pass one. |
+| [`useAnimationMixer(options)`](/hooks/use-animation-mixer) | Several keyframe definitions belong on the same element. | A combined `AnimationModule`. |
+| [`useReducedMotion()`](/hooks/use-reduced-motion) | Your interface needs to respond to the system motion preference. | A subscribed boolean. |
+
+Hooks belong in React components or custom hooks. In the Next.js App Router, put the interactive component behind a [client boundary](/integrations/nextjs).
+
+## Show feedback after saving
+
+A settings card keeps the **saved state** in React and drives the confirmation entrance with a controller. The first click mounts the confirmation. The controller remembers the command and applies it when the new element registers. Later clicks restart the effect.
 
 ```tsx
 "use client";
 
 import { MotionContainer, useController } from "motion-provider";
+import { useState } from "react";
 
-export default function Demo() {
+export default function SaveConfirmation() {
   const controls = useController();
+  const [saved, setSaved] = useState(false);
   return (
-    <section className="grid gap-3">
-      <button type="button" onClick={() => controls.play()}>Play</button>
-      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
-        Preview
-      </MotionContainer>
+    <section
+      aria-label="Profile settings"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Workspace
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Profile settings</h3>
+      <p className="mt-1 text-xs text-muted">
+        Email digests are delivered every Monday.
+      </p>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => {
+            setSaved(true);
+            controls.reset();
+            void controls.play();
+          }}
+        >
+          Save preferences
+        </button>
+      </div>
+      <div className="mt-3 min-h-11" aria-live="polite">
+        {saved && (
+          <MotionContainer
+            className="rounded-lg bg-success/10 px-3 py-2 font-medium text-success"
+            animation={{ mode: "fadeUp", duration: 0.5 }}
+            controller={controls}
+          >
+            Preferences saved.
+          </MotionContainer>
+        )}
+      </div>
     </section>
   );
 }
@@ -31,6 +74,6 @@ export default function Demo() {
 
 <Registry slug="hooks/overview" title="Hooks overview" />
 
-<Callout type="note" title="Behavior">
-A controller belongs to the component that calls the hook. Pass that same instance to each target that should respond.
+<Callout type="tip" title="Keep business state in React">
+  Store whether the save succeeded in React. Let the controller handle the visual confirmation. This keeps the outcome available when motion is skipped.
 </Callout>

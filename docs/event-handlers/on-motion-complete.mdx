@@ -5,24 +5,79 @@ order: 610
 draft: false
 ---
 
-onMotionComplete receives an animation result when the component reports completion.
+**`onMotionComplete(result)` reports the outcome of a settled animation run.** Use it to update visual feedback or advance an animation-dependent preview.
 
-## Example
+## Handle both results
 
-The label displays the reported status. Use the result when follow-up work depends on the outcome.
+| `result.status` | Meaning |
+| --- | --- |
+| `"finished"` | Playback reached its endpoint, or the run settled there without a transition. |
+| `"cancelled"` | An active run was interrupted by an operation such as cancellation, reset, or a new direction. |
+
+On `MotionContainer` and `Motion` the callback belongs to the animated element. On `MotionChain` and `MotionText`, it is passed to the animated wrappers, so it can run more than once. `MotionImage` reports completion when its tile handles have all finished.
+
+## Show an invoice approval result
+
+The screen previews the visual confirmation for an approved invoice. Activate **Approve invoice** to start the preview. Activate **Cancel preview** while it plays to see the cancelled status. The status text remains readable with reduced motion active.
 
 ```tsx
 "use client";
 
-import { MotionContainer } from "motion-provider";
+import { MotionContainer, useController } from "motion-provider";
 import { useState } from "react";
 
-export default function Demo() {
-  const [status, setStatus] = useState("Waiting");
+export default function InvoiceApproval() {
+  const controls = useController();
+  const [status, setStatus] = useState("Awaiting approval");
   return (
-    <section>
-      <MotionContainer animation={{ mode: "fadeUp" }} onMotionComplete={result => setStatus(result.status)}>Preview</MotionContainer>
-      <output>{status}</output>
+    <section
+      aria-label="Approve invoice"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Billing
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Approve invoice</h3>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => {
+            controls.reset();
+            setStatus("Approving…");
+            void controls.play();
+          }}
+        >
+          Approve invoice
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controls.cancel()}
+        >
+          Cancel preview
+        </button>
+      </div>
+      <div className="mt-3 overflow-hidden rounded-xl border border-border bg-surface-secondary px-3 py-2.5">
+        <MotionContainer
+          animation={{ mode: "fadeUp", duration: 1.2 }}
+          controller={controls}
+          onMotionComplete={({ status }) =>
+            setStatus(
+              status === "finished"
+                ? "Invoice approved"
+                : "Approval preview cancelled",
+            )
+          }
+        >
+          <span className="font-medium text-success">
+            Invoice #1042 · €110.70
+          </span>
+        </MotionContainer>
+      </div>
+      <output className="mt-2 block min-h-5 text-xs text-muted">
+        {status}
+      </output>
     </section>
   );
 }
@@ -30,6 +85,6 @@ export default function Demo() {
 
 <Registry slug="event-handlers/on-motion-complete" title="onMotionComplete" />
 
-<Callout type="note" title="Behavior">
-On MotionImage the completion callback waits until all tile handles are finished. Individual tile completions can occur earlier.
+<Callout type="warning" title="Keep the transaction separate from animation">
+  Submit the real approval in your application logic. Use `onMotionComplete` for the confirmation UI and check `result.status` before showing a finished animation state.
 </Callout>

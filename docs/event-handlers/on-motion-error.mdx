@@ -5,11 +5,17 @@ order: 620
 draft: false
 ---
 
-onMotionError receives an Error for failures reported by the motion runtime.
+**`onMotionError(error)` receives failures the motion runtime reports through the component.** Handle the `Error` to surface a diagnostic, record telemetry, or update a fallback indicator.
 
-## Example
+## Know where failures surface
 
-Enable the invalid viewport threshold to exercise the observer error path. The callback displays the message while the component finishes the effect.
+For `MotionContainer` and `Motion`, reported errors include rejected Web Animations API effects and errors binding an in-view or scroll driver. A failed browser effect can still settle at its destination when played. A failed observer binding on these components finishes the effect so the content remains available.
+
+Invalid definitions, unknown presets, and other failures that throw during render go through React's error handling. Use valid typed animation definitions and keep a React error boundary where the surrounding UI needs recovery.
+
+## Exercise a fallback path
+
+The release notice normally uses a threshold of `0.5`. **Test invalid threshold** changes it to `2`, causing the runtime to report the out-of-range value. **Restore settings** returns the demo to the valid setting.
 
 ```tsx
 "use client";
@@ -17,14 +23,50 @@ Enable the invalid viewport threshold to exercise the observer error path. The c
 import { MotionContainer } from "motion-provider";
 import { useState } from "react";
 
-export default function Demo() {
-  const [invalid, setInvalid] = useState(false);
+export default function ReleaseHealth() {
+  const [threshold, setThreshold] = useState(0.5);
   const [message, setMessage] = useState("");
   return (
-    <section>
-      <button type="button" onClick={() => setInvalid(true)}>Test invalid threshold</button>
-      <MotionContainer animation={{ mode: "fadeUp" }} controller={{ configView: { amount: invalid ? 2 : 0.5 } }} onMotionError={error => setMessage(error.message)}>Preview</MotionContainer>
-      <output>{message}</output>
+    <section
+      aria-label="Validate an entrance effect"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Release manager
+      </p>
+      <h3 className="mt-1 text-base font-semibold">
+        Validate an entrance effect
+      </h3>
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => setThreshold(2)}
+        >
+          Test invalid threshold
+        </button>
+        <button
+          type="button"
+          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => {
+            setMessage("");
+            setThreshold(0.5);
+          }}
+        >
+          Restore settings
+        </button>
+      </div>
+      <MotionContainer
+        className="mt-3 rounded-lg bg-accent/10 px-3 py-2 font-medium text-accent"
+        animation={{ mode: "fadeUp" }}
+        controller={{ configView: { amount: threshold } }}
+        onMotionError={(error) => setMessage(error.message)}
+      >
+        Release notes are available
+      </MotionContainer>
+      <output className="mt-2 block min-h-9 break-words text-xs text-warning">
+        {message || "Viewport threshold is valid."}
+      </output>
     </section>
   );
 }
@@ -32,6 +74,6 @@ export default function Demo() {
 
 <Registry slug="event-handlers/on-motion-error" title="onMotionError" />
 
-<Callout type="note" title="Behavior">
-The callback handles reported playback and observer errors. React render errors still need their usual error boundary.
+<Callout type="danger" title="Viewport thresholds must be in range">
+  Use a number between `0` and `1`, or use `"some"` or `"all"`. This preview intentionally supplies an invalid number so you can see the error callback run.
 </Callout>

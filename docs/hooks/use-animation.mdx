@@ -5,25 +5,64 @@ order: 430
 draft: false
 ---
 
-useAnimation maps stopAnimation and reverseAnimation flags to declarative controller props.
+**`useAnimation(input)` adapts existing state to a motion component's `controller` prop.** With a flags object it returns declarative playback props. With an `AnimationController` it returns that same instance.
 
-## Example
+## Map playback flags
 
-Toggle the checkbox to change the direction of the triggered animation. An existing imperative controller can also pass through this hook unchanged.
+| Input flag | Returned prop | Behavior |
+| --- | --- | --- |
+| `stopAnimation` | `isAnimationStopped` | Finishes the effect when true. |
+| `reverseAnimation` | `reverse` | Chooses backward playback when the declarative trigger is active. |
+
+Both flags default to `false`. Add `trigger: true` when state changes should drive playback immediately. You can also leave `trigger` unset to use the component's in-view behavior where supported. The hook maps values during render, so it reflects the latest flags on each render.
+
+## Switch delivery speed
+
+Checkout state controls the meter direction. Selecting **express delivery** plays from the short fill toward the full fill. Clearing it reverses playback. The delivery estimate and price are rendered as text so the meter can remain decorative.
 
 ```tsx
 "use client";
 
-import { MotionContainer, useAnimation } from "motion-provider";
+import { Motion, useAnimation } from "motion-provider";
 import { useState } from "react";
 
-export default function Demo() {
-  const [backward, setBackward] = useState(false);
-  const flags = useAnimation({ reverseAnimation: backward });
+const meter = { initial: { scaleX: 0.35 }, animate: { scaleX: 1 } } as const;
+
+export default function DeliveryOptions() {
+  const [express, setExpress] = useState(false);
+  const flags = useAnimation({ reverseAnimation: !express });
   return (
-    <section>
-      <label><input type="checkbox" checked={backward} onChange={e => setBackward(e.target.checked)} /> Reverse</label>
-      <MotionContainer controller={{ ...flags, trigger: true }} animation={{ mode: "slideUp" }}>Preview</MotionContainer>
+    <section
+      aria-label="Delivery preferences"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Checkout
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Delivery preferences</h3>
+      <label className="mt-3 flex cursor-pointer items-center gap-2">
+        <input
+          type="checkbox"
+          className="size-4 accent-accent"
+          checked={express}
+          onChange={(event) => setExpress(event.currentTarget.checked)}
+        />
+        Use express delivery
+      </label>
+      <div
+        className="mt-3 grid h-2 overflow-hidden rounded-full bg-border"
+        aria-hidden="true"
+      >
+        <Motion
+          className="origin-left rounded-full bg-accent"
+          definition={meter}
+          timing={{ duration: 0.4 }}
+          controller={{ ...flags, trigger: true }}
+        />
+      </div>
+      <p className="mt-1 text-xs text-muted" aria-live="polite">
+        {express ? "Tomorrow · €9.00" : "3–5 business days · Free"}
+      </p>
     </section>
   );
 }
@@ -31,6 +70,6 @@ export default function Demo() {
 
 <Registry slug="hooks/use-animation" title="useAnimation" />
 
-<Callout type="note" title="Behavior">
-stopAnimation maps to isAnimationStopped, which finishes the effect. Use a controller’s pause method to hold a frame.
+<Callout type="warning" title="Finishing and pausing have different outcomes">
+  `stopAnimation: true` settles the effect at its endpoint. Use [`useController()`](/hooks/use-controller) and call `pause()` to hold a frame.
 </Callout>

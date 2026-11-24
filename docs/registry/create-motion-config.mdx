@@ -5,11 +5,21 @@ order: 830
 draft: false
 ---
 
-createMotionConfig checks each entry against its selected motion component and preserves its literal key.
+**`createMotionConfig(config)` preserves literal keys and checks each entry against its motion component's props.** It returns the same input object with its inferred TypeScript type.
 
-## Example
+## Describe each entry
 
-Declare the component type alongside its props. Spread the notice props onto MotionContainer and supply children at the render site.
+| Field | Purpose |
+| --- | --- |
+| Key | A name used to retrieve the entry, such as `releaseNotice`. |
+| `type` | The supported motion component whose prop shape TypeScript checks. |
+| `props` | Shared component props. Supply children when you render the entry. |
+
+The helper performs **type checking at compile time** through its TypeScript signature. When data comes from an external source, validate it before treating it as a motion config. You can read an entry's `props` directly or bind a [registry](/registry/create-motion-registry) for named lookups.
+
+## Define a release notice
+
+The shared entry pairs an `article` wrapper with a fade and blur entrance. The component applies its props and supplies the release title and body locally.
 
 ```tsx
 "use client";
@@ -17,17 +27,51 @@ Declare the component type alongside its props. Spread the notice props onto Mot
 import { MotionContainer, createMotionConfig } from "motion-provider";
 
 const config = createMotionConfig({
-  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+  releaseNotice: {
+    type: "MotionContainer",
+    props: {
+      elementType: "article",
+      animation: { mode: ["fadeUp", "filterBlurIn"], duration: 0.65 },
+    },
+  },
 });
 
-export default function Demo() {
-  const props = config.notice.props;
-  return <MotionContainer {...props}>Notice</MotionContainer>;
+export default function ReleaseNotice() {
+  return (
+    <section
+      aria-label="Release notes"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Product updates
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Release notes</h3>
+      <p className="mt-1 text-xs text-muted">
+        A typed entry keeps the notice element and entrance together.
+      </p>
+      <div className="mt-3 grid gap-2">
+        <MotionContainer
+          {...config.releaseNotice.props}
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-medium">Saved views</p>
+            <span className="rounded-full bg-accent/10 px-2 py-1 font-secondary text-xs text-accent">
+              v2.4
+            </span>
+          </div>
+          <p className="mt-1 text-xs text-muted">
+            Pin a report with its filters and share it with your team.
+          </p>
+        </MotionContainer>
+      </div>
+    </section>
+  );
 }
 ```
 
 <Registry slug="registry/create-motion-config" title="createMotionConfig" />
 
-<Callout type="note" title="Behavior">
-The helper returns the supplied object. Define shared static configuration outside components so renders reuse it.
+<Callout type="tip" title="Keep shared definitions at module scope">
+  Put static configuration in a shared module so render sites can reuse it. Keep callbacks and controllers in the client component that owns the interaction if the config must cross a server-to-client boundary.
 </Callout>

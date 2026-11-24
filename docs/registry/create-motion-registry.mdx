@@ -5,30 +5,82 @@ order: 840
 draft: false
 ---
 
-createMotionRegistry binds a typed getAnimation method to one configuration object.
+**`createMotionRegistry(config)` binds typed lookups to a specific configuration.** It returns an object with the original `config` and a `getAnimation(key)` method.
 
-## Example
+## Look up typed props
 
-Create the registry at module scope. Destructure its getter and use the notice key to retrieve the exact props for that entry.
+`getAnimation(key)` accepts the keys inferred from the supplied config and returns that entry's exact `props` type. The getter closes over the config, so you can destructure it and export it from a shared module. Use `createMotionGetter(config)` when you only need that bound function.
+
+Each registry uses the config provided at creation. You can create a separate registry for billing, onboarding, or another feature even when they use the same entry names.
+
+## Configure invoice reminders
+
+The billing registry defines separate entries for upcoming and overdue invoices. Each row retrieves its own entry and keeps its invoice details at the render site.
 
 ```tsx
 "use client";
 
-import { MotionContainer, createMotionConfig, createMotionRegistry } from "motion-provider";
+import {
+  MotionContainer,
+  createMotionConfig,
+  createMotionRegistry,
+} from "motion-provider";
 
-const config = createMotionConfig({
-  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
-});
-const { getAnimation } = createMotionRegistry(config);
+const billing = createMotionRegistry(
+  createMotionConfig({
+    reminder: {
+      type: "MotionContainer",
+      props: { animation: { mode: "fadeUp", duration: 0.5 } },
+    },
+    overdue: {
+      type: "MotionContainer",
+      props: { animation: { mode: "slideUp", duration: 0.7 } },
+    },
+  }),
+);
 
-export default function Demo() {
-  const props = getAnimation("notice");
-  return <MotionContainer {...props}>Notice</MotionContainer>;
+export default function BillingReminders() {
+  return (
+    <section
+      aria-label="Invoice reminders"
+      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
+    >
+      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
+        Accounts
+      </p>
+      <h3 className="mt-1 text-base font-semibold">Invoice reminders</h3>
+      <p className="mt-1 text-xs text-muted">
+        Choose an entrance by invoice state.
+      </p>
+      <div className="mt-3 grid gap-2">
+        <MotionContainer
+          {...billing.getAnimation("reminder")}
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-medium">Invoice #1042</p>
+            <span className="font-secondary text-xs">€110.70</span>
+          </div>
+          <p className="mt-1 text-xs text-muted">Due this Friday</p>
+        </MotionContainer>
+        <MotionContainer
+          {...billing.getAnimation("overdue")}
+          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
+        >
+          <div className="flex items-center justify-between gap-2">
+            <p className="font-medium">Invoice #1036</p>
+            <span className="font-secondary text-xs">€84.00</span>
+          </div>
+          <p className="mt-1 text-xs text-warning">Overdue · 3 days</p>
+        </MotionContainer>
+      </div>
+    </section>
+  );
 }
 ```
 
 <Registry slug="registry/create-motion-registry" title="createMotionRegistry" />
 
-<Callout type="note" title="Behavior">
-A missing runtime key raises UNKNOWN_CONFIG_KEY. Validate external strings before treating them as configuration keys.
+<Callout type="warning" title="Validate keys from outside TypeScript">
+  A missing own key throws `UNKNOWN_CONFIG_KEY` at runtime. Guard values from URLs, forms, or remote data before passing them to the getter.
 </Callout>
