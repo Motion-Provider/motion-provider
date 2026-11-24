@@ -1,75 +1,263 @@
 ---
 title: "useAnimation"
-description: "useAnimation maps stopAnimation and reverseAnimation flags to declarative controller props."
+description: "Adapt legacy animation flags or pass an AnimationController through unchanged."
 order: 430
 draft: false
 ---
 
-**`useAnimation(input)` adapts existing state to a motion component's `controller` prop.** With a flags object it returns declarative playback props. With an `AnimationController` it returns that same instance.
+**Use `useAnimation()` when existing React state already describes animation direction or a finished state and you need to adapt that state to Motion Provider's `controller` prop.** It is primarily a *compatibility adapter*: boolean flags become declarative controller fields, while an existing `AnimationController` is returned unchanged.
 
-## Map playback flags
+For new event-driven playback, prefer [`useController()`](/hooks/use-controller/). `useAnimation()` is most useful when migrating older state such as `stopAnimation` and `reverseAnimation` without rewriting the surrounding component immediately.
 
-| Input flag | Returned prop | Behavior |
-| --- | --- | --- |
-| `stopAnimation` | `isAnimationStopped` | Finishes the effect when true. |
-| `reverseAnimation` | `reverse` | Chooses backward playback when the declarative trigger is active. |
+<Callout type="note" title="This API does not subscribe to playback">
+  `useAnimation()` does not track animation frames or controller state. With flag input it maps the current values during render; with an `AnimationController` it simply returns the same controller reference.
+</Callout>
 
-Both flags default to `false`. Add `trigger: true` when state changes should drive playback immediately. You can also leave `trigger` unset to use the component's in-view behavior where supported. The hook maps values during render, so it reflects the latest flags on each render.
+## Signatures
 
-## Switch delivery speed
+```tsx
+function useAnimation(
+  controller: AnimationController,
+): AnimationController;
 
-Checkout state controls the meter direction. Selecting **express delivery** plays from the short fill toward the full fill. Clearing it reverses playback. The delivery estimate and price are rendered as text so the meter can remain decorative.
+function useAnimation(controller: {
+  stopAnimation?: boolean;
+  reverseAnimation?: boolean;
+}): MotionControllerProps;
+```
+
+The argument is required. Which overload TypeScript selects determines the return type.
+
+## Adapt boolean flags
+
+Pass an object when application state already uses the legacy flag names:
+
+```tsx
+const playback = useAnimation({
+  stopAnimation,
+  reverseAnimation,
+});
+```
+
+The hook returns only the corresponding declarative controller fields:
+
+| Input | Type | Default | Returned field | Effect |
+| --- | --- | --- | --- | --- |
+| `stopAnimation` | `boolean` | `false` | `isAnimationStopped` | Finishes the current effect when `true`. |
+| `reverseAnimation` | `boolean` | `false` | `reverse` | Selects backward playback when the active driver tells the animation to show. |
+
+Passing an empty object therefore produces:
+
+```tsx
+{
+  isAnimationStopped: false,
+  reverse: false,
+}
+```
+
+**`useAnimation()` does not add a trigger, viewport policy, scroll configuration, or imperative controls.** Add those fields when you pass the result to a motion component:
+
+```tsx
+const playback = useAnimation({ reverseAnimation: isCollapsed });
+
+<MotionContainer
+  animation={{ mode: "fadeUp" }}
+  controller={{
+    ...playback,
+    trigger: true,
+  }}
+>
+  ...
+</MotionContainer>
+```
+
+With `trigger: true`, changing `reverseAnimation` switches between forward and backward playback. Without an explicit `trigger`, components that support the default in-view driver still use the mapped `reverse` value when they enter or leave the viewport.
+
+<Callout type="warning" title="stopAnimation is finish, not pause">
+  `stopAnimation: true` maps to `isAnimationStopped: true`, and the motion engine responds by calling `finish()` before evaluating trigger, scroll, or in-view playback for that effect. It does not freeze the animation at its current frame. Use an imperative controller and `pause()` when pausing is the intended behavior.
+</Callout>
+
+## Scale a worker pool from existing state
+
+This example treats application state as the source of truth. The checkbox changes `surgeEnabled`; `useAnimation()` converts the opposite value into `reverse`, and `trigger: true` makes the capacity meter respond immediately.
 
 ```tsx
 "use client";
 
-import { Motion, useAnimation } from "motion-provider";
+import {
+  Motion,
+  type AnimationModule,
+  useAnimation,
+} from "motion-provider";
 import { useState } from "react";
 
-const meter = { initial: { scaleX: 0.35 }, animate: { scaleX: 1 } } as const;
+const capacity = {
+  initial: {
+    opacity: 0.72,
+    scaleX: 0.34,
+  },
+  animate: {
+    opacity: 1,
+    scaleX: 1,
+  },
+} as const satisfies AnimationModule;
 
-export default function DeliveryOptions() {
-  const [express, setExpress] = useState(false);
-  const flags = useAnimation({ reverseAnimation: !express });
+export default function WorkerCapacityPreview() {
+  const [surgeEnabled, setSurgeEnabled] = useState(false);
+
+  const playback = useAnimation({
+    reverseAnimation: !surgeEnabled,
+  });
+
   return (
-    <section
-      aria-label="Delivery preferences"
-      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
-    >
-      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
-        Checkout
-      </p>
-      <h3 className="mt-1 text-base font-semibold">Delivery preferences</h3>
-      <label className="mt-3 flex cursor-pointer items-center gap-2">
-        <input
-          type="checkbox"
-          className="size-4 accent-accent"
-          checked={express}
-          onChange={(event) => setExpress(event.currentTarget.checked)}
-        />
-        Use express delivery
-      </label>
-      <div
-        className="mt-3 grid h-2 overflow-hidden rounded-full bg-border"
-        aria-hidden="true"
-      >
-        <Motion
-          className="origin-left rounded-full bg-accent"
-          definition={meter}
-          timing={{ duration: 0.4 }}
-          controller={{ ...flags, trigger: true }}
-        />
+    <article className="w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface text-foreground shadow-xl shadow-black/10">
+      <header className="flex items-start justify-between gap-4 border-b border-border p-5">
+        <div>
+          <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
+            Worker pool
+          </p>
+          <h3 className="mt-1 text-lg font-semibold">Checkout processing</h3>
+          <p className="mt-1 text-sm text-muted">
+            Scale capacity when traffic crosses the normal threshold.
+          </p>
+        </div>
+
+        <span
+          className={
+            surgeEnabled
+              ? "rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-background"
+              : "rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium text-muted"
+          }
+        >
+          {surgeEnabled ? "Surge on" : "Base load"}
+        </span>
+      </header>
+
+      <div className="space-y-5 p-5">
+        <div>
+          <div className="mb-2 flex items-end justify-between gap-4">
+            <div>
+              <p className="text-sm font-semibold">Available capacity</p>
+              <p className="text-xs text-muted">
+                {surgeEnabled ? "12 workers online" : "4 workers online"}
+              </p>
+            </div>
+            <strong className="text-2xl tabular-nums">
+              {surgeEnabled ? "100%" : "34%"}
+            </strong>
+          </div>
+
+          <div
+            aria-hidden="true"
+            className="h-3 overflow-hidden rounded-full bg-border"
+          >
+            <Motion
+              className="h-full origin-left rounded-full bg-accent"
+              controller={{ ...playback, trigger: true }}
+              definition={capacity}
+              timing={{ duration: 0.58, easing: "ease-out" }}
+            />
+          </div>
+
+          <div className="mt-2 flex justify-between text-xs text-muted">
+            <span>4 base</span>
+            <span>12 max</span>
+          </div>
+        </div>
+
+        <dl className="grid grid-cols-3 gap-2 text-center">
+          <div className="rounded-xl border border-border bg-background p-3">
+            <dt className="text-xs text-muted">Queue</dt>
+            <dd className="mt-1 font-semibold tabular-nums">
+              {surgeEnabled ? "18" : "47"}
+            </dd>
+          </div>
+          <div className="rounded-xl border border-border bg-background p-3">
+            <dt className="text-xs text-muted">p95</dt>
+            <dd className="mt-1 font-semibold tabular-nums">
+              {surgeEnabled ? "186 ms" : "412 ms"}
+            </dd>
+          </div>
+          <div className="rounded-xl border border-border bg-background p-3">
+            <dt className="text-xs text-muted">Region</dt>
+            <dd className="mt-1 font-semibold">WAW</dd>
+          </div>
+        </dl>
       </div>
-      <p className="mt-1 text-xs text-muted" aria-live="polite">
-        {express ? "Tomorrow · €9.00" : "3–5 business days · Free"}
-      </p>
-    </section>
+
+      <footer className="border-t border-border bg-background/60 p-4">
+        <label className="flex cursor-pointer items-center justify-between gap-4 rounded-xl border border-border bg-surface px-4 py-3">
+          <span>
+            <span className="block text-sm font-semibold">
+              Enable surge capacity
+            </span>
+            <span className="mt-0.5 block text-xs text-muted">
+              Reverse the meter when the pool returns to base load.
+            </span>
+          </span>
+
+          <input
+            type="checkbox"
+            className="size-4 shrink-0 accent-accent"
+            checked={surgeEnabled}
+            onChange={(event) => setSurgeEnabled(event.currentTarget.checked)}
+          />
+        </label>
+      </footer>
+    </article>
   );
 }
 ```
 
-<Registry slug="hooks/use-animation" title="useAnimation" />
+<Registry slug="hooks/use-animation" title="Adapt worker capacity state" />
 
-<Callout type="warning" title="Finishing and pausing have different outcomes">
-  `stopAnimation: true` settles the effect at its endpoint. Use [`useController()`](/hooks/use-controller) and call `pause()` to hold a frame.
+When surge capacity is enabled, `reverseAnimation` becomes `false` and the meter plays toward its full-capacity state. Disable surge mode and the same animation runs backward toward its base state.
+
+The hook does not own `surgeEnabled` and does not issue commands itself. **It only translates the state shape expected by older code into `MotionControllerProps`.**
+
+## Pass through an AnimationController
+
+The other overload accepts an `AnimationController`:
+
+```tsx
+const controller = useController();
+const playback = useAnimation(controller);
+```
+
+In this case:
+
+- `playback === controller` is `true`.
+- No wrapper controller is created.
+- No command is issued.
+- No React subscription is added.
+- The controller keeps the same registrations and command history.
+
+This overload is useful in shared or migration-oriented code where the input may already be a modern controller and you want to preserve the existing `useAnimation()` call site.
+
+<Callout type="tip" title="Skip the identity overload in new code">
+  If you already have an `AnimationController` and do not need compatibility with an older abstraction, pass it directly to the motion component. Calling `useAnimation(controller)` adds no behavior.
 </Callout>
+
+## Return behavior and precedence
+
+For flag input, a fresh plain object is created on each render. Do not depend on referential equality between calls.
+
+`isAnimationStopped` is evaluated before the component's scroll, trigger, or in-view driver. When it is `true`, the animation is finished immediately for that effect cycle and the other declarative drivers do not run.
+
+`reverse` only chooses direction; it does not start playback on its own. A driver still needs to activate the animation through `trigger`, in-view observation, or another supported declarative mechanism.
+
+<Callout type="warning" title="The input cannot be omitted">
+  There is no zero-argument overload. Pass either an `AnimationController` or a flags object such as `{}`. Calling the function with `undefined` is outside the public contract.
+</Callout>
+
+## When to use which API
+
+| Requirement | Prefer |
+| --- | --- |
+| Existing `stopAnimation` / `reverseAnimation` state | `useAnimation()` |
+| Button, pointer, keyboard, or workflow commands | [`useController()`](/hooks/use-controller/) |
+| Pause, seek, cancel, reset, or playback-rate control | [`useController()`](/hooks/use-controller/) |
+| Simple boolean trigger without legacy flag names | A declarative `controller={{ trigger }}` object |
+| Existing `AnimationController` with no compatibility requirement | Pass the controller directly |
+
+Because `useAnimation()` is exported from Motion Provider's client hook module, call it from a Client Component in frameworks that enforce React Server Component boundaries.
