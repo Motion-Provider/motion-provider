@@ -1,0 +1,34 @@
+---
+title: "useAnimationMixer"
+description: "useAnimationMixer combines animation modules into one definition for Motion."
+order: 440
+draft: false
+---
+
+useAnimationMixer combines animation modules into one definition for Motion.
+
+## Example
+
+The example merges opacity and translation into the same entrance. Set reverse to true to swap the merged initial and animate states.
+
+```tsx
+"use client";
+
+import { Motion, useAnimationMixer } from "motion-provider";
+
+const modules = [
+  { initial: { opacity: 0 }, animate: { opacity: 1 } },
+  { initial: { transform: "translateY(16px)" }, animate: { transform: "translateY(0)" } },
+] as const;
+
+export default function Demo() {
+  const definition = useAnimationMixer({ animations: modules });
+  return <Motion definition={definition}>Mixed entrance</Motion>;
+}
+```
+
+<Registry slug="hooks/use-animation-mixer" title="useAnimationMixer" />
+
+<Callout type="note" title="Behavior">
+When modules supply the same property in one phase, the later module wins. Keep static definitions outside render to reuse the memoized result.
+</Callout>

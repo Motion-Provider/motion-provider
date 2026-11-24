@@ -1,0 +1,34 @@
+---
+title: "Registry overview"
+description: "A motion registry gives application components named access to shared animation props."
+order: 810
+draft: false
+---
+
+A motion registry gives application components named access to shared animation props.
+
+## Example
+
+Define a notice once and look it up where the notice renders. The registry keeps the component type and its props together in the configuration.
+
+```tsx
+"use client";
+
+import { MotionContainer, createMotionConfig, createMotionRegistry } from "motion-provider";
+
+const config = createMotionConfig({
+  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+});
+const registry = createMotionRegistry(config);
+
+export default function Demo() {
+  const props = registry.getAnimation("notice");
+  return <MotionContainer {...props}>Notice</MotionContainer>;
+}
+```
+
+<Registry slug="registry/overview" title="Registry overview" />
+
+<Callout type="note" title="Behavior">
+Registry instances are scoped to the configuration you pass. Two features can use the same key in separate registries.
+</Callout>

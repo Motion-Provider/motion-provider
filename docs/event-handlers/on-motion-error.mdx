@@ -1,0 +1,37 @@
+---
+title: "onMotionError"
+description: "onMotionError receives an Error for failures reported by the motion runtime."
+order: 620
+draft: false
+---
+
+onMotionError receives an Error for failures reported by the motion runtime.
+
+## Example
+
+Enable the invalid viewport threshold to exercise the observer error path. The callback displays the message while the component finishes the effect.
+
+```tsx
+"use client";
+
+import { MotionContainer } from "motion-provider";
+import { useState } from "react";
+
+export default function Demo() {
+  const [invalid, setInvalid] = useState(false);
+  const [message, setMessage] = useState("");
+  return (
+    <section>
+      <button type="button" onClick={() => setInvalid(true)}>Test invalid threshold</button>
+      <MotionContainer animation={{ mode: "fadeUp" }} controller={{ configView: { amount: invalid ? 2 : 0.5 } }} onMotionError={error => setMessage(error.message)}>Preview</MotionContainer>
+      <output>{message}</output>
+    </section>
+  );
+}
+```
+
+<Registry slug="event-handlers/on-motion-error" title="onMotionError" />
+
+<Callout type="note" title="Behavior">
+The callback handles reported playback and observer errors. React render errors still need their usual error boundary.
+</Callout>

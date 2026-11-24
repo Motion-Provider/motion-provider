@@ -1,0 +1,37 @@
+---
+title: "Button-driven playback"
+description: "Event handlers can issue playback commands directly without mirroring the animation clock in React state."
+order: 750
+draft: false
+---
+
+Event handlers can issue playback commands directly without mirroring the animation clock in React state.
+
+## Example
+
+Replay resets the target to its starting position before playing. Pause holds its current position.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export default function Demo() {
+  const controls = useController();
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => { controls.reset(); void controls.play(); }}>Replay</button>
+      <button type="button" onClick={() => controls.pause()}>Pause</button>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="controllers/button-driven-playback" title="Button-driven playback" />
+
+<Callout type="note" title="Behavior">
+Pass a function to onClick so playback starts when the user activates the button.
+</Callout>

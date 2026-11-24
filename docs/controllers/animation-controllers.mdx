@@ -1,0 +1,41 @@
+---
+title: "Animation controllers"
+description: "One controller can play, pause, reverse, reset, cancel, or finish its registered animations."
+order: 720
+draft: false
+---
+
+One controller can play, pause, reverse, reset, cancel, or finish its registered animations.
+
+## Example
+
+Play both labels, pause them midway, or finish them immediately. play() and reverse() return promises for the group’s results.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export default function Demo() {
+  const controls = useController();
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => controls.play()}>Play</button>
+      <button type="button" onClick={() => controls.pause()}>Pause</button>
+      <button type="button" onClick={() => controls.finish()}>Finish</button>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 1.1 }}>
+        Details
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="controllers/animation-controllers" title="Animation controllers" />
+
+<Callout type="note" title="Behavior">
+The controller registers mounted targets. A later registration receives the last stored command.
+</Callout>

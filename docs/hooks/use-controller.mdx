@@ -1,0 +1,37 @@
+---
+title: "useController"
+description: "useController creates one stable animation controller per mounted hook instance."
+order: 420
+draft: false
+---
+
+useController creates one stable animation controller per mounted hook instance.
+
+## Example
+
+The buttons below address the same registered target. A parent can also pass its controller to several children.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export default function Demo() {
+  const controls = useController();
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => controls.play()}>Play</button>
+      <button type="button" onClick={() => controls.reverse()}>Reverse</button>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="hooks/use-controller" title="useController" />
+
+<Callout type="note" title="Behavior">
+The optional stopAnimation and reverseAnimation flags seed the first command on mount. Later prop changes require an explicit command.
+</Callout>

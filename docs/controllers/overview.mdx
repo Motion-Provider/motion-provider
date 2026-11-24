@@ -1,0 +1,40 @@
+---
+title: "Controllers overview"
+description: "A controller coordinates playback across the motion components that receive it."
+order: 710
+draft: false
+---
+
+A controller coordinates playback across the motion components that receive it.
+
+## Example
+
+Play both labels together, then reverse them. Each label keeps its own duration.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export default function Demo() {
+  const controls = useController();
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => controls.play()}>Play</button>
+      <button type="button" onClick={() => controls.reverse()}>Reverse</button>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 1.1 }}>
+        Details
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="controllers/overview" title="Controllers overview" />
+
+<Callout type="note" title="Behavior">
+Passing a controller directly gives commands ownership of playback. Start the first animation explicitly.
+</Callout>

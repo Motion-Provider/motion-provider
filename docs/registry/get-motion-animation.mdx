@@ -1,0 +1,33 @@
+---
+title: "getAnimation"
+description: "getAnimation(config, key) retrieves the props for a named entry in an explicit configuration."
+order: 850
+draft: false
+---
+
+getAnimation(config, key) retrieves the props for a named entry in an explicit configuration.
+
+## Example
+
+Use the two-argument form for a one-off lookup. TypeScript infers the allowed keys from config.
+
+```tsx
+"use client";
+
+import { MotionContainer, createMotionConfig, getAnimation } from "motion-provider";
+
+const config = createMotionConfig({
+  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+});
+
+export default function Demo() {
+  const props = getAnimation(config, "notice");
+  return <MotionContainer {...props}>Notice</MotionContainer>;
+}
+```
+
+<Registry slug="registry/get-motion-animation" title="getAnimation" />
+
+<Callout type="note" title="Behavior">
+The return value is the props object. Render the component identified by the entry’s type and supply its children separately.
+</Callout>

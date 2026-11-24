@@ -1,0 +1,33 @@
+---
+title: "createMotionConfig"
+description: "createMotionConfig checks each entry against its selected motion component and preserves its literal key."
+order: 830
+draft: false
+---
+
+createMotionConfig checks each entry against its selected motion component and preserves its literal key.
+
+## Example
+
+Declare the component type alongside its props. Spread the notice props onto MotionContainer and supply children at the render site.
+
+```tsx
+"use client";
+
+import { MotionContainer, createMotionConfig } from "motion-provider";
+
+const config = createMotionConfig({
+  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+});
+
+export default function Demo() {
+  const props = config.notice.props;
+  return <MotionContainer {...props}>Notice</MotionContainer>;
+}
+```
+
+<Registry slug="registry/create-motion-config" title="createMotionConfig" />
+
+<Callout type="note" title="Behavior">
+The helper returns the supplied object. Define shared static configuration outside components so renders reuse it.
+</Callout>

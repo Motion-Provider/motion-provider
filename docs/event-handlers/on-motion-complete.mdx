@@ -1,0 +1,35 @@
+---
+title: "onMotionComplete"
+description: "onMotionComplete receives an animation result when the component reports completion."
+order: 610
+draft: false
+---
+
+onMotionComplete receives an animation result when the component reports completion.
+
+## Example
+
+The label displays the reported status. Use the result when follow-up work depends on the outcome.
+
+```tsx
+"use client";
+
+import { MotionContainer } from "motion-provider";
+import { useState } from "react";
+
+export default function Demo() {
+  const [status, setStatus] = useState("Waiting");
+  return (
+    <section>
+      <MotionContainer animation={{ mode: "fadeUp" }} onMotionComplete={result => setStatus(result.status)}>Preview</MotionContainer>
+      <output>{status}</output>
+    </section>
+  );
+}
+```
+
+<Registry slug="event-handlers/on-motion-complete" title="onMotionComplete" />
+
+<Callout type="note" title="Behavior">
+On MotionImage the completion callback waits until all tile handles are finished. Individual tile completions can occur earlier.
+</Callout>

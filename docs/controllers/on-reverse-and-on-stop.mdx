@@ -1,0 +1,38 @@
+---
+title: "onReverse and onStop"
+description: "onReverse toggles direction according to the last controller command. onStop finishes the registered animations immediately."
+order: 740
+draft: false
+---
+
+onReverse toggles direction according to the last controller command. onStop finishes the registered animations immediately.
+
+## Example
+
+Play the preview, toggle direction twice, then finish. After a reverse command, another onReverse calls play.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export default function Demo() {
+  const controls = useController();
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => controls.play()}>Play</button>
+      <button type="button" onClick={() => controls.onReverse()}>Toggle direction</button>
+      <button type="button" onClick={() => controls.onStop()}>Finish</button>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="controllers/on-reverse-and-on-stop" title="onReverse and onStop" />
+
+<Callout type="note" title="Behavior">
+Use pause() to hold the current frame. onStop() delegates to finish().
+</Callout>

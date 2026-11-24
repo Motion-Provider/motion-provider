@@ -1,0 +1,36 @@
+---
+title: "useAnimation"
+description: "useAnimation maps stopAnimation and reverseAnimation flags to declarative controller props."
+order: 430
+draft: false
+---
+
+useAnimation maps stopAnimation and reverseAnimation flags to declarative controller props.
+
+## Example
+
+Toggle the checkbox to change the direction of the triggered animation. An existing imperative controller can also pass through this hook unchanged.
+
+```tsx
+"use client";
+
+import { MotionContainer, useAnimation } from "motion-provider";
+import { useState } from "react";
+
+export default function Demo() {
+  const [backward, setBackward] = useState(false);
+  const flags = useAnimation({ reverseAnimation: backward });
+  return (
+    <section>
+      <label><input type="checkbox" checked={backward} onChange={e => setBackward(e.target.checked)} /> Reverse</label>
+      <MotionContainer controller={{ ...flags, trigger: true }} animation={{ mode: "slideUp" }}>Preview</MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="hooks/use-animation" title="useAnimation" />
+
+<Callout type="note" title="Behavior">
+stopAnimation maps to isAnimationStopped, which finishes the effect. Use a controller’s pause method to hold a frame.
+</Callout>

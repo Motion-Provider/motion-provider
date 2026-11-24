@@ -1,0 +1,34 @@
+---
+title: "createMotionRegistry"
+description: "createMotionRegistry binds a typed getAnimation method to one configuration object."
+order: 840
+draft: false
+---
+
+createMotionRegistry binds a typed getAnimation method to one configuration object.
+
+## Example
+
+Create the registry at module scope. Destructure its getter and use the notice key to retrieve the exact props for that entry.
+
+```tsx
+"use client";
+
+import { MotionContainer, createMotionConfig, createMotionRegistry } from "motion-provider";
+
+const config = createMotionConfig({
+  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+});
+const { getAnimation } = createMotionRegistry(config);
+
+export default function Demo() {
+  const props = getAnimation("notice");
+  return <MotionContainer {...props}>Notice</MotionContainer>;
+}
+```
+
+<Registry slug="registry/create-motion-registry" title="createMotionRegistry" />
+
+<Callout type="note" title="Behavior">
+A missing runtime key raises UNKNOWN_CONFIG_KEY. Validate external strings before treating them as configuration keys.
+</Callout>

@@ -1,0 +1,34 @@
+---
+title: "Extending a centralized animation system"
+description: "Shared configuration can supply animation defaults while each render site supplies its own content and overrides."
+order: 820
+draft: false
+---
+
+Shared configuration can supply animation defaults while each render site supplies its own content and overrides.
+
+## Example
+
+Bind a getter to the shared configuration. This notice keeps the shared preset and overrides its duration locally.
+
+```tsx
+"use client";
+
+import { MotionContainer, createMotionConfig, createMotionGetter } from "motion-provider";
+
+const config = createMotionConfig({
+  notice: { type: "MotionContainer", props: { animation: { mode: "fadeUp" } } },
+});
+const getProps = createMotionGetter(config);
+
+export default function Demo() {
+  const props = getProps("notice");
+  return <MotionContainer {...props} animation={{ ...props.animation, duration: 1 }}>Notice</MotionContainer>;
+}
+```
+
+<Registry slug="registry/cas-extended" title="Extending a centralized animation system" />
+
+<Callout type="note" title="Behavior">
+Spread the nested animation object before overriding duration so the preset mode survives the override.
+</Callout>

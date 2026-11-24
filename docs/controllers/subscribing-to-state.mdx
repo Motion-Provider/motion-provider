@@ -1,0 +1,40 @@
+---
+title: "Subscribing to controller state"
+description: "useSyncExternalStore connects React to the controller\u2019s command notifications."
+order: 730
+draft: false
+---
+
+useSyncExternalStore connects React to the controller’s command notifications.
+
+## Example
+
+Play or pause to update the displayed command. The subscription returns its own cleanup function.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+import { useSyncExternalStore } from "react";
+
+export default function Demo() {
+  const controls = useController();
+  const command = useSyncExternalStore(controls.subscribe, controls.getSnapshot, () => undefined);
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => controls.play()}>Play</button>
+      <button type="button" onClick={() => controls.pause()}>Pause</button>
+      <output>{command ?? "Ready"}</output>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="controllers/subscribing-to-state" title="Subscribing to controller state" />
+
+<Callout type="note" title="Behavior">
+getSnapshot() starts as undefined. It tracks the latest command, so natural completion does not change play to finished.
+</Callout>

@@ -1,0 +1,36 @@
+---
+title: "Hooks overview"
+description: "Motion Provider exposes hooks for playback commands, declarative playback flags, mixing definitions, and reading the system motion preference."
+order: 410
+draft: false
+---
+
+Motion Provider exposes hooks for playback commands, declarative playback flags, mixing definitions, and reading the system motion preference.
+
+## Example
+
+Use useController when a button should start an effect. Use useAnimation for state flags, useAnimationMixer for keyframes, and useReducedMotion for preference-aware UI.
+
+```tsx
+"use client";
+
+import { MotionContainer, useController } from "motion-provider";
+
+export default function Demo() {
+  const controls = useController();
+  return (
+    <section className="grid gap-3">
+      <button type="button" onClick={() => controls.play()}>Play</button>
+      <MotionContainer controller={controls} animation={{ mode: "slideUp", duration: 0.8 }}>
+        Preview
+      </MotionContainer>
+    </section>
+  );
+}
+```
+
+<Registry slug="hooks/overview" title="Hooks overview" />
+
+<Callout type="note" title="Behavior">
+A controller belongs to the component that calls the hook. Pass that same instance to each target that should respond.
+</Callout>

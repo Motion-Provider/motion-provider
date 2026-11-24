@@ -1,0 +1,29 @@
+---
+title: "useReducedMotion"
+description: "useReducedMotion reads the system preference and subscribes to changes while the component is mounted."
+order: 450
+draft: false
+---
+
+useReducedMotion reads the system preference and subscribes to changes while the component is mounted.
+
+## Example
+
+The status updates when the operating system or browser emulation changes its reduced-motion setting.
+
+```tsx
+"use client";
+
+import { useReducedMotion } from "motion-provider";
+
+export default function Demo() {
+  const reduce = useReducedMotion();
+  return <output>{reduce ? "Reduced motion requested" : "Standard motion"}</output>;
+}
+```
+
+<Registry slug="hooks/use-reduced-motion" title="useReducedMotion" />
+
+<Callout type="note" title="Behavior">
+The server snapshot is false. Keep essential content available during hydration regardless of the first value.
+</Callout>
