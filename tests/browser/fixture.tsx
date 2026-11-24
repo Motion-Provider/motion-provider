@@ -11,7 +11,6 @@ import {
   MotionImage,
   MotionLink,
   MotionText,
-  useAnimation,
   useController,
 } from "../../packages/motion-provider/dist/index.js";
 
@@ -30,7 +29,6 @@ const svg = (color: string) =>
 const images = [svg("red"), svg("blue")];
 function Suite({ name, revision = 0 }: { name: string; revision?: number }) {
   const hookController = useController();
-  useAnimation(hookController);
   const common = {
     onMotionError: (error: Error) => metrics.errors.push(error.message),
   };
