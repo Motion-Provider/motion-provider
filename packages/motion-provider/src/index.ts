@@ -12,8 +12,6 @@ export {
 } from "./config.js";
 export { useReducedMotion } from "./hooks/use-reduced-motion.js";
 export {
-  useAnimation,
-  useAnimationControl,
   useAnimationMixer,
   useController,
 } from "./hooks.js";
