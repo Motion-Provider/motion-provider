@@ -44,15 +44,17 @@ const Item = memo(function Item({
       onMotionComplete={handleMotionComplete}
     >
       <Card
-        className="flex-row items-center justify-between bg-transparent hover:bg-accent/10 py-1"
+        className="flex-row items-center justify-between gap-2 bg-transparent hover:bg-accent/10 py-1"
         variant="tertiary"
       >
-        <Label>
+        <Label className="min-w-0 truncate">
           {item.first_name}{" "}
           <span className="text-accent">{item.last_name}</span>
         </Label>
 
-        <Description className="max-w-2xs truncate">{item.email}</Description>
+        <Description className="min-w-0 max-w-1/2 truncate">
+          {item.email}
+        </Description>
       </Card>
     </MotionContainer>
   );
@@ -101,22 +103,25 @@ export default function AnimatingLists5() {
   const hasVisibleItems = items.some((item) => !item.isExiting);
 
   return (
-    <div className="dark my-4 flex w-84 flex-col gap-3 relative h-60 overflow-y-scroll">
+    <div className="dark my-4 flex h-60 w-84 min-w-0 max-w-full flex-col gap-3 px-2">
       <SearchField
         aria-label="Search contacts"
         value={query}
         onChange={setQuery}
         onClear={() => setQuery("")}
-        className="sticky top-0 z-10 w-full focus:ring-0"
+        className="shrink-0 mt-3"
       >
-        <SearchField.Group>
+        <SearchField.Group className="focus-within:border-transparent! focus-within:ring-0!">
           <SearchField.SearchIcon />
-          <SearchField.Input placeholder="Search by name or email..." />
+          <SearchField.Input
+            className="min-w-0"
+            placeholder="Search by name or email..."
+          />
           <SearchField.ClearButton />
         </SearchField.Group>
       </SearchField>
 
-      <div className="flex flex-col gap-2 ">
+      <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
         {items.map(({ item, isExiting }) => (
           <Item
             item={item}
@@ -127,7 +132,7 @@ export default function AnimatingLists5() {
         ))}
 
         {!hasVisibleItems && (
-          <span className="py-4 mt-18 text-center absolute -translate-x-1/2 -translate-y-1/2 left-1/2 right-1/2 w-full">
+          <span className="my-auto py-4 text-center">
             No matching contacts found.
           </span>
         )}

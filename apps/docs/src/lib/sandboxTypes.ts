@@ -6,6 +6,7 @@ export type Slug = string;
 export interface WrapperProps {
   title?: string;
   slug: Slug;
+  withButton?: boolean;
 }
 
 export interface ModuleProps {

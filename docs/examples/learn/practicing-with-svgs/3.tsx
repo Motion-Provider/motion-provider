@@ -86,10 +86,10 @@ export default function Component({ controller }: ModuleProps) {
   );
 
   return (
-    <>
-      <div className="flex absolute bottom-3 left-3 w-full h-fit items-end md:justify-start justify-center gap-1">
+    <div className="flex w-full min-w-0 flex-col items-center gap-2 p-3">
+      <div className="order-last grid w-full grid-cols-[repeat(2,minmax(0,8rem))] items-end justify-start gap-1">
         <Select
-          className="w-36 dark"
+          className="w-full min-w-0 dark"
           placeholder="Select delay"
           value={selectedDelay}
           onChange={(v) => setSelectedDelay(v)}
@@ -111,7 +111,7 @@ export default function Component({ controller }: ModuleProps) {
           </Select.Popover>
         </Select>
         <Select
-          className="w-36 dark text-xs"
+          className="w-full min-w-0 dark text-xs"
           placeholder="Select delay"
           value={selectedTransition}
           onChange={(v) => setSelectedTransition(v)}
@@ -137,7 +137,7 @@ export default function Component({ controller }: ModuleProps) {
         width={600}
         height={600}
         viewBox="0 0 600 600"
-        className="size-60 max-w-full mt-4"
+        className="aspect-square h-auto w-56 max-w-full"
         role="img"
         aria-labelledby="path-drawing-title"
       >
@@ -171,6 +171,6 @@ export default function Component({ controller }: ModuleProps) {
           ))}
         </MotionChain>
       </svg>
-    </>
+    </div>
   );
 }

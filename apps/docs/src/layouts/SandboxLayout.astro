@@ -1,31 +1,52 @@
 ---
+import { LucideBadgeCheck } from "@lucide/astro";
 import type { WrapperProps } from "@/lib/sandboxTypes";
 
-type Props = Pick<WrapperProps, "title">;
+type Props = Pick<WrapperProps, "title" | "withButton"> & { inGrid?: boolean };
 
-const { title } = Astro.props;
+const { title, withButton, inGrid } = Astro.props;
 ---
 
-<section aria-label={title} class="my-8 bg-surface/20 rounded-2xl relative overflow-hidden border border-border/50">
-    {title && <span class="absolute text-xs z-50 top-3 left-3 tracking-tighter text-muted max-w-3xs truncate">{title}</span>}
-    <div
-      class="absolute inset-0 h-full w-full overflow-hidden [--pattern-scales:var(--color-white)]/10 -z-10"
-      style={
-        {
-          "--scales-size": "8px",
-          "--scales-line-width": "1px",
-          "--scales-angle": "315deg",
-          "--pattern-scales": "var(--color-surface-secondary)",
-          "opacity": "1",
-        } as React.CSSProperties
-      }
-    >
+<section
+  aria-label={title}
+  class:list={[
+    "bg-surface/20 rounded-2xl relative isolate overflow-hidden border border-border/50",
+    inGrid ? "h-full min-w-0 pt-14" : "my-8",
+  ]}
+>
+  {
+    title && (
       <div
-        class="h-full w-full bg-[repeating-linear-gradient(var(--scales-angle),var(--pattern-scales)_0,var(--pattern-scales)_var(--scales-line-width),transparent_0,transparent_50%)]"
-        style={{
-          backgroundSize: "var(--scales-size) var(--scales-size)",
-        }}
-      />
-    </div>
-    <slot />
+        class:list={[
+          "absolute top-4 left-4 z-50 text-xs tracking-tighter text-muted flex items-center gap-1",
+          inGrid
+            ? ["line-clamp-2", withButton ? "right-36" : "right-3"]
+            : "max-w-3xs truncate",
+        ]}
+      >
+        <LucideBadgeCheck class="size-4 shrink-0 text-blue-400 fill-blue-400/20" />
+        <span>{title}</span>
+      </div>
+    )
+  }
+  <div
+    class="absolute inset-0 h-full w-full overflow-hidden [--pattern-scales:var(--color-white)]/10 -z-10"
+    style={
+      {
+        "--scales-size": "8px",
+        "--scales-line-width": "1px",
+        "--scales-angle": "315deg",
+        "--pattern-scales": "var(--color-surface-secondary)",
+        opacity: "1",
+      } as React.CSSProperties
+    }
+  >
+    <div
+      class="h-full w-full bg-[repeating-linear-gradient(var(--scales-angle),var(--pattern-scales)_0,var(--pattern-scales)_var(--scales-line-width),transparent_0,transparent_50%)]"
+      style={{
+        backgroundSize: "var(--scales-size) var(--scales-size)",
+      }}
+    />
+  </div>
+  <slot />
 </section>

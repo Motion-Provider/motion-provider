@@ -6,17 +6,17 @@ interface Props extends FrameworkItem {}
 const { desc, href, icon: Icon, title } = Astro.props;
 ---
 
-    <li class="a p-3 tracking-tight group relative rounded-2xl hover:bg-surface transition-colors duration-150 shadow-2xl flex md:justify-start justify-between w-1/2 h-auto gap-3">
-        <Icon 
-            class="size-9 shrink-0 text-transparent "
-            stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"
-            fill="var(--color-foreground)"
-        />
-        <div class="flex flex-col items-start">
-            <span class="font-semibold">{title}</span> 
-            <p class="pt-1 text-muted tracking-tighter text-xs">
-                {desc}
-            </p>  
-        </div>  
-        <a href={href} class="absolute inset-0 size-full" />
-    </li> 
+<li class="a p-3 tracking-tight group relative rounded-2xl hover:bg-surface transition-colors duration-150 shadow-2xl flex md:justify-start justify-between w-1/2 h-auto gap-3">
+    <Icon 
+        class="size-9 shrink-0 text-transparent "
+        stroke-width="0.5" stroke-linecap="round" stroke-linejoin="round"
+        fill="var(--color-foreground)"
+    />
+    <div class="flex flex-col items-start">
+        <span class="font-semibold">{title}</span> 
+        <p class="pt-1 text-muted tracking-tighter text-xs">
+            {desc}
+        </p>  
+    </div>  
+    <a href={href} aria-label={title} class="absolute inset-0 size-full" />
+</li> 
