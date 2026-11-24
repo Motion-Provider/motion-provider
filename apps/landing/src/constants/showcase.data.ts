@@ -46,11 +46,11 @@ export default [
   MotionText, 
   MotionContainer, 
   MotionLink, 
-  useAnimationControl,
+  useController,
 } from "motion-provider";
 
 export default function Page() {
-  const controls = useAnimationControl();
+  const controls = useController();
 
   return (
     <>
