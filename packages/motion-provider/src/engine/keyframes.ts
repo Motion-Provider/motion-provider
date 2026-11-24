@@ -24,19 +24,48 @@ const lengths =
 const cssValue = (key: string, value: MotionValue): MotionValue =>
   typeof value === "number" && lengths.test(key) ? `${value}px` : value;
 
-function values(value: MotionState[string]): readonly MotionValue[] {
-  const out = Array.isArray(value) ? value : [value];
+type KeyframeTrack = readonly [MotionValue, ...MotionValue[]];
+
+function validateTrack(
+  track: readonly unknown[],
+): asserts track is KeyframeTrack {
+  const message = "Keyframes must contain finite numbers or CSS strings.";
+  invariant(track.length > 0, "INVALID_KEYFRAMES", message);
+  for (const value of track) {
+    invariant(
+      typeof value === "string" ||
+        (typeof value === "number" && Number.isFinite(value)),
+      "INVALID_KEYFRAMES",
+      message,
+    );
+  }
+}
+
+function compileTrack(
+  from: MotionState[string] | undefined,
+  to: MotionState[string] | undefined,
+): KeyframeTrack {
+  // Array targets describe the whole track and override the initial state.
+  if (Array.isArray(to)) {
+    validateTrack(to);
+    return to.length === 1 ? [to[0], to[0]] : to;
+  }
+
   invariant(
-    out.length &&
-      out.every(
-        (v) =>
-          typeof v === "string" ||
-          (typeof v === "number" && Number.isFinite(v)),
-      ),
-    "INVALID_KEYFRAMES",
-    "Keyframes must contain finite numbers or CSS strings.",
+    from !== undefined || to !== undefined,
+    "UNDEFINED_KEYFRAME",
+    "Animation state cannot be 'undefined'",
   );
-  return out as readonly MotionValue[];
+
+  if (Array.isArray(from)) {
+    validateTrack(from);
+    from = from[0];
+  }
+
+  const first = from === undefined ? to : from;
+  const track = [first, to === undefined ? first : to];
+  validateTrack(track);
+  return track;
 }
 
 /** Last mode wins for duplicate properties, matching the attached source's mixing semantics. */
@@ -117,71 +146,66 @@ export function compileAnimation(module: AnimationModule): CompiledAnimation {
     "Provide initial and animate objects.",
   );
 
-  const tracks: Record<string, readonly MotionValue[]> = {};
+  const tracks = new Map<string, readonly MotionValue[]>();
 
   for (const key of new Set([
     ...Object.keys(module.initial),
     ...Object.keys(module.animate),
   ])) {
-    const [from, to] = [module.initial[key], module.animate[key]];
-
-    if (typeof from === "undefined" && typeof to === "undefined") {
-      invariant(
-        false,
-        "UNDEFINED_KEYFRAME",
-        "Animation state cannot be 'undefined'",
-      );
-    }
-
-    // Array targets explicitly describe the whole track, as in the original presets.
-    tracks[key] =
-      to === undefined
-        ? [values(from as MotionValue)[0]!, values(from!)[0]!]
-        : Array.isArray(to)
-          ? values(to).length === 1
-            ? [values(to)[0]!, values(to)[0]!]
-            : values(to)!
-          : [
-              from === undefined ? (to as MotionValue) : values(from)[0]!,
-              to as MotionValue,
-            ];
+    tracks.set(key, compileTrack(module.initial[key], module.animate[key]));
   }
 
   let transformOffsets: number[] | undefined;
-  const aliasKeys = Object.keys(transforms).filter((key) => key in tracks);
-
-  if (aliasKeys.length && !tracks.transform) {
+  if (!tracks.has("transform")) {
+    const aliases: {
+      fn: string;
+      unit: string;
+      track: readonly MotionValue[];
+    }[] = [];
     const offsets = new Set([0, 1]);
 
-    for (const key of aliasKeys)
-      tracks[key]!.forEach((_, i, a) => {
-        offsets.add(a.length > 1 ? i / (a.length - 1) : 0);
+    for (const [key, [fn, unit]] of Object.entries(transforms)) {
+      const track = tracks.get(key);
+      if (!track) continue;
+
+      aliases.push({ fn, unit, track });
+      track.forEach((_, index) => {
+        offsets.add(index / (track.length - 1));
       });
+    }
 
-    const positions = [...offsets].sort((a, b) => a - b);
-    const transformValues = positions.map((p) =>
-      aliasKeys
-        .map((key) => {
-          const [fn, unit] = transforms[key]!;
-          return `${fn}(${interpolate(tracks[key]!, p, unit)})`;
-        })
-        .join(" "),
-    );
+    if (aliases.length) {
+      transformOffsets = [...offsets].sort((a, b) => a - b);
+      const transformValues = transformOffsets.map((progress) =>
+        aliases
+          .map(
+            ({ fn, unit, track }) =>
+              `${fn}(${interpolate(track, progress, unit)})`,
+          )
+          .join(" "),
+      );
 
-    tracks.transform = transformValues;
-    transformOffsets = positions;
+      tracks.set("transform", transformValues);
+    }
   }
 
   const frames: PropertyIndexedKeyframes = {},
     initial: Record<string, MotionValue> = {},
     final: Record<string, MotionValue> = {};
 
-  for (const [key, track] of Object.entries(tracks)) {
-    if (key in transforms) continue;
+  for (const [key, track] of tracks) {
+    if (Object.hasOwn(transforms, key)) continue;
     const normalized = track.map((v) => cssValue(key, v));
+    const first = normalized[0];
+    const last = normalized.at(-1);
+    invariant(
+      first !== undefined && last !== undefined,
+      "UNDEFINED_KEYFRAME",
+      "Undefined keyframe.",
+    );
     frames[key] = normalized.map(String);
-    initial[key] = normalized[0]!;
-    final[key] = normalized.at(-1)!;
+    initial[key] = first;
+    final[key] = last;
   }
 
   return {

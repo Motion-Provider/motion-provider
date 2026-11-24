@@ -1,22 +1,42 @@
 ---
-import { LucideArrowUpRight } from "@lucide/astro";
+import {
+  LucideAnchor,
+  LucideArrowUpRight,
+  LucideBellRing,
+  LucideBookOpen,
+  LucideLibrary,
+  LucideSlidersHorizontal,
+} from "@lucide/astro";
 import { WordmarkImage } from "@motion/ui";
+import DiscoverCard from "@/components/DiscoverCard.astro";
 import ExploreCard from "@/components/ExploreCard.astro";
 import FrameworkCard from "@/components/FrameworkCard.astro";
 import Registry from "@/components/Registry.astro";
 import exploreData from "@/data/explore.data";
 import frameworksData from "@/data/frameworks.data";
-import learnData from "@/data/learnCards.data";
+import learnItems from "@/data/learnCards.data";
 import DocLayout from "@/layouts/DocLayout.astro";
 import { cn } from "@/lib/cn";
 import { buildIndex, getDocs } from "@/lib/docs";
 
 const index = buildIndex(await getDocs(), "docs");
 
+const discoverIcons: Partial<Record<string, typeof LucideBookOpen>> = {
+  hooks: LucideAnchor,
+  "event-handlers": LucideBellRing,
+  controllers: LucideSlidersHorizontal,
+  registry: LucideLibrary,
+};
+
 const sections = index.nav.flatMap((group) => {
   const first = group.items[0];
   return group.label && first
-    ? [{ label: group.label, href: first.href, count: group.items.length }]
+    ? [{
+        label: group.label,
+        href: first.href,
+        count: group.items.length,
+        icon: discoverIcons[group.key] ?? LucideBookOpen,
+      }]
     : [];
 });
 ---
@@ -70,16 +90,16 @@ const sections = index.nav.flatMap((group) => {
     >
       <h2 id="learn-title" class="text-muted text-xs font-semibold uppercase tracking-wide">practice with real world use cases</h2>
       <ul aria-labelledby="learn-title" class="mt-4 grid grid-cols-1 gap-3 @min-[40rem]:grid-cols-2">
-        {learnData.map((item) => (
-          <li class="min-w-0 relative">
-            <a href={item.href} aria-label={item.title}>
-              <button class={cn("absolute right-4 cursor-pointer hover:text-foreground text-muted z-50",
+        {learnItems.map((item) => (
+          <li class:list={["min-w-0 relative", item.slug === "cas-4" && "@min-[40rem]:col-span-2"]}>
+            {item.href && (
+              <a href={item.href} aria-label={item.title} class={cn("absolute right-4 cursor-pointer hover:text-foreground text-muted z-50",
                 item?.withButton ? "bottom-4" : "top-4"
               )}>
                 <LucideArrowUpRight class="size-5"/>
-              </button>
-            </a>
-            <Registry {...item} slug={`learn/${item.slug}`} inGrid />
+              </a>
+            )}
+            <Registry {...item} inGrid />
           </li>
         ))}
       </ul>
@@ -94,20 +114,7 @@ const sections = index.nav.flatMap((group) => {
             Discover
           </h2>
           <ul class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-            {sections.map((section) => (
-              <li>
-                <a
-                  href={section.href}
-                  class="block h-full rounded-lg border border-border bg-surface p-5 transition-colors hover:border-accent"
-                  data-astro-prefetch
-                >
-                  <span class="block font-medium">{section.label}</span>
-                  <span class="mt-1 block text-sm text-muted">
-                    {section.count} {section.count === 1 ? "page" : "pages"}
-                  </span>
-                </a>
-              </li>
-            ))}
+            {sections.map((section) => <DiscoverCard {...section} />)}
           </ul>
         </section>
       )

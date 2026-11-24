@@ -1,0 +1,600 @@
+---
+title: "Designing an Option Wheel"
+description: "Learn how to combine scroll-driven animations, mathematical transformations and custom animation modules to implement an interactive curved option picker."
+order: 40
+draft: false
+---
+
+In this chapter, we're going to explore how a relatively sophisticated
+animation can be achieved by combining **scroll-driven animations** with
+mathematically derived animation states.
+
+Instead of working with conventional entry and exit animations, we're
+going to derive the appearance of each element from its position
+relative to a central selection point.
+
+
+Inspired by the [Option Wheel](https://www.reactbits.dev/components/option-wheel)
+from React Bits.
+
+Take a look at the final result: 
+
+<Registry
+  slug="learn/designing-option-wheel/option-wheel"
+  title="Option Wheel • Scroll/drag/arrow keys"
+/>
+
+At first glance, the component might look like a sophisticated
+three-dimensional animation. Surprisingly, the illusion is created
+through a combination of relatively simple CSS properties.
+
+<Callout type="note" title="What are we going to utilize?">
+  Throughout this chapter, Motion Provider will be responsible for
+  interpolating animation properties, whereas React and native browser
+  APIs will handle user interactions and selection state.
+
+  No additional animation library is required.
+</Callout>
+
+## Breaking Down The Animation
+
+Let's start by examining the final result and work our way backwards.
+
+There are five visual characteristics that distinguish this component
+from a conventional scrollable list:
+
+| Property | Responsibility |
+| --- | --- |
+| `translateX` | Curves the horizontal position of each item |
+| `translateY` | Adjusts the vertical spacing along the curve |
+| `rotate` | Tilts items away from the selection point |
+| `scale` | Makes distant items appear smaller |
+| `opacity` | Gradually hides distant items |
+| `filter: blur()` | Reinforces the illusion of depth |
+
+All of these properties depend on a single value — the **relative
+distance** of an item from the current selection position.
+
+When this distance approaches `0`, the item becomes fully visible,
+straight and sharp.
+
+As the distance increases in either direction, the item progressively
+becomes smaller, blurrier, less visible and more tilted.
+
+## Synchronizing Animations With Scroll
+
+One might initially consider updating the animation definition whenever
+a scroll event occurs.
+
+Although this approach could work, it would require repeatedly
+constructing animation definitions and potentially recreating animations
+throughout the interaction.
+
+Instead, we can take advantage of Motion Provider's built-in
+`controller.scroll` API.
+
+```tsx
+<Motion
+  elementType="span"
+  definition={DEFINITIONS[index]}
+  timing={{
+    duration: 1,
+    easing: "linear",
+    fill: "both",
+  }}
+  controller={{
+    scroll: {
+      source: scrollRoot,
+      axis: "y",
+      mode: "document",
+    },
+  }}
+  onMotionError={() => setAnimationFailed(true)}
+  className="pointer-events-none block origin-left whitespace-nowrap text-[clamp(1.75rem,7vw,2.5rem)] font-medium tracking-tight"
+>
+  {option}
+</Motion>
+```
+
+By passing the scrollable element as `scroll.source`, the animation is
+synchronized with its scroll position rather than advancing
+independently over time.
+
+Notice that we're utilizing `mode: "document"` instead of
+`mode: "view"`.
+
+| Scroll mode | Progress is derived from |
+| --- | --- |
+| `view` | The position of an element relative to its viewport |
+| `document` | The overall scrollable range of the scroll source |
+
+Since every item needs to respond to the same selection position,
+`document` mode is particularly useful in this scenario.
+
+<Callout type="tip" title="A shared source of progress">
+  Although each item has its own animation definition, all of them
+  derive their progress from the same scroll container.
+
+  This enables synchronized animation without manually updating every
+  item's animation on each scroll event.
+</Callout>
+
+### Why Linear Easing?
+
+The animation does not represent an ordinary time-driven transition.
+
+The progress of its timeline represents the physical scroll position.
+
+Therefore, applying a non-linear easing function could introduce a
+discrepancy between the position of an item and its visual state.
+
+By using `easing: "linear"`, we preserve the relationship between the
+scroll position and the generated keyframes.
+
+## Constructing The Animation Timeline
+
+Now that we know how to synchronize the animations, let's examine what
+we're actually synchronizing.
+
+Motion Provider allows us to define multiple keyframes for an
+individual animation property by passing an array of values.
+
+For instance, the following animation gradually reveals and subsequently
+hides an element.
+
+```tsx
+const definition = {
+  initial: {
+    opacity: 0.2,
+    filter: "blur(4px)",
+  },
+  animate: {
+    opacity: [0.2, 1, 0.2],
+    filter: [
+      "blur(4px)",
+      "blur(0px)",
+      "blur(4px)",
+    ],
+  },
+} satisfies AnimationModule;
+```
+
+Rather than describing only a starting and ending appearance,
+we're describing intermediate states as well.
+
+The element is fully visible and sharp halfway through the timeline,
+while both endpoints remain blurred and partially visible.
+
+We can apply the same concept to our option wheel by generating
+keyframes mathematically.
+
+```tsx
+function getWheelDefinition(index: number): AnimationModule {
+  const frames = Array.from(
+    { length: LAST_INDEX * SAMPLES + 1 },
+    (_, frame) => {
+      const position = frame / SAMPLES;
+
+      return getWheelState(index - position);
+    },
+  );
+
+  return {
+    initial: getWheelState(index),
+    animate: {
+      transform: frames.map((frame) => frame.transform),
+      opacity: frames.map((frame) => frame.opacity),
+      filter: frames.map((frame) => frame.filter),
+    },
+  };
+}
+```
+
+Each frame represents the appearance of an item at a particular
+position throughout the scrollable range.
+
+Consider a list containing five items.
+
+For the third item, its relative distance changes throughout the
+timeline as follows:
+
+| Scroll position | Relative distance | Visual state |
+| --- | --- | --- |
+| `0` | `2` | Blurred |
+| `1` | `1` | Approaching selection |
+| `2` | `0` | Selected |
+| `3` | `-1` | Leaving selection |
+| `4` | `-2` | Blurred |
+
+Instead of generating only one keyframe per item, we're generating
+eight intermediate intervals per scroll step using `SAMPLES`.
+
+By doing so, we approximate the mathematical curves more accurately
+while leaving the interpolation between keyframes to Motion Provider.
+
+<Callout type="warning" title="Avoid recreating animation definitions">
+  The animation definitions depend on the static collection of options,
+  not on the currently selected index.
+
+  Generate them outside the component whenever possible. For a dynamic
+  collection, consider memoizing the generated definitions according
+  to the collection's actual dependencies.
+</Callout>
+
+```tsx
+const DEFINITIONS = OPTIONS.map((_, index) =>
+  getWheelDefinition(index),
+);
+```
+
+This is one of the most important distinctions between
+**state-driven animation** and **progress-driven animation**.
+
+We're not constructing a new animation on every interaction.
+We're navigating through an existing animation timeline.
+
+## Deriving The Visual Properties
+
+Let's take another step backwards and examine how we obtain the
+appearance of an individual item.
+
+The entire animation can be derived from the following relationship:
+
+```tsx
+const distance = index - position;
+```
+
+Here, `index` represents the static index of an item, whereas
+`position` represents the current fractional scroll position.
+
+Consider that we're currently positioned halfway between the third
+and fourth items.
+
+```tsx
+const position = 2.5;
+
+const distances = [0, 1, 2, 3, 4].map(
+  (index) => index - position,
+);
+
+// [-2.5, -1.5, -0.5, 0.5, 1.5]
+```
+
+Unlike the selected index, this value is not necessarily an integer.
+
+This is what allows intermediate visual states to exist between
+two selections.
+
+### Curving The Position
+
+To make the items follow a curved trajectory, we're going to utilize
+the `Math.sin()` and `Math.cos()` functions.
+
+```tsx
+const depth = Math.abs(distance);
+const angle = Math.min(3.5, depth) * 0.36;
+
+const x = -(1 - Math.cos(angle)) * 100;
+const y =
+  Math.sign(distance) * Math.sin(angle) * 180 -
+  distance * STEP;
+```
+
+The cosine function progressively shifts distant items horizontally
+away from the central selection point.
+
+The sine function adjusts their vertical positions to resemble an arc.
+
+Notice that we're subtracting `distance * STEP` from the vertical
+translation.
+
+Since the items already move vertically through native scrolling,
+this subtraction compensates for their original linear displacement.
+
+Otherwise, we would effectively apply vertical movement twice.
+
+<Callout type="note" title="An illusion of three-dimensional space">
+  We're not constructing a three-dimensional wheel using WebGL or
+  CSS perspective.
+
+  The combination of curved translation, rotation, scaling and
+  progressive blurring provides a visually similar effect using
+  ordinary DOM elements.
+</Callout>
+
+### Introducing Rotation And Scale
+
+The next step is to rotate each item according to its distance from
+the selected position.
+
+```tsx
+const rotate = Math.max(-32, Math.min(32, distance * 9));
+const scale = Math.max(0.78, 1 - depth * 0.055);
+```
+
+Items above the selection point rotate negatively, while items
+below rotate positively.
+
+Scale, on the other hand, depends on the absolute distance because
+items in both directions should progressively become smaller.
+
+### Introducing Blur And Opacity
+
+We could derive opacity from a linear relationship, but doing so
+would make the disappearance of distant items rather abrupt.
+
+Instead, we're going to utilize exponential decay.
+
+```tsx
+const opacity = Math.exp(-depth * 0.95);
+const blur = Math.min(12, 1.4 * depth ** 1.4);
+```
+
+The opacity rapidly decreases as the item moves away from the
+selection point, whereas the blur progressively increases.
+
+| Absolute distance | Opacity | Blur |
+| --- | --- | --- |
+| `0` | `100%` | `0px` |
+| `1` | `38.7%` | `1.4px` |
+| `2` | `15%` | `3.7px` |
+| `3` | `5.8%` | `6.5px` |
+
+These two properties contribute significantly to the illusion of depth.
+
+<Callout type="tip" title="Experimenting with the mathematical curves">
+  Try changing the coefficient `0.95` inside `Math.exp()`.
+
+  A smaller value keeps distant items visible for longer, whereas a
+  larger value concentrates visibility around the selected item.
+
+  The blur coefficient can be adjusted independently.
+</Callout>
+
+### Combining The Properties
+
+Once we've established the mathematical relationships, we can combine
+them inside a single function.
+
+```tsx
+function getWheelState(distance: number) {
+  const depth = Math.abs(distance);
+  const angle = Math.min(3.5, depth) * 0.36;
+
+  const x = -(1 - Math.cos(angle)) * 100;
+  const y =
+    Math.sign(distance) * Math.sin(angle) * 180 -
+    distance * STEP;
+
+  const rotate = Math.max(-32, Math.min(32, distance * 9));
+  const scale = Math.max(0.78, 1 - depth * 0.055);
+  const opacity = Math.exp(-depth * 0.95);
+  const blur = Math.min(12, 1.4 * depth ** 1.4);
+
+  return {
+    transform: `translate(${x}px, ${y}px) rotate(${rotate}deg) scale(${scale})`,
+    opacity,
+    filter: `blur(${blur}px)`,
+  };
+}
+```
+
+The function itself is entirely framework-independent.
+
+Given a particular distance, it always returns the corresponding
+visual state without modifying the DOM or scheduling any animations.
+
+Motion Provider takes responsibility for interpolating these
+generated states.
+
+## Establishing The Scrollable Baseline
+
+Now that we've broken down the animation layer, let's take a look
+at the underlying layout.
+
+The baseline is essentially a conventional scrollable list.
+
+What distinguishes it is the presence of vertical spacing before
+the first item and after the last item, allowing every item to
+reach the central selection point.
+
+```tsx
+const STEP = 60;
+const HEIGHT = 288;
+```
+
+The required spacing can be calculated by subtracting the height
+of an individual item from the viewport height and dividing the
+remaining space equally.
+
+```tsx
+const padding = (HEIGHT - STEP) / 2;
+```
+
+This gives us `114px` of spacing at both ends.
+
+We can then introduce native CSS scroll snapping using Tailwind CSS.
+
+```tsx
+<div
+  style={{ height: HEIGHT }}
+  className="snap-y snap-mandatory overflow-y-auto"
+>
+  <div style={{ paddingBlock: (HEIGHT - STEP) / 2 }}>
+    {OPTIONS.map(({ name, Icon }) => (
+      <div
+        key={name}
+        style={{ height: STEP }}
+        className="flex snap-center items-center gap-3 pl-12"
+      >
+        <Icon aria-hidden="true" className="size-[0.75em] shrink-0" />
+        {name}
+      </div>
+    ))}
+  </div>
+</div>
+```
+
+Here, `snap-center` ensures that each item can settle at the center
+of the scrollable viewport.
+
+<Callout type="warning" title="Keep layout and animation separate">
+  Apply the animation to an inner element instead of the element
+  responsible for scroll snapping.
+
+  The outer element defines the stable layout and selection position,
+  whereas the inner `Motion` element receives visual transformations.
+
+  This prevents the curved appearance from interfering with the
+  underlying scroll geometry.
+</Callout>
+
+## Introducing User Interactions
+
+Since our animation timeline is synchronized with native scrolling,
+we don't need to implement a separate animation mechanism for each
+interaction.
+
+Every interaction ultimately modifies the same scroll position.
+
+### Selecting An Item
+
+We can determine the selected item by dividing the current scroll
+offset by the height of an individual item.
+
+```tsx
+function handleScroll() {
+  if (!scrollRoot) return;
+
+  const position = scrollRoot.scrollTop / STEP;
+
+  setSelected(clampIndex(Math.round(position)));
+
+  if (
+    destination.current !== null &&
+    Math.abs(position - destination.current) < 0.01
+  ) {
+    destination.current = null;
+  }
+}
+```
+
+Notice the distinction between these two values:
+
+- The fractional scroll position drives the animation.
+- The rounded position determines the selected option.
+
+We don't need to store the fractional scroll position in React state
+because Motion Provider already tracks the scroll source.
+
+### Programmatic Navigation
+
+Clicking an item or navigating with the keyboard should bring the
+corresponding item into the central selection position.
+
+```tsx
+function scrollToIndex(index: number) {
+  const next = clampIndex(index);
+
+  destination.current = next;
+
+  scrollRoot?.scrollTo({
+    top: next * STEP,
+    behavior: reducedMotion ? "auto" : "smooth",
+  });
+}
+```
+
+By utilizing the native `scrollTo()` API, we're indirectly controlling
+the progress of every animation bound to the scroll container.
+
+The same function can be reused for click and keyboard interactions.
+
+### Dragging The Wheel
+
+Touch-based dragging is already supported by native scrolling.
+
+For desktop users, however, we can introduce mouse dragging by
+capturing the initial pointer position and scroll offset.
+
+The essential relationship is relatively straightforward.
+
+```tsx
+const delta = current.startY - event.clientY;
+
+event.currentTarget.scrollTop = current.startTop + delta;
+```
+
+While dragging, scroll snapping is temporarily disabled to prevent
+the browser from repeatedly forcing the list into a snapped position.
+
+Once the pointer is released, we restore scroll snapping and navigate
+to the nearest item.
+
+<Callout type="tip" title="No gesture animation engine required">
+  Motion Provider doesn't need to recognize the dragging gesture itself.
+
+  As long as the interaction modifies the scroll position, every
+  associated animation automatically responds through
+  `controller.scroll`.
+</Callout>
+
+## Considering Accessibility
+
+The component behaves as a single-selection listbox.
+
+Its accessible state is represented through `role="listbox"`,
+`role="option"`, `aria-selected` and `aria-activedescendant`.
+
+Keyboard users can navigate the collection using the arrow keys,
+while `Home` and `End` provide access to the boundaries of the list.
+
+We're also utilizing Motion Provider's `useReducedMotion()` hook.
+
+```tsx
+const reducedMotion = useReducedMotion();
+```
+
+When reduced motion is requested, the component renders a conventional
+scrollable option list instead of the curved animation.
+
+<Callout type="warning" title="Reduced motion and usability">
+  Do not rely on an animated visual property alone to communicate
+  the selected state.
+
+  The component should remain navigable and understandable even when
+  its animations are disabled.
+</Callout>
+
+## Putting Everything Together
+
+Let's revisit the result.
+
+<Registry
+  slug="learn/designing-option-wheel/option-wheel"
+  title="Scroll-driven Option Wheel"
+/>
+
+What initially appeared to require a sophisticated gesture-based
+animation engine turned out to be a combination of several relatively
+independent responsibilities.
+
+| Responsibility | Implementation |
+| --- | --- |
+| Animation interpolation | Motion Provider |
+| Animation synchronization | `controller.scroll` |
+| Custom keyframes | `AnimationModule` |
+| Curved positioning | Trigonometric functions |
+| Depth illusion | Blur, opacity and scale |
+| Scroll snapping | Native CSS |
+| Mouse dragging | Pointer Events API |
+| Programmatic navigation | `scrollTo()` |
+| Selection state | React |
+| Reduced motion | `useReducedMotion()` |
+
+The main takeaway from this chapter is that **dynamic animations do
+not necessarily require dynamically constructed animation definitions**.
+
+By describing the visual states beforehand and synchronizing them
+with a continuous source of progress, we can achieve sophisticated
+interactive animations while keeping the implementation declarative.

@@ -1,0 +1,743 @@
+---
+title: "Designing an Animated Image Slider"
+description: "Learn how to animate stacked image cards, synchronize dynamic animation definitions and introduce staggered text reveals using Motion Provider."
+order: 50
+draft: false
+---
+
+In this chapter, we're going to explore how an animated image slider
+can be implemented by combining **state-driven animations**, custom
+animation modules and synchronized playback.
+
+Unlike conventional sliders where images are translated horizontally
+through a scrollable container, we're going to work with overlapping
+elements and animate their relative positions within a stack.
+
+Inspired by the
+[Animated Testimonials](https://ui.aceternity.com/components/animated-testimonials)
+component from Aceternity UI, let's take a look at the final result
+before breaking down its implementation.
+
+<Registry
+  slug="learn/image-slider/image-slider"
+  title="Stacked Image Slider — Navigate between images"
+/>
+
+Notice how the images progressively lose their sharpness and visibility
+as they move further behind the active image.
+
+The active image, on the other hand, slightly rises before settling
+into its final position while its corresponding text appears in
+sequence.
+
+<Callout type="note" title="What are we going to utilize?">
+  Throughout this chapter, we're going to utilize `Motion`,
+  `MotionText`, `useController()` and custom animation modules.
+
+  React will be responsible for managing the currently selected image,
+  while Motion Provider will handle the interpolation and playback of
+  the animation properties.
+</Callout>
+
+## Breaking Down The Animation
+
+Let's examine what happens whenever we navigate between images.
+
+There are essentially three independent layers of animation involved
+in the component.
+
+| Animation layer | Responsibility |
+| --- | --- |
+| Card transformation | Repositions each image within the stack |
+| Visual depth | Introduces progressive blur, opacity and scale |
+| Text reveal | Reveals the active image's caption in sequence |
+
+Although these animations appear to be closely coupled, they don't
+necessarily need to share the same animation definition or duration.
+
+The card animations should be synchronized collectively, whereas the
+text animations should be triggered independently whenever the active
+image changes.
+
+This distinction is particularly important when deciding how to
+structure our controllers.
+
+## Synchronizing The Card Animations
+
+Let's begin with the mechanism responsible for coordinating the
+animations before examining how their definitions are constructed.
+
+We can create a shared controller using the `useController()` hook.
+
+```tsx
+const controller = useController();
+```
+
+Instead of assigning a separate controller to each image, we're going
+to pass the same controller to every `Motion` component responsible
+for rendering a card.
+
+```tsx
+<Motion
+  key={slide.id}
+  elementType="figure"
+  definition={getCardDefinition(index, previous, active)}
+  timing={{
+    duration: 0.56,
+    easing: [0.22, 1, 0.36, 1],
+    fill: "both",
+  }}
+  controller={controller}
+  aria-hidden={!isActive}
+  aria-roledescription="slide"
+  aria-label={`${index + 1} of ${TOTAL}`}
+  style={{
+    zIndex: TOTAL - depth,
+  }}
+  className="absolute inset-0 m-0 overflow-hidden rounded-2xl border border-border bg-surface shadow-xl"
+>
+  {/* Image and caption */}
+</Motion>
+```
+
+By passing the same controller to each card, their animation handles
+become part of a shared group.
+
+Whenever the selected image changes, we can initiate collective
+playback using `controller.play()`.
+
+An important characteristic of the controller is that its `play()`
+method returns a promise containing the animation results of the
+registered handles.
+
+This allows us to coordinate user interactions with the actual
+animation lifecycle instead of relying on manually calculated timeouts.
+
+```tsx
+useEffect(() => {
+  let current = true;
+
+  function unlock() {
+    if (!current) return;
+
+    setDeck((state) =>
+      state.active === active &&
+      state.previous === previous &&
+      state.locked
+        ? { ...state, locked: false }
+        : state,
+    );
+  }
+
+  void controller.play().then(unlock, unlock);
+
+  return () => {
+    current = false;
+  };
+}, [controller, active, previous]);
+```
+
+Once playback settles, the navigation buttons become available again.
+
+The cleanup function prevents an outdated playback promise from
+unlocking a subsequent transition.
+
+<Callout type="tip" title="Animation lifecycle over timeouts">
+  Avoid relying on `setTimeout()` to determine when an animation
+  has completed.
+
+  The animation duration might change, playback might be interrupted
+  or reduced motion might be enabled.
+
+  Coordinating interactions with the controller's playback promise
+  makes the implementation less dependent on hardcoded timing values.
+</Callout>
+
+## Animating The Active Image
+
+Now that we know how the animations are synchronized, let's examine
+what actually happens to the currently selected card.
+
+Instead of interpolating directly between two visual states, we can
+introduce an intermediate keyframe.
+
+Consider the following animation module.
+
+```tsx
+const lift = {
+  initial: {
+    y: 0,
+    scale: 0.95,
+    opacity: 0.7,
+    filter: "blur(2px)",
+  },
+  animate: {
+    y: [0, -14, 0],
+    scale: [0.95, 1.015, 1],
+    opacity: [0.7, 0.92, 1],
+    filter: [
+      "blur(2px)",
+      "blur(1.5px)",
+      "blur(0px)",
+    ],
+  },
+} satisfies AnimationModule;
+```
+
+Rather than simply moving toward its final state, the image briefly
+rises and becomes slightly larger before settling.
+
+This intermediate state gives the impression that the card is being
+lifted from the stack.
+
+There are three phases involved.
+
+| Phase | Visual behaviour |
+| --- | --- |
+| Initial | The card retains its previous appearance |
+| Intermediate | The card rises, enlarges and becomes sharper |
+| Final | The card settles into its selected position |
+
+The remaining cards don't necessarily require this intermediate phase.
+
+Their previous and subsequent visual states are sufficient to create
+a convincing transition.
+
+This is why we're constructing different animation definitions
+depending on whether a card is becoming active.
+
+```tsx
+function getCardDefinition(
+  index: number,
+  previous: number,
+  active: number,
+): AnimationModule {
+  const from = getCardState(getDepth(index, previous));
+  const to = getCardState(getDepth(index, active));
+
+  if (index !== active || previous === active) {
+    return {
+      initial: from,
+      animate: to,
+    };
+  }
+
+  return {
+    initial: from,
+    animate: {
+      transform: [
+        from.transform,
+        "translate(0px, -14px) rotate(0deg) scale(1.015)",
+        to.transform,
+      ],
+      opacity: [from.opacity, 0.92, to.opacity],
+      filter: [from.filter, "blur(1.5px)", to.filter],
+    },
+  };
+}
+```
+
+Notice that we're passing an array of values to the `animate` object
+instead of a single destination value.
+
+Motion Provider interprets these arrays as keyframe tracks and
+interpolates between their values.
+
+<Callout type="note" title="About intermediate keyframes">
+  When an animation property receives an array of values, the array
+  describes its complete keyframe track.
+
+  Therefore, include the starting value explicitly whenever you
+  construct an animation dynamically from a previous visual state.
+</Callout>
+
+## Deriving The Visual Properties
+
+Let's take another step backwards.
+
+We already know how to animate an image between two positions.
+However, we haven't yet defined what those positions actually look
+like.
+
+Instead of manually assigning a different animation module to every
+image, we're going to derive their visual properties from a single
+value — the **relative depth**.
+
+```tsx
+function getCardState(depth: number) {
+  const rotation = depth === 0 ? 0 : depth % 2 === 1 ? -8 : 7;
+  const x = depth === 0 ? 0 : depth % 2 === 1 ? -10 : 12;
+  const y = depth * -8;
+  const scale = 1 - depth * 0.045;
+
+  return {
+    transform: `translate(${x}px, ${y}px) rotate(${rotation}deg) scale(${scale})`,
+    opacity: 1 - depth * 0.15,
+    filter: `blur(${depth * 0.8}px)`,
+  };
+}
+```
+
+The depth of an image determines its appearance independently of
+its content or original position in the collection.
+
+### Establishing The Depth Illusion
+
+Let's compare the visual properties of three cards.
+
+| Property | Depth 0 | Depth 1 | Depth 2 |
+| --- | --- | --- | --- |
+| Horizontal offset | `0px` | `-10px` | `12px` |
+| Vertical offset | `0px` | `-8px` | `-16px` |
+| Rotation | `0deg` | `-8deg` | `7deg` |
+| Scale | `1` | `0.955` | `0.91` |
+| Opacity | `1` | `0.85` | `0.70` |
+| Blur | `0px` | `0.8px` | `1.6px` |
+
+The active image always remains straight, sharp and fully visible.
+
+The remaining images progressively become smaller and less prominent
+as their depth increases.
+
+We're also alternating the rotation direction to create a more
+natural, overlapping arrangement.
+
+One might consider using `Math.random()` to determine the rotation
+of each card.
+
+However, randomly generating transformations during rendering can
+produce inconsistent visual states between renders and potentially
+cause hydration mismatches.
+
+<Callout type="tip" title="Prefer deterministic transformations">
+  Derive visual properties from stable values such as an item's
+  index, identifier or relative depth.
+
+  The same input should consistently produce the same visual state,
+  allowing us to reconstruct both the previous and subsequent
+  appearances of an element.
+</Callout>
+
+### Calculating The Relative Depth
+
+Now that we've established how depth influences the appearance of
+an image, we need to determine how far behind the active image
+each card should be positioned.
+
+A conventional subtraction would produce negative values whenever
+the index of an image is smaller than the active index.
+
+Since our slider is circular, we can utilize the modulo operator
+to normalize the result.
+
+```tsx
+function getDepth(index: number, active: number) {
+  return (index - active + TOTAL) % TOTAL;
+}
+```
+
+Consider that the collection contains three images and the second
+image is currently active.
+
+```tsx
+const active = 1;
+const TOTAL = 3;
+
+const depths = [0, 1, 2].map(
+  (index) => (index - active + TOTAL) % TOTAL,
+);
+
+// [2, 0, 1]
+```
+
+The second image is positioned at depth `0`, the third image at
+depth `1` and the first image at depth `2`.
+
+By navigating to the next image, their relative depths are
+recalculated again.
+
+| Image index | Active: 0 | Active: 1 | Active: 2 |
+| --- | --- | --- | --- |
+| `0` | `0` | `2` | `1` |
+| `1` | `1` | `0` | `2` |
+| `2` | `2` | `1` | `0` |
+
+The original collection never needs to be reordered.
+
+We can instead derive the stacking order directly from the current
+depth.
+
+```tsx
+style={{
+  zIndex: TOTAL - depth,
+}}
+```
+
+The image with the lowest depth receives the highest `z-index`.
+
+This property is updated immediately when navigation occurs, while
+the remaining visual properties are animated toward their new states.
+
+<Callout type="note" title="Stacking order is not interpolated">
+  In this example, `z-index` is a layout decision rather than an
+  animated property.
+
+  The incoming image is brought to the foreground immediately.
+  Its blur, opacity and transformation create the visual transition
+  from that point onward.
+</Callout>
+
+## Introducing Animated Text
+
+So far, we've focused primarily on the animation of the images.
+
+Let's now examine how we can reinforce the transition by animating
+the corresponding textual content.
+
+We're going to construct a reusable animation module that combines
+vertical translation, progressive opacity and blur.
+
+```tsx
+const TEXT_REVEAL = {
+  initial: {
+    opacity: 0,
+    y: 10,
+    filter: "blur(8px)",
+  },
+  animate: {
+    opacity: 1,
+    y: 0,
+    filter: "blur(0px)",
+  },
+} satisfies AnimationModule;
+```
+
+Although we could apply this definition to the entire caption using
+`Motion`, doing so would animate the text collectively.
+
+Instead, we're going to utilize `MotionText` to reveal the title
+word by word.
+
+```tsx
+<MotionText
+  key={slide.id}
+  animation={{
+    mode: TEXT_REVEAL,
+    duration: 0.24,
+    delay: 0.28,
+    transition: {
+      easing: "ease-out",
+    },
+  }}
+  config={{
+    mode: "words",
+    duration: 0.045,
+    delayLogic: "linear",
+  }}
+  controller={{ trigger: true }}
+  wrapperClassName="block text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+>
+  {slide.title}
+</MotionText>
+```
+
+By specifying `mode: "words"`, Motion Provider separates the given
+text into independently animated word tokens.
+
+The `linear` delay logic introduces a consistent interval between
+their animations.
+
+### Understanding The Timing
+
+There are three timing-related properties involved in this example.
+
+| Property | Value | Responsibility |
+| --- | --- | --- |
+| `animation.duration` | `0.24` | Duration of each word's animation |
+| `animation.delay` | `0.28` | Initial delay before the reveal |
+| `config.duration` | `0.045` | Interval between word animations |
+
+These values are expressed in seconds.
+
+Notice that `config.duration` does not represent the duration of
+the entire text animation.
+
+It determines the delay interval utilized by the configured delay
+logic.
+
+<Callout type="tip" title="Overlap your animation layers">
+  The card transition lasts `0.56` seconds, whereas the title
+  begins appearing after `0.28` seconds.
+
+  Instead of waiting for the card to finish moving, we allow the
+  caption to appear while the card is still settling.
+
+  This relatively small timing decision makes the interaction feel
+  more cohesive.
+</Callout>
+
+### Triggering Text Animations On Slide Changes
+
+The caption only exists inside the currently selected card.
+
+```tsx
+{isActive && (
+  <figcaption className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
+    <Motion
+      elementType="span"
+      definition={TEXT_REVEAL}
+      timing={{
+        duration: 0.24,
+        delay: 0.22,
+        easing: "ease-out",
+      }}
+      controller={{ trigger: true }}
+      className="text-[10px] font-semibold tracking-[0.22em] text-white/70 uppercase"
+    >
+      {slide.category}
+    </Motion>
+
+    <MotionText
+      key={slide.id}
+      animation={{
+        mode: TEXT_REVEAL,
+        duration: 0.24,
+        delay: 0.28,
+        transition: {
+          easing: "ease-out",
+        },
+      }}
+      config={{
+        mode: "words",
+        duration: 0.045,
+        delayLogic: "linear",
+      }}
+      controller={{ trigger: true }}
+      wrapperClassName="block text-2xl font-semibold tracking-tight text-white sm:text-3xl"
+    >
+      {slide.title}
+    </MotionText>
+  </figcaption>
+)}
+```
+
+Whenever another image becomes active, the previous caption is
+unmounted and a new caption is rendered inside the newly selected
+card.
+
+The new text animation is triggered upon mounting through its
+declarative controller.
+
+<Callout type="warning" title="Keep the controllers independent">
+  Do not assign the shared card controller to these text animations.
+
+  The text reveal has its own lifecycle and staggered timing.
+  Keeping it independent prevents collective card playback from
+  unnecessarily restarting the caption animations.
+</Callout>
+
+## Establishing The Layout
+
+Now that we've broken down the animation layers, let's examine
+the underlying layout.
+
+The baseline consists of a relatively positioned container and
+a collection of absolutely positioned images.
+
+```tsx
+<div className="relative isolate h-52 w-full sm:h-56">
+  {SLIDES.map((slide, index) => {
+    const depth = getDepth(index, active);
+
+    return (
+      <figure
+        key={slide.id}
+        style={{
+          ...getCardState(depth),
+          zIndex: TOTAL - depth,
+        }}
+        className="absolute inset-0 m-0 overflow-hidden rounded-2xl border border-border bg-surface shadow-xl"
+      >
+        <img
+          src={slide.src}
+          alt={slide.alt}
+          width={900}
+          height={600}
+          loading="eager"
+          decoding="async"
+          draggable={false}
+          className="absolute inset-0 size-full object-cover"
+        />
+      </figure>
+    );
+  })}
+</div>
+```
+
+Even without Motion Provider, this structure already produces a
+stacked image arrangement.
+
+Changing the active index would immediately update the positions
+of all images, but without any interpolation between their
+previous and subsequent visual states.
+
+By replacing the native `figure` with `Motion` and assigning the
+corresponding animation definition, we introduce animated transitions
+without changing the underlying layout.
+
+### Preventing Layout Shifts
+
+Since every image is absolutely positioned, the parent container
+must establish a predictable height.
+
+Otherwise, its children would not contribute to its dimensions
+through the normal document flow.
+
+We establish the height of our slider using `h-52` and `sm:h-56`.
+
+The images remain mounted and use `object-cover` to fill their
+respective cards without distorting their original aspect ratios.
+
+<Callout type="warning" title="Preserve the image identities">
+  Avoid assigning a changing key to the entire image collection
+  whenever the selected image changes.
+
+  Each image should retain its own stable `slide.id` as its React
+  key. This allows React to preserve the corresponding DOM elements
+  while Motion Provider updates their animation definitions.
+</Callout>
+
+## Implementing Circular Navigation
+
+The remaining part of the implementation is primarily concerned
+with React state management.
+
+Instead of tracking only the active index, we're going to retain
+the previous index as well.
+
+```tsx
+const [deck, setDeck] = useState({
+  active: 0,
+  previous: 0,
+  locked: false,
+});
+
+const { active, previous, locked } = deck;
+```
+
+The previous index is required to reconstruct the visual state
+of every image before a new transition takes place.
+
+Without this information, we would only know where a card should
+end up, not where it should begin.
+
+```tsx
+function navigate(direction: -1 | 1) {
+  setDeck((state) => {
+    if (state.locked) return state;
+
+    return {
+      previous: state.active,
+      active: (state.active + direction + TOTAL) % TOTAL,
+      locked: true,
+    };
+  });
+}
+```
+
+Passing `1` moves the slider forward, whereas passing `-1` moves
+it backwards.
+
+The modulo operator ensures that navigation continues circularly
+when either boundary of the collection is reached.
+
+### Preventing Interrupted Transitions
+
+An important detail is the presence of the `locked` property.
+
+Since our animation definitions are calculated from known previous
+and subsequent states, initiating another transition before the
+current one settles could introduce a visual discontinuity.
+
+The starting position of the next animation might not correspond
+to the actual intermediate position of the card.
+
+To avoid this, we're temporarily preventing further navigation
+until the shared card controller's playback promise settles.
+
+```tsx
+if (state.locked) return state;
+```
+
+<Callout type="note" title="Why not allow uninterrupted navigation?">
+  An interruption-aware implementation would require obtaining
+  each card's current interpolated appearance and constructing
+  the subsequent animation from that appearance.
+
+  For this example, briefly locking navigation allows us to
+  maintain a predictable declarative implementation without
+  introducing a manual interpolation engine.
+</Callout>
+
+## Considering Accessibility
+
+Since the carousel is controlled by native buttons, users can
+navigate between images using standard keyboard interactions.
+
+Each image also provides a descriptive `alt` attribute.
+
+Inactive cards are visually present but excluded from the
+accessibility tree through `aria-hidden`.
+
+The currently selected image is communicated using a status
+element.
+
+```tsx
+<span role="status" className="sr-only">
+  Image {active + 1} of {TOTAL}: {SLIDES[active].title}
+</span>
+```
+
+This allows assistive technologies to announce changes without
+requiring users to move their focus away from the navigation
+controls.
+
+Motion Provider respects the user's reduced-motion preference by
+default, allowing the cards and captions to reach their destination
+states without ordinary animated playback.
+
+## Putting Everything Together
+
+Let's revisit the final result.
+
+<Registry
+  slug="learn/image-slider/image-slider"
+  title="Animated Image Slider"
+/>
+
+What initially appeared to require a dedicated carousel or layout
+animation library can be divided into several independent
+responsibilities.
+
+| Responsibility | Implementation |
+| --- | --- |
+| Shared animation playback | `useController()` |
+| Dynamic card transformations | `Motion` |
+| Intermediate visual states | Custom keyframe arrays |
+| Depth illusion | Rotation, scale, opacity and blur |
+| Sequential caption animation | `MotionText` |
+| Circular navigation | Modulo operator |
+| Previous and active selection | React state |
+| Transition coordination | Controller playback promise |
+| Card positioning | Absolute positioning and `z-index` |
+
+The most important takeaway from this chapter is that **dynamic
+layout-like animations can often be reconstructed by deriving
+visual states from application state**.
+
+Instead of asking an animation engine to determine how an element
+should move between layouts, we explicitly describe its previous
+and subsequent appearances.
+
+Motion Provider then takes responsibility for interpolating between
+those appearances.

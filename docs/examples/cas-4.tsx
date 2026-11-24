@@ -18,7 +18,7 @@ const data = createMotionConfig({
         transition: "gentle",
         duration: 0.5,
       },
-      className: "font-light md:text-sm text-xs -mb-12",
+      className: "text-xs font-light @min-[28rem]:text-sm",
     },
   },
   title: {
@@ -35,7 +35,7 @@ const data = createMotionConfig({
         mode: "chars",
         delayLogic: "chaotic",
       },
-      className: "mt-0 capitalize md:text-3xl text-lg",
+      className: "text-lg capitalize @min-[28rem]:text-3xl",
     },
   },
   desc: {
@@ -47,7 +47,7 @@ const data = createMotionConfig({
         transition: "gentle",
         delay: 0.88,
       },
-      className: "md:max-w-2xs max-w-42 text-pretty -mt-4 md:text-sm text-xs",
+      className: "max-w-2xs text-pretty text-xs @min-[28rem]:text-sm",
     },
   },
   image: {
@@ -67,7 +67,7 @@ const data = createMotionConfig({
       },
       alt: "demo",
       wrapperClassName:
-        "md:size-60 size-40 rounded-lg overflow-hidden object-cover",
+        "size-24 overflow-hidden rounded-lg @min-[28rem]:size-44 @min-[36rem]:size-56",
     },
   },
 });
@@ -93,27 +93,31 @@ export default function Cas4() {
   };
 
   return (
-    <section className="size-full flex items-center justify-center tracking-tighter md:px-6 gap-4 md:gap-8">
-      <div className="flex absolute top-12 left-3 gap-3 *:hover:text-accent z-50 bg-surface-secondary *:cursor-pointer px-3 text-xs text-surface-secondary-foreground backdrop-blur-xl rounded-md py-2">
-        {actions.map((action) => (
-          <button key={action} type="button" onClick={animate(action)}>
-            {action}
-          </button>
-        ))}
-      </div>
-      <div className="flex flex-col items-start justify-end h-full pb-8 -translate-y-8">
-        <MotionContainer {...getAnimation("badge")} controller={controller}>
-          Motion CAS
-        </MotionContainer>
-        <MotionText {...getAnimation("title")} controller={controller}>
-          Make stuffs alive
-        </MotionText>
-        <MotionContainer {...getAnimation("desc")} controller={controller}>
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
-        </MotionContainer>
-      </div>
-      <div className="flex gap-2 items-center relative">
-        <MotionImage {...getAnimation("image")} controller={controller} />
+    <section className="@container grid min-h-full w-full items-center px-4 py-3 tracking-tighter">
+      <div className="mx-auto grid w-full max-w-2xl gap-3">
+        <div className="flex flex-wrap gap-3 justify-self-center rounded-md bg-surface-secondary px-3 py-2 text-xs text-surface-secondary-foreground *:cursor-pointer *:hover:text-accent @min-[28rem]:justify-self-start">
+          {actions.map((action) => (
+            <button key={action} type="button" onClick={animate(action)}>
+              {action}
+            </button>
+          ))}
+        </div>
+        <div className="grid items-center justify-items-center gap-3 @min-[28rem]:grid-cols-[minmax(0,1fr)_auto] @min-[28rem]:gap-8">
+          <div className="grid min-w-0 justify-items-center gap-2 text-center @min-[28rem]:justify-items-start @min-[28rem]:justify-self-start @min-[28rem]:text-left">
+            <MotionContainer {...getAnimation("badge")} controller={controller}>
+              Motion CAS
+            </MotionContainer>
+            <MotionText {...getAnimation("title")} controller={controller}>
+              Make stuffs alive
+            </MotionText>
+            <MotionContainer {...getAnimation("desc")} controller={controller}>
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </MotionContainer>
+          </div>
+          <div className="flex gap-2 items-center relative">
+            <MotionImage {...getAnimation("image")} controller={controller} />
+          </div>
+        </div>
       </div>
     </section>
   );

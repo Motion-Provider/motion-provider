@@ -128,6 +128,17 @@ test("explicit transforms take precedence and static setup properties persist", 
 		"85%",
 	]);
 });
+test("keyframe validation rejects empty tracks, sparse tracks, and nonfinite targets", () => {
+	const sparse = [0, 0.5, 1];
+	delete sparse[1];
+	for (const opacity of [[], sparse, NaN, Infinity]) {
+		assert.throws(
+			() =>
+				compileAnimation({ initial: { opacity: 0 }, animate: { opacity } }),
+			{ code: "INVALID_KEYFRAMES" },
+		);
+	}
+});
 test("every stagger algorithm is deterministic, finite and bounded", () => {
 	for (const delayLogic of delays)
 		for (const index of [0, 1, 50, 5000]) {
