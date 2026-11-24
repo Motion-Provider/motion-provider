@@ -1,80 +1,239 @@
 ---
 title: "useController"
-description: "useController creates one stable animation controller per mounted hook instance."
+description: "Create one stable imperative controller for coordinating Motion Provider animations."
 order: 420
 draft: false
 ---
 
-**`useController(initial?)` returns a stable controller for one mounted component.** Attach it to the `controller` prop of one or more motion components. Each component registers its animation after mount and unregisters it during cleanup.
+**Use `useController()` when animation playback should be driven by application events instead of only viewport visibility or a boolean trigger.** The hook creates one stable `AnimationController` for the lifetime of the mounted React component and lets every Motion Provider component that receives it register its animation with the same command store.
 
-## Initial options
+This is the API to reach for when a button, hover state, workflow step, route transition, or other interaction needs to **play, pause, reverse, seek, finish, reset, or cancel** one or several animations together.
 
-| Option | Effect when the controller is created |
+<Callout type="note" title="useController is a client hook">
+  The Motion Provider components themselves can render from a Server Component, but the component that calls `useController()` must be a Client Component because it uses React state internally.
+</Callout>
+
+## Signature
+
+```tsx
+const controller = useController(initial?);
+```
+
+The optional `initial` object seeds the controller with a command before any animations register.
+
+| Option | Type | Default | Behavior |
+| --- | --- | --- | --- |
+| `stopAnimation` | `boolean` | `false` | Stores a `finish` command. Animations that register later settle immediately at their final state. |
+| `reverseAnimation` | `boolean` | `false` | Stores a `reverse` command. Animations that register later begin in reverse playback. |
+
+If both options are `true`, **`stopAnimation` takes precedence** because the hook applies it first.
+
+The object is read *once when the hook instance mounts*. Updating the object later does not recreate or reconfigure the controller; call controller methods to change playback after mount.
+
+<Callout type="warning" title="stopAnimation means finish, not pause">
+  `stopAnimation: true` calls `finish()`. That moves registered animations to their destination state immediately. Use `pause()` when you need to freeze playback at the current timeline position.
+</Callout>
+
+## Return value
+
+`useController()` returns an `AnimationController`. The same object instance is preserved across component re-renders.
+
+### Playback commands
+
+| Member | Return value | What it does |
+| --- | --- | --- |
+| `play()` | `Promise<AnimationResult[]>` | Plays every registered animation forward. |
+| `reverse()` | `Promise<AnimationResult[]>` | Reverses the registered group from a shared timeline position. |
+| `pause()` | `void` | Pauses every registered animation at its current position. |
+| `finish()` | `void` | Finishes every animation immediately and applies its final state. |
+| `reset()` | `void` | Returns animations to their initial state and leaves them paused. |
+| `cancel()` | `void` | Cancels playback and restores the underlying DOM styles. |
+| `seek(progress)` | `void` | Pauses the group and seeks to normalized progress. Values are clamped to `0...1`. |
+| `setPlaybackRate(rate)` | `void` | Updates the playback rate of every registered animation. |
+
+`play()` and `reverse()` resolve with one `AnimationResult` per registered animation. Calling either method before anything has registered is valid and resolves with an empty array; the controller still remembers the command for later registrations.
+
+<Callout type="warning" title="seek has two important constraints">
+  `seek()` accepts only finite numbers, and normalized seeking is not supported for animations with `iterations: Infinity`. Infinite animations raise an `INFINITE_SEEK` runtime error instead of inventing a finite progress range.
+</Callout>
+
+### Registration and compatibility members
+
+| Member | Purpose |
 | --- | --- |
-| `stopAnimation: true` | Stores a `finish` command so registering animations settle immediately. |
-| `reverseAnimation: true` | Stores a `reverse` command so registering animations play backwards. |
-| Omitted or both false | Leaves the controller ready for its first command. |
+| `size` | Number of animation handles currently registered with the controller. |
+| `getSnapshot()` | Returns the latest command, or `undefined` before the first command. |
+| `subscribe(listener)` | Subscribes to command changes. Motion Provider uses this for controller integration. |
+| `register(handle)` | Registers a low-level `AnimationHandle` and returns its unregister function. Motion components call this for you. |
+| `onReverse()` | Compatibility helper that toggles between `reverse()` and `play()`. |
+| `onStop()` | Compatibility alias for `finish()`. |
+| `control` | Returns the controller itself for compatibility with older controller-shaped APIs. |
 
-`stopAnimation` takes precedence when both flags are true. The hook reads these options **once per mount**. Use methods such as `play()`, `reverse()`, and `finish()` to change playback after mount. See [Animation Controllers](/controllers/animation-controllers) for the complete command list.
+Application code normally uses the playback methods and lets `MotionContainer`, `MotionChain`, `MotionText`, `MotionImage`, or `Motion` handle registration.
 
-## Reveal an invoice breakdown
+## Coordinate a deployment preview
 
-The invoice owns a controller and passes it directly to the breakdown. **Show breakdown** plays the entrance and **Hide breakdown** reverses it. The amount due stays visible throughout the interaction.
+A single controller can own several animations. This preview starts with both animated sections already finished so the UI is visible immediately, then uses native controls to replay, pause, reverse, or reset the whole group.
 
 ```tsx
 "use client";
 
 import { MotionContainer, useController } from "motion-provider";
 
-export default function InvoiceDetails() {
-  const controls = useController();
+export default function DeploymentPreview() {
+  const controller = useController({ stopAnimation: true });
+
   return (
-    <section
-      aria-label="Invoice #1042"
-      className="w-full max-w-sm rounded-2xl border border-border bg-surface p-4 text-sm text-foreground shadow-lg shadow-black/20"
-    >
-      <p className="text-xs font-semibold tracking-wide text-muted uppercase">
-        Billing
-      </p>
-      <h3 className="mt-1 text-base font-semibold">Invoice #1042</h3>
-      <p className="mt-1 text-xs text-muted">Total due · €110.70</p>
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button
-          type="button"
-          className="cursor-pointer rounded-lg bg-accent px-3 py-2 font-semibold text-background hover:bg-accent/85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => void controls.play()}
-        >
-          Show breakdown
-        </button>
-        <button
-          type="button"
-          className="cursor-pointer rounded-lg border border-border bg-background px-3 py-2 font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-          onClick={() => void controls.reverse()}
-        >
-          Hide breakdown
-        </button>
-      </div>
-      <div className="mt-3 overflow-hidden">
+    <article className="w-full max-w-md overflow-hidden rounded-2xl border border-border bg-surface text-foreground shadow-xl shadow-black/10">
+      <header className="flex items-start justify-between gap-4 border-b border-border p-5">
+        <div>
+          <p className="text-xs font-semibold tracking-[0.18em] text-muted uppercase">
+            Release preview
+          </p>
+          <h3 className="mt-1 text-lg font-semibold">Checkout service</h3>
+          <p className="mt-1 text-sm text-muted">
+            Coordinate the rollout summary from one controller.
+          </p>
+        </div>
+
+        <span className="rounded-full border border-border bg-background px-2.5 py-1 text-xs font-medium">
+          staging
+        </span>
+      </header>
+
+      <div className="grid gap-3 p-5">
         <MotionContainer
-          className="rounded-xl border border-border bg-surface-secondary px-3 py-2.5"
-          animation={{ mode: "fadeUp", duration: 0.5 }}
-          controller={controls}
+          animation={{
+            mode: ["fadeUp", "filterBlurIn"],
+            duration: 0.48,
+          }}
+          controller={controller}
         >
-          <dl className="grid grid-cols-2 gap-1">
-            <dt>Subtotal</dt>
-            <dd className="text-right">€90.00</dd>
-            <dt>Tax</dt>
-            <dd className="text-right">€20.70</dd>
-          </dl>
+          <section className="rounded-xl border border-border bg-background p-4">
+            <div className="flex items-center justify-between gap-3">
+              <div>
+                <p className="text-sm font-semibold">API rollout</p>
+                <p className="mt-1 text-xs text-muted">8 instances · eu-central</p>
+              </div>
+              <span
+                aria-label="Healthy"
+                className="size-2.5 rounded-full bg-emerald-500"
+                role="img"
+              />
+            </div>
+          </section>
+        </MotionContainer>
+
+        <MotionContainer
+          animation={{
+            mode: ["fadeUp", "scaleZoomIn"],
+            duration: 0.56,
+            delay: 0.08,
+          }}
+          controller={controller}
+        >
+          <section className="rounded-xl border border-border bg-background p-4">
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
+              <dt className="text-muted">Changed files</dt>
+              <dd className="text-right font-medium">14</dd>
+              <dt className="text-muted">Bundle delta</dt>
+              <dd className="text-right font-medium">-6.2 kB</dd>
+              <dt className="text-muted">Checks</dt>
+              <dd className="text-right font-medium">12 / 12</dd>
+            </dl>
+          </section>
         </MotionContainer>
       </div>
-    </section>
+
+      <footer className="grid grid-cols-2 gap-2 border-t border-border bg-background/60 p-4 sm:grid-cols-4">
+        <button
+          type="button"
+          className="rounded-lg bg-accent px-3 py-2 text-sm font-semibold text-background transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => void controller.play()}
+        >
+          Replay
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controller.pause()}
+        >
+          Pause
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => void controller.reverse()}
+        >
+          Reverse
+        </button>
+        <button
+          type="button"
+          className="rounded-lg border border-border px-3 py-2 text-sm font-medium hover:border-accent focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
+          onClick={() => controller.reset()}
+        >
+          Reset
+        </button>
+      </footer>
+    </article>
   );
 }
 ```
 
-<Registry slug="hooks/use-controller" title="useController" />
+<Registry slug="hooks/use-controller" title="Coordinate a deployment preview" />
 
-<Callout type="note" title="A direct controller starts in manual mode">
-  Passing `controller={controls}` hands playback to commands. Call `play()` to start the entrance. See the [controller overview](/controllers/overview) for combining commands with declarative triggers.
+Because both `MotionContainer` instances receive the same controller, each one registers its animation during the effect phase. **Every command is then broadcast to both registered handles without requiring a React render for each playback frame.**
+
+The `stopAnimation: true` initializer makes the preview useful on first paint: newly registered animations receive the stored `finish` command and settle at their final styles. Pressing **Replay** replaces that stored command with `play` and starts the group again.
+
+## Direct controllers are command-driven
+
+Passing the controller object directly switches that Motion Provider component to imperative mode:
+
+```tsx
+<MotionContainer
+  animation={{ mode: "fadeUp" }}
+  controller={controller}
+>
+  Command-driven content
+</MotionContainer>
+```
+
+In this form, the component does **not** also run its default in-view observer. Playback waits for controller commands.
+
+If you want a declarative driver first and imperative control later, pass the controller through the `controls` field instead:
+
+```tsx
+<MotionContainer
+  animation={{ mode: "fadeUp" }}
+  controller={{
+    configView: { amount: 0.3, once: false },
+    controls: controller,
+  }}
+>
+  In-view until a controller command takes ownership
+</MotionContainer>
+```
+
+The declarative driver remains active while `controller.getSnapshot()` is `undefined`. After the first controller command, the command store owns playback and the in-view driver stops issuing competing commands.
+
+<Callout type="tip" title="Prefer declarative control when events are not involved">
+  For a simple viewport reveal, scroll-linked animation, or boolean trigger, pass a declarative `controller={{ ... }}` object directly to the motion component. Use `useController()` when application code genuinely needs imperative commands or one command should coordinate several animations.
 </Callout>
+
+## Edge cases
+
+- **The controller is stable, not reactive state.** Playback commands mutate the controller store directly. Reading `controller.size` in JSX does not by itself subscribe the component to registration changes.
+- **Unmounted components unregister automatically.** Motion Provider removes their animation handles during effect cleanup, so later commands only target mounted registrations.
+- **Initial commands survive registration timing.** Calling `play()`, `reverse()`, or `finish()` before a child animation registers is intentional; the latest command is applied when that handle registers.
+- **Reversal is group-aware.** `reverse()` calculates a shared starting time from the registered group so shorter completed effects do not jump ahead of longer ones.
+- **Finite numeric validation is strict.** `seek()` and `setPlaybackRate()` reject `NaN` and infinite values.
+
+## Related APIs
+
+| API | When to use it |
+| --- | --- |
+| [Animation controllers](/controllers/animation-controllers/) | Learn the complete imperative controller contract and command semantics. |
+| [Controller overview](/controllers/overview/) | Compare direct imperative controllers with declarative controller objects. |
+| [`useAnimation()`](/hooks/use-animation/) | Adapt either an `AnimationController` or legacy boolean controller flags. |
+| [`MotionContainer`](/components/motion-container/) | Animate one intrinsic element and attach the controller returned here. |
