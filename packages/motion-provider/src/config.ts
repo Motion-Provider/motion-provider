@@ -41,12 +41,13 @@ export function createMotionRegistry<const T extends MotionConfig>(config: T) {
   return {
     config,
     getAnimation<K extends keyof T>(key: K): T[K]["props"] {
+      const phase = Object.hasOwn(config, key) ? config[key] : undefined;
       invariant(
-        Object.hasOwn(config, key),
+        phase,
         "UNKNOWN_CONFIG_KEY",
         `Motion config has no key "${String(key)}".`,
       );
-      return config[key]!.props;
+      return phase.props;
     },
   };
 }

@@ -172,7 +172,15 @@ export function calculateDelays(
 
   for (let i = count - 1; i > 0; i--) {
     const j = Math.floor(random(i + (config.seed ?? 12345)) * (i + 1));
-    [ranks[i], ranks[j]] = [ranks[j]!, ranks[i]!];
+    const currentRank = ranks[i];
+    const swapRank = ranks[j];
+    invariant(
+      currentRank !== undefined && swapRank !== undefined,
+      "INVALID_SHUFFLE_INDEX",
+      "Shuffle indices must reference initialized ranks.",
+    );
+    ranks[i] = swapRank;
+    ranks[j] = currentRank;
   }
 
   return ranks.map((index) =>
