@@ -1,14 +1,13 @@
 ﻿import type { AnimationController } from "motion-provider";
 
-type ShowcaseSlot = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-type ShowcaseItemType = "component" | "hook" | "lib";
+type ShowcaseSlot = 0 | 1 | 2 | 3 | 4 | 5;
 export type ShowcaseSelected = ShowcaseItem["id"];
 
 export interface ShowcaseItem {
   id: string;
   imgSrc?: string;
   slot: ShowcaseSlot;
-  type: ShowcaseItemType;
+  type: "component";
   title: string;
   tagline: string;
   desc: string;

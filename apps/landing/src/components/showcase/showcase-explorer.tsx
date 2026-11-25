@@ -51,7 +51,7 @@ export function ShowcaseExplorer() {
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLDivElement>) {
-    const last = items.length - 1;
+    const last = filteredItems.length - 1;
     let next: number;
 
     switch (e.key) {

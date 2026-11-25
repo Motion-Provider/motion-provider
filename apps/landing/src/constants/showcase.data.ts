@@ -36,7 +36,7 @@ export default [
   },
   {
     id: "motion-link.demo",
-    slot: 5,
+    slot: 4,
     type: "component",
     title: "<MotionLink />",
     tagline: "Click. Hover. Tap.",
@@ -138,71 +138,8 @@ const animations: MotionAnimationProps[] = elements.map((_, idx) => ({
 </MotionChain>`,
   },
   {
-    id: "motion-registry.demo",
-    slot: 6,
-    type: "lib",
-    title: "createMotionRegistry()",
-    tagline: "Centralize all animations, organize from one space.",
-    imgSrc: "/assets/backgrounds/motion-createregistry-illustration.webp",
-    desc: "Defines reusable entry points for animations allowing you to keep your workflow organized. DX friendly and easy to use.",
-    snippet: `// src/motion/hero.config.ts
-import { createMotionConfig } from "@/motion/config";
-
-export default createMotionConfig({
-  appHeroTitle: {
-    type: "MotionText",
-    props: {
-      elementType: "h1",
-      animation: {
-        mode: ["textShimmer", "transformTextGlow", "filterBlurIn"],
-        transition: "slowCubic",
-        delay: 0.3,
-        duration: 1.5,
-      },
-      config: { mode: "chars", delayLogic: "chaotic", duration: 0.08 },
-    },
-  },
-  appHeroDescription: {
-    type: "MotionContainer",
-    props: {
-      elementType: "p",
-      animation: {
-        mode: ["fadeIn", "filterBlurIn"],
-        transition: "gentle",
-        delay: 1.5,
-        duration: 1.5,
-      },
-    },
-  },
-  // ... all other animations
-});
-
-// src/lib/motion.ts
-// Bind your app’s getter once
-
-import config from "@/motion/hero.config";
-import { createMotionRegistry } from "motion-provider";
-
-export const { getAnimation } = createMotionRegistry(config);
-
-
-// src/app.tsx
-
-import { getAnimation } from "@/lib/motion";
-
-export default App() {
-  return (
-    <>
-      <MotionText {...getAnimation("appHeroTitle")} />
-      <MotionContainer {...getAnimation("appHeroDescription")} />
-    </>
-  );
-};
-`,
-  },
-  {
     id: "motion-motion.demo",
-    slot: 7,
+    slot: 5,
     type: "component",
     title: "<Motion />",
     tagline: "Lighten up version of the container.",
@@ -221,49 +158,5 @@ import { spin } from "@/motion/presets";
   }}
   timing={{ duration: 0.6, easing: "ease-out" }}
 />`,
-  },
-  {
-    id: "motion-hooks.demo",
-    slot: 8,
-    type: "hook",
-    title: "useController()",
-    tagline: "One hook to control all animations.",
-    desc: "Introducing the centralized animation system which allows you to control the animation lifecycle with a line of code.",
-    imgSrc: "/assets/backgrounds/motion-hooks-illustration.webp",
-    snippet: `import {
-  MotionText, 
-  MotionContainer, 
-  useController,
-} from "motion-provider";
-import { getAnimation } from "@/lib/motion";
-
-const titleMotion = getAnimation("appHeroTitle");
-const descMotion = getAnimation("appHeroDescription");
-
-export default function Page() {
-  const controller = useController();
-  const link = getAnimation("appHeroLink");
-
-  return (
-    <>
-      <MotionText {...titleMotion} controller={controller}>
-        Make your interface move.
-      </MotionText>
-      <MotionContainer {...descMotion} controller={controller}>
-        One config. Shared playback. Animate on demand.
-      </MotionContainer>
-
-      <button type="button" onClick={() => {
-        controller.reset();
-        void controller.play();
-      }}>
-        Replay
-      </button>
-      <button type="button" onClick={() => controller.reverse()}>
-        Reverse
-      </button>
-    </>
-  );
-}`,
   },
 ] as const satisfies readonly ShowcaseItem[];
