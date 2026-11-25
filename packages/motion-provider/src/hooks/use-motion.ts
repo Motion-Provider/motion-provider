@@ -2,34 +2,25 @@
 
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
-import { animateElement } from "../engine/animate.js";
+import { animatePreparedElement } from "../engine/animate.js";
 import { isController } from "../engine/controller.js";
 import { report } from "../engine/errors.js";
 import { observeInView } from "../engine/in-view.js";
-import { bindScroll } from "../engine/scroll.js";
 import type { AnimationHandle, Timing } from "../engine/types.js";
+import { bindControlledScroll } from "../internal/playback.js";
 import { dataKey, parseData } from "../internal/stable.js";
-import type { AnimationModule, MotionProps } from "../types.js";
+import type { MotionProps } from "../types.js";
 import { useLatest } from "./use-latest.js";
+import type { PreparedDefinition } from "./use-prepared-animation.js";
 
 /** Attach effects after commit; cleanup owns every animation, observer, and scroll subscription. */
 export function useMotion(
   ref: RefObject<HTMLElement | SVGElement | null>,
-  props: Omit<MotionProps, "children">,
-): void {
-  const key = dataKey({
-    definition: props.definition,
-    timing: props.timing ?? {},
-  });
-
-  const spec = useMemo(
-    () =>
-      parseData<{
-        definition: AnimationModule;
-        timing: Timing;
-      }>(key),
-    [key],
-  );
+  compiled: PreparedDefinition,
+  props: Omit<MotionProps, "children" | "definition">,
+) {
+  const timingKey = useMemo(() => dataKey(props.timing ?? {}), [props.timing]);
+  const timing = useMemo(() => parseData<Timing>(timingKey), [timingKey]);
 
   const handle = useRef<AnimationHandle | null>(null);
 
@@ -62,35 +53,15 @@ export function useMotion(
     start = scroll?.start,
     end = scroll?.end;
 
-  const hasScroll = !!scroll,
-    reducedMotion = props.reducedMotion;
+  const hasScroll = !!scroll;
+  const { elementType, reducedMotion } = props;
 
-  // useEffect(() => {
-  //   if (!ref.current) return;
-  //   const animation = animateElement(ref.current, spec.definition, {
-  //     ...spec.timing,
-  //     autoplay: false,
-  //     reducedMotion,
-  //     onError: (error) => report(error, callbacks.current.onError),
-  //     onFinish: (result) => callbacks.current.onComplete?.(result),
-  //   });
-  //   handle.current = animation;
-  //   return () => {
-  //     animation.dispose();
-  //     if (handle.current === animation) handle.current = null;
-  //   };
-  // }, [ref, spec, reducedMotion, callbacks]);
-
-  // useEffect(() => {
-  //   if (!handle.current || !controls) return;
-  //   return controls.register(handle.current);
-  // }, [controls]);
-
+  // biome-ignore lint/correctness/useExhaustiveDependencies: The intrinsic tag can replace ref.current without changing ref.
   useEffect(() => {
     if (!ref.current) return;
 
-    const animation = animateElement(ref.current, spec.definition, {
-      ...spec.timing,
+    const animation = animatePreparedElement(ref.current, compiled, {
+      ...timing,
       autoplay: false,
       reducedMotion,
       onError: (error) => report(error, callbacks.current.onError),
@@ -121,8 +92,9 @@ export function useMotion(
         handle.current = null;
       }
     };
-  }, [ref, spec, reducedMotion, callbacks, controls]);
+  }, [ref, elementType, compiled, timing, reducedMotion, callbacks, controls]);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Rebind whenever the effect above replaces the handle or element.
   useEffect(() => {
     const animation = handle.current,
       element = ref.current;
@@ -140,13 +112,9 @@ export function useMotion(
 
     if (hasScroll) {
       try {
-        return bindScroll(
+        return bindControlledScroll(
           element,
-          {
-            seek: (progress) => {
-              if (!commandOwns()) animation.seek(progress);
-            },
-          },
+          animation,
           {
             source,
             target,
@@ -155,6 +123,7 @@ export function useMotion(
             start,
             end,
           },
+          controls,
         );
       } catch (error) {
         report(error, callbacks.current.onError);
@@ -162,37 +131,28 @@ export function useMotion(
         return;
       }
     }
-    const show = () => {
-      if (!commandOwns())
-        void (reverse ? animation.reverse() : animation.play());
+    const drive = (visible: boolean) => {
+      if (commandOwns()) return;
+      if (visible) void (reverse ? animation.reverse() : animation.play());
+      else if (animation.playState !== "paused")
+        void (reverse ? animation.play() : animation.reverse());
     };
     if (trigger !== undefined) {
-      if (trigger) show();
-      else if (animation.playState !== "paused") void animation.reverse();
+      drive(trigger);
       return;
     }
     try {
-      return observeInView(
-        element,
-        (visible) => {
-          if (commandOwns()) return;
-          if (visible) show();
-          else if (animation.playState !== "paused")
-            void (reverse ? animation.play() : animation.reverse());
-        },
-        {
-          amount,
-          once,
-          margin,
-          root,
-        },
-      );
+      return observeInView(element, drive, { amount, once, margin, root });
     } catch (error) {
       report(error, callbacks.current.onError);
       animation.finish();
     }
   }, [
     ref,
+    elementType,
+    compiled,
+    timing,
+    reducedMotion,
     controls,
     trigger,
     reverse,
@@ -211,4 +171,5 @@ export function useMotion(
     callbacks,
     imperativeController,
   ]);
+  return compiled.initial;
 }

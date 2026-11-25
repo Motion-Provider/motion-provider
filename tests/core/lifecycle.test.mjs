@@ -7,6 +7,7 @@ import {
 	observeInView,
 } from "../../packages/motion-provider/dist/engine/index.js";
 import { fadeIn, fadeUp } from "../../packages/motion-provider/dist/presets/index.js";
+import { bindControlledScroll } from "../../packages/motion-provider/dist/internal/playback.js";
 
 class NativeAnimation {
 	playState = "running";
@@ -398,4 +399,135 @@ test("controller seeking takes ownership from automatic drivers", () => {
 	const c = createController();
 	c.seek(0.5);
 	assert.equal(c.getSnapshot(), "pause");
+});
+
+test("a shared scroll source batches reads before writes and detaches on takeover", () => {
+	const events = new Map();
+	const frames = new Map();
+	const operations = [];
+	let id = 0;
+	let resize;
+	const observed = new Set();
+	const win = {
+		innerHeight: 200,
+		addEventListener: (name, callback) => events.set(name, callback),
+		removeEventListener: (name) => events.delete(name),
+		requestAnimationFrame(callback) {
+			frames.set(++id, callback);
+			return id;
+		},
+		cancelAnimationFrame: (frame) => frames.delete(frame),
+		ResizeObserver: class {
+			constructor(callback) {
+				resize = callback;
+			}
+			observe = (node) => observed.add(node);
+			unobserve = (node) => observed.delete(node);
+			disconnect = () => observed.clear();
+		},
+	};
+	const source = {};
+	const doc = { defaultView: win, scrollingElement: source };
+	const element = (name) => ({
+		ownerDocument: doc,
+		getBoundingClientRect() {
+			operations.push(`read ${name}`);
+			return { top: 50, height: 100 };
+		},
+	});
+	const a = element("a");
+	const b = element("b");
+	const controller = createController();
+	const stop = [a, a, b].map((node, i) =>
+		bindControlledScroll(
+			node,
+			{
+				seek(progress) {
+					assert.equal(progress, 0.5);
+					operations.push(`seek ${i}`);
+				},
+			},
+			{},
+			i === 2 ? undefined : controller,
+		),
+	);
+	const flush = () => {
+		const scheduled = [...frames.values()];
+		frames.clear();
+		for (const callback of scheduled) callback();
+	};
+	assert.equal(observed.size, 3);
+	operations.length = 0;
+	events.get("scroll")();
+	events.get("scroll")();
+	assert.equal(frames.size, 1);
+	flush();
+	assert.deepEqual(operations, ["read a", "read b", "seek 0", "seek 1", "seek 2"]);
+	operations.length = 0;
+	resize([{ target: a }]);
+	assert.equal(frames.size, 1);
+	controller.pause();
+	assert.equal(frames.size, 0);
+	assert.equal(observed.has(a), false);
+	events.get("scroll")();
+	flush();
+	assert.deepEqual(operations, ["read b", "seek 2"]);
+	for (const dispose of stop) dispose();
+	assert.equal(events.size, 0);
+	assert.equal(observed.size, 0);
+});
+
+test("replacement handles retain the last normalized seek through pause", () => {
+	const controller = createController();
+	const a = target();
+	const first = animateElement(a, fadeIn, { autoplay: false, duration: 1 });
+	const unregister = controller.register(first);
+	controller.seek(0.35);
+	controller.pause();
+	assert.equal(first.currentTime, 0.35);
+	unregister();
+	first.dispose();
+
+	const b = target();
+	const replacement = animateElement(b, fadeIn, { autoplay: false, duration: 2 });
+	controller.register(replacement);
+	assert.equal(replacement.playState, "paused");
+	assert.equal(replacement.currentTime, 0.7);
+	controller.reset();
+	assert.equal(replacement.currentTime, 0);
+	replacement.dispose();
+});
+
+test("live reduced motion restores a paused seek or allows later playback", () => {
+	const e = target();
+	let preference;
+	e.ownerDocument.defaultView.matchMedia = () => ({
+		matches: true,
+		addEventListener: (_name, callback) => {
+			preference = callback;
+		},
+		removeEventListener: (_name, callback) => {
+			assert.equal(callback, preference);
+			preference = undefined;
+		},
+	});
+	const h = animateElement(e, fadeIn, { duration: 2 });
+	assert.equal(e.effects.length, 0);
+	assert.equal(h.playState, "finished");
+	preference({ matches: false });
+	assert.equal(e.effects.length, 0);
+	void h.play();
+	assert.equal(e.effects.length, 1);
+	assert.equal(h.playState, "running");
+
+	h.seek(0.4);
+	preference({ matches: true });
+	assert.equal(e.effects[0].playState, "idle");
+	assert.equal(e.style.getPropertyValue("opacity"), "1");
+	preference({ matches: false });
+	assert.equal(e.effects.length, 2);
+	assert.equal(h.playState, "paused");
+	assert.equal(h.currentTime, 0.8);
+	h.dispose();
+	assert.equal(preference, undefined);
 });

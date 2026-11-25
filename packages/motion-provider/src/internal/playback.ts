@@ -1,8 +1,42 @@
 import { isController } from "../engine/controller.js";
 import { observeInView } from "../engine/in-view.js";
 import { bindScroll } from "../engine/scroll.js";
-import type { AnimationHandle } from "../engine/types.js";
+import type {
+  AnimationController,
+  AnimationHandle,
+  ScrollOptions,
+} from "../engine/types.js";
 import type { ControllerInput } from "../types.js";
+
+/** The first controller command permanently hands off this scroll binding. */
+export function bindControlledScroll(
+  target: HTMLElement | SVGElement,
+  handle: Pick<AnimationHandle, "seek">,
+  options: ScrollOptions,
+  controls?: AnimationController,
+): () => void {
+  if (!controls) return bindScroll(target, handle, options);
+  if (controls.getSnapshot() !== undefined) return () => {};
+
+  const stopScroll = bindScroll(target, handle, options);
+  let unsubscribe: (() => void) | undefined;
+  const dispose = () => {
+    stopScroll();
+    unsubscribe?.();
+    unsubscribe = undefined;
+  };
+  const handoff = () => {
+    if (controls.getSnapshot() !== undefined) dispose();
+  };
+  try {
+    unsubscribe = controls.subscribe(handoff);
+    handoff();
+  } catch (error) {
+    dispose();
+    throw error;
+  }
+  return dispose;
+}
 
 /** Apply one driver's policy to a set of handles. Used by tiled images and gallery slides. */
 export function bindPlayback(
@@ -41,15 +75,15 @@ export function bindPlayback(
       if (props?.isAnimationStopped) drive(true);
       else if (props?.scroll)
         cleanups.push(
-          bindScroll(
+          bindControlledScroll(
             target,
             {
               seek: (progress) => {
-                if (owns()) return;
                 for (const handle of handles) handle.seek(progress);
               },
             },
             props.scroll,
+            controls,
           ),
         );
       else if (!manual) {

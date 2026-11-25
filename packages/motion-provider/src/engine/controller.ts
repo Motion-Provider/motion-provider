@@ -1,4 +1,4 @@
-import { finite } from "./errors.js";
+import { finite, invariant } from "./errors.js";
 import type {
   AnimationController,
   AnimationHandle,
@@ -12,14 +12,16 @@ export function createController(): AnimationController {
   const listeners = new Set<() => void>();
 
   let action: ControlAction | undefined;
+  let seekPosition: number | undefined;
 
-  const notify = (next: ControlAction) => {
+  const notify = (next: ControlAction, position?: number) => {
+    seekPosition = position;
     action = next;
     for (const listener of listeners) listener();
   };
 
   const command = (next: ControlAction) => {
-    notify(next);
+    notify(next, next === "pause" ? seekPosition : undefined);
     return [...handles].map((handle) => handle[next]());
   };
 
@@ -28,7 +30,9 @@ export function createController(): AnimationController {
       handles.add(handle);
 
       try {
-        if (action) void handle[action]();
+        if (seekPosition !== undefined && handle.totalDuration !== Infinity)
+          handle.seek(seekPosition);
+        else if (action) void handle[action]();
       } catch (error) {
         handles.delete(handle);
         throw error;
@@ -77,8 +81,15 @@ export function createController(): AnimationController {
     },
     seek(progress) {
       finite(progress, "progress");
-      notify("pause");
-      for (const handle of handles) handle.seek(progress);
+      for (const handle of handles)
+        invariant(
+          handle.totalDuration !== Infinity,
+          "INFINITE_SEEK",
+          "Normalized seeking requires finite iterations.",
+        );
+      const position = Math.max(0, Math.min(1, progress));
+      notify("pause", position);
+      for (const handle of handles) handle.seek(position);
     },
     setPlaybackRate(rate) {
       finite(rate, "playbackRate");

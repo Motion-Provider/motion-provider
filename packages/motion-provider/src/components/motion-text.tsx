@@ -1,6 +1,6 @@
 "use client";
 
-import { createElement } from "react";
+import { createElement, useMemo } from "react";
 import { splitText } from "../internal/text.js";
 import type { MotionTextProps } from "../types.js";
 import { MotionChain } from "./motion-chain.js";
@@ -22,7 +22,8 @@ export function MotionText({
   onMotionComplete,
   ...props
 }: MotionTextProps) {
-  const tokens = splitText(children, config.mode);
+  const { mode, space } = config;
+  const tokens = useMemo(() => splitText(children, mode), [children, mode]);
   return createElement(
     elementType,
     {
@@ -57,7 +58,7 @@ export function MotionText({
         style={{
           display: "inline-block",
           whiteSpace: "pre",
-          marginRight: config.space,
+          marginRight: space,
         }}
       >
         {tokens}

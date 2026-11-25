@@ -1,10 +1,12 @@
 "use client";
 
-import { Children, isValidElement } from "react";
+import { Children, isValidElement, useMemo } from "react";
 import { invariant } from "../engine/errors.js";
-import type { MotionAnimationProps, MotionChainProps } from "../types.js";
+import { usePreparedAnimation } from "../hooks/use-prepared-animation.js";
+import { resolveAnimation } from "../internal/resolve.js";
+import type { MotionChainProps } from "../types.js";
 import { calculateDelays } from "../utils.js";
-import { MotionContainer } from "./motion-container.js";
+import { MotionElement } from "./motion.js";
 
 /**
  * Render one animated wrapper per child, retaining React keys through reordering.
@@ -38,6 +40,12 @@ export function MotionChain({
     `Expected ${items.length} animations; received ${animations?.length}.`,
   );
 
+  const shared = useMemo(
+    () => (animation ? resolveAnimation(animation) : undefined),
+    [animation],
+  );
+  const prepared = usePreparedAnimation(shared?.definition);
+
   const offsets = calculateDelays(items.length, {
     ...config,
     baseDuration: config.duration ?? 0.1,
@@ -45,14 +53,22 @@ export function MotionChain({
   });
 
   return items.map((child, index) => {
-    const spec = animations?.[index] ?? (animation as MotionAnimationProps);
+    const spec = animation ?? animations?.[index];
+    invariant(
+      spec,
+      "MISSING_ANIMATION",
+      "An animation with a mode is required.",
+    );
+    const { definition, timing } = shared ?? resolveAnimation(spec);
+    const source = prepared ? { prepared } : { definition };
     return (
-      <MotionContainer
+      <MotionElement
         {...props}
+        {...source}
         key={isValidElement(child) ? child.key : index}
         elementType={elementType}
-        animation={{
-          ...spec,
+        timing={{
+          ...timing,
           delay: (spec.delay ?? 0) + (offsets[index] ?? 0),
         }}
         controller={
@@ -62,7 +78,7 @@ export function MotionChain({
         }
       >
         {child}
-      </MotionContainer>
+      </MotionElement>
     );
   });
 }

@@ -147,6 +147,88 @@ try {
 			assert.deepEqual(errors, []);
 		},
 	);
+	await check("declarative playback follows replacement effects and nodes", async () => {
+		const errors = await fresh("replacement");
+		for (const revision of [1, 2, 3, 4]) {
+			const previous = await page.locator("#box").evaluate((element) => {
+				window.previousTarget = element;
+				window.previousEffects = element.getAnimations();
+				return element.tagName;
+			});
+			await page.evaluate((value) => window.fixture.render("replacement", value), revision);
+			await page.waitForFunction(
+				(value) => document.querySelector("#box")?.dataset.revision === String(value),
+				revision,
+			);
+			const state = await page.locator("#box").evaluate((element) => ({
+				tag: element.tagName,
+				previousTargetEffects: window.previousTarget.getAnimations().length,
+				currentEffects: element.getAnimations().map((effect) => ({
+					replaced: !window.previousEffects.includes(effect),
+					state: effect.playState,
+				})),
+				opacity: getComputedStyle(element).opacity,
+			}));
+			if (revision === 1) {
+				assert.equal(state.opacity, "1");
+				assert.deepEqual(state.currentEffects, []);
+			} else {
+				assert.deepEqual(state.currentEffects, [{ replaced: true, state: "running" }]);
+			}
+			if (revision === 3) {
+				assert.equal(previous, "DIV");
+				assert.equal(state.tag, "SECTION");
+				assert.equal(state.previousTargetEffects, 0);
+			}
+		}
+		assert.deepEqual(errors, []);
+	});
+	await check("seek survives a live reduced-motion change and a timing rebuild", async () => {
+		const errors = await fresh();
+		await page.emulateMedia({ reducedMotion: "reduce" });
+		await page.evaluate(() => {
+			window.fixture.controller.seek(0.35);
+			window.fixture.render("controlled-replacement");
+		});
+		await page.waitForFunction(() => window.fixture.controller.size === 1);
+		assert.equal(await page.locator("#box").evaluate((el) => el.getAnimations().length), 0);
+
+		await page.emulateMedia({ reducedMotion: "no-preference" });
+		await page.waitForFunction(() => {
+			const effect = document.querySelector("#box").getAnimations()[0];
+			return effect?.playState === "paused" && effect.currentTime === 350;
+		});
+		await page.evaluate(() => window.fixture.render("controlled-replacement", 4));
+		await page.waitForFunction(() => {
+			const effect = document.querySelector("#box").getAnimations()[0];
+			return effect?.playState === "paused" && effect.currentTime === 700;
+		});
+		assert.deepEqual(errors, []);
+	});
+	await check("direct image controllers wait and register replacement tiles", async () => {
+		const errors = await fresh("controlled-image");
+		await page.waitForFunction(() => window.fixture.controller.size === 4);
+		assert.deepEqual(
+			await page.locator("[data-motion-tile]").evaluateAll((tiles) =>
+				tiles.flatMap((tile) => tile.getAnimations().map((effect) => effect.playState)),
+			),
+			Array(4).fill("paused"),
+		);
+		await page.evaluate(() => {
+			void window.fixture.controller.play();
+			window.fixture.render("controlled-image", 1);
+		});
+		await page.waitForFunction(() => window.fixture.controller.size === 9);
+		assert.deepEqual(
+			await page.locator("[data-motion-tile]").evaluateAll((tiles) =>
+				tiles.flatMap((tile) => tile.getAnimations().map((effect) => effect.playState)),
+			),
+			Array(9).fill("running"),
+		);
+		await page.evaluate(() => window.fixture.unmount());
+		assert.equal(await page.evaluate(() => window.fixture.controller.size), 0);
+		assert.deepEqual(errors, []);
+	});
 	await check(
 		"native reverse preserves the visible mid-flight value",
 		async () => {
@@ -177,6 +259,14 @@ try {
 				Number(getComputedStyle(document.querySelector("#box")).opacity),
 			)) < 0.01,
 		);
+		await page.evaluate(() => window.fixture.render("trigger", 2));
+		await page.waitForFunction(
+			() => document.querySelector("#box").getAnimations()[0]?.playbackRate === -1,
+		);
+		await page.evaluate(() => window.fixture.render("trigger", 3));
+		await page.waitForFunction(
+			() => document.querySelector("#box").getAnimations()[0]?.playbackRate === 1,
+		);
 	});
 	await check("in-view entry waits for visibility", async () => {
 		await fresh("inview");
@@ -194,6 +284,30 @@ try {
 			),
 			"1",
 		);
+	});
+	await check("shared chain preparation preserves stagger and native effects", async () => {
+		const errors = await fresh("shared-chain");
+		const delays = await page.locator("#shared-chain").evaluate((group) => {
+			window.chainEffects = group.getAnimations({ subtree: true });
+			return window.chainEffects.map((effect) => effect.effect.getTiming().delay);
+		});
+		assert.deepEqual(delays, [125, 250]);
+		for (const revision of [1, 2, 3]) {
+			await page.evaluate((value) => window.fixture.render("shared-chain", value), revision);
+			await page.waitForFunction(
+				(value) => document.querySelector("#shared-chain")?.dataset.revision === String(value),
+				revision,
+			);
+			assert.equal(
+				await page.locator("#shared-chain").evaluate((group) => {
+					const effects = group.getAnimations({ subtree: true });
+					return effects.length === window.chainEffects.length &&
+						effects.every((effect, i) => effect === window.chainEffects[i]);
+				}),
+				true,
+			);
+		}
+		assert.deepEqual(errors, []);
 	});
 	await check("Unicode text and per-item explicit delays", async () => {
 		await fresh("text");

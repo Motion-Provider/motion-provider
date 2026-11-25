@@ -65,9 +65,36 @@ function Suite({ name, revision = 0 }: { name: string; revision?: number }) {
           }}
           controller={{
             trigger: revision % 2 === 0,
+            reverse: revision >= 2,
           }}
         >
           Trigger
+        </MotionContainer>
+      );
+    case "replacement":
+    case "controlled-replacement":
+      return (
+        <MotionContainer
+          {...common}
+          id="box"
+          data-revision={revision}
+          elementType={revision >= 3 ? "section" : "div"}
+          reducedMotion={
+            name === "controlled-replacement"
+              ? "user"
+              : revision === 1
+                ? "always"
+                : "never"
+          }
+          controller={
+            name === "controlled-replacement" ? controller : { trigger: true }
+          }
+          animation={{
+            mode: "fadeIn",
+            duration: revision >= 4 ? 2 : 1,
+          }}
+        >
+          Replacement
         </MotionContainer>
       );
     case "inview":
@@ -132,6 +159,29 @@ function Suite({ name, revision = 0 }: { name: string; revision?: number }) {
           {[<b key="a">A</b>, <b key="b">B</b>]}
         </MotionChain>
       );
+    case "shared-chain": {
+      const animation = {
+        mode: "fadeIn" as const,
+        duration: 1,
+        delay: 0.125,
+        transition: { delay: 0.5 },
+      };
+      return (
+        <div id="shared-chain" data-revision={revision}>
+          <MotionChain
+            {...(revision === 2
+              ? { animations: [animation, animation] }
+              : { animation })}
+            config={{ duration: 0.125 }}
+            controller={controller}
+            reducedMotion="never"
+          >
+            <b key="a">A</b>
+            <b key="b">B</b>
+          </MotionChain>
+        </div>
+      );
+    }
     case "image":
       return (
         <Profiler id="image" onRender={() => metrics.commits++}>
@@ -154,6 +204,18 @@ function Suite({ name, revision = 0 }: { name: string; revision?: number }) {
             alt="Tiles"
           />
         </Profiler>
+      );
+    case "controlled-image":
+      return (
+        <MotionImage
+          {...common}
+          animation={{ mode: "fadeIn", duration: 1 }}
+          config={{ img: svg("red"), pieces: revision === 0 ? 4 : 9 }}
+          controller={controller}
+          reducedMotion="never"
+          style={{ width: 200, height: 100 }}
+          alt="Controlled tiles"
+        />
       );
     case "link":
       return (

@@ -1,6 +1,6 @@
 "use client";
 
-import { forwardRef } from "react";
+import { forwardRef, useMemo } from "react";
 import { resolveAnimation } from "../internal/resolve.js";
 import type { MotionContainerProps } from "../types.js";
 import { Motion } from "./motion.js";
@@ -13,7 +13,10 @@ export const MotionContainer = forwardRef<
   HTMLElement | SVGElement,
   MotionContainerProps
 >(function MotionContainer({ animation, ...props }, ref) {
-  const { definition, timing } = resolveAnimation(animation);
+  const { definition, timing } = useMemo(
+    () => resolveAnimation(animation),
+    [animation],
+  );
   return (
     <Motion {...props} definition={definition} timing={timing} ref={ref} />
   );

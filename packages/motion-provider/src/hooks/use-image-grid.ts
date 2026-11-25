@@ -2,23 +2,28 @@
 
 import type { RefObject } from "react";
 import { useEffect, useMemo, useRef } from "react";
-import { animateElement } from "../engine/animate.js";
+import { animatePreparedElement } from "../engine/animate.js";
 import { isController } from "../engine/controller.js";
 import { report } from "../engine/errors.js";
 import type { AnimationHandle, Timing } from "../engine/types.js";
 import { bindPlayback } from "../internal/playback.js";
 import { resolveAnimation } from "../internal/resolve.js";
 import { dataKey, parseData } from "../internal/stable.js";
-import type { AnimationModule, MotionImageProps } from "../types.js";
+import type { MotionImageProps } from "../types.js";
 import { calculateDelays } from "../utils.js";
 import { useLatest } from "./use-latest.js";
+import { usePreparedAnimation } from "./use-prepared-animation.js";
 /** Tile effects live outside React state. Pointer activity only plays the affected handles. */
 export function useImageGrid(
   ref: RefObject<HTMLDivElement | null>,
   ready: boolean,
   props: MotionImageProps,
 ) {
-  const { definition, timing } = resolveAnimation(props.animation);
+  const { definition, timing } = useMemo(
+    () => resolveAnimation(props.animation),
+    [props.animation],
+  );
+  const compiled = usePreparedAnimation(definition);
   const { pieces, duration, delayLogic, customLogic, seed, maxDelay, fn } =
     props.config;
 
@@ -31,7 +36,6 @@ export function useImageGrid(
   });
 
   const key = dataKey({
-    definition,
     timing,
     offsets,
   });
@@ -39,7 +43,6 @@ export function useImageGrid(
   const spec = useMemo(
     () =>
       parseData<{
-        definition: AnimationModule;
         timing: Timing;
         offsets: number[];
       }>(key),
@@ -62,7 +65,7 @@ export function useImageGrid(
     try {
       nodes.forEach((node, i) => {
         effects.push(
-          animateElement(node, spec.definition, {
+          animatePreparedElement(node, compiled, {
             ...spec.timing,
             delay: (spec.timing.delay ?? 0) + (spec.offsets[i] ?? 0),
             autoplay: false,
@@ -92,12 +95,12 @@ export function useImageGrid(
       for (const effect of effects) effect.dispose();
       handles.current = [];
     };
-  }, [ref, ready, spec, reducedMotion, callbacks]);
+  }, [ref, ready, compiled, spec, reducedMotion, callbacks]);
 
   const input = props.controller,
-    declarative = isController(input) ? undefined : input;
-
-  const controls = isController(input) ? input : declarative?.controls;
+    imperativeController = isController(input),
+    declarative = imperativeController ? undefined : input,
+    controls = imperativeController ? input : declarative?.controls;
 
   const trigger = declarative?.trigger,
     reverse = declarative?.reverse,
@@ -119,8 +122,11 @@ export function useImageGrid(
     start = s?.start,
     end = s?.end;
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Rebind whenever the effect above replaces the tile handles.
   useEffect(() => {
     if (!ready || !ref.current) return;
+    if (imperativeController)
+      return bindPlayback(ref.current, handles.current, controls);
 
     return bindPlayback(
       ref.current,
@@ -152,6 +158,10 @@ export function useImageGrid(
   }, [
     ref,
     ready,
+    compiled,
+    spec,
+    reducedMotion,
+    imperativeController,
     controls,
     trigger,
     reverse,
