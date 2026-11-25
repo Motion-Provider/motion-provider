@@ -19,6 +19,7 @@ export default function CtaSection() {
       id="cta-playground"
     >
       <Wrapper>
+        <div className="bg-black/50 z-20 width-full absolute backdrop-blur-sm inset-0" />
         <GridImage />
         <div className="grid place-items-center-safe z-50">
           <Chip
@@ -79,7 +80,7 @@ function Wrapper({ children }: { children: React.ReactNode }) {
         size: 24,
       }}
       className="size-full flex flex-row bg-transparent"
-      innerClassName="size-full relative flex md:flex-row flex-col overflow-clip items-center-safe justify-center-safe md:gap-8  bg-transparent"
+      innerClassName="size-full relative flex md:flex-row flex-col overflow-clip items-center-safe justify-center-safe md:gap-8 bg-transparent"
     >
       {children}
     </ContainerWrapper>

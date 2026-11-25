@@ -148,7 +148,7 @@ export default createMotionConfig({
     type: "MotionImage",
     props: {
       animation: {
-        mode: ["fadeIn", "filterBlurIn", "skewX45"],
+        mode: ["fadeIn", "rotateFlipY"],
         duration: 1.5,
         transition: "gentle",
       },
@@ -162,7 +162,7 @@ export default createMotionConfig({
           axis: "y",
           mode: "view",
           start: 0.25,
-          end: 0.5,
+          end: 0.8,
         },
       },
     },

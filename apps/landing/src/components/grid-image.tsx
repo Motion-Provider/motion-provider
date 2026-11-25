@@ -13,7 +13,7 @@ export function GridImage() {
         {...imageAnimation}
         config={{
           ...imageAnimation.config,
-          img: "/assets/backgrounds/grid-background-be9b88fc.webp",
+          img: "/assets/backgrounds/motion-provider-adventure-illustration.webp",
           pieces: isMobile ? 36 : imageAnimation.config.pieces,
         }}
         wrapperClassName="top-0 left-0 z-10 absolute size-full aspect-video overflow-hidden"
