@@ -7,7 +7,6 @@ export interface ShowcaseItem {
   id: string;
   imgSrc?: string;
   slot: ShowcaseSlot;
-  type: "component";
   title: string;
   tagline: string;
   desc: string;

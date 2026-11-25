@@ -1,4 +1,5 @@
 ﻿import { createContext, useContext, useState } from "react";
+import data from "@/constants/showcase.data";
 import type { SetStateProps } from "@/types";
 import type { ShowcaseSelected } from "@/types/showcase.type";
 
@@ -20,9 +21,11 @@ export function useShowcase() {
   return ctx;
 }
 
+const median = data[Math.floor(data.length / 2)]?.id;
+
 export function ShowcaseProvider({ children }: { children: React.ReactNode }) {
   const [selected, setSelected] = useState<ShowcaseSelected>(
-    "motion-container.demo",
+    median ?? "motion-container.demo",
   );
 
   return (

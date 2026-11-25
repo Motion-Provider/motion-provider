@@ -4,7 +4,6 @@ export default [
   {
     id: "motion-container.demo",
     slot: 0,
-    type: "component",
     title: "<MotionContainer />",
     tagline: "Wrap anything. It animates on view.",
     desc: "A viewport-triggered wrapper. Drop it around any element, pick a preset, ship.",
@@ -18,7 +17,6 @@ export default [
   {
     id: "motion-text.demo",
     slot: 1,
-    type: "component",
     title: "<MotionText />",
     tagline: "Split. Stagger. Reveal.",
     desc: "Breaks text into pieces and staggers a preset across them. Headlines stop being static, they're more like — ALIVE.",
@@ -37,7 +35,6 @@ export default [
   {
     id: "motion-link.demo",
     slot: 4,
-    type: "component",
     title: "<MotionLink />",
     tagline: "Click. Hover. Tap.",
     desc: "Waits for reverse playback of existing animations before navigating. Wire it with useController() to perform seamless transitions between pages.",
@@ -89,7 +86,6 @@ export default function Page() {
   {
     id: "motion-image.demo",
     slot: 3,
-    type: "component",
     title: "<MotionImage />",
     tagline: "One image. Hundreds of pieces.",
     desc: "Fragments an image into a grid of tiles and animates each piece independently using deterministic algorithms.",
@@ -114,7 +110,6 @@ export default function Page() {
   {
     id: "motion-chain.demo",
     slot: 2,
-    type: "component",
     title: "<MotionChain />",
     tagline: "Sequence without timelines.",
     desc: "Animates a group of elements or nodes in sequence. Auto-detects the order & timing.",
@@ -140,7 +135,6 @@ const animations: MotionAnimationProps[] = elements.map((_, idx) => ({
   {
     id: "motion-motion.demo",
     slot: 5,
-    type: "component",
     title: "<Motion />",
     tagline: "Lighten up version of the container.",
     desc: "Unopinionated wrapper that feels eased. Best for lightweight and simple animations.",

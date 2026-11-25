@@ -1,5 +1,4 @@
-﻿import { Chip } from "@heroui/react";
-import Image from "next/image";
+﻿import Image from "next/image";
 import type { CSSProperties, KeyboardEvent, Ref } from "react";
 import { useRef } from "react";
 import showcaseData from "@/constants/showcase.data";
@@ -30,7 +29,6 @@ export function ShowcaseExplorer() {
   const buttonRefs = useRef<(HTMLButtonElement | null)[]>([]);
 
   const isMobile = useIsMobile();
-
   const { selected, setSelected } = useShowcase();
 
   const filteredItems = isMobile
@@ -101,7 +99,7 @@ export function ShowcaseExplorer() {
 }
 
 function StackCard({ item, index, offset, onSelect, ref }: StackCardProps) {
-  const { title, tagline, imgSrc, type } = item;
+  const { title, tagline, imgSrc } = item;
 
   const isSelected = offset === 0;
   const isVisible = Math.abs(offset) <= VISIBLE_DEPTH;
@@ -124,11 +122,10 @@ function StackCard({ item, index, offset, onSelect, ref }: StackCardProps) {
       onClick={() => onSelect(index)}
       style={style}
       className={cn(
-        "group absolute inset-x-6 top-1/2 h-[46%] cursor-pointer overflow-hidden rounded-2xl border bg-black text-left",
+        "group absolute inset-x-6 top-1/2 h-[46%] cursor-pointer overflow-hidden rounded-2xl border border-border bg-black text-left",
         "translate-y-[calc(-50%+var(--o)*28%)] scale-[calc(1-var(--d)*0.06)]",
         "transition-[translate,scale,opacity,border-color] duration-500 ease-out motion-reduce:transition-none",
         "focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent",
-        isSelected ? "border-accent" : "border-accent/20",
         !isVisible && "pointer-events-none opacity-0",
       )}
     >
@@ -167,14 +164,6 @@ function StackCard({ item, index, offset, onSelect, ref }: StackCardProps) {
           >
             {title}
           </span>
-          <Chip
-            variant="soft"
-            color="accent"
-            className="rounded-full text-[10px] font-primary tracking-normal"
-            size="sm"
-          >
-            {type}
-          </Chip>
         </div>
 
         <span className="flex w-full items-end justify-between gap-2">
