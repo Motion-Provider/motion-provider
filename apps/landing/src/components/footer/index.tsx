@@ -1,8 +1,8 @@
+import { WordmarkImage } from "@motion/ui";
 import {
   FooterLinkGroupColumn,
   FooterLinkItem,
 } from "@/components/footer/footer-link-group";
-import { FooterWordmark } from "@/components/footer/footer-wordmark";
 import { FOOTER_DATA } from "@/constants/footer.data";
 
 export function Footer() {
@@ -21,7 +21,20 @@ export function Footer() {
               {tagline.accent}
             </span>
           </p>
-          <FooterWordmark />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none select-none text-foreground relative md:-my-26"
+          >
+            <WordmarkImage
+              controller={{
+                configView: {
+                  amount: 0.5,
+                  once: false,
+                },
+              }}
+              img="/assets/app-wordmark.webp"
+            />
+          </div>
         </div>
 
         <div className="place-items-stretch md:mt-0">
