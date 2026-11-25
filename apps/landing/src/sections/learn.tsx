@@ -156,15 +156,19 @@ export default function LearnSection() {
           <div className="min-w-0">
             <MotionText
               animation={{
-                mode: ["fadeUp", "filterBlurIn", "rotateFlipY"],
+                mode: ["fadeIn", "filterBlurIn", "rotateFlipY"],
+                duration: 0.72,
+                transition: "gentle",
               }}
               config={{
                 mode: "chars",
                 delayLogic: "chaotic",
+                duration: 0.08,
               }}
               id="learn-title"
               elementType="h2"
-              wrapperClassName="text-4xl leading-tight tracking-tighter text-pretty sm:text-5xl lg:text-6xl last:text-accent"
+              className="last:text-accent"
+              wrapperClassName="text-4xl leading-tight tracking-tighter text-pretty sm:text-5xl lg:text-6xl -ml-1"
             >
               Motion in practice.
             </MotionText>
