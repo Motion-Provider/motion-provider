@@ -1,0 +1,65 @@
+---
+title: "Motion runtime changes"
+description: "Local review draft covering scroll batching, compiled definitions, and playback continuity."
+draft: true
+---
+
+This temporary Learn draft records the `useMotion` review and the follow-up optimizations.
+
+## What changes in an app
+
+| Scenario | Before | With the changes |
+| --- | --- | --- |
+| A storefront has 100 scroll-linked product cards. Opening a preview hands playback to a shared controller. | Each card scheduled its own frame callback. The callbacks still read geometry after the controller took over. | Cards on the same source share one frame. The first controller command detaches its scroll bindings, including queued work. |
+| A campaign image reveals itself in a grid of 49 tiles. | Each tile compiled the same animation and created its own native effects. | The grid compiles the definition once. Each tile still has its own native effects and stagger delay. |
+| An editor scrubs to 35% and changes the animation duration from one second to two seconds. | A replacement handle replayed a pause at its initial position. | The replacement stays paused at 35%. For an effect with no delays, that moves the playhead from 350 ms to 700 ms. |
+| Someone enables reduced motion while editing, then turns it off. | A handle created during reduced motion could stay without native effects, even on a later play command. | A paused seek returns to its scrubbed position. For completed playback, the next play command creates native effects on demand. |
+| A product card changes its intrinsic element from a `div` to a `section` as its layout changes. | The playback driver could still refer to the old handle, leaving the replacement element paused. | The hook releases the old animation, creates one for the new element, and reconnects the playback driver. |
+
+## Try the scenarios
+
+### Give an editor control of a scroll-driven preview
+
+Scroll the product list, then press **Pause preview** and keep scrolling. The shared controller takes ownership, so the card accents hold their fade levels while the list continues to move. Press **Restart preview** to reconnect the scroll bindings.
+
+<Registry slug="optimizations/scroll-takeover" title="Scroll-driven product preview" />
+
+The Node simulation used 100 distinct targets on one viewport source. These are operation counts per scroll update.
+
+| Operation | Before batching | After batching | After takeover of all 100 bindings |
+| --- | ---: | ---: | ---: |
+| Scheduled frame callbacks | 100 | 1 | 0 |
+| Target rectangle reads | 100 | 100 | 0 |
+| Animation seeks | 100 | 100 | 0 |
+
+### Reveal a gallery image with staggered tiles
+
+Press **Replay reveal** to watch all 49 tiles fade in. Motion Provider compiles one definition for the grid. The `config.duration` value spaces out the starts, while `animation.duration` controls each tile's fade.
+
+<Registry slug="optimizations/tile-reveal" title="49-tile image reveal" />
+
+### Keep a timeline scrubbed while changing its duration
+
+Press **Seek to 35%**, then **Double duration**. The fill should stay at 35% while its paused time changes from 350 ms to 700 ms. With system reduced motion enabled, playback shows a static endpoint. Turning the preference off restores the scrubbed position.
+
+<Registry slug="optimizations/seek-continuity" title="Seek position across a timing change" />
+
+## Source changes by line
+
+Old line numbers refer to commit `9efc0fe`. Current line numbers refer to the working copy reviewed for this draft. Runtime paths are relative to `packages/motion-provider/src/`. Test paths are relative to the repository root.
+
+| File | Removed or replaced | Added or updated | Why |
+| --- | --- | --- | --- |
+| `engine/scroll.ts` | Old L19–124 assigned each binding its own listener and frame callback. | Current L16–72 caches geometry per frame. L81–199 pools listeners, resize observations, and frames. L205–239 attaches each binding to its pool. | Share reads and scheduling across bindings and measure before seeking. |
+| `internal/playback.ts` | Old L44–55 kept the scroll driver active and checked controller ownership inside each seek. | Current L11–40 subscribes to takeover and disposes the scroll binding. L77–89 uses it for grouped playback. | Release geometry work when imperative playback takes over. |
+| `hooks/use-motion.ts` | Old L19–32 parsed one combined definition and timing key. L65–86 held commented-out effects. L143–191 handled scroll and visibility in separate branches. | Current L20–23 prepares definition and timing separately. L56–97 tracks the native element and handle lifetime. L114–146 connects controlled scrolling and shares the trigger and viewport direction logic. L150–174 rebinds playback and returns initial styles. | Keep the driver connected to the current handle and reuse compiled data. |
+| `hooks/use-prepared-animation.ts` | New file. | Current L1–15 memoizes compilation by definition data. | Reuse prepared tracks across rerenders with equivalent inline definitions. |
+| `components/motion.tsx` and `motion-container.tsx` | Old `motion.tsx` L35 compiled initial styles on render. Old `motion-container.tsx` L16 resolved presets every render. | Current `motion.tsx` L44–52 receives initial styles from the hook. Current `motion-container.tsx` L16–19 memoizes preset resolution. | Share initial styles with playback and avoid resolving a stable animation prop again. |
+| `hooks/use-image-grid.ts` | Old L34 and L42 included the definition in the grid's data snapshot. L65 compiled it through the engine for each tile. Old L98–101 and L122–171 normalized the controller into a declarative shape. | Current L22–50 separates the prepared definition from timing and offsets. L68–72 passes the same compiled data to every tile. L98–178 retains direct controller mode and rebinds replacement tiles. | Share compilation across tiles and register the handles that are actually mounted. |
+| `engine/animate.ts` | Old L30–33 compiled within every native handle setup. L88–139 used one-time native setup and recomputed end time on demand. L288–295 handled only the switch into reduced motion. | Current L12–39 separates compilation from native setup. L43–75 precomputes timing and tracks seek state. L106–169 manages reusable tracks and native effects. L289–346 restores seek state on preference changes and enables later playback. | Reuse compilation, avoid creating effects while reduced motion is active, and support later playback or scrubbing. |
+| `engine/controller.ts` | Old L31 replayed the latest action on registration. L78–81 represented a seek by storing only `pause`. | Current L14–35 stores and replays normalized progress. L82–93 validates and applies seeks. | Keep replacement handles at the same fraction of their own duration. |
+| `tests/core/lifecycle.test.mjs` and `tests/browser/run.mjs` | The existing reverse-trigger test covered one direction. | Core L404–533 covers batching, teardown, seek replay, and reduced motion. Browser L150–231 covers replacement effects, live preference changes, and image registration. Browser L262–269 adds backwards-trigger coverage. | Exercise the changes through both the engine and the React components. |
+
+## Verification
+
+TypeScript, Biome, and all 19 lifecycle tests passed. Chromium passed 13 of 14 checks, including the new case that restores a 35% seek after reduced motion and a timing rebuild. The broader runs still showed three known failures involving the preset count, server-rendered opacity, and an exact floating-point comparison of a stagger delay.
