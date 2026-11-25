@@ -86,7 +86,10 @@ function getWheelDefinition(index: number): AnimationModule {
   };
 }
 
-const DEFINITIONS = OPTIONS.map((_, index) => getWheelDefinition(index));
+const wheelOptions = OPTIONS.map((option, index) => ({
+  ...option,
+  definition: getWheelDefinition(index),
+}));
 
 type DragState = {
   pointerId: number;
@@ -114,14 +117,14 @@ export default function OptionWheel() {
     }
   }, [scrollRoot]);
 
-  function scrollToIndex(index: number) {
+  function scrollToIndex(index: number, animate = !reducedMotion) {
     const next = clampIndex(index);
 
     destination.current = next;
 
     scrollRoot?.scrollTo({
       top: next * STEP,
-      behavior: reducedMotion ? "auto" : "smooth",
+      behavior: animate ? "smooth" : "instant",
     });
   }
 
@@ -163,7 +166,7 @@ export default function OptionWheel() {
     }
 
     event.preventDefault();
-    scrollToIndex(next);
+    scrollToIndex(next, false);
   }
 
   function handlePointerDown(event: PointerEvent<HTMLDivElement>) {
@@ -232,7 +235,7 @@ export default function OptionWheel() {
   const animated = scrollRoot && !reducedMotion && !animationFailed;
 
   return (
-    <section className="w-full max-w-md overflow-hidden rounded-2xl text-white">
+    <div className="@container w-full max-w-md overflow-hidden rounded-2xl text-white">
       <div
         ref={setScrollRoot}
         role="listbox"
@@ -257,29 +260,28 @@ export default function OptionWheel() {
           }
         }}
         style={{ height: HEIGHT }}
-        className="cursor-grab touch-pan-y snap-y snap-mandatory select-none overflow-x-hidden overflow-y-auto overscroll-y-contain outline-none [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-transparent active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
+        className="cursor-grab touch-pan-y snap-y snap-mandatory select-none overflow-x-hidden overflow-y-auto outline-none [scrollbar-width:none] focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent/70 active:cursor-grabbing [&::-webkit-scrollbar]:hidden"
       >
         <div
           style={{
             paddingBlock: (HEIGHT - STEP) / 2,
           }}
         >
-          {OPTIONS.map(({ name, Icon }, index) => (
-            // biome-ignore lint/a11y/useFocusableInteractive: dynamic slug
+          {wheelOptions.map(({ name, Icon, definition }, index) => (
+            // biome-ignore lint/a11y/useFocusableInteractive lint/a11y/useKeyWithClickEvents: The listbox keeps focus and handles keyboard selection.
             <div
               key={name}
               id={`${id}-${index}`}
               role="option"
               aria-selected={selected === index}
               onClick={() => scrollToIndex(index)}
-              onKeyUp={() => scrollToIndex(index)}
               style={{ height: STEP }}
-              className="flex snap-center items-center pl-12"
+              className="flex snap-center items-center pl-[clamp(1.25rem,10cqi,3rem)]"
             >
               {animated ? (
                 <Motion
                   elementType="span"
-                  definition={DEFINITIONS[index]!}
+                  definition={definition}
                   timing={{
                     duration: 1,
                     easing: "linear",
@@ -293,14 +295,14 @@ export default function OptionWheel() {
                     },
                   }}
                   onMotionError={() => setAnimationFailed(true)}
-                  className="pointer-events-none inline-flex origin-left items-center gap-3 whitespace-nowrap text-[clamp(1.75rem,7vw,2.5rem)] font-medium tracking-tight"
+                  className="pointer-events-none inline-flex origin-left items-center gap-3 whitespace-nowrap text-[clamp(1.5rem,12cqi,2.5rem)] font-medium tracking-tight"
                 >
                   <Icon aria-hidden="true" className="size-[0.75em] shrink-0" />
                   {name}
                 </Motion>
               ) : (
                 <span
-                  className={`pointer-events-none inline-flex items-center gap-3 whitespace-nowrap text-[clamp(1.75rem,7vw,2.5rem)] font-medium tracking-tight ${
+                  className={`pointer-events-none inline-flex items-center gap-3 whitespace-nowrap text-[clamp(1.5rem,12cqi,2.5rem)] font-medium tracking-tight ${
                     selected === index ? "text-white" : "text-white/40"
                   }`}
                 >
@@ -312,6 +314,6 @@ export default function OptionWheel() {
           ))}
         </div>
       </div>
-    </section>
+    </div>
   );
 }

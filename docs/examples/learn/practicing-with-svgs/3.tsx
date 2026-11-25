@@ -89,7 +89,7 @@ export default function Component({ controller }: ModuleProps) {
     <div className="flex w-full min-w-0 flex-col items-center gap-2 p-3">
       <div className="order-last grid w-full grid-cols-[repeat(2,minmax(0,8rem))] items-end justify-start gap-1">
         <Select
-          className="w-full min-w-0 dark"
+          className="w-full min-w-0"
           placeholder="Select delay"
           value={selectedDelay}
           onChange={(v) => setSelectedDelay(v)}
@@ -99,7 +99,7 @@ export default function Component({ controller }: ModuleProps) {
             <Select.Value className="text-xs" />
             <Select.Indicator />
           </Select.Trigger>
-          <Select.Popover className="dark">
+          <Select.Popover>
             <ListBox className="max-h-60 overflow-y-scroll text-xs">
               {delayItems.map((delay) => (
                 <ListBox.Item key={delay} id={delay} textValue={delay}>
@@ -111,7 +111,7 @@ export default function Component({ controller }: ModuleProps) {
           </Select.Popover>
         </Select>
         <Select
-          className="w-full min-w-0 dark text-xs"
+          className="w-full min-w-0 text-xs"
           placeholder="Select delay"
           value={selectedTransition}
           onChange={(v) => setSelectedTransition(v)}
@@ -121,7 +121,7 @@ export default function Component({ controller }: ModuleProps) {
             <Select.Value className="text-xs" />
             <Select.Indicator />
           </Select.Trigger>
-          <Select.Popover className="dark">
+          <Select.Popover>
             <ListBox className="max-h-60 overflow-y-scroll text-xs">
               {transitionItems.map((delay) => (
                 <ListBox.Item key={delay} id={delay} textValue={delay}>

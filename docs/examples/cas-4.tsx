@@ -65,7 +65,7 @@ const data = createMotionConfig({
         duration: 0.42,
         delayLogic: "sinusoidal",
       },
-      alt: "demo",
+      alt: "Mist drifting over a forested ridge",
       wrapperClassName:
         "size-24 overflow-hidden rounded-lg @md:size-44 @xl:size-56",
     },
@@ -77,10 +77,10 @@ const { getAnimation } = createMotionRegistry(data);
 type Action = keyof Pick<AnimationController, "pause" | "onReverse" | "play">;
 
 const actions = [
-  "play",
-  "pause",
-  "onReverse",
-] as const satisfies readonly Action[];
+  { label: "Play", action: "play" },
+  { label: "Pause", action: "pause" },
+  { label: "Reverse", action: "onReverse" },
+] as const satisfies readonly { label: string; action: Action }[];
 
 export default function Cas4() {
   const controller = useController({
@@ -95,10 +95,15 @@ export default function Cas4() {
   return (
     <section className="@container grid min-h-full w-full items-center px-4 py-3 tracking-tighter">
       <div className="mx-auto grid w-full max-w-2xl gap-3">
-        <div className="flex flex-wrap gap-3 justify-self-center rounded-md bg-surface-secondary px-3 py-2 text-xs text-surface-secondary-foreground *:cursor-pointer *:hover:text-accent @md:justify-self-end">
-          {actions.map((action) => (
-            <button key={action} type="button" onClick={animate(action)}>
-              {action}
+        <div className="flex flex-wrap justify-self-center rounded-lg bg-surface-secondary p-1 text-xs text-surface-secondary-foreground @md:justify-self-end">
+          {actions.map(({ label, action }) => (
+            <button
+              key={action}
+              type="button"
+              className="min-h-9 cursor-pointer rounded-md px-3 hover:text-accent focus-visible:outline-2 focus-visible:outline-focus"
+              onClick={animate(action)}
+            >
+              {label}
             </button>
           ))}
         </div>
@@ -108,10 +113,10 @@ export default function Cas4() {
               Motion CAS
             </MotionContainer>
             <MotionText {...getAnimation("title")} controller={controller}>
-              Make stuffs alive
+              Above the treeline
             </MotionText>
             <MotionContainer {...getAnimation("desc")} controller={controller}>
-              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+              A quiet morning in the mountains.
             </MotionContainer>
           </div>
           <div className="flex gap-2 items-center relative">

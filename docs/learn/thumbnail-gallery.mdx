@@ -1,0 +1,176 @@
+---
+title: "Building a Thumbnail Gallery"
+description: "Build a looping strip of covers, select them with thumbnails, and animate the rail with Motion Provider."
+order: 60
+---
+
+Build a gallery with a row of large covers and a thumbnail for each one. Selecting a thumbnail centers its matching cover. The row can move in either direction across the first and last covers, and a second selection can redirect an animation already in progress.
+
+The examples build on one another. Each uses the same cover data and thumbnail controls.
+
+## 1. Select a cover with thumbnails
+
+Give each cover a stable ID, a title, an image URL, and a description. Use the same array to render the thumbnail strip and look up the cover to display.
+
+```tsx
+const [active, setActive] = useState(0);
+const cover = COVERS[active];
+```
+
+`active` is the index in the original artwork array. The thumbnail and the large cover can use the same image URL because CSS sets their display sizes independently.
+
+```tsx
+<button
+  id={`${id}-tab-${index}`}
+  type="button"
+  role="tab"
+  aria-label={title}
+  aria-controls={`${id}-stage`}
+  aria-selected={index === active}
+  tabIndex={index === active ? 0 : -1}
+  onClick={(event) => onSelect(index, event.detail > 0)}
+>
+  <img src={src} alt="" width={320} height={448} />
+</button>
+```
+
+The button's label gives each thumbnail its name. Put the buttons in a labeled `tablist` and give the large-cover panel `role="tabpanel"`. The panel's `aria-labelledby` points to the selected thumbnail. Its cover description is available to screen readers.
+
+Only the active thumbnail is in the Tab order. Handle the arrow keys on the strip, select the next thumbnail, and move focus to its button. The demo also handles Home and End for direct access to the first and last covers.
+
+```tsx
+const next = wrap(active + direction);
+onSelect(next, false);
+event.currentTarget.querySelectorAll("button")[next]?.focus();
+```
+
+Here `direction` is `-1` for Arrow Left and `1` for Arrow Right. The second argument opts out of motion for keyboard navigation. A button click with `event.detail === 0` uses the same immediate behavior, including activation with Enter or Space.
+
+<Registry
+  slug="learn/thumbnail-gallery/thumbnail-strip"
+  title="Select a cover"
+/>
+
+## 2. Build a continuous cover rail
+
+Render three copies of the cover array in one flex row. Start in the middle copy so both neighbors are available when the first or last thumbnail is selected.
+
+```tsx
+const railCovers = [0, 1, 2].flatMap((copy) =>
+  COVERS.map((cover) => ({ ...cover, key: `${copy}-${cover.id}` })),
+);
+
+const center = COVERS.length + active;
+```
+
+Use a key that includes the copy number so React can keep each image mounted when selection changes. The rail can show repeated artwork, while the thumbnail list still represents each cover once.
+
+The rail's own width is one cover plus one gap. Its children have a fixed cover width and are allowed to overflow the rail. The stage clips that overflow.
+
+```css
+.stage {
+  overflow: hidden;
+}
+
+.rail {
+  position: relative;
+  left: calc(50% - var(--cover-width) / 2);
+  display: flex;
+  width: calc(var(--cover-width) + var(--cover-gap));
+  gap: var(--cover-gap);
+}
+
+.cover {
+  width: var(--cover-width);
+  aspect-ratio: 5 / 7;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+```
+
+The left offset centers the first cover at rest. Because percentages in `translateX()` use the rail's width, every `-100%` moves it exactly one cover-and-gap step. That relationship holds when the stage resizes.
+
+```tsx
+function translateRail(position: number) {
+  return `translateX(${-position * 100}%)`;
+}
+```
+
+Apply `translateRail(center)` as the row's transform. Pick the first and last thumbnails below and check that both still have neighbors.
+
+<Registry
+  slug="learn/thumbnail-gallery/cover-rail"
+  title="Center a cover in the rail"
+/>
+
+## 3. Animate the shortest route
+
+When the rail is at rest, use its last destination. If someone selects a thumbnail during a transition, read the transform the browser is currently drawing. The computed matrix's `m41` is the horizontal translation in pixels. Dividing its negative by the rail width gives the current position in cover steps, including any fraction between covers.
+
+```tsx
+function readPosition(rail: Element | null, fallback: number) {
+  if (!rail?.getAnimations?.().some((effect) => effect.playState === "running")) {
+    return fallback;
+  }
+
+  const width = rail.getBoundingClientRect().width;
+  const transform = getComputedStyle(rail).transform;
+  if (!width || transform === "none") return fallback;
+
+  return -new DOMMatrixReadOnly(transform).m41 / width;
+}
+```
+
+Normalize that position into the middle copy, then choose the copy of the requested cover closest to it.
+
+```tsx
+function wrap(position: number) {
+  return ((position % COUNT) + COUNT) % COUNT;
+}
+
+const start = COUNT + wrap(readPosition(rail.current, to));
+const target = index + Math.round((start - index) / COUNT) * COUNT;
+setSelection({ active: index, from: start, to: target });
+```
+
+Normalization shifts the rail by a whole set of identical covers, so the visible artwork stays in the same place. With nine covers, the first one starts at position `9`. Selecting the last one chooses position `8`, one step to the left. Selecting the first one again advances one step to the right.
+
+Render the row with `Motion`. Use the sampled position as the initial transform and the target copy as the end transform. A short ease-out gives pointer users immediate feedback and `fill: "both"` keeps the rail at its destination after playback.
+
+```tsx
+<Motion
+  ref={rail}
+  className={RAIL_CLASS}
+  definition={{
+    initial: { transform: translateRail(from) },
+    animate: { transform: translateRail(to) },
+  }}
+  timing={{
+    duration: 0.28,
+    easing: "cubic-bezier(0.23, 1, 0.32, 1)",
+    fill: "both",
+  }}
+  controller={{ trigger: true, isAnimationStopped: from === to }}
+>
+  <RailCovers />
+</Motion>
+```
+
+Use `useReducedMotion()` from Motion Provider to honor the system preference. For a keyboard selection or reduced motion, store the destination as both endpoints. `isAnimationStopped` makes it display immediately.
+
+```tsx
+const reducedMotion = useReducedMotion();
+
+if (!animate || reducedMotion) {
+  const center = COUNT + index;
+  setSelection({ active: index, from: center, to: center });
+  return;
+}
+```
+
+Try selecting the first and last thumbnails in succession, then click a third thumbnail while the row is moving. Tab into the strip and use the arrow keys to try immediate navigation.
+
+<Registry
+  slug="learn/thumbnail-gallery/thumbnail-gallery"
+  title="Looping thumbnail gallery"
+/>

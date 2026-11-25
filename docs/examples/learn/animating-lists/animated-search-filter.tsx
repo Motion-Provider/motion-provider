@@ -103,7 +103,7 @@ export default function AnimatingLists5() {
   const hasVisibleItems = items.some((item) => !item.isExiting);
 
   return (
-    <div className="dark my-4 flex h-60 w-84 min-w-0 max-w-full flex-col gap-3 px-2">
+    <div className="my-4 flex h-60 w-full min-w-0 max-w-sm flex-col gap-3 px-3">
       <SearchField
         aria-label="Search contacts"
         value={query}
@@ -111,7 +111,7 @@ export default function AnimatingLists5() {
         onClear={() => setQuery("")}
         className="shrink-0 mt-3"
       >
-        <SearchField.Group className="focus-within:border-transparent! focus-within:ring-0!">
+        <SearchField.Group>
           <SearchField.SearchIcon />
           <SearchField.Input
             className="min-w-0"

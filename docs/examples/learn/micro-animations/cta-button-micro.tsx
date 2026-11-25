@@ -6,6 +6,7 @@ import {
   MotionText,
   useController,
 } from "motion-provider";
+import { useRef } from "react";
 import type { ModuleProps } from "../../types";
 
 interface Props extends ButtonProps, ModuleProps {
@@ -27,9 +28,9 @@ function Icon({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={cn("lucide lucide-arrow-up-right preview-icon", className)}
     >
       <title className="sr-only">Navigate</title>
@@ -69,9 +70,9 @@ function Flame({
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      stroke-width="2"
-      stroke-linecap="round"
-      stroke-linejoin="round"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
       className={cn("lucide lucide-flame preview-icon", className)}
     >
       <title className="sr-only">Navigate</title>
@@ -96,14 +97,24 @@ export default function CtaButton3({
   size = "lg",
 }: Props) {
   const controller = useController();
+  const previewing = useRef(false);
+
+  function setPreview(next: boolean) {
+    previewing.current = next;
+    if (next) controller.play();
+    else controller.onReverse();
+  }
 
   return (
     <Button
       variant={variant}
       size={size}
+      aria-label={label}
       className="relative overflow-hidden text-sm"
-      onMouseEnter={() => controller.play()}
-      onMouseLeave={() => controller.onReverse()}
+      onHoverChange={setPreview}
+      onPress={({ pointerType }) => {
+        if (pointerType !== "mouse") setPreview(!previewing.current);
+      }}
     >
       <div className="relative">
         <MotionContainer

@@ -273,7 +273,7 @@ export default function ImageSlider() {
       </div>
 
       <span role="status" className="sr-only">
-        Image {active + 1} of {TOTAL}: {SLIDES[active].title}
+        Image {active + 1} of {TOTAL}: {SLIDES[active]?.title}
       </span>
     </section>
   );
