@@ -30,13 +30,13 @@ const { title, withButton, inGrid } = Astro.props;
     )
   }
   <div
-    class="absolute inset-0 h-full w-full overflow-hidden [--pattern-scales:var(--color-white)]/10 -z-10"
+    class="absolute inset-0 h-full w-full overflow-hidden -z-10"
     style={
       {
         "--scales-size": "8px",
         "--scales-line-width": "1px",
         "--scales-angle": "315deg",
-        "--pattern-scales": "var(--color-surface-secondary)",
+        "--pattern-scales": "var(--color-surface)",
         opacity: "1",
       } as React.CSSProperties
     }
