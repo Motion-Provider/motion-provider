@@ -2,6 +2,7 @@ import type { NavigationItem } from "@/types";
 
 export default [
   { label: "Features", href: "#features" },
+  { label: "Learn", href: "/#learn" },
   { label: "Docs", href: "https://docs.motionprovider.dev", external: true },
   {
     label: "Playground",

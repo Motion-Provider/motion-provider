@@ -3,7 +3,7 @@ import { SEO } from "@/constants/seo.config";
 
 export default function Document() {
   return (
-    <Html lang="en">
+    <Html lang="en" data-theme="dark">
       <Head>
         <Head>
           <meta name="application-name" content={SEO.siteName} />

@@ -1,0 +1,16 @@
+{
+  "extends": ["//"],
+  "tasks": {
+    "build": {
+      "inputs": [
+        "$TURBO_EXTENDS$",
+        "$TURBO_ROOT$/apps/docs/src/data/learnCards.data.ts",
+        "$TURBO_ROOT$/apps/docs/public/docs/learn/thumbnail-gallery/**",
+        "$TURBO_ROOT$/docs/examples/learn/**",
+        "$TURBO_ROOT$/docs/examples/cas-4.tsx",
+        "$TURBO_ROOT$/docs/examples/types.ts"
+      ],
+      "outputs": ["$TURBO_EXTENDS$", "out/**"]
+    }
+  }
+}

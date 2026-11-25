@@ -3,7 +3,8 @@
   "compilerOptions": {
     "paths": {
       "@/*": ["./src/*"],
-      "@assets/*": ["../../public/*"]
+      "@assets/*": ["../../public/*"],
+      "@examples/*": ["../../docs/examples/*"]
     }
   },
   "include": [

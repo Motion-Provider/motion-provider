@@ -1,6 +1,9 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
+@source "../../../../docs/examples/learn";
+@source "../../../../docs/examples/cas-4.tsx";
+
 :root {
   color-scheme: dark;
   --accent: oklch(74.28% 0.1618 40.24);
