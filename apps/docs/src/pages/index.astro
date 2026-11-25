@@ -14,12 +14,17 @@ import FrameworkCard from "@/components/FrameworkCard.astro";
 import Registry from "@/components/Registry.astro";
 import exploreData from "@/data/explore.data";
 import frameworksData from "@/data/frameworks.data";
+import { home } from "@/data/home.data";
 import learnItems from "@/data/learnCards.data";
 import DocLayout from "@/layouts/DocLayout.astro";
 import { cn } from "@/lib/cn";
-import { buildIndex, getDocs } from "@/lib/docs";
+import { buildIndex, docHref, getDocs } from "@/lib/docs";
 
 const index = buildIndex(await getDocs(), "docs");
+const learnCards = learnItems.map((item) => ({
+  ...item,
+  href: "draft" in item && !import.meta.env.DEV ? undefined : docHref(item.docId),
+}));
 
 const discoverIcons: Partial<Record<string, typeof LucideBookOpen>> = {
   hooks: LucideAnchor,
@@ -43,7 +48,7 @@ const sections = index.nav.flatMap((group) => {
 
 <DocLayout
   landing
-  title="Motion Provider"
+  title={home.title}
   description="An open-source React animation library for rapid development."
   section="docs"
   nav={index.nav}
@@ -78,7 +83,7 @@ const sections = index.nav.flatMap((group) => {
       id="frameworks" 
       class="mt-12"
     >
-      <h2 class="text-muted text-xs font-semibold uppercase tracking-wide">Explore By Frontend Framework</h2>
+      <h2 id={home.headings.frameworks.slug} class="text-muted text-xs font-semibold uppercase tracking-wide">{home.headings.frameworks.text}</h2>
       <ul aria-label="explore" id="explore" class="flex items-start justify-center mt-4 max-w-full flex-wrap">
         {frameworksData.map((item) => <FrameworkCard {...item} />)}
       </ul>  
@@ -88,9 +93,9 @@ const sections = index.nav.flatMap((group) => {
       id="learn" 
       class="@container mt-20"
     >
-      <h2 id="learn-title" class="text-muted text-xs font-semibold uppercase tracking-wide">practice with real world use cases</h2>
-      <ul aria-labelledby="learn-title" class="mt-4 grid grid-cols-1 gap-3 @min-[40rem]:grid-cols-2">
-        {learnItems.map((item) => (
+      <h2 id={home.headings.learn.slug} class="text-muted text-xs font-semibold uppercase tracking-wide">{home.headings.learn.text}</h2>
+      <ul aria-labelledby={home.headings.learn.slug} class="mt-4 grid grid-cols-1 gap-3 @min-[40rem]:grid-cols-2">
+        {learnCards.map((item) => (
           <li class:list={["min-w-0 relative", item.slug === "cas-4" && "@min-[40rem]:col-span-2"]}>
             {item.href && (
               <a href={item.href} aria-label={item.title} class={cn("absolute right-4 cursor-pointer hover:text-foreground text-muted z-50",
@@ -106,12 +111,12 @@ const sections = index.nav.flatMap((group) => {
     </section>
     {
       sections.length > 0 && (
-        <section aria-labelledby="home-sections" class="mt-16">
+        <section aria-labelledby={home.headings.discover.slug} class="mt-16">
           <h2
-            id="home-sections"
+            id={home.headings.discover.slug}
             class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted"
           >
-            Discover
+            {home.headings.discover.text}
           </h2>
           <ul class="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {sections.map((section) => <DiscoverCard {...section} />)}
