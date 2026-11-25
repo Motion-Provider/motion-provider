@@ -1,5 +1,5 @@
 import { type Key, Tabs } from "@heroui/react";
-import { memo, useRef } from "react";
+import { useRef } from "react";
 import {
   DEFAULT_SPLIT_SIZE,
   DxComparisonPanel,
@@ -10,7 +10,7 @@ import {
 } from "@/providers/dx-feature.provider";
 import { DX_LIBRARIES, isLibraryId } from "@/utils/comparison";
 
-const DxLibraryTabList = memo(function DxLibraryTabList() {
+function DxLibraryTabList() {
   return (
     <Tabs.ListContainer className="bg-transparent">
       <Tabs.List aria-label="Compared libraries">
@@ -25,7 +25,7 @@ const DxLibraryTabList = memo(function DxLibraryTabList() {
       </Tabs.List>
     </Tabs.ListContainer>
   );
-});
+}
 
 export function DxComparisonSplit() {
   const sizeRef = useRef(DEFAULT_SPLIT_SIZE);

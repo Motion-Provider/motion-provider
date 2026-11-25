@@ -1,5 +1,4 @@
 ﻿import { type MotionAnimationProps, MotionChain } from "motion-provider";
-import { useMemo } from "react";
 import { useCircle } from "@/providers/circle.provider";
 import config from "../../constants/circle.config";
 import { CircleItem } from "./circle-item";
@@ -22,14 +21,14 @@ const items = Array.from({ length: count }, (_, i) => {
 export function Circle() {
   const { controller, svgRef, animations, transition } = useCircle();
 
-  const animationConfig: readonly MotionAnimationProps[] = useMemo(() => {
-    return items.map((_, i) => ({
+  const animationConfig: readonly MotionAnimationProps[] = items.map(
+    (_, i) => ({
       mode: animations,
-      transition: transition,
+      transition,
       duration: animationDuration,
       endDelay: (count - 1 - i) * animationStaggerDuration,
-    }));
-  }, [animations, transition]);
+    }),
+  );
 
   return (
     <div

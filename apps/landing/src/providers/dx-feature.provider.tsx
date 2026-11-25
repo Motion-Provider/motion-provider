@@ -1,4 +1,4 @@
-﻿import { createContext, type ReactNode, use, useMemo, useState } from "react";
+﻿import { createContext, type ReactNode, use, useState } from "react";
 
 import {
   DEFAULT_COMPARISON_ID,
@@ -24,10 +24,7 @@ export function DxComparisonProvider({ children }: { children: ReactNode }) {
   );
   const [libraryId, setLibraryId] = useState<DxLibraryID>(DEFAULT_LIBRARY_ID);
 
-  const actions = useMemo<DxComparisonActions>(
-    () => ({ setComparisonId, setLibraryId }),
-    [],
-  );
+  const actions: DxComparisonActions = { setComparisonId, setLibraryId };
 
   return (
     <DxComparisonActionsContext value={actions}>

@@ -91,6 +91,7 @@ export interface EdgeGeometry {
   /** Arrow head at the target. */
   arrow: string;
   labelPoint: Point;
+  labelDelay: number;
 }
 
 export type Emphasis = "idle" | "active" | "dimmed";

@@ -1,6 +1,6 @@
 import { Skeleton } from "@heroui/react";
 import type { Attributes, ComponentType, SVGProps } from "react";
-import { memo, Suspense } from "react";
+import { Suspense } from "react";
 import { ErrorBoundary } from "react-error-boundary";
 import {
   type AnimationMode,
@@ -23,7 +23,7 @@ type DxCodePaneProps = {
   animationKey?: Attributes["key"];
 } & DxCodePaneAnimation;
 
-export const DxCodePane = memo(function DxCodePane({
+export function DxCodePane({
   code,
   label,
   icon: Icon,
@@ -65,4 +65,4 @@ export const DxCodePane = memo(function DxCodePane({
       </div>
     </div>
   );
-});
+}

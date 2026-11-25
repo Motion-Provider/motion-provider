@@ -1,4 +1,4 @@
-import { type Attributes, memo, type RefObject } from "react";
+import type { Attributes, RefObject } from "react";
 
 import {
   ResizableHandle,
@@ -60,11 +60,7 @@ function DxMotionProviderPane({
 const comparedToAnimation = getAnimation("circleCodeSnippet");
 const comparisonPanelAnimation = getAnimation("comparisonPanel");
 
-export const DxComparisonPanel = memo(function DxComparisonPanel({
-  sizeRef,
-}: {
-  sizeRef: RefObject<number>;
-}) {
+export function DxComparisonPanel({ sizeRef }: { sizeRef: RefObject<number> }) {
   return (
     <ResizablePanelGroup
       sizeRef={sizeRef}
@@ -88,4 +84,4 @@ export const DxComparisonPanel = memo(function DxComparisonPanel({
       </ResizablePanel>
     </ResizablePanelGroup>
   );
-});
+}

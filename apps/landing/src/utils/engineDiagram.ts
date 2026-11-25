@@ -131,7 +131,7 @@ export function arrowPath(end: Point): string {
   return `M${end.x - ARROW_HALF_WIDTH} ${end.y - ARROW_LENGTH} L${end.x} ${end.y} L${end.x + ARROW_HALF_WIDTH} ${end.y - ARROW_LENGTH} Z`;
 }
 
-function buildEdge(edge: EngineEdge): EdgeGeometry {
+function buildEdge(edge: EngineEdge, index: number): EdgeGeometry {
   const from: EngineNode = NODE_BY_ID[edge.from];
   const to: EngineNode = NODE_BY_ID[edge.to];
   const start: Point = {
@@ -148,6 +148,7 @@ function buildEdge(edge: EngineEdge): EdgeGeometry {
     d: roundedPath(points),
     arrow: arrowPath(end),
     labelPoint: labelPoint(points, edge),
+    labelDelay: index * 0.2,
   };
 }
 
@@ -178,9 +179,6 @@ export const NEIGHBORS: Record<
     ...outgoing.map((e) => e.to),
   ]);
 });
-
-export const getEngineLabelDelayByIndex = (id: EdgeGeometry["id"]) =>
-  ENGINE_EDGES.findIndex((e) => e.id === id) * 0.2;
 
 const GITHUB_SOURCE_BASE =
   "https://github.com/Motion-Provider/motion-provider/blob/main/packages/motion-provider/src";

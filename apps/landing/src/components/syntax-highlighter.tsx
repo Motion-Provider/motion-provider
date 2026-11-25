@@ -7,8 +7,8 @@ import {
   MotionText,
   type MotionTextConfigProps,
 } from "motion-provider";
-import { type Attributes, type CSSProperties, type FC, use } from "react";
-import { getHighlighter } from "@/lib/shiki";
+import { type Attributes, type CSSProperties, use } from "react";
+import { getCodeTokenizer } from "@/lib/shiki";
 
 type FontOptions = {
   italic: number;
@@ -65,7 +65,7 @@ function getTokenStyle(
   return style;
 }
 
-const highlighterPromise = getHighlighter();
+const tokenizerPromise = getCodeTokenizer();
 
 export function SyntaxHighlighter<T extends Props["animationMode"]>({
   lineClassName,
@@ -74,15 +74,18 @@ export function SyntaxHighlighter<T extends Props["animationMode"]>({
   code,
   ...props
 }: Props<T>) {
-  const highlighter = use(highlighterPromise);
-  if (!highlighter) return null;
+  const tokenize = use(tokenizerPromise);
+  if (!tokenize) return null;
 
-  const { tokens } = highlighter.codeToTokens(code, {
-    lang: "tsx",
-    theme: "syntax-theme",
-  });
-
+  const tokens = tokenize(code);
   const lineIndexWidth = `${String(tokens.length).length}ch`;
+  const textAnimation: MotionAnimationProps | undefined =
+    props.animationMode === "text"
+      ? {
+          mode: props.animationProps?.animation?.mode ?? "fadeIn",
+          ...props.animationProps?.animation,
+        }
+      : undefined;
 
   return (
     <Wrapper {...props}>
@@ -102,14 +105,7 @@ export function SyntaxHighlighter<T extends Props["animationMode"]>({
             </span>
           )}
           {line.map((token) => (
-            <Line
-              key={token.offset}
-              token={token}
-              animationProps={{
-                ...props.animationProps,
-              }}
-              isAnimated={props.animationMode === "text"}
-            />
+            <Line key={token.offset} token={token} animation={textAnimation} />
           ))}
         </div>
       ))}
@@ -117,27 +113,23 @@ export function SyntaxHighlighter<T extends Props["animationMode"]>({
   );
 }
 
-const Line: FC<
-  {
-    token: ThemedToken;
-    isAnimated?: boolean;
-  } & Pick<Props<"text">, "animationProps">
-> = ({ token, isAnimated, animationProps }) => (
-  <span key={token.offset} style={getTokenStyle(token)}>
-    {isAnimated ? (
-      <MotionText
-        animation={{
-          mode: animationProps.animation?.mode ?? "fadeIn",
-          ...animationProps.animation,
-        }}
-      >
-        {token.content}
-      </MotionText>
-    ) : (
-      token.content
-    )}
-  </span>
-);
+function Line({
+  token,
+  animation,
+}: {
+  token: ThemedToken;
+  animation?: MotionAnimationProps;
+}) {
+  return (
+    <span style={getTokenStyle(token)}>
+      {animation ? (
+        <MotionText animation={animation}>{token.content}</MotionText>
+      ) : (
+        token.content
+      )}
+    </span>
+  );
+}
 
 function Wrapper({
   animationKey,

@@ -3,7 +3,6 @@ import { MotionContainer } from "motion-provider";
 import { cn } from "@/lib/utils";
 import { useEngineLabels } from "@/providers/engine.provider";
 import type { EdgeGeometry, Emphasis } from "@/types/engine.type";
-import { getEngineLabelDelayByIndex } from "@/utils/engineDiagram";
 
 export const EDGE_PATH: Record<Emphasis, string> = {
   idle: "stroke-[color-mix(in_oklch,var(--foreground)_26%,transparent)]",
@@ -62,7 +61,7 @@ export function EngineEdge({ edge, emphasis }: EngineEdgeProps) {
           mode: "fadeUp",
           duration: 0.55,
           transition: "gentle",
-          delay: getEngineLabelDelayByIndex(edge.id),
+          delay: edge.labelDelay,
         }}
         controller={{
           trigger: showLabels,
