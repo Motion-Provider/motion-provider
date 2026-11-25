@@ -18,7 +18,7 @@ const data = createMotionConfig({
         transition: "gentle",
         duration: 0.5,
       },
-      className: "text-xs font-light @min-[28rem]:text-sm",
+      className: "text-xs font-light @md:text-sm",
     },
   },
   title: {
@@ -35,7 +35,7 @@ const data = createMotionConfig({
         mode: "chars",
         delayLogic: "chaotic",
       },
-      className: "text-lg capitalize @min-[28rem]:text-3xl",
+      className: "text-lg capitalize @md:text-3xl font-bold",
     },
   },
   desc: {
@@ -47,7 +47,7 @@ const data = createMotionConfig({
         transition: "gentle",
         delay: 0.88,
       },
-      className: "max-w-2xs text-pretty text-xs @min-[28rem]:text-sm",
+      className: "max-w-2xs text-pretty text-xs @md:text-sm",
     },
   },
   image: {
@@ -67,7 +67,7 @@ const data = createMotionConfig({
       },
       alt: "demo",
       wrapperClassName:
-        "size-24 overflow-hidden rounded-lg @min-[28rem]:size-44 @min-[36rem]:size-56",
+        "size-24 overflow-hidden rounded-lg @md:size-44 @xl:size-56",
     },
   },
 });
@@ -95,15 +95,15 @@ export default function Cas4() {
   return (
     <section className="@container grid min-h-full w-full items-center px-4 py-3 tracking-tighter">
       <div className="mx-auto grid w-full max-w-2xl gap-3">
-        <div className="flex flex-wrap gap-3 justify-self-center rounded-md bg-surface-secondary px-3 py-2 text-xs text-surface-secondary-foreground *:cursor-pointer *:hover:text-accent @min-[28rem]:justify-self-start">
+        <div className="flex flex-wrap gap-3 justify-self-center rounded-md bg-surface-secondary px-3 py-2 text-xs text-surface-secondary-foreground *:cursor-pointer *:hover:text-accent @md:justify-self-end">
           {actions.map((action) => (
             <button key={action} type="button" onClick={animate(action)}>
               {action}
             </button>
           ))}
         </div>
-        <div className="grid items-center justify-items-center gap-3 @min-[28rem]:grid-cols-[minmax(0,1fr)_auto] @min-[28rem]:gap-8">
-          <div className="grid min-w-0 justify-items-center gap-2 text-center @min-[28rem]:justify-items-start @min-[28rem]:justify-self-start @min-[28rem]:text-left">
+        <div className="grid items-center justify-items-center gap-3 @md:grid-cols-[minmax(0,1fr)_auto] md:px-8">
+          <div className="grid min-w-0 justify-items-center gap-0.5 text-center @md:justify-items-start  @md:justify-self-start @md:text-left">
             <MotionContainer {...getAnimation("badge")} controller={controller}>
               Motion CAS
             </MotionContainer>
