@@ -11,10 +11,17 @@
   "dependencies": {
     "@heroui/react": "^3.2.6",
     "@heroui/styles": "^3.2.6",
+    "@shikijs/core": "^4.6.0",
+    "@shikijs/engine-javascript": "^4.6.0",
+    "@shikijs/langs": "^4.6.0",
+    "geist": "^1.9.2",
+    "lucide-react": "^1.81.0",
+    "motion-provider": "*",
+    "next": "^16.4.3",
+    "parse5": "^8.1.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
-    "next": "^16.4.3",
-    "motion-provider": "*"
+    "style-to-js": "^2.0.2"
   },
   "devDependencies": {
     "@motion/typescript-config": "*",
