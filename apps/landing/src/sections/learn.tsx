@@ -39,7 +39,7 @@ function LearnPreview({
 }
 
 function LearnCard({ card }: { card: LearnCardItem }) {
-  const { title, hint, columns, stage, load } = learnDemos[card.slug];
+  const { title, hint, columns, load } = learnDemos[card.slug];
   const controller = useController();
   const [Demo, setDemo] = useState(() => lazy(load));
   const featured = card.slug === "cas-4";
@@ -98,9 +98,12 @@ function LearnCard({ card }: { card: LearnCardItem }) {
         </header>
         <IntersectionProvider
           className={cn(
-            "grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] place-items-center",
+            "grid min-w-0 flex-1 grid-cols-[minmax(0,1fr)] place-items-center bg-radial-[ellipse_at_center] from-surface-secondary to-background/50",
             featured ? "min-h-64" : "min-h-80",
-            stage,
+            card.slug === "learn/micro-animations/cta-button-micro" &&
+              "max-md:min-h-48",
+            card.slug === "learn/thumbnail-gallery/thumbnail-gallery" &&
+              "max-md:min-h-56",
           )}
           fallback={loading}
           options={loadAhead}
@@ -156,14 +159,14 @@ export default function LearnSection() {
           <div className="min-w-0">
             <MotionText
               animation={{
-                mode: ["fadeIn", "filterBlurIn", "rotateFlipY"],
-                duration: 0.72,
+                mode: ["fadeUp", "filterBlurIn", "rotateFlipY"],
+                duration: 1.12,
                 transition: "gentle",
               }}
               config={{
                 mode: "chars",
-                delayLogic: "chaotic",
-                duration: 0.08,
+                delayLogic: "triangle",
+                duration: 0.12,
               }}
               id="learn-title"
               elementType="h2"

@@ -107,7 +107,7 @@ export default function CtaButton3({
 
   return (
     <Button
-      variant={variant}
+      variant="danger"
       size={size}
       aria-label={label}
       className="relative overflow-hidden text-sm"

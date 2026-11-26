@@ -34,19 +34,6 @@ const SLIDES = [
 
 const TOTAL = SLIDES.length;
 
-const TEXT_REVEAL = {
-  initial: {
-    opacity: 0,
-    y: 10,
-    filter: "blur(8px)",
-  },
-  animate: {
-    opacity: 1,
-    y: 0,
-    filter: "blur(0px)",
-  },
-} satisfies AnimationModule;
-
 function getDepth(index: number, active: number) {
   return (index - active + TOTAL) % TOTAL;
 }
@@ -190,34 +177,36 @@ export default function ImageSlider() {
                   </span>
 
                   <figcaption className="absolute inset-x-0 bottom-0 flex flex-col gap-1 p-5">
-                    <Motion
+                    <MotionText
                       elementType="span"
-                      definition={TEXT_REVEAL}
-                      timing={{
-                        duration: 0.24,
-                        delay: 0.22,
-                        easing: "ease-out",
+                      animation={{
+                        mode: ["filterBlurIn", "slideUp", "fadeUp"],
+                        duration: 0.66,
+                        transition: "gentle",
                       }}
-                      controller={{ trigger: true }}
-                      className="text-[10px] font-semibold tracking-[0.22em] text-white/70 uppercase"
+                      config={{
+                        mode: "words",
+                      }}
+                      wrapperClassName="text-[10px] font-semibold tracking-[0.22em] text-white/70 uppercase"
+                      controller={{
+                        trigger: true,
+                      }}
                     >
                       {slide.category}
-                    </Motion>
+                    </MotionText>
 
                     <MotionText
                       key={slide.id}
                       animation={{
-                        mode: TEXT_REVEAL,
-                        duration: 0.24,
+                        mode: ["fadeUp", "filterBlurIn"],
+                        duration: 0.88,
                         delay: 0.28,
-                        transition: {
-                          easing: "ease-out",
-                        },
+                        transition: "bounceSoft",
                       }}
                       config={{
-                        mode: "words",
+                        mode: "chars",
                         duration: 0.045,
-                        delayLogic: "linear",
+                        delayLogic: "sinusoidal",
                       }}
                       controller={{ trigger: true }}
                       wrapperClassName="block text-2xl font-semibold tracking-tight text-white sm:text-3xl"
