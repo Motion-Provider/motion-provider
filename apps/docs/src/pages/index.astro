@@ -23,7 +23,8 @@ import { buildIndex, docHref, getDocs } from "@/lib/docs";
 const index = buildIndex(await getDocs(), "docs");
 const learnCards = learnItems.map((item) => ({
   ...item,
-  href: "draft" in item && !import.meta.env.DEV ? undefined : docHref(item.docId),
+  href:
+    "draft" in item && !import.meta.env.DEV ? undefined : docHref(item.docId),
 }));
 
 const discoverIcons: Partial<Record<string, typeof LucideBookOpen>> = {
@@ -36,12 +37,14 @@ const discoverIcons: Partial<Record<string, typeof LucideBookOpen>> = {
 const sections = index.nav.flatMap((group) => {
   const first = group.items[0];
   return group.label && first
-    ? [{
-        label: group.label,
-        href: first.href,
-        count: group.items.length,
-        icon: discoverIcons[group.key] ?? LucideBookOpen,
-      }]
+    ? [
+        {
+          label: group.label,
+          href: first.href,
+          count: group.items.length,
+          icon: discoverIcons[group.key] ?? LucideBookOpen,
+        },
+      ]
     : [];
 });
 ---

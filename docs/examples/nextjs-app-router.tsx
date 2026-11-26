@@ -26,8 +26,8 @@ export default function NextAppRouterDemo({ controller }: ModuleProps) {
         controller={controller}
         className="rounded-xl border border-border bg-accent/10 p-5 text-sm leading-relaxed"
       >
-        The component owns its client boundary. Your Server Component can
-        render it without becoming a Client Component itself.
+        The component owns its client boundary. Your Server Component can render
+        it without becoming a Client Component itself.
       </MotionContainer>
     </div>
   );

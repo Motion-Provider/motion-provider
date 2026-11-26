@@ -1,7 +1,4 @@
-import {
-  MotionText,
-  type AnimationModule,
-} from "motion-provider";
+import { MotionText, type AnimationModule } from "motion-provider";
 import type { ModuleProps } from "../../types";
 
 const lift = {
