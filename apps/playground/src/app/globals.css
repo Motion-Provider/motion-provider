@@ -1,29 +1,13 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-background text-foreground font-sans;
 }
 
 :root,
@@ -157,4 +141,68 @@ body {
   --breakpoint-laptop: 88rem;
   --breakpoint-desktop: 108rem;
   --breakpoint-mobile: 32rem;
+}
+
+:root,
+[data-theme="light"] {
+  --panel: #fffdfb;
+  --inset: #f8f4f0;
+  --canvas: #eee7e2;
+  --stroke: #e0d6ce;
+  --canvas-line: #63534a;
+  --grid: #54453828;
+  --tint: #fbe2d4;
+  --accent-stroke: #e3a685;
+  --secondary-text: #4d423b;
+  --accent-text: #9a3f14;
+}
+
+[data-theme="dark"] {
+  --panel: #191715;
+  --inset: #151311;
+  --canvas: #100f0e;
+  --stroke: #322a25;
+  --canvas-line: #3a302a;
+  --grid: #bb9c8031;
+  --tint: #34231b;
+  --accent-stroke: #70452f;
+  --secondary-text: #d7cdc6;
+  --accent-text: var(--accent);
+}
+
+.mp-segments .toggle-button[data-selected] {
+  @apply bg-[var(--default)] text-foreground shadow-[0_1px_2px_#0002];
+}
+
+.mp-segments .toggle-button[aria-pressed="true"] {
+  @apply bg-[var(--default)] text-foreground shadow-[0_1px_2px_#0002];
+}
+
+.mp-slider .slider__track {
+  @apply h-4 border-x-7 border-x-transparent bg-transparent;
+}
+
+.mp-slider .slider__track::before,
+.mp-slider .slider__fill {
+  @apply absolute inset-y-1/2 h-1 -translate-y-1/2 rounded-full;
+}
+
+.mp-slider .slider__track::before {
+  @apply inset-x-0 bg-[var(--stroke)] content-[''];
+}
+
+.mp-slider .slider__thumb {
+  @apply size-3.5 rounded-full bg-accent shadow-none;
+}
+
+.mp-slider .slider__thumb::after {
+  @apply hidden;
+}
+
+.mp-timeline .slider__track::before {
+  @apply bg-[var(--default)];
+}
+
+[data-theme="light"] .text-accent {
+  color: var(--accent-text);
 }
