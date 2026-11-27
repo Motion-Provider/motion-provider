@@ -1,16 +1,17 @@
-import { calculateDelays } from "motion-provider/catalog";
 import type {
   MotionAnimationProps,
   MotionChainConfigProps,
 } from "motion-provider";
+import { calculateDelays } from "motion-provider/catalog";
 import {
   EASINGS,
-  MAX_STAGGER_DELAY,
+  FILLS,
+  MAX_LAYER_DELAY,
   MAX_MODES,
-  TRANSITIONS,
   ORDERS,
   PRESETS,
   settingsFor,
+  TRANSITIONS,
 } from "../constants/motion.config";
 import type {
   Attribute,
@@ -30,13 +31,19 @@ export const VOID_TAGS = new Set(
 );
 
 export function animationFor(settings: MotionSettings): MotionAnimationProps {
+  const curve = EASINGS[settings.easing].value;
   return {
     mode: settings.modes.length === 1 ? settings.modes[0]! : settings.modes,
     duration: settings.duration,
     delay: settings.delay,
-    ...(settings.transition === "custom"
-      ? { easing: EASINGS[settings.easing].value }
-      : { transition: settings.transition }),
+    endDelay: settings.endDelay,
+    fill: settings.fill,
+    ...(settings.transition !== "custom" && {
+      transition: settings.transition,
+    }),
+    ...(settings.easingProperty !== "transition" && {
+      [settings.easingProperty]: curve,
+    }),
   };
 }
 
@@ -44,8 +51,8 @@ export function staggerFor(settings: MotionSettings): MotionChainConfigProps {
   return {
     duration: settings.stagger,
     delayLogic: settings.order,
-    seed: 42,
-    maxDelay: MAX_STAGGER_DELAY,
+    seed: settings.seed,
+    maxDelay: settings.maxDelay,
   };
 }
 
@@ -144,10 +151,12 @@ export function animationTime(
           ...staggerFor(settings),
           baseDuration: settings.stagger,
         });
-  return (
+  return Math.max(
+    0,
     settings.duration +
-    settings.delay +
-    offsets.reduce((max, value) => Math.max(max, value), 0)
+      settings.delay +
+      settings.endDelay +
+      offsets.reduce((max, value) => Math.max(max, value), 0),
   );
 }
 
@@ -211,21 +220,37 @@ export function readProject(input: unknown, markup: Markup): Project | null {
             return preset ? [preset.id] : [];
           })
           .slice(0, MAX_MODES);
+        const transition =
+          TRANSITIONS.find(({ id }) => id === saved.transition)?.id ?? "custom";
         const settings: MotionSettings = {
           modes: modes.length ? modes : defaults.modes,
-          transition:
-            TRANSITIONS.find(({ id }) => id === saved.transition)?.id ??
-            "custom",
+          transition,
           duration: numberBetween(saved.duration, 0.1, 3, defaults.duration),
-          delay: numberBetween(saved.delay, 0, 2, defaults.delay),
-          easing: Object.hasOwn(EASINGS, saved.easing)
-            ? saved.easing
-            : defaults.easing,
+          delay: numberBetween(saved.delay, 0, MAX_LAYER_DELAY, defaults.delay),
+          easing:
+            typeof saved.easing === "string" &&
+            Object.hasOwn(EASINGS, saved.easing)
+              ? saved.easing
+              : defaults.easing,
+          easingProperty:
+            saved.easingProperty === "ease" ||
+            saved.easingProperty === "easing" ||
+            saved.easingProperty === "transition"
+              ? saved.easingProperty
+              : transition === "custom"
+                ? "easing"
+                : "transition",
+          endDelay: numberBetween(saved.endDelay, -60, 60, defaults.endDelay),
+          fill: FILLS.find(({ id }) => id === saved.fill)?.id ?? defaults.fill,
           split: saved.split === "chars" ? "chars" : "words",
           stagger: numberBetween(saved.stagger, 0, 0.4, defaults.stagger),
           order: ORDERS.some(({ id }) => id === saved.order)
             ? saved.order
             : "linear",
+          maxDelay: numberBetween(saved.maxDelay, 0, 60, defaults.maxDelay),
+          seed: Math.trunc(
+            numberBetween(saved.seed, -2147483648, 2147483647, defaults.seed),
+          ),
           pieces: [4, 9, 16, 25, 36, 49, 64].includes(saved.pieces)
             ? saved.pieces
             : 16,

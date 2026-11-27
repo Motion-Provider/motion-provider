@@ -1,6 +1,7 @@
 import type {
   AnimationKeys,
   DelayLogic,
+  MotionAnimationProps,
   TransitionKeys,
 } from "motion-provider";
 
@@ -36,7 +37,9 @@ export type Markup = {
 
 export type Easing =
   | "ease-out"
+  | "ease-in"
   | "ease-in-out"
+  | "ease"
   | "linear"
   | "snappy"
   | "smooth";
@@ -48,9 +51,14 @@ export type MotionSettings = {
   duration: number;
   delay: number;
   easing: Easing;
+  easingProperty: "transition" | "ease" | "easing";
+  endDelay: number;
+  fill: NonNullable<MotionAnimationProps["fill"]>;
   split: "words" | "chars";
   stagger: number;
   order: Stagger;
+  maxDelay: number;
+  seed: number;
   pieces: number;
   interaction: "auto" | "hover" | "click";
 };

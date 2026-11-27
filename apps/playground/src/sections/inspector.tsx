@@ -6,9 +6,11 @@ import {
   Chip,
   CloseButton,
   cn,
+  Disclosure,
   Header,
   Label,
   ListBox,
+  NumberField,
   Select,
 } from "@heroui/react";
 import {
@@ -43,6 +45,8 @@ import {
 } from "../components/controls";
 import {
   EASINGS,
+  FILLS,
+  MAX_LAYER_DELAY,
   MAX_MODES,
   ORDERS,
   PRESETS,
@@ -87,6 +91,11 @@ const easingItems = Object.entries(EASINGS).map(([id, { label }]) => ({
   id: id as Easing,
   label,
 }));
+const easingProperties = [
+  { id: "transition", label: "Transition default" },
+  { id: "easing", label: "Easing (easing)" },
+  { id: "ease", label: "Ease (ease)" },
+] as const;
 const pieceItems = [4, 9, 16, 25, 36, 49, 64].map((count) => ({
   id: String(count),
   label: `${Math.sqrt(count)} × ${Math.sqrt(count)}`,
@@ -255,9 +264,10 @@ export function Inspector({
                 onChange={(transition) =>
                   onChange(
                     transition === "custom"
-                      ? { transition }
+                      ? { transition, easingProperty: "easing" }
                       : {
                           transition,
+                          easingProperty: "transition",
                           duration: transitions[transition].duration,
                         },
                   )
@@ -274,86 +284,135 @@ export function Inspector({
                 />
                 <Range
                   label="Delay"
-                  max={2}
+                  max={MAX_LAYER_DELAY}
                   step={0.05}
                   value={settings.delay}
                   onChange={(delay) => onChange({ delay })}
                 />
               </div>
-              {settings.transition === "custom" && (
-                <OptionSelect
-                  label="Easing"
-                  value={settings.easing}
-                  items={easingItems}
-                  onChange={(easing) => onChange({ easing })}
-                />
-              )}
             </div>
 
-            {layer.kind !== "MotionContainer" && (
-              <div className="grid gap-2.5 border-t border-stroke pt-3">
-                <h3 className="flex items-center gap-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">
-                  <Boxes size={14} />{" "}
-                  {layer.kind === "MotionText"
-                    ? "Text settings"
-                    : layer.kind === "MotionImage"
-                      ? "Image settings"
-                      : "Sequence settings"}
-                </h3>
-                {layer.kind === "MotionText" && (
-                  <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-sm text-secondary-text">
-                      Split by
-                    </span>
-                    <Segmented
-                      label="Split text by"
-                      value={settings.split}
-                      items={[
-                        { id: "words", label: "Words" },
-                        { id: "chars", label: "Characters" },
-                      ]}
-                      onChange={(split) => onChange({ split })}
-                    />
-                  </div>
-                )}
-
-                {layer.kind === "MotionImage" && (
-                  <div className="grid grid-cols-2 gap-2">
+            <Disclosure className="border-t border-stroke pt-3">
+              <Disclosure.Heading>
+                <Disclosure.Trigger className="flex min-h-9 w-full items-center gap-2 rounded-md px-1 text-left text-sm font-medium">
+                  Advanced settings
+                  <Disclosure.Indicator />
+                </Disclosure.Trigger>
+              </Disclosure.Heading>
+              <Disclosure.Content>
+                <Disclosure.Body className="grid gap-4 px-0 pt-3 pb-1">
+                  <OptionSelect
+                    label="Easing property"
+                    value={settings.easingProperty}
+                    items={easingProperties}
+                    onChange={(easingProperty) => onChange({ easingProperty })}
+                  />
+                  {settings.easingProperty !== "transition" && (
                     <OptionSelect
-                      label="Tiles"
-                      value={String(settings.pieces)}
-                      items={pieceItems}
-                      onChange={(count) => onChange({ pieces: Number(count) })}
+                      label="Easing"
+                      value={settings.easing}
+                      items={easingItems}
+                      onChange={(easing) => onChange({ easing })}
                     />
-                    <OptionSelect
-                      label="Trigger"
-                      value={settings.interaction}
-                      items={[
-                        { id: "auto", label: "Playback" },
-                        { id: "hover", label: "Hover" },
-                        { id: "click", label: "Click" },
-                      ]}
-                      onChange={(interaction) => onChange({ interaction })}
-                    />
-                  </div>
-                )}
+                  )}
+                  <NumberSetting
+                    label="End delay (s)"
+                    value={settings.endDelay}
+                    min={-60}
+                    max={60}
+                    onChange={(endDelay) => onChange({ endDelay })}
+                  />
+                  <OptionSelect
+                    label="Fill"
+                    value={settings.fill}
+                    items={FILLS}
+                    onChange={(fill) => onChange({ fill })}
+                  />
+                  {layer.kind !== "MotionContainer" && (
+                    <div className="grid gap-3 border-t border-stroke pt-4">
+                      <h3 className="flex items-center gap-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">
+                        <Boxes size={14} />{" "}
+                        {layer.kind === "MotionText"
+                          ? "Text settings"
+                          : layer.kind === "MotionImage"
+                            ? "Image settings"
+                            : "Sequence settings"}
+                      </h3>
+                      {layer.kind === "MotionText" && (
+                        <div className="flex flex-wrap items-center justify-between gap-2">
+                          <span className="text-sm text-secondary-text">
+                            Split by
+                          </span>
+                          <Segmented
+                            label="Split text by"
+                            value={settings.split}
+                            items={[
+                              { id: "words", label: "Words" },
+                              { id: "chars", label: "Characters" },
+                            ]}
+                            onChange={(split) => onChange({ split })}
+                          />
+                        </div>
+                      )}
 
-                <Range
-                  label="Stagger"
-                  max={0.4}
-                  value={settings.stagger}
-                  onChange={(stagger) => onChange({ stagger })}
-                />
-                <OptionSelect
-                  label="Delay logic"
-                  value={settings.order}
-                  items={ORDERS}
-                  onChange={(order) => onChange({ order })}
-                />
-              </div>
-            )}
+                      {layer.kind === "MotionImage" && (
+                        <div className="grid grid-cols-2 gap-2">
+                          <OptionSelect
+                            label="Tiles"
+                            value={String(settings.pieces)}
+                            items={pieceItems}
+                            onChange={(count) =>
+                              onChange({ pieces: Number(count) })
+                            }
+                          />
+                          <OptionSelect
+                            label="Trigger"
+                            value={settings.interaction}
+                            items={[
+                              { id: "auto", label: "Playback" },
+                              { id: "hover", label: "Hover" },
+                              { id: "click", label: "Click" },
+                            ]}
+                            onChange={(interaction) =>
+                              onChange({ interaction })
+                            }
+                          />
+                        </div>
+                      )}
+
+                      <Range
+                        label="Stagger"
+                        max={0.4}
+                        value={settings.stagger}
+                        onChange={(stagger) => onChange({ stagger })}
+                      />
+                      <OptionSelect
+                        label="Delay logic"
+                        value={settings.order}
+                        items={ORDERS}
+                        onChange={(order) => onChange({ order })}
+                      />
+                      <NumberSetting
+                        label="Max stagger delay (s)"
+                        value={settings.maxDelay}
+                        min={0}
+                        max={60}
+                        onChange={(maxDelay) => onChange({ maxDelay })}
+                      />
+                      <NumberSetting
+                        label="Stagger seed"
+                        value={settings.seed}
+                        min={-2147483648}
+                        max={2147483647}
+                        integer
+                        onChange={(seed) => onChange({ seed })}
+                      />
+                    </div>
+                  )}
+                </Disclosure.Body>
+              </Disclosure.Content>
+            </Disclosure>
           </div>
-
           <div className="mt-auto grid gap-2 border-t border-stroke p-4">
             <div className="flex gap-2">
               <Button
@@ -396,6 +455,44 @@ export function Inspector({
         </div>
       )}
     </Card>
+  );
+}
+
+function NumberSetting({
+  label,
+  value,
+  min,
+  max,
+  integer = false,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  min: number;
+  max: number;
+  integer?: boolean;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <NumberField
+      value={value}
+      minValue={min}
+      maxValue={max}
+      step={integer ? 1 : 0.01}
+      formatOptions={{
+        maximumFractionDigits: integer ? 0 : 2,
+        useGrouping: false,
+      }}
+      onChange={(next) => {
+        if (typeof next === "number" && Number.isFinite(next)) onChange(next);
+      }}
+      className="grid gap-2"
+    >
+      <Label className="text-sm font-medium text-secondary-text">{label}</Label>
+      <NumberField.Group>
+        <NumberField.Input className="w-full min-w-0" />
+      </NumberField.Group>
+    </NumberField>
   );
 }
 
