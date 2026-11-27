@@ -11,20 +11,20 @@ const { slug, title, withButton, inGrid } = Astro.props;
 ---
 
 <SandboxLayout title={title} withButton={withButton} inGrid={inGrid}>
-    <Sandbox slug={slug} withButton={withButton} client:visible>
-        <div
-            slot="fallback"
-            class="flex h-80 items-center justify-center"
-            role="status"
-            aria-label="Loading demo"
-        >
-            <Image
-                src={Loader}
-                alt="Component Loader"
-                height={48}
-                width={48}
-                class="size-10 animate-spin motion-reduce:animate-none text-accent"
-            />
-        </div>
-    </Sandbox>
+  <Sandbox slug={slug} withButton={withButton} client:visible>
+    <div
+      slot="fallback"
+      class="flex h-80 items-center justify-center"
+      role="status"
+      aria-label="Loading demo"
+    >
+      <Image
+        src={Loader}
+        alt="Component Loader"
+        height={48}
+        width={48}
+        class="size-10 animate-spin motion-reduce:animate-none text-accent"
+      />
+    </div>
+  </Sandbox>
 </SandboxLayout>

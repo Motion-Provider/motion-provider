@@ -27,6 +27,7 @@ interface Props {
 
 export const getStaticPaths = (async () => {
   const docs = await getDocs();
+
   const indexes: Record<NavSection, DocsIndex> = {
     docs: buildIndex(docs, "docs"),
     api: buildIndex(docs, "api"),
@@ -38,7 +39,9 @@ export const getStaticPaths = (async () => {
 
     return {
       params: { slug: entry.id === "index" ? undefined : entry.id },
+
       props: { entry, index: indexes[section], section },
+
       cacheKey: entry.id,
     };
   });
@@ -52,8 +55,11 @@ const mdxComponents = {
   summary: Summary,
   img: ImageMdx,
 };
+
 const { entry, index, section } = Astro.props;
+
 const { Content, headings } = await render(entry);
+
 const { prev, next } = getNeighbors(index.flat, entry.id);
 ---
 

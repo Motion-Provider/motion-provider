@@ -7,9 +7,11 @@ import type { SearchPage } from "../lib/docs-search";
 
 export const GET: APIRoute = async () => {
   const docs = await getDocs();
+
   const pages = await Promise.all(
     docs.map(async (entry): Promise<SearchPage> => {
       const { headings } = await render(entry);
+
       return {
         title: entry.data.title,
         href: docHref(entry.id) || "/",
@@ -22,6 +24,7 @@ export const GET: APIRoute = async () => {
     {
       title: home.title,
       href: docHref("index") || "/",
+
       headings: [
         ...exploreData.map(({ headingId, title }) => ({
           slug: headingId,
@@ -30,6 +33,7 @@ export const GET: APIRoute = async () => {
         ...Object.values(home.headings),
       ],
     },
+
     ...pages,
   ] satisfies SearchPage[]);
 };

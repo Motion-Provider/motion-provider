@@ -35,6 +35,7 @@ function createTokenReader(highlighter: Highlighter): Tokenize {
       const oldest = cache.keys().next();
       if (!oldest.done) cache.delete(oldest.value);
     }
+
     cache.set(code, tokens);
     return tokens;
   };

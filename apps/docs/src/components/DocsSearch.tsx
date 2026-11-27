@@ -25,6 +25,7 @@ import {
 } from "../lib/docs-search";
 
 const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
 const indexUrl = `${base}/docs-search.json`;
 
 type SearchLink = Pick<SearchEntry, "href" | "pageTitle" | "title"> & {
@@ -33,12 +34,15 @@ type SearchLink = Pick<SearchEntry, "href" | "pageTitle" | "title"> & {
 
 const quickLinks: readonly SearchLink[] = [
   { title: "Start Here", href: `${base}/learn`, icon: BookOpen },
+
   {
     title: "Controllers overview",
     href: `${base}/controllers/overview`,
     icon: SlidersHorizontal,
   },
+
   { title: "Hooks overview", href: `${base}/hooks/overview`, icon: Anchor },
+
   {
     title: "Registry overview",
     href: `${base}/registry/overview`,
@@ -52,8 +56,11 @@ type SearchIndex =
 
 export default function DocsSearch() {
   const [isOpen, setIsOpen] = useState(false);
+
   const [query, setQuery] = useState("");
+
   const [index, setIndex] = useState<SearchIndex>({ status: "idle" });
+
   const input = useRef<HTMLInputElement>(null);
 
   const loadIndex = useCallback(async () => {
@@ -61,9 +68,11 @@ export default function DocsSearch() {
 
     try {
       const response = await fetch(indexUrl);
+
       if (!response.ok) throw new Error("Could not load the search index");
 
       const pages: SearchPage[] = await response.json();
+
       setIndex({ status: "ready", entries: indexSearchPages(pages) });
     } catch {
       setIndex({ status: "error" });
@@ -73,6 +82,7 @@ export default function DocsSearch() {
   const onOpenChange = useCallback(
     (open: boolean) => {
       setIsOpen(open);
+
       if (!open) setQuery("");
       else if (index.status === "idle" || index.status === "error")
         void loadIndex();
@@ -93,22 +103,28 @@ export default function DocsSearch() {
         return;
 
       event.preventDefault();
+
       if (event.repeat) return;
+
       if (isOpen) input.current?.focus();
       else onOpenChange(true);
     }
 
     document.addEventListener("keydown", onShortcut);
+
     return () => document.removeEventListener("keydown", onShortcut);
   }, [isOpen, onOpenChange]);
 
   const showQuickLinks = !query.trim();
+
   const links = useMemo<readonly SearchLink[]>(() => {
     if (showQuickLinks) return quickLinks;
+
     return index.status === "ready" ? searchDocs(index.entries, query) : [];
   }, [index, query, showQuickLinks]);
 
   const showStatus = links.length === 0 || index.status === "error";
+
   const statusMessage = {
     idle: "Loading documentation…",
     loading: "Loading documentation…",
@@ -166,8 +182,11 @@ export default function DocsSearch() {
               onKeyDownCapture={(event) => {
                 if (event.key !== "Escape" || event.nativeEvent.isComposing)
                   return;
+
                 event.preventDefault();
+
                 event.stopPropagation();
+
                 onOpenChange(false);
               }}
             >
@@ -258,6 +277,7 @@ export default function DocsSearch() {
                       className="mt-2"
                       onPress={() => {
                         input.current?.focus();
+
                         void loadIndex();
                       }}
                       size="sm"

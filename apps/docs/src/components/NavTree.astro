@@ -9,11 +9,13 @@ interface Props {
 }
 
 const { groups, currentId, section } = Astro.props;
+
 const filteredGroups = groups.filter((g) => g.label);
 ---
 
 <nav aria-label="Documentation" class="relative">
   <NavList section={section} className="flex md:hidden z-40" />
+
   <ul class="space-y-6">
     {
       filteredGroups.map((group) => (

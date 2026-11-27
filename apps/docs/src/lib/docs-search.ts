@@ -29,6 +29,7 @@ export function indexSearchPages(pages: readonly SearchPage[]): SearchEntry[] {
 
     return [
       { href, title, titleMatch, pageMatch: "" },
+
       ...headings.map(({ slug, text }) => ({
         href: `${href}#${encodeURIComponent(slug)}`,
         title: text,
@@ -45,17 +46,23 @@ export function searchDocs(
   query: string,
 ): SearchEntry[] {
   const phrase = normalize(query);
+
   if (!phrase) return [];
 
   const terms = phrase.split(" ");
+
   const exact: SearchEntry[] = [];
+
   const prefix: SearchEntry[] = [];
+
   const partial: SearchEntry[] = [];
 
   for (const entry of index) {
     const { titleMatch, pageMatch } = entry;
+
     if (titleMatch === phrase) {
       exact.push(entry);
+
       if (exact.length === RESULT_LIMIT) return exact;
     } else if (titleMatch.startsWith(phrase)) {
       if (prefix.length < RESULT_LIMIT) prefix.push(entry);

@@ -17,7 +17,7 @@ const items = Astro.props.headings.filter(
       <p class="mb-4 text-xs font-semibold uppercase tracking-wide text-muted">On this page</p>
       <ul class="space-y-1.5">
         {items.map((h) => (
-          <li 
+          <li
             id={`hash-${h.slug}`}
             data-active="false"
             class={cn("pl-4 pr-4 border-l max-w-60 -mt-1.5",
@@ -40,19 +40,20 @@ const items = Astro.props.headings.filter(
 
   window.addEventListener("hashchange", () => {
     const hash = window.location.hash;
+
     const NODE_ID = `${prefix}${hash.slice(1)}`;
 
     const el = document.getElementById(NODE_ID);
-    
-    if(el) {
-        const listItems = document.querySelectorAll<HTMLElement>("li[data-active=true]"); 
-        
-        listItems.forEach((item) => {
-          item.dataset.active = "false";
-        })
 
-        el.dataset.active = "true";
-      }
+    if(el) {
+      const listItems = document.querySelectorAll<HTMLElement>("li[data-active=true]");
+
+      listItems.forEach((item) => {
+        item.dataset.active = "false";
+      })
+
+      el.dataset.active = "true";
+    }
   })
 
 </script>

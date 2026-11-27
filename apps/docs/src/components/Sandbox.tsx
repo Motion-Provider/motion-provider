@@ -38,6 +38,7 @@ export default function Sandbox({
 
   function handleReset() {
     controller.reset();
+
     controller.play();
   }
 
@@ -47,6 +48,7 @@ export default function Sandbox({
         key={slug}
         fallbackRender={({ resetErrorBoundary, error }) => {
           const isErrorMsg = error instanceof Error;
+
           const errorMsg = isErrorMsg ?? null;
 
           return (

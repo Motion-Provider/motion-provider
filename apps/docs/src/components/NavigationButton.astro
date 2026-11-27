@@ -14,12 +14,11 @@ const Icon = isNext ? LucideArrowRight : LucideArrowLeft;
 const rel = isNext ? "next" : "prev";
 ---
 
-
 <a
-  href={href} 
+  href={href}
   rel={rel}
   class={cn("hover:text-accent flex gap-2 items-center justify-center", !isNext && "flex-row-reverse")}
 >
-  <span>{title}</span> 
+  <span>{title}</span>
   <Icon class="size-4"/>
 </a>

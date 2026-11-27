@@ -29,6 +29,7 @@ const theme = {
   type: "dark",
   fg: c.plain,
   bg: c.bg,
+
   colorReplacements: {
     [c.plain]: "var(--syntax-plain)",
     [c.bg]: "var(--syntax-bg)",
@@ -52,6 +53,7 @@ const theme = {
     [c.inserted]: "var(--syntax-inserted)",
     [c.deleted]: "var(--syntax-deleted)",
   },
+
   tokenColors: [
     // ── Identifiers
     {
@@ -67,12 +69,14 @@ const theme = {
         "support.type.object",
         "meta.jsx.children",
       ],
+
       settings: { foreground: c.plain },
     },
 
     // ── Object literal keys: { once: false }
     {
       scope: ["meta.object-literal.key", "support.type.property-name"],
+
       settings: { foreground: c.key },
     },
 
@@ -86,6 +90,7 @@ const theme = {
         "variable.other.jsdoc",
         "storage.type.class.jsdoc",
       ],
+
       settings: { foreground: c.comment, fontStyle: "italic" },
     },
 
@@ -108,6 +113,7 @@ const theme = {
         "keyword.operator.rest",
         "keyword.operator.quantifier.regexp",
       ],
+
       settings: { foreground: c.punctuation },
     },
 
@@ -122,18 +128,21 @@ const theme = {
         "punctuation.definition.binding-pattern",
         "punctuation.section.embedded",
       ],
+
       settings: { foreground: c.bracket },
     },
 
     // ── Operators: = === || + ! ?? =>
     {
       scope: ["keyword.operator", "storage.type.function.arrow"],
+
       settings: { foreground: c.operator },
     },
 
     // ── Ternary: ? :
     {
       scope: ["keyword.operator.ternary"],
+
       settings: { foreground: c.ternary },
     },
 
@@ -150,6 +159,7 @@ const theme = {
         "constant.language.null",
         "constant.language.undefined",
       ],
+
       settings: { foreground: c.keyword },
     },
 
@@ -163,12 +173,14 @@ const theme = {
         "support.constant.font-name",
         "constant.other.color",
       ],
+
       settings: { foreground: c.string },
     },
 
     // ── Functions & calls
     {
       scope: ["entity.name.function", "support.function"],
+
       settings: { foreground: c.fn },
     },
 
@@ -183,12 +195,14 @@ const theme = {
         "support.class",
         "support.type",
       ],
+
       settings: { foreground: c.type },
     },
 
     // ── Numbers & CSS units
     {
       scope: ["constant.numeric", "keyword.other.unit"],
+
       settings: { foreground: c.number },
     },
 
@@ -201,16 +215,20 @@ const theme = {
         "support.type.builtin",
         "variable.other.enummember",
       ],
+
       settings: { foreground: c.constant },
     },
 
     // ── JSX / HTML tags
     {
       scope: ["entity.name.tag"],
+
       settings: { foreground: c.tag },
     },
+
     {
       scope: ["support.class.component"],
+
       settings: { foreground: c.component },
     },
 
@@ -221,12 +239,14 @@ const theme = {
         "punctuation.decorator",
         "meta.decorator entity.name.function",
       ],
+
       settings: { foreground: c.attr },
     },
 
     // ── Regex body & flags
     {
       scope: ["string.regexp", "keyword.other.tsx"],
+
       settings: { foreground: c.regex },
     },
 
@@ -246,6 +266,7 @@ const theme = {
         "punctuation.definition.character-class.regexp",
         "support.other.parenthesis.regexp",
       ],
+
       settings: { foreground: c.escape },
     },
 
@@ -256,8 +277,10 @@ const theme = {
         "meta.diff.header.to-file",
         "punctuation.definition.inserted",
       ],
+
       settings: { foreground: c.inserted },
     },
+
     {
       scope: [
         "markup.deleted",
@@ -266,6 +289,7 @@ const theme = {
         "invalid",
         "invalid.illegal",
       ],
+
       settings: { foreground: c.deleted },
     },
   ],

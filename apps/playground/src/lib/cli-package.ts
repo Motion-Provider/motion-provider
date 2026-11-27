@@ -46,6 +46,7 @@ main(process.argv.slice(2)).catch((error) => {
 function tarEntry(name: string, text: string, mode: number) {
   const data = Buffer.from(text);
   const header = Buffer.alloc(512);
+
   function octal(value: number, offset: number, width: number) {
     header.write(
       value.toString(8).padStart(width - 1, "0") + "\0",
@@ -54,6 +55,7 @@ function tarEntry(name: string, text: string, mode: number) {
       "ascii",
     );
   }
+
   header.write(name);
   octal(mode, 100, 8);
   octal(0, 108, 8);
@@ -63,11 +65,13 @@ function tarEntry(name: string, text: string, mode: number) {
   header.fill(32, 148, 156);
   header.write("0", 156);
   header.write("ustar\0" + "00", 257);
+
   octal(
     header.reduce((sum, byte) => sum + byte, 0),
     148,
     8,
   );
+
   return Buffer.concat([
     header,
     data,
@@ -82,10 +86,12 @@ export function cliPackage() {
     bin: { "motion-playground": "./cli.mjs" },
     engines: { node: ">=20" },
   });
+
   const archive = Buffer.concat([
     tarEntry("package/package.json", manifest, 0o644),
     tarEntry("package/cli.mjs", executable, 0o755),
     Buffer.alloc(1024),
   ]);
+
   return gzipSync(archive);
 }

@@ -110,6 +110,7 @@ const svgAttrs = new Set(
 function safeUrl(value: string, image: boolean) {
   const normalized = value.replace(/[\u0000-\u0020\u007f]/g, "");
   const scheme = /^[a-z][a-z\d+.-]*:/i.exec(normalized)?.[0].toLowerCase();
+
   if (!scheme) return true;
   if (scheme === "https:" || scheme === "http:") return true;
   if (image)
@@ -135,8 +136,10 @@ function classify(node: ElementNode): {
   const text = node.children
     .filter((child) => typeof child === "string")
     .join("");
+
   if (node.tag === "img" && node.attributes.src)
     return { kind: "MotionImage", itemCount: 1 };
+
   const repeated =
     children.length >= 2 &&
     !text.trim() &&
@@ -144,6 +147,7 @@ function classify(node: ElementNode): {
       (child) =>
         child.tag === children[0]?.tag && chainChildTags.has(child.tag),
     );
+
   if (
     repeated ||
     (listTags.has(node.tag) &&
@@ -153,6 +157,7 @@ function classify(node: ElementNode): {
   ) {
     return { kind: "MotionChain", itemCount: children.length };
   }
+
   if (
     textTags.has(node.tag) &&
     children.length === 0 &&
@@ -161,6 +166,7 @@ function classify(node: ElementNode): {
   ) {
     return { kind: "MotionText", itemCount: text.trim().split(/\s+/u).length };
   }
+
   return { kind: "MotionContainer", itemCount: 1 };
 }
 
@@ -181,6 +187,7 @@ function layerName(node: ElementNode) {
         .join("")
         .trim() || node.tag
     );
+
   return (
     (
       {
@@ -199,6 +206,7 @@ function layerName(node: ElementNode) {
 export function readMarkup(html: string): Markup {
   if (html.length > MAX_HTML)
     throw new Error("HTML is limited to 80,000 characters.");
+
   const styles: string[] = [];
   const classes = new Set<string>();
   let omitted = 0;
@@ -211,10 +219,12 @@ export function readMarkup(html: string): Markup {
   ): MarkupNode[] {
     if (depth > MAX_DEPTH)
       throw new Error("HTML is nested more than 40 levels deep.");
+
     return children.flatMap<MarkupNode>((entry, index) => {
       const id = path ? `${path}.${index}` : String(index);
       if (entry.nodeName === "#text" && "value" in entry) return [entry.value];
       if (!("tagName" in entry)) return [];
+
       const tag = entry.tagName;
       if (tag === "style") {
         styles.push(
@@ -224,17 +234,21 @@ export function readMarkup(html: string): Markup {
         );
         return [];
       }
+
       if (blockedContainers.has(tag)) {
         omitted += 1;
         return [];
       }
+
       if (!allowedTags.has(tag)) {
         omitted += 1;
         return convert(entry.childNodes, id, depth + 1);
       }
+
       count += 1;
       if (count > MAX_ELEMENTS)
         throw new Error("This preview supports up to 600 HTML elements.");
+
       const attributes: Record<string, Attribute> = {};
       let style: Record<string, string> = {};
       for (const { name, value } of entry.attrs) {
@@ -247,6 +261,7 @@ export function readMarkup(html: string): Markup {
           omitted += 1;
           continue;
         }
+
         if (
           ((name === "href" || name === "src" || name === "poster") &&
             !safeUrl(value, name !== "href")) ||
@@ -255,6 +270,7 @@ export function readMarkup(html: string): Markup {
           omitted += 1;
           continue;
         }
+
         if (name === "style") {
           try {
             style = styleToJS(value, { reactCompat: true });
@@ -263,6 +279,7 @@ export function readMarkup(html: string): Markup {
           }
           continue;
         }
+
         const key = Object.hasOwn(names, name)
           ? names[name]!
           : svgTags.has(tag) && svgAttrs.has(name)
@@ -275,10 +292,12 @@ export function readMarkup(html: string): Markup {
           attributes[key] = Number(value);
         else attributes[key] = value;
       }
+
       if (typeof attributes.className === "string") {
         for (const className of attributes.className.split(/\s+/u))
           if (className) classes.add(className);
       }
+
       return [
         {
           id,
@@ -293,6 +312,7 @@ export function readMarkup(html: string): Markup {
 
   const nodes = convert(parseFragment(html).childNodes, "", 0);
   const layers: Layer[] = [];
+
   function collect(children: MarkupNode[], depth: number) {
     for (const node of children) {
       if (!isElement(node)) continue;
@@ -306,10 +326,12 @@ export function readMarkup(html: string): Markup {
           depth,
           itemCount,
         });
+
         if (!svgTags.has(node.tag)) collect(node.children, depth + 1);
       }
     }
   }
+
   collect(nodes, 0);
   return { nodes, layers, styles, classes: [...classes].sort(), omitted };
 }

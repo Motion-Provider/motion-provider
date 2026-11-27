@@ -1,7 +1,7 @@
 "use client";
 
 import { ImageOff } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import type { Device, Markup } from "../types/playground";
 
@@ -48,18 +48,22 @@ export function Sandbox({
   useEffect(() => {
     const body = frameDocument?.body;
     if (!body) return;
+
     const select = (event: MouseEvent) => {
       const target = event.target as Element | null;
       if (typeof target?.closest !== "function") return;
       if (target.closest("a")) event.preventDefault();
+
       const id = target
         .closest("[data-mp-layer]")
         ?.getAttribute("data-mp-layer");
       if (id) onSelect(id);
     };
     const preventSubmit = (event: SubmitEvent) => event.preventDefault();
+
     body.addEventListener("click", select);
     body.addEventListener("submit", preventSubmit);
+
     return () => {
       body.removeEventListener("click", select);
       body.removeEventListener("submit", preventSubmit);
@@ -78,9 +82,9 @@ export function Sandbox({
   }
 
   return (
-    <div className="relative flex min-h-[360px] flex-1 justify-center overflow-hidden bg-[var(--canvas)] bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-[size:16px_16px] p-3 sm:p-4">
+    <div className="relative flex min-h-90 flex-1 justify-center overflow-hidden bg-[var(--canvas)] bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-size-[16px_16px] p-3 sm:p-4">
       <div
-        className={`relative flex w-full min-w-0 flex-col overflow-hidden rounded-[9px] border border-[var(--canvas-line)] bg-[#131110] ${device === "mobile" ? "max-w-[390px]" : ""}`}
+        className={`relative flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--canvas-line)] bg-[#131110] ${device === "mobile" ? "max-w-97.5" : ""}`}
       >
         <iframe
           ref={frame}
@@ -88,11 +92,12 @@ export function Sandbox({
           sandbox="allow-same-origin"
           srcDoc={FRAME_HTML}
           referrerPolicy="no-referrer"
-          className="min-h-[330px] w-full flex-1 [color-scheme:dark]"
+          className="min-h-82.5 w-full flex-1 scheme-dark"
           onLoad={(event) =>
             setFrameDocument(event.currentTarget.contentDocument)
           }
         />
+
         {frameDocument &&
           createPortal(
             <>
@@ -103,6 +108,7 @@ export function Sandbox({
             </>,
             frameDocument.head,
           )}
+
         {frameDocument && createPortal(children, frameDocument.body)}
       </div>
     </div>

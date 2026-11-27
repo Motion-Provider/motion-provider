@@ -18,7 +18,7 @@ import {
   Link2,
   Terminal,
 } from "lucide-react";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
 import { fileName } from "../lib/export";
 import { downloadText, pack } from "../lib/transfer";
 import type { Draft, Project } from "../types/playground";
@@ -48,11 +48,12 @@ export function Dialog({
         }}
         isDismissable={!pending}
         isKeyboardDismissDisabled={pending}
-        className="bg-black/65"
+        className="bg-(--scrim)"
       >
         <Modal.Container className="p-3">
-          <Modal.Dialog className="w-full max-w-[640px] rounded-xl border border-[var(--stroke)] bg-[var(--panel)] p-5 shadow-xl sm:p-6">
+          <Modal.Dialog className="w-full max-w-160 rounded-4xl border mp-glass mp-glass-raised p-5 sm:p-6">
             <Modal.CloseTrigger isDisabled={pending} />
+
             <Modal.Header className="gap-2 pr-7">
               <Modal.Heading className="text-xl font-semibold tracking-tight">
                 {title}
@@ -63,7 +64,9 @@ export function Dialog({
                 </p>
               )}
             </Modal.Header>
+
             <Modal.Body className="mt-4 gap-4">{children}</Modal.Body>
+
             {footer && (
               <Modal.Footer className="mt-5 flex-wrap gap-2">
                 {footer}
@@ -93,8 +96,10 @@ export function ImportDialog({
 
   async function submit() {
     if (pending || !html.trim()) return;
+
     setPending(true);
     setError("");
+
     try {
       await onImport(html, name.trim() || "Imported component");
     } catch (error) {
@@ -131,6 +136,7 @@ export function ImportDialog({
         <Label>Component name</Label>
         <Input maxLength={90} placeholder="Imported component" />
       </TextField>
+
       <div className="grid gap-2">
         <label htmlFor="source-html" className="text-sm font-medium">
           HTML markup
@@ -143,10 +149,11 @@ export function ImportDialog({
           placeholder={
             '<section class="p-8">\n  <h1>Your component</h1>\n</section>'
           }
-          className="min-h-52 resize-y rounded-lg border border-[var(--stroke)] bg-[var(--inset)] font-mono text-sm leading-6"
+          className="min-h-52 resize-y rounded-lg border border-(--stroke) bg-(--inset) font-mono text-sm leading-6"
           maxLength={80_001}
         />
       </div>
+
       <div className="flex flex-wrap gap-2">
         <input
           ref={input}
@@ -155,11 +162,13 @@ export function ImportDialog({
           accept=".html,.htm,text/html"
           onChange={async (event) => {
             const file = event.currentTarget.files?.item(0);
+
             if (!file) return;
             if (file.size > 320_000) {
               setError("Choose an HTML file under 320 KB.");
               return;
             }
+
             try {
               setHtml(await file.text());
               setName(file.name.replace(/\.html?$/i, "").slice(0, 90));
@@ -187,6 +196,7 @@ export function ImportDialog({
           <Clipboard size={15} /> Edit current HTML
         </Button>
       </div>
+
       {error && (
         <p role="alert" className="text-sm text-danger">
           {error}
@@ -218,16 +228,20 @@ export function ExportDialog({
   }>();
   const [sharing, setSharing] = useState(false);
   const [shareError, setShareError] = useState("");
+
   const name = fileName(project);
 
   useEffect(() => {
     if (mode !== "cli") return;
+
     let cancelled = false;
     const packageUrl = new URL("/api/motion-cli.tgz", window.location.origin)
       .href;
+
     void pack(source)
       .then((code) => {
         if (cancelled) return;
+
         if (code.length > 100_000) {
           setTransfer({
             source,
@@ -236,6 +250,7 @@ export function ExportDialog({
           });
           return;
         }
+
         setTransfer({
           source,
           hash: code.slice(0, 64),
@@ -249,6 +264,7 @@ export function ExportDialog({
             error: "Could not generate the CLI command in this browser.",
           });
       });
+
     return () => {
       cancelled = true;
     };
@@ -257,6 +273,7 @@ export function ExportDialog({
   async function share() {
     setSharing(true);
     setShareError("");
+
     try {
       await onShare();
     } catch (error) {
@@ -271,6 +288,7 @@ export function ExportDialog({
   }
 
   const ready = transfer?.source === source ? transfer : undefined;
+
   return (
     <Dialog
       title="Export code"
@@ -291,11 +309,13 @@ export function ExportDialog({
           { id: "cli", label: "CLI command", icon: Terminal },
         ]}
       />
+
       {mode === "file" ? (
         <div className="grid gap-3">
-          <code className="overflow-hidden rounded-lg border border-[var(--stroke)] bg-[var(--inset)] p-3 font-mono text-sm text-ellipsis">
+          <code className="overflow-hidden rounded-lg border border-(--stroke) bg-(--inset) p-3 font-mono text-sm text-ellipsis">
             {name}
           </code>
+
           <div className="flex flex-wrap gap-2">
             <Button onPress={() => downloadText(name, source)}>
               <Download size={16} /> Download TSX
@@ -320,8 +340,9 @@ export function ExportDialog({
                 aria-label="CLI command"
                 readOnly
                 value={ready.command}
-                className="min-h-28 resize-y break-all rounded-lg border border-[var(--stroke)] bg-[var(--inset)] font-mono text-[13px]"
+                className="min-h-28 resize-y break-all rounded-lg border border-(--stroke) bg-(--inset) font-mono text-[13px]"
               />
+
               <p className="min-w-0 truncate text-[12px] text-muted">
                 Export hash{" "}
                 <code className="ml-2 font-mono" title={ready.hash}>
@@ -330,6 +351,7 @@ export function ExportDialog({
               </p>
               <Button
                 className="w-fit"
+                // biome-ignore lint/style/noNonNullAssertion: error internally handled
                 onPress={() => onCopy(ready.command!, "CLI command copied.")}
               >
                 <Copy size={16} /> Copy command
@@ -342,7 +364,8 @@ export function ExportDialog({
           )}
         </div>
       )}
-      <div className="grid gap-2 border-t border-[var(--stroke)] pt-4">
+
+      <div className="grid gap-2 border-t border-(--stroke) pt-4">
         <Button
           variant="outline"
           className="w-fit"
@@ -379,6 +402,7 @@ export function SavedDialog({
 }) {
   const [pending, setPending] = useState(false);
   const [loadError, setLoadError] = useState("");
+
   return (
     <Dialog
       title="Saved projects"
@@ -407,6 +431,7 @@ export function SavedDialog({
                 onPress={async () => {
                   setPending(true);
                   setLoadError("");
+
                   try {
                     await onLoad(draft);
                   } catch {
@@ -416,7 +441,7 @@ export function SavedDialog({
                   }
                 }}
                 isDisabled={pending}
-                className="w-full min-w-0 justify-start gap-3 rounded-lg border-[var(--stroke)]"
+                className="w-full min-w-0 justify-start gap-3 rounded-lg border-(--stroke)"
               >
                 <FolderOpen size={17} className="shrink-0 text-accent" />
                 <span className="min-w-0 flex-1 truncate text-left">
@@ -430,6 +455,7 @@ export function SavedDialog({
           ))}
         </ul>
       )}
+
       {loadError && (
         <p role="alert" className="text-sm text-danger">
           {loadError}

@@ -1,4 +1,8 @@
-import type { AnimationKeys } from "motion-provider";
+import type {
+  AnimationKeys,
+  DelayLogic,
+  TransitionKeys,
+} from "motion-provider";
 
 export type Attribute = string | number | boolean;
 export type ElementNode = {
@@ -36,9 +40,11 @@ export type Easing =
   | "linear"
   | "snappy"
   | "smooth";
-export type Stagger = "linear" | "wave" | "shuffle" | "bounce";
+export type Preset = Exclude<AnimationKeys, "default">;
+export type Stagger = Exclude<DelayLogic, "custom">;
 export type MotionSettings = {
-  preset: AnimationKeys;
+  modes: Preset[];
+  transition: TransitionKeys | "custom";
   duration: number;
   delay: number;
   easing: Easing;

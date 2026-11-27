@@ -1,13 +1,10 @@
 @import "tailwindcss";
 @import "@heroui/styles";
 
-@theme inline {
-  --font-sans: var(--font-geist-sans), system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-}
-
 body {
-  @apply bg-background text-foreground font-sans;
+  color: var(--foreground);
+  scroll-behavior: smooth;
+  background: var(--background);
 }
 
 :root,
@@ -46,9 +43,6 @@ body {
   --surface-tertiary-foreground: oklch(21.03% 0.006 40.24);
   --warning: oklch(78.19% 0.1604 46.7);
   --warning-foreground: oklch(21.03% 0.0059 46.7);
-
-  --radius: 0.25rem;
-  --field-radius: 0.75rem;
 
   /* Glass Tones */
   --glass-surface: oklch(97.02% 0.006 40.24 / 0.55);
@@ -135,6 +129,9 @@ body {
   --color-glass-surface: var(--glass-surface);
   --color-glass-surface-strong: var(--glass-surface-strong);
   --color-glass-border: var(--glass-border);
+  --font-sans: var(--font-primary), sans-serif;
+  --font-mono: var(--font-secondary), monospace;
+  --default-mono-font-family: var(--font-secondary), monospace;
   --font-primary: var(--font-primary);
   --font-secondary: var(--font-secondary);
   --font-annotation: var(--font-annotation);
@@ -145,10 +142,11 @@ body {
 
 :root,
 [data-theme="light"] {
-  --panel: #fffdfb;
-  --inset: #f8f4f0;
-  --canvas: #eee7e2;
-  --stroke: #e0d6ce;
+  --panel: var(--glass-surface-strong);
+  --inset: var(--glass-surface);
+  --canvas: color-mix(in oklab, var(--surface-tertiary) 90%, var(--accent));
+  --scrim: oklch(21% 0.018 40 / 0.34);
+  --stroke: color-mix(in oklab, var(--border) 60%, var(--glass-border));
   --canvas-line: #63534a;
   --grid: #54453828;
   --tint: #fbe2d4;
@@ -158,10 +156,15 @@ body {
 }
 
 [data-theme="dark"] {
-  --panel: #191715;
-  --inset: #151311;
-  --canvas: #100f0e;
-  --stroke: #322a25;
+  --panel: var(--glass-surface-strong);
+  --inset: color-mix(
+    in oklab,
+    var(--surface-secondary) 76%,
+    var(--glass-surface)
+  );
+  --canvas: color-mix(in oklab, var(--background) 94%, var(--accent));
+  --scrim: oklch(8% 0.012 40 / 0.68);
+  --stroke: color-mix(in oklab, var(--border) 60%, var(--glass-border));
   --canvas-line: #3a302a;
   --grid: #bb9c8031;
   --tint: #34231b;
@@ -170,12 +173,52 @@ body {
   --accent-text: var(--accent);
 }
 
+.mp-shell {
+  background-color: var(--background);
+  background-image: radial-gradient(
+    ellipse at 16% 0%,
+    color-mix(in oklab, var(--accent) 9%, transparent),
+    transparent 55rem
+  );
+}
+
+.mp-glass {
+  background-color: var(--surface);
+  border-color: var(--glass-border);
+  box-shadow: 0 2px 10px -5px var(--glass-shadow);
+}
+
+.mp-glass-raised {
+  box-shadow: 0 12px 36px -10px var(--glass-shadow);
+}
+
+@supports (backdrop-filter: blur(1px)) {
+  .mp-glass {
+    background-color: var(--glass-surface);
+    backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  }
+
+  .mp-glass-raised {
+    background-color: var(--glass-surface-strong);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .mp-shell,
+  .mp-glass {
+    transition:
+      background-color 180ms ease-out,
+      border-color 180ms ease-out,
+      box-shadow 180ms ease-out;
+  }
+}
+
 .mp-segments .toggle-button[data-selected] {
-  @apply bg-[var(--default)] text-foreground shadow-[0_1px_2px_#0002];
+  @apply bg-transparent text-foreground shadow-[0_1px_2px_#0002];
 }
 
 .mp-segments .toggle-button[aria-pressed="true"] {
-  @apply bg-[var(--default)] text-foreground shadow-[0_1px_2px_#0002];
+  @apply bg-transparent text-foreground shadow-[0_1px_2px_#0002];
 }
 
 .mp-slider .slider__track {
@@ -188,7 +231,7 @@ body {
 }
 
 .mp-slider .slider__track::before {
-  @apply inset-x-0 bg-[var(--stroke)] content-[''];
+  @apply inset-x-0 bg-(--stroke) content-[''];
 }
 
 .mp-slider .slider__thumb {
@@ -200,9 +243,59 @@ body {
 }
 
 .mp-timeline .slider__track::before {
-  @apply bg-[var(--default)];
+  @apply bg-transparent;
 }
 
 [data-theme="light"] .text-accent {
   color: var(--accent-text);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--background);
+}
+
+.glass {
+  background: var(--glass-surface);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+}
+
+.glass-strong {
+  background: var(--glass-surface-strong);
+  border: 1px solid var(--glass-border);
+  box-shadow: 0 8px 32px var(--glass-shadow);
+  -webkit-backdrop-filter: blur(var(--glass-blur))
+    saturate(var(--glass-saturation));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+}
+
+@supports not (
+    (backdrop-filter: blur(1px)) or
+    (-webkit-backdrop-filter: blur(1px))
+  ) {
+  .glass,
+  .glass-strong {
+    background: var(--surface);
+  }
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
 }

@@ -6,6 +6,7 @@ export async function importMarkup(html: string): Promise<Markup> {
   const worker = new Worker(
     new URL("../workers/markup.worker.ts", import.meta.url),
   );
+
   try {
     return await new Promise<Markup>((resolve, reject) => {
       worker.onmessage = ({
@@ -16,6 +17,7 @@ export async function importMarkup(html: string): Promise<Markup> {
       };
       worker.onerror = () =>
         reject(new Error("Could not start the HTML parser."));
+
       worker.postMessage(html);
     });
   } finally {

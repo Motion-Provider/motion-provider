@@ -42,27 +42,30 @@ export function Presets({
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {TEMPLATES.map((template) => {
         const Icon = icons[template.icon] ?? LayoutTemplate;
+
         return (
           <Card
             key={template.id}
-            className="flex min-w-0 flex-col gap-0 rounded-xl border border-[var(--stroke)] bg-[var(--panel)] p-0 shadow-none"
+            className="flex min-w-0 flex-col gap-0 rounded-2xl border mp-glass p-0"
           >
-            <div className="relative grid h-24 place-items-center overflow-hidden rounded-t-xl border-b border-[var(--stroke)] bg-[var(--canvas)] bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-[size:15px_15px]">
-              <div className="grid size-12 place-items-center rounded-xl border border-[var(--accent-stroke)] bg-[var(--tint)] text-accent">
+            <div className="relative grid h-24 place-items-center overflow-hidden rounded-t-2xl border-b border-(--stroke) bg-(--canvas) bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-size-[15px_15px]">
+              <div className="grid size-12 place-items-center rounded-xl border border-(--accent-stroke) bg-(--tint) text-accent">
                 <Icon size={23} strokeWidth={1.6} />
               </div>
             </div>
+
             <div className="grid flex-1 content-start gap-1.5 p-4">
               <h2 className="font-semibold">{template.name}</h2>
               <p className="text-sm leading-relaxed text-muted">
                 {template.description}
               </p>
             </div>
+
             <div className="px-4 pb-4">
               <Button
                 variant={current === template.id ? "secondary" : "outline"}
                 size="sm"
-                className="rounded-md border-[var(--stroke)]"
+                className="rounded-md border-(--stroke)"
                 onPress={() => onPick(template)}
               >
                 {current === template.id ? (

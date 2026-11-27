@@ -10,27 +10,38 @@ export default defineConfig({
   site: "https://docs.motionprovider.dev",
   output: "static",
   trailingSlash: "never",
+
   build: { format: "directory" },
+
   integrations: [mdx(), react(), sitemap()],
+
   prefetch: { prefetchAll: true },
+
   markdown: {
     shikiConfig: { theme: syntaxTheme },
   },
+
   fonts: [
     {
       name: "Sora",
       cssVariable: "--font-primary",
       provider: fontProviders.google(),
+
       weights: [300, 400, 500, 600, 700, 800],
+
       display: "swap",
     },
+
     {
       name: "Geist Mono",
       cssVariable: "--font-secondary",
       provider: fontProviders.google(),
+
       weights: [400, 500, 600, 700, 800],
+
       display: "swap",
     }
   ],
+
   vite: { plugins: [tailwindcss()] },
 });

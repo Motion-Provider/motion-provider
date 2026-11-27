@@ -1,6 +1,7 @@
 import { type CollectionEntry, getCollection } from "astro:content";
 
 export type DocEntry = CollectionEntry<"docs">;
+
 export type NavSection = "docs" | "api" | "learn";
 
 export interface NavItem {
@@ -24,12 +25,15 @@ const ROOT_ID = "index";
 
 export function docHref(id: string): string {
   const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
   return id === ROOT_ID ? base : `${base}/${id}`;
 }
 
 export function getSection(id: string): NavSection {
   if (id === "api" || id.startsWith("api/")) return "api";
+
   if (id === "learn" || id.startsWith("learn/")) return "learn";
+
   return "docs";
 }
 
@@ -44,6 +48,7 @@ function groupKey(id: string, section: NavSection): string {
   if (!relativeId) return section === "docs" ? "" : section;
 
   const separator = relativeId.indexOf("/");
+
   if (separator === -1) return section === "docs" ? "" : section;
 
   return relativeId.slice(0, separator);
@@ -53,6 +58,7 @@ function humanize(key: string): string {
   if (key === "api") return "API";
 
   const text = key.replace(/-/g, " ");
+
   return text.charAt(0).toUpperCase() + text.slice(1);
 }
 
@@ -75,11 +81,13 @@ export function buildIndex(
 
   for (const entry of sorted) {
     const key = groupKey(entry.id, section);
+
     const item: NavItem = {
       id: entry.id,
       href: docHref(entry.id),
       title: entry.data.title,
     };
+
     const list = groups.get(key);
 
     if (list) {

@@ -21,6 +21,7 @@ export default [
     desc: "General introduction to get started with Motion Provider explaining why its matter, capabilities, integrating Motion Provider to your UI components at ease.",
     href: "/getting-started/introduction",
   },
+
   {
     title: "learn with practicing",
     headingId: "learn-with-practicing",
@@ -28,6 +29,7 @@ export default [
     href: "/learn",
     icon: LucideGraduationCap,
   },
+
   {
     title: "playground guideline",
     headingId: "playground-guideline",
@@ -35,6 +37,7 @@ export default [
     icon: CircleFadingPlay,
     desc: "Go through guideline to get started with dedicated playground to animate even faster than any AI model you can imagine, visually and literally! You will learn how easy modularization that Motion Provider gives.",
   },
+
   {
     title: "Add CAS to your app",
     headingId: "add-cas-to-your-app",

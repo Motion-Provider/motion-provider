@@ -51,12 +51,13 @@ export function Workspace({
   return (
     <Card
       aria-label="Workspace"
-      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-[12px] border border-[var(--stroke)] bg-[var(--panel)] p-0 shadow-none lg:col-start-1 lg:row-start-1"
+      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0 lg:col-start-1 lg:row-start-1"
     >
       <SectionTitle icon={PanelTop}>Workspace</SectionTitle>
-      <div className="space-y-3 border-b border-[var(--stroke)] p-3.5">
-        <div className="flex min-w-0 items-center gap-2.5 rounded-lg border border-[var(--stroke)] bg-[var(--inset)] p-2.5">
-          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-[var(--tint)] text-accent">
+
+      <div className="space-y-3 border-b border-(--stroke) p-3.5">
+        <div className="flex min-w-0 items-center gap-2.5 rounded-lg border border-(--stroke) bg-(--inset) p-2.5">
+          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-(--tint) text-accent">
             <FileCode size={17} strokeWidth={1.7} />
           </span>
           <div className="min-w-0 flex-1">
@@ -66,27 +67,30 @@ export function Workspace({
             <p className="mt-0.5 text-[12px] text-muted">HTML</p>
           </div>
         </div>
+
         <Button
           variant="outline"
-          className="min-h-9 w-full justify-center rounded-md border-[var(--stroke)] text-sm"
+          className="min-h-9 w-full justify-center rounded-md border-(--stroke) text-sm"
           onPress={onImport}
         >
           <Plus size={16} className="text-accent" /> Import HTML
         </Button>
       </div>
+
       <div className="flex min-h-0 flex-1 flex-col px-2.5 py-3.5">
         <div className="mb-2.5 flex items-center justify-between px-2 text-[12px] font-semibold tracking-[0.13em] text-muted uppercase">
           <h3 className="flex items-center gap-2">
             <Layers size={14} strokeWidth={1.7} /> Layers
           </h3>
-          <span className="rounded border border-[var(--stroke)] px-1.5 py-0.5 font-mono tracking-normal">
+          <span className="rounded border border-(--stroke) px-1.5 py-0.5 font-mono tracking-normal">
             {layers.length}
           </span>
         </div>
+
         {layers.length ? (
           <ul
             aria-label="Component layers"
-            className="max-h-[240px] space-y-0.5 lg:max-h-[430px] overflow-y-auto"
+            className="max-h-60 space-y-0.5 lg:max-h-107.5 overflow-y-auto"
           >
             {layers
               .slice(
@@ -99,6 +103,7 @@ export function Workspace({
               .map((layer) => {
                 const Icon = icons[layer.kind];
                 const active = selected === layer.id;
+
                 return (
                   <li key={layer.id}>
                     <Button
@@ -106,7 +111,7 @@ export function Workspace({
                       variant="ghost"
                       size="sm"
                       onPress={() => onSelect(layer.id)}
-                      className={`min-h-8 w-full min-w-0 justify-start gap-2 rounded-md border px-2 text-left [font-size:13px] ${active ? "border-[var(--accent-stroke)] bg-[var(--tint)] text-accent" : "border-transparent text-[var(--secondary-text)] hover:bg-default"}`}
+                      className={`min-h-8 w-full min-w-0 justify-start gap-2 rounded-md border px-2 text-left text-[13px] ${active ? "border-(--accent-stroke) bg-(--tint) text-accent" : "border-transparent text-(--secondary-text) hover:bg-default"}`}
                     >
                       {layer.depth === 0 ? (
                         <ChevronDown
@@ -125,15 +130,13 @@ export function Workspace({
                         {layer.name}
                       </span>
                       {assignments[layer.id] && (
-                        <span
-                          className="size-1.5 shrink-0 rounded-full bg-accent"
-                          aria-label="Animated"
-                        />
+                        <span className="size-1.5 shrink-0 rounded-full bg-accent" />
                       )}
                     </Button>
                   </li>
                 );
               })}
+
             {layers.length > limit && (
               <li>
                 <Button
@@ -152,10 +155,11 @@ export function Workspace({
           </p>
         )}
       </div>
-      <div className="mt-auto flex items-center gap-2 border-t border-[var(--stroke)] p-3.5">
+
+      <div className="mt-auto flex items-center gap-2 border-t border-(--stroke) p-3.5">
         <Button
           variant="outline"
-          className="min-h-9 min-w-0 flex-1 justify-start gap-2 rounded-md border-[var(--stroke)] px-2.5 text-sm"
+          className="min-h-9 min-w-0 flex-1 justify-start gap-2 rounded-md border-(--stroke) px-2.5 text-sm"
           isPending={saving}
           onPress={onSave}
           isDisabled={!layers.length}
@@ -167,7 +171,7 @@ export function Workspace({
           icon={FolderOpen}
           label="Open saved projects"
           variant="outline"
-          className="min-h-9 rounded-md border-[var(--stroke)]"
+          className="min-h-9 rounded-md border-(--stroke)"
           onPress={onOpen}
         />
       </div>

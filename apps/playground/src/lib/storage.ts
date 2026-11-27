@@ -6,6 +6,7 @@ export const THEME_KEY = "motion-playground:theme";
 async function openLibrary() {
   return new Promise<IDBDatabase>((resolve, reject) => {
     const request = indexedDB.open("motion-playground", 1);
+
     request.onupgradeneeded = () =>
       request.result.createObjectStore("projects", { keyPath: "id" });
     request.onsuccess = () => resolve(request.result);
@@ -18,10 +19,12 @@ async function withLibrary<Value>(
   action: (store: IDBObjectStore) => IDBRequest<Value>,
 ) {
   const database = await openLibrary();
+
   try {
     return await new Promise<Value>((resolve, reject) => {
       const transaction = database.transaction("projects", mode);
       const request = action(transaction.objectStore("projects"));
+
       transaction.oncomplete = () => resolve(request.result);
       transaction.onabort = () => reject(transaction.error);
     });
@@ -36,10 +39,12 @@ export function saveProject(project: Project) {
     id: crypto.randomUUID(),
     updated: Date.now(),
   };
+
   return withLibrary("readwrite", (store) => store.put(draft));
 }
 
 export async function listProjects(): Promise<Draft[]> {
   const drafts = await withLibrary("readonly", (store) => store.getAll());
+
   return drafts.sort((a, b) => b.updated - a.updated);
 }

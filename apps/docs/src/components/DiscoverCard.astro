@@ -46,17 +46,20 @@ const { label, href, count, icon: Icon } = Astro.props;
 
   .discover-card {
     background-color: color-mix(in srgb, var(--discover-accent) 2.7%, var(--color-surface));
+
     border-color: color-mix(in srgb, var(--discover-accent) 7.2%, var(--color-border));
   }
 
   .discover-card:hover,
   .discover-card:focus-visible {
     background-color: color-mix(in srgb, var(--discover-accent) 4.8%, var(--color-surface));
+
     border-color: color-mix(in srgb, var(--discover-accent) 30%, var(--color-border));
   }
 
   .discover-icon {
     background-color: color-mix(in srgb, var(--color-accent) 5.4%, var(--color-surface));
+
     color: color-mix(in srgb, var(--color-accent) 70%, var(--color-foreground));
   }
 

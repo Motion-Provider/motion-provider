@@ -25,18 +25,21 @@ export default [
     desc: "Fully typed API with strict generics and autocompletion out of the box.",
     href: "/integrations/typescript",
   },
+
   {
     icon: NextjsIcon,
     title: "Next.js",
     desc: "Drop-in setup for the App Router, including Server and Client Component boundaries.",
     href: "/integrations/nextjs",
   },
+
   {
     icon: AstroIcon,
     title: "React",
     desc: "Fully typed API with strict generics and autocompletion out of the box.",
     href: "/integrations/astro",
   },
+
   {
     icon: TanStackIcon,
     title: "TanStack",

@@ -1,23 +1,28 @@
-import type { MotionAnimationProps } from "motion-provider";
+import {
+  animationModes,
+  delayLogics,
+  transitions,
+} from "motion-provider/catalog";
+import type { TransitionKeys, MotionAnimationProps } from "motion-provider";
 import type {
   ComponentKind,
   Easing,
   MotionSettings,
 } from "../types/playground";
 
-export const PRESETS = [
-  { id: "fadeUp", label: "Fade up" },
-  { id: "fadeIn", label: "Fade in" },
-  { id: "fadeDown", label: "Fade down" },
-  { id: "fadeLeft", label: "Fade left" },
-  { id: "fadeRight", label: "Fade right" },
-  { id: "slideUp", label: "Slide up" },
-  { id: "scaleZoomIn", label: "Scale in" },
-  { id: "filterBlurIn", label: "Blur in" },
-  { id: "rotateIn", label: "Rotate in" },
-  { id: "clipCircle", label: "Circle reveal" },
-  { id: "transformRevealUp", label: "Reveal up" },
-] as const;
+function option<T extends string>(id: T) {
+  const words = id.replace(/([a-z])([A-Z])/g, "$1 $2").toLowerCase();
+  return { id, label: words.charAt(0).toUpperCase() + words.slice(1) };
+}
+
+export const MAX_MODES = 5;
+export const PRESETS = animationModes
+  .filter((id) => id !== "default")
+  .map(option);
+export const TRANSITIONS = [
+  { id: "custom" as const, label: "Custom timing" },
+  ...(Object.keys(transitions) as TransitionKeys[]).map(option),
+];
 
 export const EASINGS = {
   "ease-out": { label: "Ease out", value: "ease-out" },
@@ -30,18 +35,14 @@ export const EASINGS = {
   { label: string; value: MotionAnimationProps["easing"] }
 >;
 
-export const ORDERS = [
-  { id: "linear", label: "In order" },
-  { id: "wave", label: "Wave" },
-  { id: "shuffle", label: "Shuffle" },
-  { id: "bounce", label: "Bounce" },
-] as const;
+export const ORDERS = delayLogics.filter((id) => id !== "custom").map(option);
 
 export const MAX_STAGGER_DELAY = 3;
 
 export function settingsFor(kind: ComponentKind): MotionSettings {
   return {
-    preset: kind === "MotionImage" ? "filterBlurIn" : "fadeUp",
+    modes: [kind === "MotionImage" ? "filterBlurIn" : "fadeUp"],
+    transition: "custom",
     duration: 0.6,
     delay: 0,
     easing: "ease-out",

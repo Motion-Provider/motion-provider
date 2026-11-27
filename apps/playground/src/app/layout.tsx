@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
-import { GeistSans } from "geist/font/sans";
-import { GeistMono } from "geist/font/mono";
 import type { ReactNode } from "react";
+import { fontAnnotation, fontPrimary, fontSecondary } from "@/lib/fonts";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -15,9 +14,9 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       data-theme="dark"
-      className={`${GeistSans.variable} ${GeistMono.variable} antialiased`}
+      className={`${fontAnnotation.variable} ${fontPrimary.variable} ${fontSecondary.variable} antialiased`}
     >
-      <body>{children}</body>
+      <body className="font-primary">{children}</body>
     </html>
   );
 }

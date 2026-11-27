@@ -24,6 +24,7 @@ const { section } = Astro.props;
         width={432}
       />
     </a>
+
     <button
       id="docs-nav-toggle"
       type="button"
@@ -44,6 +45,7 @@ const { section } = Astro.props;
         <path d="M4 6h16M4 12h16M4 18h16"></path>
       </svg>
     </button>
+
     <NavList section={section} className="hidden md:flex" />
     <div class="flex shrink-0 items-center md:-mt-1 md:ml-auto">
       <DocsSearch client:load />

@@ -8,6 +8,7 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 

@@ -35,6 +35,7 @@ export function IconButton({
       >
         <Icon size={16} strokeWidth={1.65} />
       </Button>
+
       <Tooltip.Content>{label}</Tooltip.Content>
     </Tooltip>
   );
@@ -66,17 +67,19 @@ export function Segmented<Value extends string>({
       onSelectionChange={(keys) => {
         const key = keys.values().next().value;
         const item = items.find(({ id }) => id === key);
+
         if (item) onChange(item.id);
       }}
-      className="mp-segments inline-flex max-w-full shrink-0 items-center gap-0.5 rounded-lg border border-[var(--stroke)] bg-[var(--inset)] p-[3px]"
+      className="mp-segments inline-flex max-w-full shrink-0 items-center gap-0.5 rounded-full border border-(--stroke) bg-(--inset) p-0.75"
     >
       {items.map(({ id, label: itemLabel, icon: Icon, iconOnly }) => (
         <ToggleButton
           key={id}
           id={id}
           aria-label={itemLabel}
+          variant="ghost"
           isIconOnly={iconOnly}
-          className="min-h-7 rounded-md border-0 px-2.5 text-[13px] font-medium text-muted"
+          className="min-h-7 rounded-full border-0 px-2.5 text-[13px] font-medium text-muted"
         >
           {Icon && <Icon size={15} strokeWidth={1.7} />}
           {!iconOnly && itemLabel}
@@ -96,7 +99,7 @@ export function SectionTitle({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex min-h-14 items-center justify-between gap-2 border-b border-[var(--stroke)] px-4">
+    <div className="flex min-h-14 items-center justify-between gap-2 border-b border-(--stroke) px-4">
       <h2 className="flex min-w-0 items-center gap-2.5 text-sm font-semibold">
         <Icon size={17} strokeWidth={1.7} className="shrink-0 text-muted" />
         {children}
@@ -128,17 +131,19 @@ export function OptionSelect<Value extends string>({
       }}
       className="grid w-full gap-2"
     >
-      <Label className="text-sm font-medium text-[var(--secondary-text)]">
+      <Label className="text-sm font-medium text-(--secondary-text)">
         {label}
       </Label>
-      <Select.Trigger className="min-h-9 gap-2 rounded-md border border-[var(--stroke)] bg-[var(--inset)] px-2.5 text-sm shadow-none">
+
+      <Select.Trigger className="min-h-9 gap-2 rounded-md border border-(--stroke) bg-(--inset) px-2.5 text-sm shadow-none">
         {Icon && (
           <Icon size={15} aria-hidden className="shrink-0 text-accent" />
         )}
         <Select.Value className="min-w-0 flex-1 truncate" />
         <Select.Indicator className="size-3.5 shrink-0 text-muted" />
       </Select.Trigger>
-      <Select.Popover className="max-h-64 rounded-lg border border-[var(--stroke)]">
+
+      <Select.Popover className="mp-glass mp-glass-raised max-h-64 rounded-lg border">
         <ListBox>
           {items.map((item) => (
             <ListBox.Item key={item.id} id={item.id} textValue={item.label}>
@@ -178,12 +183,11 @@ export function Range({
       }}
       className="mp-slider gap-x-1 gap-y-2"
     >
-      <Label className="text-[13px] text-[var(--secondary-text)]">
-        {label}
-      </Label>
-      <Slider.Output className="w-max rounded border border-[var(--stroke)] bg-[var(--inset)] px-1 py-0.5 font-mono text-[12px] whitespace-nowrap text-foreground">
+      <Label className="text-[13px] text-(--secondary-text)">{label}</Label>
+      <Slider.Output className="w-max rounded border border-(--stroke) bg-(--inset) px-1 py-0.5 font-mono text-[12px] whitespace-nowrap text-foreground">
         {() => `${value.toFixed(2)} s`}
       </Slider.Output>
+
       <Slider.Track>
         <Slider.Fill />
         <Slider.Thumb />

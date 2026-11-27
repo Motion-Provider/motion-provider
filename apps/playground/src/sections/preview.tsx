@@ -16,6 +16,7 @@ import {
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { IconButton, Segmented } from "../components/controls";
+import { CodePaneSkeleton } from "../components/loading-skeletons";
 import { MotionTree } from "../components/motion-tree";
 import { Sandbox } from "../components/sandbox";
 import type { usePlayback } from "../hooks/use-playback";
@@ -23,13 +24,7 @@ import type { Device, Markup, Project, View } from "../types/playground";
 
 const CodePane = dynamic(
   () => import("../components/code-pane").then(({ CodePane }) => CodePane),
-  {
-    loading: () => (
-      <p role="status" className="p-6 text-sm text-muted">
-        Loading the code viewer…
-      </p>
-    ),
-  },
+  { loading: CodePaneSkeleton },
 );
 
 const views = [
@@ -81,25 +76,40 @@ export function Preview({
   const [codeView, setCodeView] = useState<"generated" | "original">(
     "generated",
   );
+
   const live = view === "preview";
   const playing = playback.display.state === "playing";
 
   return (
     <Card
       aria-label="Live sandbox"
-      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-[12px] border border-[var(--stroke)] bg-[var(--panel)] p-0 shadow-none lg:col-start-2 lg:row-start-1"
+      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0 lg:col-start-2 lg:row-start-1"
     >
-      <div className="relative flex min-h-14 flex-wrap items-center justify-between gap-2 border-b border-[var(--stroke)] px-3 py-2 sm:px-4">
+      <div className="relative flex min-h-14 flex-wrap items-center justify-between gap-2 border-b border-(--stroke) px-3 py-2 sm:px-4">
         <h2 className="mr-auto flex items-center gap-2.5 text-sm font-semibold">
           <ScanLine size={17} strokeWidth={1.7} className="text-muted" />
           <span>Sandbox</span>
         </h2>
-        <Segmented
-          label="Sandbox view"
-          items={views}
-          value={view}
-          onChange={onView}
-        />
+
+        <fieldset
+          aria-label="Sandbox view"
+          className="inline-flex min-w-0 items-center gap-0.5 rounded-full border border-(--stroke) bg-(--inset) p-0.75"
+        >
+          {views.map(({ id, label, icon: Icon }) => (
+            <Button
+              key={id}
+              size="sm"
+              variant={view === id ? "secondary" : "ghost"}
+              aria-pressed={view === id}
+              className="min-h-7 rounded-full px-2.5"
+              onPress={() => onView(id)}
+            >
+              <Icon size={15} aria-hidden="true" />
+              {label}
+            </Button>
+          ))}
+        </fieldset>
+
         <div className="flex items-center gap-1 sm:ml-auto">
           {live ? (
             <Segmented
@@ -119,6 +129,7 @@ export function Preview({
           )}
         </div>
       </div>
+
       {live ? (
         <>
           <Sandbox
@@ -137,6 +148,7 @@ export function Preview({
               onError={onError}
             />
           </Sandbox>
+
           <div className="flex min-h-[66px] flex-wrap items-center gap-2.5 border-t border-[var(--stroke)] px-3 py-2 sm:gap-3 sm:px-4">
             <IconButton
               label={playing ? "Pause animation" : "Play animation"}
@@ -144,7 +156,7 @@ export function Preview({
               variant="primary"
               isDisabled={!total || before}
               onPress={() => (playing ? playback.pause() : playback.play())}
-              className="size-9 rounded-md bg-accent text-accent-foreground hover:text-accent-foreground"
+              className="size-9 rounded-2xl bg-accent text-accent-foreground hover:text-accent-foreground"
             />
             <IconButton
               label="Replay from start"
@@ -152,6 +164,7 @@ export function Preview({
               isDisabled={!total || before}
               onPress={() => playback.play(true)}
             />
+
             <Slider
               aria-label="Playback position"
               isDisabled={!total || before}
@@ -174,6 +187,7 @@ export function Preview({
               </span>{" "}
               / {total.toFixed(2)}s
             </div>
+
             <Button
               size="sm"
               isIconOnly
@@ -206,6 +220,7 @@ export function Preview({
               {codeView === "generated" ? "React · TypeScript" : "HTML"}
             </span>
           </div>
+
           <CodePane source={codeView === "generated" ? code : project.html} />
         </div>
       )}

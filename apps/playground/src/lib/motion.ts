@@ -1,3 +1,4 @@
+import { calculateDelays } from "motion-provider/catalog";
 import type {
   MotionAnimationProps,
   MotionChainConfigProps,
@@ -5,6 +6,8 @@ import type {
 import {
   EASINGS,
   MAX_STAGGER_DELAY,
+  MAX_MODES,
+  TRANSITIONS,
   ORDERS,
   PRESETS,
   settingsFor,
@@ -28,10 +31,12 @@ export const VOID_TAGS = new Set(
 
 export function animationFor(settings: MotionSettings): MotionAnimationProps {
   return {
-    mode: settings.preset,
+    mode: settings.modes.length === 1 ? settings.modes[0]! : settings.modes,
     duration: settings.duration,
     delay: settings.delay,
-    easing: EASINGS[settings.easing].value,
+    ...(settings.transition === "custom"
+      ? { easing: EASINGS[settings.easing].value }
+      : { transition: settings.transition }),
   };
 }
 
@@ -47,6 +52,7 @@ export function staggerFor(settings: MotionSettings): MotionChainConfigProps {
 export function imageStyle(node: ElementNode) {
   const width = Number(node.attributes.width);
   const height = Number(node.attributes.height);
+
   return {
     ...(width > 0 && height > 0
       ? {
@@ -65,6 +71,7 @@ export function nodeProps(
   // React controls these fields when they are supplied as value or checked.
   const { checked, value, ...rest } = attributes;
   const field = ["input", "select", "textarea"].includes(node.tag);
+
   return {
     ...rest,
     ...(checked !== undefined ? { defaultChecked: Boolean(checked) } : {}),
@@ -82,13 +89,16 @@ export function chainChild(
 ) {
   const list = ["ul", "ol", "menu"].includes(node.tag);
   const first = peers[0];
+
   if (!first)
     return { tag: list ? "li" : "div", shared: false, props: {}, list };
+
   const signature = JSON.stringify(nodeProps(first));
   const shared =
     !assigned &&
     !first.attributes.id &&
     peers.every((child) => JSON.stringify(nodeProps(child)) === signature);
+
   return {
     tag: shared ? first.tag : list ? "li" : "div",
     shared,
@@ -103,10 +113,12 @@ export function animationTime(
   markup: Markup,
 ) {
   let count = layer.itemCount;
+
   if (layer.kind === "MotionImage") {
     if (settings.interaction !== "auto") return 0;
     count = settings.pieces;
   }
+
   if (layer.kind === "MotionText") {
     const find = (nodes: Markup["nodes"]): ElementNode | undefined => {
       for (const node of nodes) {
@@ -115,6 +127,7 @@ export function animationTime(
         if (match) return match;
       }
     };
+
     const text = find(markup.nodes)?.children.join("") ?? "";
     if (settings.split === "chars") {
       count =
@@ -123,31 +136,33 @@ export function animationTime(
           : Array.from(text).length;
     } else count = text.match(/\s+|\S+/gu)?.length ?? count;
   }
-  const largestStep =
-    settings.order === "wave"
-      ? Math.max(
-          0,
-          ...Array.from(
-            { length: count },
-            (_, index) => Math.sin(0.5 * index) * 0.5 + 0.5,
-          ),
-        )
-      : settings.order === "bounce"
-        ? 1
-        : Math.max(count - 1, 0);
+
+  const offsets =
+    layer.kind === "MotionContainer"
+      ? []
+      : calculateDelays(count, {
+          ...staggerFor(settings),
+          baseDuration: settings.stagger,
+        });
   return (
     settings.duration +
     settings.delay +
-    Math.min(MAX_STAGGER_DELAY, largestStep * settings.stagger)
+    offsets.reduce((max, value) => Math.max(max, value), 0)
   );
 }
 
 export function randomized(settings: MotionSettings): MotionSettings {
-  const candidates = PRESETS.filter((preset) => preset.id !== settings.preset);
+  const candidates = PRESETS.filter(
+    (preset) => !settings.modes.includes(preset.id),
+  );
+  const modes = settings.modes.map(() => {
+    const index = Math.floor(Math.random() * candidates.length);
+    return candidates.splice(index, 1)[0]!.id;
+  });
+
   return {
     ...settings,
-    preset:
-      candidates[Math.floor(Math.random() * candidates.length)]?.id ?? "fadeUp",
+    modes,
     duration: (3 + Math.floor(Math.random() * 9)) / 10,
     delay: Math.floor(Math.random() * 4) / 20,
     stagger: (3 + Math.floor(Math.random() * 13)) / 100,
@@ -167,6 +182,7 @@ function numberBetween(
 
 export function readProject(input: unknown, markup: Markup): Project | null {
   if (typeof input !== "object" || !input) return null;
+
   const { name, html, template, assignments } = input as Partial<Project>;
   if (
     typeof name !== "string" ||
@@ -175,6 +191,7 @@ export function readProject(input: unknown, markup: Markup): Project | null {
     typeof assignments !== "object"
   )
     return null;
+
   return {
     name: name.slice(0, 90),
     html,
@@ -183,11 +200,22 @@ export function readProject(input: unknown, markup: Markup): Project | null {
       markup.layers.flatMap((layer) => {
         const saved = assignments[layer.id];
         if (!saved || typeof saved !== "object") return [];
+
         const defaults = settingsFor(layer.kind);
+        const rawModes: unknown[] = Array.isArray(saved.modes)
+          ? saved.modes
+          : ["preset" in saved ? saved.preset : undefined];
+        const modes = [...new Set(rawModes)]
+          .flatMap((value) => {
+            const preset = PRESETS.find(({ id }) => id === value);
+            return preset ? [preset.id] : [];
+          })
+          .slice(0, MAX_MODES);
         const settings: MotionSettings = {
-          preset: PRESETS.some(({ id }) => id === saved.preset)
-            ? saved.preset
-            : defaults.preset,
+          modes: modes.length ? modes : defaults.modes,
+          transition:
+            TRANSITIONS.find(({ id }) => id === saved.transition)?.id ??
+            "custom",
           duration: numberBetween(saved.duration, 0.1, 3, defaults.duration),
           delay: numberBetween(saved.delay, 0, 2, defaults.delay),
           easing: Object.hasOwn(EASINGS, saved.easing)
@@ -206,6 +234,7 @@ export function readProject(input: unknown, markup: Markup): Project | null {
               ? saved.interaction
               : "auto",
         };
+
         return [[layer.id, settings]];
       }),
     ),

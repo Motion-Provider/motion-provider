@@ -20,6 +20,10 @@
     "./presets": {
       "types": "./dist/presets/index.d.ts",
       "import": "./dist/presets/index.js"
+    },
+    "./catalog": {
+      "types": "./dist/catalog.d.ts",
+      "import": "./dist/catalog.js"
     }
   },
   "files": [

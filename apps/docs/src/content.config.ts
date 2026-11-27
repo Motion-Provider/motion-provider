@@ -5,6 +5,7 @@ import { z } from "astro/zod";
 const docs = defineCollection({
   loader: glob({
     pattern: ["**/*.{md,mdx}", "!**/_*", "!examples/**"],
+
     base: "../../docs",
   }),
   type: "content_layer",

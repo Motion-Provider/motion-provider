@@ -38,6 +38,7 @@ type Props = {
 
 function PreviewImage(props: MotionImageProps) {
   const [failed, setFailed] = useState(false);
+
   return (
     <MotionImage
       {...props}
@@ -68,15 +69,18 @@ export function MotionTree({
 
   function render(node: MarkupNode): ReactNode {
     if (!isElement(node)) return node;
+
     const { id, tag } = node;
     const props = nodeProps(node);
     const marker = {
       "data-mp-layer": id,
       "data-mp-selected": id === selected ? "" : undefined,
     };
+
     const children = VOID_TAGS.has(tag) ? undefined : node.children.map(render);
     const layer = layers.get(id);
     const settings = assignments[id];
+
     if (!layer || !settings)
       return createElement(tag, { ...props, ...marker, key: id }, children);
 
@@ -85,8 +89,10 @@ export function MotionTree({
     const playback = active.has(id) ? controller : passive;
     const elementType = tag as MotionElementType;
     const common = { animation, controller: playback, onMotionError };
+
     if (layer.kind === "MotionText") {
       const { className, ...rest } = props;
+
       return (
         <MotionText
           key={id}
@@ -103,6 +109,7 @@ export function MotionTree({
         </MotionText>
       );
     }
+
     if (layer.kind === "MotionImage" && typeof props.src === "string") {
       const {
         src,
@@ -117,6 +124,7 @@ export function MotionTree({
         settings.interaction !== "auto" ? settings.interaction : undefined;
       // Images with an interaction have their own driver when selected or in batch mode.
       const imageController = interact && active.has(id) ? undefined : playback;
+
       return (
         <PreviewImage
           key={`${id}:${src}:${String(srcSet)}`}
@@ -139,6 +147,7 @@ export function MotionTree({
         />
       );
     }
+
     if (layer.kind === "MotionChain") {
       const items = node.children.filter(isElement);
       const layout = chainChild(
@@ -146,6 +155,7 @@ export function MotionTree({
         items.some((child) => !!assignments[child.id]),
         items,
       );
+
       const chain = (
         <MotionChain
           {...layout.props}
@@ -162,6 +172,7 @@ export function MotionTree({
           )}
         </MotionChain>
       );
+
       const markChildren = layout.shared
         ? (root: Element | null) => {
             if (!root) return;
@@ -172,12 +183,14 @@ export function MotionTree({
             }
           }
         : undefined;
+
       return createElement(
         tag,
         { ...props, ...marker, key: id, ref: markChildren },
         chain,
       );
     }
+
     return (
       <MotionContainer
         key={id}
