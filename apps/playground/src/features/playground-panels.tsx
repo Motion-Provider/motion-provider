@@ -1,3 +1,4 @@
+import { ShortcutsModal } from "@/components/shortcuts-modal";
 import { report } from "@/lib/report";
 import { Inspector } from "@/sections/inspector";
 import { Preview } from "@/sections/preview";
@@ -47,6 +48,7 @@ export function WorkspacePanel() {
       layers={state.markup.layers}
       selected={state.selected}
       saving={saving}
+      shortcuts={<ShortcutsModal save={save} saving={saving} />}
       onSelect={actions.select}
       onImport={() => actions.openDialog("import")}
       onSave={save}

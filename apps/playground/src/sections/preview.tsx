@@ -150,7 +150,7 @@ export function Preview({
               icon={playing ? Pause : Play}
               variant="primary"
               isDisabled={!total || before}
-              onPress={() => (playing ? playback.pause() : playback.play())}
+              onPress={playback.toggle}
               className="size-9 rounded-2xl"
             />
             <IconButton

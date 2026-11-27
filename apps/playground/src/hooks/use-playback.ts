@@ -1,6 +1,6 @@
 "use client";
 
-import { useController, type AnimationController } from "motion-provider";
+import { type AnimationController, useController } from "motion-provider";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Handle = Parameters<AnimationController["register"]>[0];
@@ -55,6 +55,7 @@ export function usePlayback(total: number, playbackKey: string) {
     frame.current = undefined;
   }, []);
 
+  // biome-ignore lint/correctness/useExhaustiveDependencies: Restart playback when the project or its duration changes.
   useEffect(() => {
     stopFrame();
     for (const handle of handles.current) handle.finish();
@@ -127,5 +128,10 @@ export function usePlayback(total: number, playbackKey: string) {
     [total, stopFrame, update],
   );
 
-  return { controller, passive, display, play, pause, seek };
+  const toggle = useCallback(() => {
+    if (position.current.state === "playing") pause();
+    else play();
+  }, [pause, play]);
+
+  return { controller, passive, display, play, toggle, seek };
 }

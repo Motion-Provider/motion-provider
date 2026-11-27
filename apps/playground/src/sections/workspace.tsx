@@ -15,7 +15,7 @@ import {
   Save,
   Type,
 } from "lucide-react";
-import { useState } from "react";
+import { type ReactNode, useState } from "react";
 import { IconButton, SectionTitle } from "../components/controls";
 import type { Assignments, Layer, Project } from "../types/playground";
 
@@ -31,6 +31,7 @@ export function Workspace({
   layers,
   selected,
   saving,
+  shortcuts,
   onSelect,
   onImport,
   onSave,
@@ -41,6 +42,7 @@ export function Workspace({
   layers: Layer[];
   selected?: string;
   saving: boolean;
+  shortcuts: ReactNode;
   onSelect: (id: string) => void;
   onImport: () => void;
   onSave: () => void;
@@ -169,27 +171,35 @@ export function Workspace({
         )}
       </div>
 
-      <div className="mt-auto grid shrink-0 grid-cols-[minmax(0,1fr)_auto] gap-2 border-t border-stroke p-3.5">
-        <Button
-          variant="outline"
-          className="min-h-9 min-w-0 flex-1 justify-start gap-2 rounded-md border-stroke px-2.5 text-sm"
-          isPending={saving}
-          onPress={onSave}
-          isDisabled={!layers.length}
-        >
-          <Save size={15} className="shrink-0 text-muted" />
-          <span className="truncate">Save project</span>
-        </Button>
-        <IconButton
-          icon={FolderOpen}
-          label="Open saved projects"
-          variant="outline"
-          className="min-h-9 rounded-md border-stroke"
-          onPress={onOpen}
-        />
+      <div className="mt-auto grid shrink-0 gap-2 border-t border-stroke p-3.5">
+        <div className="flex min-w-0 items-center gap-1.5">
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-9 min-w-0 flex-1 justify-start gap-2 rounded-md px-1.5 text-sm @min-[230px]/workspace:px-2.5"
+            isPending={saving}
+            onPress={onSave}
+            isDisabled={!layers.length}
+          >
+            <Save
+              size={15}
+              className="hidden shrink-0 text-muted @min-[230px]/workspace:block"
+              aria-hidden
+            />
+            <span className="truncate">Save project</span>
+          </Button>
+          <IconButton
+            icon={FolderOpen}
+            label="Open saved projects"
+            variant="outline"
+            className="h-9 shrink-0 rounded-md"
+            onPress={onOpen}
+          />
+          {shortcuts}
+        </div>
         <Button
           size="sm"
-          className="col-span-2 min-h-9 w-full gap-2 rounded-md font-semibold"
+          className="min-h-9 w-full gap-2 rounded-md font-semibold"
           onPress={onExport}
           isDisabled={!layers.length}
         >

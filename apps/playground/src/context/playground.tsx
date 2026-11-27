@@ -20,6 +20,7 @@ export interface PlaygroundActions {
   load: (document: PlaygroundDocument) => void;
   restore: (document?: PlaygroundDocument, layer?: string | null) => void;
   patchSettings: (patch: Partial<MotionSettings>) => void;
+  cancelReplay: () => void;
   removeAnimation: () => void;
 }
 
@@ -60,6 +61,7 @@ export function PlaygroundProvider({
     restore: (document, layer) =>
       dispatch({ type: "restored", document, layer }),
     patchSettings: (patch) => dispatch({ type: "patchSettings", patch }),
+    cancelReplay: () => dispatch({ type: "cancelReplay" }),
     removeAnimation: () => {
       dispatch({ type: "removeAnimation" });
       report("Animation removed.");

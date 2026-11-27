@@ -13,17 +13,29 @@ const Presets = dynamic(
 
 export function PresetsModal() {
   const {
-    state: { project },
+    state: { project, dialog },
+    actions,
   } = usePlayground();
   const { loadTemplate } = useDocumentLoader();
 
   return (
     <Modal>
-      <Button size="sm" variant="outline" className="h-9 rounded-full">
+      <Button
+        size="sm"
+        variant="outline"
+        className="h-9 rounded-full"
+        onPress={() => actions.openDialog("presets")}
+      >
         <LayoutTemplate size={16} className="hidden min-[360px]:block" />
         Presets
       </Button>
-      <Modal.Backdrop>
+      <Modal.Backdrop
+        isOpen={dialog === "presets"}
+        onOpenChange={(open) => {
+          if (open) actions.openDialog("presets");
+          else actions.closeDialog();
+        }}
+      >
         <Modal.Container
           placement="center"
           scroll="inside"

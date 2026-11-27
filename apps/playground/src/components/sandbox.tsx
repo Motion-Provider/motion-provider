@@ -107,6 +107,7 @@ export function Sandbox({
       >
         <iframe
           ref={frame}
+          data-playground-preview
           title="Component preview"
           sandbox="allow-same-origin"
           srcDoc={FRAME_HTML}

@@ -7,7 +7,7 @@ import {
 import { DEFAULT_VIEW_STATE, type ViewState } from "../schemas/playground";
 import type { Markup, MotionSettings, Project } from "../types/playground";
 
-export type Dialog = "import" | "export" | "saved";
+export type Dialog = "import" | "export" | "saved" | "presets" | "shortcuts";
 
 export interface PlaygroundDocument {
   project: Project;
@@ -32,6 +32,7 @@ export type PlaygroundAction =
       layer?: string | null;
     }
   | { type: "patchSettings"; patch: Partial<MotionSettings> }
+  | { type: "cancelReplay" }
   | { type: "removeAnimation" };
 
 export function createInitialState(
@@ -111,6 +112,9 @@ export function playgroundReducer(
         },
       };
     }
+
+    case "cancelReplay":
+      return state.replay ? { ...state, replay: 0 } : state;
 
     case "removeAnimation": {
       const layer = findLayer(state.markup, state.selected);

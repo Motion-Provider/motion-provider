@@ -2,6 +2,7 @@ import type { Draft, Project } from "../types/playground";
 
 export const DRAFT_KEY = "motion-playground:draft:1";
 export const THEME_KEY = "motion-playground:theme";
+export const SHORTCUTS_KEY = "motion-playground:shortcuts:1";
 
 async function openLibrary() {
   return new Promise<IDBDatabase>((resolve, reject) => {

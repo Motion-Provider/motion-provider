@@ -1,4 +1,4 @@
-import { usePlayHotkey, useReplayOnEdit } from "@/hooks/use-playback-effects";
+import { useReplayOnEdit } from "@/hooks/use-playback-effects";
 import {
   useDraftAutosave,
   useRestore,
@@ -9,7 +9,6 @@ export function PlaygroundEffects(): null {
   useRestore();
   useDraftAutosave();
   useUrlSync();
-  usePlayHotkey();
   useReplayOnEdit();
 
   return null;
