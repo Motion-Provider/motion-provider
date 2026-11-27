@@ -49,3 +49,7 @@ export async function listProjects(): Promise<Draft[]> {
 
   return drafts.sort((a, b) => b.updated - a.updated);
 }
+
+export async function deleteProject(id: string): Promise<void> {
+  await withLibrary("readwrite", (store) => store.delete(id));
+}

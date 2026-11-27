@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { listProjects } from "../lib/storage";
+import { deleteProject, listProjects } from "../lib/storage";
 import type { Draft } from "../types/playground";
 
 interface SavedProjects {
@@ -8,7 +8,9 @@ interface SavedProjects {
   error?: string;
 }
 
-export function useSavedProjects(): SavedProjects {
+export function useSavedProjects(): SavedProjects & {
+  remove: (id: string) => Promise<void>;
+} {
   const [saved, setSaved] = useState<SavedProjects>({
     drafts: [],
     loading: true,
@@ -35,5 +37,13 @@ export function useSavedProjects(): SavedProjects {
     };
   }, []);
 
-  return saved;
+  async function remove(id: string) {
+    await deleteProject(id);
+    setSaved((current) => ({
+      ...current,
+      drafts: current.drafts.filter((draft) => draft.id !== id),
+    }));
+  }
+
+  return { ...saved, remove };
 }

@@ -50,7 +50,7 @@ function ExportDialogContainer() {
 function SavedDialogContainer() {
   const { actions } = usePlayground();
   const { loadDraft } = useDocumentLoader();
-  const { drafts, loading, error } = useSavedProjects();
+  const { drafts, loading, error, remove } = useSavedProjects();
 
   return (
     <SavedDialog
@@ -58,6 +58,7 @@ function SavedDialogContainer() {
       loading={loading}
       error={error}
       onLoad={loadDraft}
+      onDelete={remove}
       onClose={actions.closeDialog}
     />
   );

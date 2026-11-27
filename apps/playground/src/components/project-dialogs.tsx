@@ -18,6 +18,7 @@ import {
   FolderOpen,
   Link2,
   Terminal,
+  Trash2,
 } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { fileName } from "../lib/export";
@@ -403,25 +404,93 @@ export function SavedDialog({
   loading,
   error,
   onLoad,
+  onDelete,
   onClose,
 }: {
   drafts: Draft[];
   loading: boolean;
   error?: string;
   onLoad: (draft: Draft) => Promise<void>;
+  onDelete: (id: string) => Promise<void>;
   onClose: () => void;
 }) {
   const [pending, setPending] = useState(false);
-  const [loadError, setLoadError] = useState("");
+  const [operationError, setOperationError] = useState("");
+  const [confirming, setConfirming] = useState<Draft>();
+  const [focusId, setFocusId] = useState<string | null>();
+
+  async function load(draft: Draft) {
+    setPending(true);
+    setOperationError("");
+
+    try {
+      await onLoad(draft);
+    } catch {
+      setOperationError("This saved project could not be opened.");
+    } finally {
+      setPending(false);
+    }
+  }
+
+  function cancelDelete() {
+    setFocusId(confirming?.id);
+    setConfirming(undefined);
+    setOperationError("");
+  }
+
+  async function confirmDelete(draft: Draft) {
+    setPending(true);
+    setOperationError("");
+
+    try {
+      await onDelete(draft.id);
+      setFocusId(drafts.find(({ id }) => id !== draft.id)?.id ?? null);
+      setConfirming(undefined);
+    } catch {
+      setOperationError("This saved project could not be deleted. Try again.");
+    } finally {
+      setPending(false);
+    }
+  }
 
   return (
     <Dialog
-      title="Saved projects"
-      description="Projects saved in this browser."
-      onClose={onClose}
+      title={confirming ? "Delete saved project?" : "Saved projects"}
+      description={confirming ? undefined : "Projects saved in this browser."}
+      onClose={confirming ? cancelDelete : onClose}
       pending={pending}
+      footer={
+        confirming ? (
+          <>
+            <Button
+              variant="ghost"
+              autoFocus
+              onPress={cancelDelete}
+              isDisabled={pending}
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="danger"
+              onPress={() => confirmDelete(confirming)}
+              isPending={pending}
+            >
+              Delete project
+            </Button>
+          </>
+        ) : focusId === null ? (
+          <Button key="done" variant="outline" autoFocus onPress={onClose}>
+            Done
+          </Button>
+        ) : undefined
+      }
     >
-      {loading ? (
+      {confirming ? (
+        <p className="text-sm text-secondary-text wrap-anywhere">
+          <strong>{confirming.name}</strong> will be removed from saved projects
+          in this browser.
+        </p>
+      ) : loading ? (
         <p role="status" className="text-sm text-muted">
           Loading saved projects…
         </p>
@@ -434,25 +503,14 @@ export function SavedDialog({
           Use Save project to keep a copy of your current workspace.
         </p>
       ) : (
-        <ul className="max-h-80 space-y-2 overflow-auto">
+        <ul className="scrollbar max-h-80 space-y-2 overflow-auto">
           {drafts.map((draft) => (
-            <li key={draft.id}>
+            <li key={draft.id} className="flex min-w-0 items-center gap-2">
               <Button
                 variant="outline"
-                onPress={async () => {
-                  setPending(true);
-                  setLoadError("");
-
-                  try {
-                    await onLoad(draft);
-                  } catch {
-                    setLoadError("This saved project could not be opened.");
-                  } finally {
-                    setPending(false);
-                  }
-                }}
+                onPress={() => load(draft)}
                 isDisabled={pending}
-                className="w-full min-w-0 justify-start gap-3 rounded-lg border-stroke"
+                className="min-w-0 flex-1 justify-start gap-3 rounded-lg"
               >
                 <FolderOpen size={17} className="shrink-0 text-accent-text" />
                 <span className="min-w-0 flex-1 truncate text-left">
@@ -462,14 +520,29 @@ export function SavedDialog({
                   {new Date(draft.updated).toLocaleDateString()}
                 </span>
               </Button>
+              <Button
+                size="sm"
+                variant="ghost"
+                isIconOnly
+                aria-label={`Delete saved project ${draft.name}`}
+                autoFocus={focusId === draft.id}
+                isDisabled={pending}
+                className="shrink-0 text-danger"
+                onPress={() => {
+                  setOperationError("");
+                  setConfirming(draft);
+                }}
+              >
+                <Trash2 size={16} aria-hidden />
+              </Button>
             </li>
           ))}
         </ul>
       )}
 
-      {loadError && (
+      {operationError && (
         <p role="alert" className="text-sm text-danger">
-          {loadError}
+          {operationError}
         </p>
       )}
     </Dialog>
