@@ -44,14 +44,11 @@ export function Presets({
         const Icon = icons[template.icon] ?? LayoutTemplate;
 
         return (
-          <Card
-            key={template.id}
-            className="flex min-w-0 flex-col gap-0 rounded-2xl border mp-glass p-0"
-          >
+          <Card key={template.id} className="mp-panel rounded-2xl">
             <div
               className={cn(
                 "relative grid h-24 place-items-center overflow-hidden",
-                "rounded-t-2xl border-b border-stroke bg-canvas",
+                "border-b border-stroke bg-canvas",
                 "bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-size-[15px_15px]",
               )}
             >
@@ -77,7 +74,7 @@ export function Presets({
               <Button
                 variant={current === template.id ? "secondary" : "outline"}
                 size="sm"
-                className="rounded-md border-stroke"
+                className="rounded-md"
                 onPress={() => onPick(template)}
               >
                 {current === template.id ? (

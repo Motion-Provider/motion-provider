@@ -82,11 +82,7 @@ export function Preview({
   return (
     <Card
       aria-label="Live sandbox"
-      className={cn(
-        "flex min-w-0 flex-col gap-0 overflow-hidden",
-        "rounded-3xl border mp-glass p-0",
-        "lg:col-start-2 lg:row-start-2",
-      )}
+      className="mp-panel lg:col-start-2 lg:row-start-2"
     >
       <div
         className={cn(
@@ -95,28 +91,12 @@ export function Preview({
           "sm:px-4",
         )}
       >
-        <fieldset
-          aria-label="Sandbox view"
-          className={cn(
-            "inline-flex min-w-0 items-center gap-0.5",
-            "rounded-full border border-stroke bg-glass-surface",
-            "p-0.75",
-          )}
-        >
-          {views.map(({ id, label, icon: Icon }) => (
-            <Button
-              key={id}
-              size="sm"
-              variant={view === id ? "primary" : "ghost"}
-              aria-pressed={view === id}
-              className="min-h-7 rounded-full px-2.5"
-              onPress={() => onView(id)}
-            >
-              <Icon size={15} aria-hidden="true" />
-              {label}
-            </Button>
-          ))}
-        </fieldset>
+        <Segmented
+          label="Sandbox view"
+          items={views}
+          value={view}
+          onChange={onView}
+        />
 
         <div className="flex items-center gap-1 sm:ml-auto">
           {live ? (
@@ -171,7 +151,7 @@ export function Preview({
               variant="primary"
               isDisabled={!total || before}
               onPress={() => (playing ? playback.pause() : playback.play())}
-              className="size-9 rounded-2xl bg-accent text-accent-foreground hover:text-accent-foreground"
+              className="size-9 rounded-2xl"
             />
             <IconButton
               label="Replay from start"
@@ -214,7 +194,7 @@ export function Preview({
               isDisabled={!markup.layers.length}
               onPress={() => onBefore(!before)}
               className={cn(
-                "min-h-8 rounded-md border-stroke",
+                "min-h-8 rounded-md",
                 before ? "bg-tint text-accent-text" : "text-muted",
               )}
             >

@@ -49,7 +49,6 @@ export function Dialog({
         }}
         isDismissable={!pending}
         isKeyboardDismissDisabled={pending}
-        className="bg-(--scrim)"
       >
         <Modal.Container className="p-3">
           <Modal.Dialog className="max-w-160 rounded-4xl p-5 sm:p-6">
@@ -151,7 +150,7 @@ export function ImportDialog({
             '<section class="p-8">\n  <h1>Your component</h1>\n</section>'
           }
           className={cn(
-            "min-h-52 resize-y rounded-lg border border-stroke bg-inset",
+            "scrollbar min-h-52 resize-y",
             "font-mono text-sm leading-6",
           )}
           maxLength={80_001}
@@ -350,7 +349,7 @@ export function ExportDialog({
                 readOnly
                 value={ready.command}
                 className={cn(
-                  "min-h-28 resize-y break-all rounded-lg border border-stroke bg-inset",
+                  "scrollbar min-h-28 resize-y break-all",
                   "font-mono text-[13px]",
                 )}
               />

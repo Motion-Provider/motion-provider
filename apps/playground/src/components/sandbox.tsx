@@ -100,7 +100,7 @@ export function Sandbox({
       <div
         className={cn(
           "relative flex w-full min-w-0 flex-col overflow-hidden",
-          "rounded-2xl border border-(--canvas-line)",
+          "rounded-2xl border border-stroke",
           isPreset ? "bg-background/20 backdrop-blur-md" : "bg-backdrop",
           device === "mobile" && "max-w-97.5",
         )}

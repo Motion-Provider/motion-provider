@@ -37,7 +37,7 @@ export function IconButton({
         )}
         {...props}
       >
-        <Icon size={16} strokeWidth={1.65} />
+        <Icon size={16} strokeWidth={1.65} aria-hidden />
       </Button>
 
       <Tooltip.Content>{label}</Tooltip.Content>
@@ -87,9 +87,9 @@ export function Segmented<Value extends string>({
           aria-label={itemLabel}
           variant="ghost"
           isIconOnly={iconOnly}
-          className="min-h-7 rounded-full border-0 px-2.5 text-[13px] font-medium text-muted"
+          className="min-h-7 rounded-full border-0 px-2.5 text-[13px] font-medium"
         >
-          {Icon && <Icon size={15} strokeWidth={1.7} />}
+          {Icon && <Icon size={15} strokeWidth={1.7} aria-hidden />}
           {!iconOnly && itemLabel}
         </ToggleButton>
       ))}
@@ -109,7 +109,12 @@ export function SectionTitle({
   return (
     <div className="flex min-h-14 items-center justify-between gap-2 border-b border-stroke px-4">
       <h2 className="flex min-w-0 items-center gap-2.5 text-sm font-semibold">
-        <Icon size={17} strokeWidth={1.7} className="shrink-0 text-muted" />
+        <Icon
+          size={17}
+          strokeWidth={1.7}
+          className="shrink-0 text-muted"
+          aria-hidden
+        />
         {children}
       </h2>
       {action}
@@ -139,19 +144,17 @@ export function OptionSelect<Value extends string>({
       }}
       className="grid w-full gap-2"
     >
-      <Label className="text-sm font-medium text-secondary-text">
-        {label}
-      </Label>
+      <Label className="text-sm font-medium text-secondary-text">{label}</Label>
 
-      <Select.Trigger className="min-h-9 gap-2 rounded-md border border-stroke bg-inset px-2.5 text-sm shadow-none">
+      <Select.Trigger>
         {Icon && (
           <Icon size={15} aria-hidden className="shrink-0 text-accent-text" />
         )}
         <Select.Value className="min-w-0 flex-1 truncate" />
-        <Select.Indicator className="size-3.5 shrink-0 text-muted" />
+        <Select.Indicator />
       </Select.Trigger>
 
-      <Select.Popover className="mp-glass mp-glass-raised max-h-64 rounded-lg border">
+      <Select.Popover>
         <ListBox>
           {items.map((item) => (
             <ListBox.Item key={item.id} id={item.id} textValue={item.label}>

@@ -29,7 +29,7 @@ export function PresetsModal() {
           scroll="inside"
           className="p-3 md:max-h-11/12"
         >
-          <Modal.Dialog>
+          <Modal.Dialog className="max-w-5xl bg-(--glass-surface)">
             {({ close }) => (
               <>
                 <Modal.CloseTrigger />

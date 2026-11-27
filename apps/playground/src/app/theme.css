@@ -13,16 +13,19 @@
     --danger-foreground: oklch(99.11% 0 0);
     --default: oklch(94.00% 0.006 40.24);
     --default-foreground: oklch(21.03% 0.0059 40.24);
-    --field-background: oklch(100.00% 0.003 40.24);
-    --field-border: transparent;
+    --field-background: var(--inset);
+    --field-border: var(--stroke);
+    --field-border-width: 1px;
     --field-foreground: oklch(21.03% 0.006 40.24);
+    --field-hover: var(--surface-secondary);
     --field-placeholder: oklch(55.17% 0.012 40.24);
+    --field-radius: var(--radius-md);
+    --field-shadow: 0 0 0 0 transparent;
     --focus: oklch(74.28% 0.1618 40.24);
     --foreground: oklch(21.03% 0.006 40.24);
     --muted: oklch(55.17% 0.012 40.24);
     --overlay: oklch(100.00% 0.0018 40.24);
     --overlay-foreground: oklch(21.03% 0.006 40.24);
-    --scrollbar: oklch(87.10% 0.006 40.24);
     --segment: oklch(100.00% 0.006 40.24);
     --segment-foreground: oklch(21.03% 0.006 40.24);
     --separator: oklch(92.00% 0.006 40.24);
@@ -39,7 +42,6 @@
 
     /* Glass Tones */
     --glass-surface: oklch(97.02% 0.006 40.24 / 0.55);
-    --glass-surface-strong: oklch(100.00% 0.003 40.24 / 0.75);
     --glass-border: oklch(90.00% 0.006 40.24 / 0.4);
     --glass-shadow: oklch(21.03% 0.006 40.24 / 0.12);
     --glass-blur: 16px;
@@ -57,6 +59,17 @@
     --syntax-constant: oklch(48% 0.17 20);
     --syntax-attr: oklch(54% 0.14 40.24);
     --syntax-regex: oklch(50% 0.15 70);
+
+    /* Playground surfaces and accents */
+    --inset: var(--glass-surface);
+    --canvas: color-mix(in oklab, var(--surface-tertiary) 90%, var(--accent));
+    --backdrop: oklch(21% 0.018 40 / 0.34);
+    --stroke: color-mix(in oklab, var(--border) 60%, var(--glass-border));
+    --grid: #54453828;
+    --tint: #fbe2d4;
+    --accent-stroke: #e3a685;
+    --secondary-text: #4d423b;
+    --accent-text: #9a3f14;
   }
 
   .dark,
@@ -70,16 +83,19 @@
     --danger-foreground: oklch(99.11% 0 0);
     --default: oklch(27.40% 0.006 40.24);
     --default-foreground: oklch(99.11% 0 0);
-    --field-background: oklch(21.03% 0.012 40.24);
-    --field-border: transparent;
+    --field-background: var(--inset);
+    --field-border: var(--stroke);
+    --field-border-width: 1px;
     --field-foreground: oklch(99.11% 0.006 40.24);
+    --field-hover: var(--surface-secondary);
     --field-placeholder: oklch(70.50% 0.012 40.24);
+    --field-radius: var(--radius-md);
+    --field-shadow: 0 0 0 0 transparent;
     --focus: oklch(74.28% 0.1618 40.24);
     --foreground: oklch(99.11% 0.006 40.24);
     --muted: oklch(70.50% 0.012 40.24);
     --overlay: oklch(21.03% 0.012 40.24);
     --overlay-foreground: oklch(99.11% 0.006 40.24);
-    --scrollbar: oklch(70.50% 0.006 40.24);
     --segment: oklch(39.64% 0.006 40.24);
     --segment-foreground: oklch(99.11% 0.006 40.24);
     --separator: oklch(25.00% 0.006 40.24);
@@ -96,7 +112,6 @@
 
     /* Glass Tones */
     --glass-surface: oklch(21.03% 0.012 40.24 / 0.45);
-    --glass-surface-strong: oklch(27.40% 0.006 40.24 / 0.65);
     --glass-border: oklch(28.00% 0.006 40.24 / 0.5);
     --glass-shadow: oklch(0% 0 0 / 0.4);
     --glass-blur: 16px;
@@ -114,22 +129,8 @@
     --syntax-constant: oklch(78% 0.14 20);
     --syntax-attr: oklch(80% 0.13 40.24);
     --syntax-regex: oklch(82% 0.12 70);
-  }
 
-  :root,
-  [data-theme="light"] {
-    --inset: var(--glass-surface);
-    --canvas: color-mix(in oklab, var(--surface-tertiary) 90%, var(--accent));
-    --backdrop: oklch(21% 0.018 40 / 0.34);
-    --stroke: color-mix(in oklab, var(--border) 60%, var(--glass-border));
-    --grid: #54453828;
-    --tint: #fbe2d4;
-    --accent-stroke: #e3a685;
-    --secondary-text: #4d423b;
-    --accent-text: #9a3f14;
-  }
-
-  [data-theme="dark"] {
+    /* Playground surfaces and accents */
     --inset: color-mix(
       in oklab,
       var(--surface-secondary) 76%,

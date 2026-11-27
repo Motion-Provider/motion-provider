@@ -53,11 +53,7 @@ export function Workspace({
   return (
     <Card
       aria-label="Workspace"
-      className={cn(
-        "flex min-w-0 flex-col gap-0 overflow-hidden",
-        "rounded-3xl border mp-glass p-0",
-        "lg:col-start-1 lg:row-[1/span_2]",
-      )}
+      className="mp-panel @container/workspace lg:col-start-1 lg:row-[1/span_2]"
     >
       <SectionTitle icon={PanelTop}>Workspace</SectionTitle>
 
@@ -76,7 +72,7 @@ export function Workspace({
 
         <Button
           variant="outline"
-          className="min-h-9 w-full justify-center rounded-md border-stroke text-sm"
+          className="min-h-9 w-full justify-center rounded-md text-sm"
           onPress={onImport}
         >
           <Plus size={16} className="text-accent-text" /> Import HTML
@@ -101,7 +97,7 @@ export function Workspace({
         {layers.length ? (
           <ul
             aria-label="Component layers"
-            className="mp-panel-scroll max-h-60 space-y-0.5 lg:max-h-107.5 overflow-y-auto"
+            className="scrollbar max-h-60 space-y-0.5 overflow-y-auto lg:max-h-107.5"
           >
             {layers
               .slice(

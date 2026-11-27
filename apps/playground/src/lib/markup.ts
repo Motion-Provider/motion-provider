@@ -108,6 +108,7 @@ const svgAttrs = new Set(
 );
 
 function safeUrl(value: string, image: boolean) {
+  // biome-ignore lint/suspicious/noControlCharactersInRegex: Normalize whitespace and control characters before validating the URL scheme.
   const normalized = value.replace(/[\u0000-\u0020\u007f]/g, "");
   const scheme = /^[a-z][a-z\d+.-]*:/i.exec(normalized)?.[0].toLowerCase();
 

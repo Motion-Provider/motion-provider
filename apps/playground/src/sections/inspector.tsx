@@ -116,7 +116,7 @@ export function Inspector({
   return (
     <Card
       aria-label="Motion settings"
-      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0 lg:col-start-3 lg:row-[1/span_2]"
+      className="mp-panel lg:col-start-3 lg:row-[1/span_2]"
     >
       <SectionTitle
         icon={SlidersHorizontal}
@@ -135,7 +135,7 @@ export function Inspector({
       <div
         className={cn(
           "flex shrink-0 flex-wrap items-center justify-between gap-2",
-          "border-b border-stroke px-4 py-2",
+          "border-b border-stroke px-4 py-3",
         )}
       >
         <span className="text-sm text-muted">Replay</span>
@@ -163,7 +163,7 @@ export function Inspector({
             </Chip>
           </div>
 
-          <div className="mp-panel-scroll grid min-h-0 content-start gap-3 overflow-y-auto px-4 py-3">
+          <div className="scrollbar grid min-h-0 content-start gap-4 overflow-y-auto p-4">
             <Select
               selectionMode="multiple"
               value={settings.modes}
@@ -180,16 +180,16 @@ export function Inspector({
               }}
               className="grid w-full gap-2"
             >
-              <Label>
+              <Label className="text-sm font-medium text-secondary-text">
                 Animation modes ({settings.modes.length}/{MAX_MODES})
               </Label>
-              <Select.Trigger className="min-w-0">
+              <Select.Trigger>
                 <Select.Value className="min-w-0 flex-1 truncate">
                   {() => "Choose modes"}
                 </Select.Value>
                 <Select.Indicator />
               </Select.Trigger>
-              <Select.Popover className="mp-glass mp-glass-raised max-h-64">
+              <Select.Popover>
                 <ListBox>
                   {groupedModes.map(({ label, icon: Icon, modes }) => (
                     <ListBox.Section key={label}>
@@ -244,7 +244,7 @@ export function Inspector({
               ))}
             </fieldset>
 
-            <div className="grid gap-2.5 border-t border-stroke pt-3">
+            <div className="grid gap-3 border-t border-stroke pt-4">
               <h3 className="flex items-center gap-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">
                 <Gauge size={14} /> Timing
               </h3>
@@ -421,7 +421,7 @@ function ListBoxItem({
       isDisabled={isDisabled}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="flex items-center justify-between gap-2"
+      className="flex items-center justify-between gap-2 overflow-hidden"
     >
       <div className="flex items-center gap-2">
         <span aria-hidden="true">

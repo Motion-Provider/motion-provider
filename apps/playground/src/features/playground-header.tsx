@@ -9,7 +9,7 @@ export function PlaygroundHeader() {
     <header className="lg:col-start-2 lg:row-start-1">
       <nav
         aria-label="Primary"
-        className="mp-glass flex h-13 items-center justify-between gap-1 rounded-full border px-1.5 min-[360px]:gap-2 min-[360px]:px-2.5 sm:pr-3 sm:pl-6"
+        className="mp-glass flex h-13 items-center justify-between gap-1 rounded-full px-1.5 min-[360px]:gap-2 min-[360px]:px-2.5 sm:pr-3 sm:pl-6"
       >
         <a
           href="/"

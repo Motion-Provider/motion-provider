@@ -40,7 +40,7 @@ export function CodePane({ source }: { source: string }) {
       tabIndex={0}
       aria-label="Source code"
       className={cn(
-        "max-h-135 min-h-48 overflow-auto",
+        "scrollbar max-h-135 min-h-48 overflow-auto",
         "rounded-3xl border border-stroke bg-inset",
         "px-4 py-3 font-mono text-[13px] leading-6 text-(--syntax-plain)",
       )}

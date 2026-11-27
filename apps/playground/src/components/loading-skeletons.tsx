@@ -10,7 +10,7 @@ export function PresetsSkeleton() {
         className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3"
       >
         {TEMPLATES.map(({ id }) => (
-          <div key={id} className="mp-glass overflow-hidden rounded-2xl border">
+          <div key={id} className="mp-panel rounded-2xl">
             <div className="motion-safe:animate-pulse">
               <div className="grid h-24 place-items-center border-b border-stroke bg-canvas">
                 <Skeleton animationType="none" className="size-12 rounded-xl" />

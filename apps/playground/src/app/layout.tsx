@@ -23,7 +23,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
     <html
       lang="en"
       data-theme="dark"
-      className={`${fontAnnotation.variable} ${fontPrimary.variable} ${fontSecondary.variable} antialiased`}
+      className={`${fontAnnotation.variable} ${fontPrimary.variable} ${fontSecondary.variable} scrollbar antialiased`}
     >
       <body className="font-primary">{children}</body>
     </html>
