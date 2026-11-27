@@ -4,6 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "predev": "node ../../scripts/src/sync-favicons.mjs",
+    "prebuild": "node ../../scripts/src/sync-favicons.mjs",
     "dev": "next dev --port 62335",
     "build": "next build",
     "start": "next start",

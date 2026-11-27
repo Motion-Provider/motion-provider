@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card } from "@heroui/react";
+import { Button, Card, cn } from "@heroui/react";
 import {
   Braces,
   ChevronDown,
@@ -34,6 +34,7 @@ export function Workspace({
   onSelect,
   onImport,
   onSave,
+  onExport,
   onOpen,
 }: {
   project: Project;
@@ -43,6 +44,7 @@ export function Workspace({
   onSelect: (id: string) => void;
   onImport: () => void;
   onSave: () => void;
+  onExport: () => void;
   onOpen: () => void;
 }) {
   const [limit, setLimit] = useState(50);
@@ -51,13 +53,17 @@ export function Workspace({
   return (
     <Card
       aria-label="Workspace"
-      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0 lg:col-start-1 lg:row-start-1"
+      className={cn(
+        "flex min-w-0 flex-col gap-0 overflow-hidden",
+        "rounded-3xl border mp-glass p-0",
+        "lg:col-start-1 lg:row-[1/span_2]",
+      )}
     >
       <SectionTitle icon={PanelTop}>Workspace</SectionTitle>
 
-      <div className="space-y-3 border-b border-(--stroke) p-3.5">
-        <div className="flex min-w-0 items-center gap-2.5 rounded-lg border border-(--stroke) bg-(--inset) p-2.5">
-          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-(--tint) text-accent">
+      <div className="space-y-3 border-b border-stroke p-3.5">
+        <div className="flex min-w-0 items-center gap-2.5 rounded-lg border border-stroke bg-inset p-2.5">
+          <span className="grid size-8 shrink-0 place-items-center rounded-md bg-tint text-accent-text">
             <FileCode size={17} strokeWidth={1.7} />
           </span>
           <div className="min-w-0 flex-1">
@@ -70,19 +76,24 @@ export function Workspace({
 
         <Button
           variant="outline"
-          className="min-h-9 w-full justify-center rounded-md border-(--stroke) text-sm"
+          className="min-h-9 w-full justify-center rounded-md border-stroke text-sm"
           onPress={onImport}
         >
-          <Plus size={16} className="text-accent" /> Import HTML
+          <Plus size={16} className="text-accent-text" /> Import HTML
         </Button>
       </div>
 
       <div className="flex min-h-0 flex-1 flex-col px-2.5 py-3.5">
-        <div className="mb-2.5 flex items-center justify-between px-2 text-[12px] font-semibold tracking-[0.13em] text-muted uppercase">
+        <div
+          className={cn(
+            "mb-2.5 flex items-center justify-between px-2",
+            "text-[12px] font-semibold tracking-[0.13em] text-muted uppercase",
+          )}
+        >
           <h3 className="flex items-center gap-2">
             <Layers size={14} strokeWidth={1.7} /> Layers
           </h3>
-          <span className="rounded border border-(--stroke) px-1.5 py-0.5 font-mono tracking-normal">
+          <span className="rounded border border-stroke px-1.5 py-0.5 font-mono tracking-normal">
             {layers.length}
           </span>
         </div>
@@ -90,7 +101,7 @@ export function Workspace({
         {layers.length ? (
           <ul
             aria-label="Component layers"
-            className="max-h-60 space-y-0.5 lg:max-h-107.5 overflow-y-auto"
+            className="mp-panel-scroll max-h-60 space-y-0.5 lg:max-h-107.5 overflow-y-auto"
           >
             {layers
               .slice(
@@ -111,7 +122,13 @@ export function Workspace({
                       variant="ghost"
                       size="sm"
                       onPress={() => onSelect(layer.id)}
-                      className={`min-h-8 w-full min-w-0 justify-start gap-2 rounded-md border px-2 text-left text-[13px] ${active ? "border-(--accent-stroke) bg-(--tint) text-accent" : "border-transparent text-(--secondary-text) hover:bg-default"}`}
+                      className={cn(
+                        "min-h-8 w-full min-w-0 justify-start gap-2",
+                        "rounded-md border px-2 text-left text-[13px]",
+                        active
+                          ? "border-accent-stroke bg-tint text-accent-text"
+                          : "border-transparent text-secondary-text hover:bg-default",
+                      )}
                     >
                       {layer.depth === 0 ? (
                         <ChevronDown
@@ -156,10 +173,10 @@ export function Workspace({
         )}
       </div>
 
-      <div className="mt-auto flex items-center gap-2 border-t border-(--stroke) p-3.5">
+      <div className="mt-auto grid shrink-0 grid-cols-[minmax(0,1fr)_auto] gap-2 border-t border-stroke p-3.5">
         <Button
           variant="outline"
-          className="min-h-9 min-w-0 flex-1 justify-start gap-2 rounded-md border-(--stroke) px-2.5 text-sm"
+          className="min-h-9 min-w-0 flex-1 justify-start gap-2 rounded-md border-stroke px-2.5 text-sm"
           isPending={saving}
           onPress={onSave}
           isDisabled={!layers.length}
@@ -171,9 +188,18 @@ export function Workspace({
           icon={FolderOpen}
           label="Open saved projects"
           variant="outline"
-          className="min-h-9 rounded-md border-(--stroke)"
+          className="min-h-9 rounded-md border-stroke"
           onPress={onOpen}
         />
+        <Button
+          size="sm"
+          className="col-span-2 min-h-9 w-full gap-2 rounded-md font-semibold"
+          onPress={onExport}
+          isDisabled={!layers.length}
+        >
+          <CodeXml size={17} strokeWidth={2.1} />
+          Export code
+        </Button>
       </div>
     </Card>
   );

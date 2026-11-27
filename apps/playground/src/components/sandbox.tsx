@@ -1,5 +1,6 @@
 "use client";
 
+import { cn } from "@heroui/react";
 import { ImageOff } from "lucide-react";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -24,12 +25,14 @@ const FRAME_HTML = `<!doctype html>
 </html>`;
 
 export function Sandbox({
+  isPreset,
   markup,
   device,
   css,
   onSelect,
   children,
 }: {
+  isPreset: boolean;
   markup: Markup;
   device: Device;
   css: string;
@@ -38,12 +41,17 @@ export function Sandbox({
 }) {
   const frame = useRef<HTMLIFrameElement>(null);
   const [frameDocument, setFrameDocument] = useState<Document | null>(null);
+  const hasLayers = markup.layers.length > 0;
 
   useEffect(() => {
+    if (!hasLayers) {
+      setFrameDocument(null);
+      return;
+    }
     const document = frame.current?.contentDocument;
     if (document?.URL === "about:srcdoc" && document.body)
       setFrameDocument(document);
-  }, [markup.layers.length]);
+  }, [hasLayers]);
 
   useEffect(() => {
     const body = frameDocument?.body;
@@ -70,7 +78,7 @@ export function Sandbox({
     };
   }, [frameDocument, onSelect]);
 
-  if (!markup.layers.length) {
+  if (!hasLayers) {
     return (
       <div className="grid min-h-80 flex-1 place-items-center text-center text-muted">
         <div className="space-y-3">
@@ -82,9 +90,20 @@ export function Sandbox({
   }
 
   return (
-    <div className="relative flex min-h-90 flex-1 justify-center overflow-hidden bg-[var(--canvas)] bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-size-[16px_16px] p-3 sm:p-4">
+    <div
+      className={cn(
+        "relative flex min-h-90 flex-1 justify-center overflow-hidden",
+        "bg-canvas bg-[radial-gradient(var(--grid)_1px,transparent_1px)]",
+        "bg-size-[16px_16px] p-3 sm:p-4",
+      )}
+    >
       <div
-        className={`relative flex w-full min-w-0 flex-col overflow-hidden rounded-2xl border border-[var(--canvas-line)] bg-[#131110] ${device === "mobile" ? "max-w-97.5" : ""}`}
+        className={cn(
+          "relative flex w-full min-w-0 flex-col overflow-hidden",
+          "rounded-2xl border border-(--canvas-line)",
+          isPreset ? "bg-background/20 backdrop-blur-md" : "bg-backdrop",
+          device === "mobile" && "max-w-97.5",
+        )}
       >
         <iframe
           ref={frame}
@@ -92,7 +111,12 @@ export function Sandbox({
           sandbox="allow-same-origin"
           srcDoc={FRAME_HTML}
           referrerPolicy="no-referrer"
-          className="min-h-82.5 w-full flex-1 scheme-dark"
+          className={cn(
+            "min-h-82.5 w-full flex-1",
+            isPreset
+              ? "scheme-light in-data-[theme=dark]:scheme-dark"
+              : "scheme-dark",
+          )}
           onLoad={(event) =>
             setFrameDocument(event.currentTarget.contentDocument)
           }
@@ -104,6 +128,17 @@ export function Sandbox({
               {css && <style>{css}</style>}
               {markup.styles.length > 0 && (
                 <style>{markup.styles.join("\n")}</style>
+              )}
+              {isPreset && (
+                <style>{`
+                  html { background: transparent; color-scheme: light dark; }
+                  .mp-example { background: transparent; }
+                  @media (prefers-color-scheme: light) {
+                    .mp-example, .mp-example :is(h1, h2, p, label) { color: #302824; }
+                    .mp-tile, .mp-tile :is(h1, h2, p, label) { color: #faf3ef; }
+                    .mp-example a, .mp-kicker, .mp-price { color: #964017; }
+                  }
+                `}</style>
               )}
             </>,
             frameDocument.head,

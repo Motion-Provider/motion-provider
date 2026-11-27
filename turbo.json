@@ -1,11 +1,12 @@
 {
   "$schema": "https://v2-11-13.turborepo.dev/schema.json",
   "ui": "tui",
+  "globalDependencies": ["public/favicon/**", "scripts/src/sync-favicons.mjs"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*", "!README.md"],
-      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**"],
+      "outputs": [".next/**", "!.next/cache/**", "!.next/dev/**", "dist/**", "out/**", "public/favicon/**"],
       "cache": true
     },
     "dev": {

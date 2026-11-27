@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, Slider } from "@heroui/react";
+import { Button, Card, cn, Slider } from "@heroui/react";
 import {
   CodeXml,
   Columns2,
@@ -10,7 +10,6 @@ import {
   Pause,
   Play,
   RotateCcw,
-  ScanLine,
   Smartphone,
 } from "lucide-react";
 import dynamic from "next/dynamic";
@@ -83,23 +82,32 @@ export function Preview({
   return (
     <Card
       aria-label="Live sandbox"
-      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0 lg:col-start-2 lg:row-start-1"
+      className={cn(
+        "flex min-w-0 flex-col gap-0 overflow-hidden",
+        "rounded-3xl border mp-glass p-0",
+        "lg:col-start-2 lg:row-start-2",
+      )}
     >
-      <div className="relative flex min-h-14 flex-wrap items-center justify-between gap-2 border-b border-(--stroke) px-3 py-2 sm:px-4">
-        <h2 className="mr-auto flex items-center gap-2.5 text-sm font-semibold">
-          <ScanLine size={17} strokeWidth={1.7} className="text-muted" />
-          <span>Sandbox</span>
-        </h2>
-
+      <div
+        className={cn(
+          "relative flex min-h-14 flex-wrap items-center justify-between gap-2",
+          "border-b border-stroke px-3 py-2",
+          "sm:px-4",
+        )}
+      >
         <fieldset
           aria-label="Sandbox view"
-          className="inline-flex min-w-0 items-center gap-0.5 rounded-full border border-(--stroke) bg-(--inset) p-0.75"
+          className={cn(
+            "inline-flex min-w-0 items-center gap-0.5",
+            "rounded-full border border-stroke bg-glass-surface",
+            "p-0.75",
+          )}
         >
           {views.map(({ id, label, icon: Icon }) => (
             <Button
               key={id}
               size="sm"
-              variant={view === id ? "secondary" : "ghost"}
+              variant={view === id ? "primary" : "ghost"}
               aria-pressed={view === id}
               className="min-h-7 rounded-full px-2.5"
               onPress={() => onView(id)}
@@ -133,6 +141,7 @@ export function Preview({
       {live ? (
         <>
           <Sandbox
+            isPreset={Boolean(project.template)}
             markup={markup}
             device={device}
             css={css}
@@ -149,7 +158,13 @@ export function Preview({
             />
           </Sandbox>
 
-          <div className="flex min-h-[66px] flex-wrap items-center gap-2.5 border-t border-[var(--stroke)] px-3 py-2 sm:gap-3 sm:px-4">
+          <div
+            className={cn(
+              "flex min-h-16.5 flex-wrap items-center gap-2.5",
+              "border-t border-stroke",
+              "px-3 py-2 sm:gap-3 sm:px-4",
+            )}
+          >
             <IconButton
               label={playing ? "Pause animation" : "Play animation"}
               icon={playing ? Pause : Play}
@@ -198,14 +213,17 @@ export function Preview({
               aria-pressed={before}
               isDisabled={!markup.layers.length}
               onPress={() => onBefore(!before)}
-              className={`min-h-8 rounded-md border-[var(--stroke)] ${before ? "bg-[var(--tint)] text-accent" : "text-muted"}`}
+              className={cn(
+                "min-h-8 rounded-md border-stroke",
+                before ? "bg-tint text-accent-text" : "text-muted",
+              )}
             >
               <Columns2 size={16} />
             </Button>
           </div>
         </>
       ) : (
-        <div className="flex min-h-[430px] flex-1 flex-col gap-3 bg-[var(--canvas)] p-3 sm:p-4">
+        <div className="flex min-h-107.5 flex-1 flex-col gap-3 bg-canvas p-3 sm:p-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <Segmented
               label="Code version"

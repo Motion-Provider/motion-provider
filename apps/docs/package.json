@@ -4,6 +4,8 @@
   "type": "module",
   "private": true,
   "scripts": {
+    "predev": "node ../../scripts/src/sync-favicons.mjs",
+    "prebuild": "node ../../scripts/src/sync-favicons.mjs",
     "dev": "astro dev --port 18863",
     "build": "astro build",
     "preview": "astro preview",

@@ -5,19 +5,31 @@ import {
   Card,
   Chip,
   CloseButton,
+  cn,
+  Header,
   Label,
   ListBox,
   Select,
 } from "@heroui/react";
 import {
+  Axis3d,
+  Blend,
   Boxes,
-  BoxIcon,
+  Crop,
   Dices,
+  Filter,
   Gauge,
+  Layers,
+  Move,
   RotateCcw,
+  RotateCw,
+  Scaling,
+  Scan,
   SlidersHorizontal,
+  Sparkles,
   SquareDashed,
   Trash2,
+  ZoomIn,
 } from "lucide-react";
 import { type AnimationKeys, MotionContainer } from "motion-provider";
 import { transitions } from "motion-provider/catalog";
@@ -42,6 +54,34 @@ const scopes = [
   { id: "individual", label: "Individual" },
   { id: "batch", label: "Batch" },
 ] as const;
+
+const modeSections = [
+  { prefix: "clip", label: "Clip", icon: Crop },
+  { prefix: "fade", label: "Fade", icon: Blend },
+  { prefix: "filter", label: "Filter", icon: Filter },
+  { prefix: "mask", label: "Mask", icon: Layers },
+  { prefix: "rotat", label: "Rotate", icon: RotateCw },
+  { prefix: "scale", label: "Scale", icon: ZoomIn },
+  { prefix: "skew", label: "Skew", icon: Scaling },
+  { prefix: "slide", label: "Slide", icon: Move },
+  { prefix: "transform", label: "Transform", icon: Scan },
+  { prefix: "translate3d", label: "Translate 3D", icon: Axis3d },
+];
+
+const groupedModes = [
+  ...modeSections.map(({ prefix, label, icon }) => ({
+    label,
+    icon,
+    modes: PRESETS.filter(({ id }) => id.startsWith(prefix)),
+  })),
+  {
+    label: "Other effects",
+    icon: Sparkles,
+    modes: PRESETS.filter(
+      ({ id }) => !modeSections.some(({ prefix }) => id.startsWith(prefix)),
+    ),
+  },
+].filter(({ modes }) => modes.length > 0);
 
 const easingItems = Object.entries(EASINGS).map(([id, { label }]) => ({
   id: id as Easing,
@@ -76,7 +116,7 @@ export function Inspector({
   return (
     <Card
       aria-label="Motion settings"
-      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0"
+      className="flex min-w-0 flex-col gap-0 overflow-hidden rounded-3xl border mp-glass p-0 lg:col-start-3 lg:row-[1/span_2]"
     >
       <SectionTitle
         icon={SlidersHorizontal}
@@ -92,7 +132,12 @@ export function Inspector({
         Motion settings
       </SectionTitle>
 
-      <div className="flex shrink-0 flex-wrap items-center justify-between gap-2 border-b border-(--stroke) px-4 py-2">
+      <div
+        className={cn(
+          "flex shrink-0 flex-wrap items-center justify-between gap-2",
+          "border-b border-stroke px-4 py-2",
+        )}
+      >
         <span className="text-sm text-muted">Replay</span>
         <Segmented
           label="Replay scope"
@@ -104,21 +149,21 @@ export function Inspector({
 
       {layer && settings ? (
         <>
-          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-(--stroke) px-4 py-3.5">
-            <code className="font-mono text-[13px] text-(--secondary-text)">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-b border-stroke px-4 py-3.5">
+            <code className="font-mono text-[13px] text-secondary-text">
               &lt;{layer.tag}&gt;
             </code>
             <Chip
               size="sm"
               variant="soft"
               color="accent"
-              className="rounded-full bg-(--tint) px-2 font-mono text-[12px] text-accent"
+              className="rounded-full bg-tint px-2 font-mono text-[12px] text-accent-text"
             >
               {layer.kind}
             </Chip>
           </div>
 
-          <div className="grid min-h-0 content-start gap-3 overflow-y-auto px-4 py-3">
+          <div className="mp-panel-scroll grid min-h-0 content-start gap-3 overflow-y-auto px-4 py-3">
             <Select
               selectionMode="multiple"
               value={settings.modes}
@@ -146,17 +191,25 @@ export function Inspector({
               </Select.Trigger>
               <Select.Popover className="mp-glass mp-glass-raised max-h-64">
                 <ListBox>
-                  {PRESETS.map(({ id, label }) => (
-                    <ListBoxItem
-                      key={id}
-                      mode={id}
-                      label={label}
-                      isDisabled={
-                        settings.modes.includes(id)
-                          ? settings.modes.length === 1
-                          : settings.modes.length >= MAX_MODES
-                      }
-                    />
+                  {groupedModes.map(({ label, icon: Icon, modes }) => (
+                    <ListBox.Section key={label}>
+                      <Header className="flex items-center gap-2 font-semibold">
+                        <Icon size={14} strokeWidth={1.75} aria-hidden />
+                        {label}
+                      </Header>
+                      {modes.map(({ id, label }) => (
+                        <ListBoxItem
+                          key={id}
+                          mode={id}
+                          label={label}
+                          isDisabled={
+                            settings.modes.includes(id)
+                              ? settings.modes.length === 1
+                              : settings.modes.length >= MAX_MODES
+                          }
+                        />
+                      ))}
+                    </ListBox.Section>
                   ))}
                 </ListBox>
               </Select.Popover>
@@ -191,7 +244,7 @@ export function Inspector({
               ))}
             </fieldset>
 
-            <div className="grid gap-2.5 border-t border-(--stroke) pt-3">
+            <div className="grid gap-2.5 border-t border-stroke pt-3">
               <h3 className="flex items-center gap-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">
                 <Gauge size={14} /> Timing
               </h3>
@@ -238,7 +291,7 @@ export function Inspector({
             </div>
 
             {layer.kind !== "MotionContainer" && (
-              <div className="grid gap-2.5 border-t border-(--stroke) pt-3">
+              <div className="grid gap-2.5 border-t border-stroke pt-3">
                 <h3 className="flex items-center gap-2 text-[12px] font-semibold tracking-[0.12em] text-muted uppercase">
                   <Boxes size={14} />{" "}
                   {layer.kind === "MotionText"
@@ -249,7 +302,7 @@ export function Inspector({
                 </h3>
                 {layer.kind === "MotionText" && (
                   <div className="flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-sm text-(--secondary-text)">
+                    <span className="text-sm text-secondary-text">
                       Split by
                     </span>
                     <Segmented
@@ -301,21 +354,21 @@ export function Inspector({
             )}
           </div>
 
-          <div className="mt-auto grid gap-2 border-t border-(--stroke) p-4">
+          <div className="mt-auto grid gap-2 border-t border-stroke p-4">
             <div className="flex gap-2">
               <Button
                 variant="outline"
-                className="min-h-9 flex-1 rounded-md border-(--stroke) text-sm"
+                className="min-h-9 flex-1 rounded-md border-stroke text-sm"
                 onPress={onRandomize}
               >
-                <Dices size={16} className="text-accent" /> Randomize
+                <Dices size={16} className="text-accent-text" /> Randomize
               </Button>
               {assigned && (
                 <IconButton
                   icon={Trash2}
                   label="Remove animation"
                   variant="outline"
-                  className="min-h-9 rounded-md border-(--stroke)"
+                  className="min-h-9 rounded-md border-stroke"
                   onPress={onRemove}
                 />
               )}
@@ -332,7 +385,12 @@ export function Inspector({
           </div>
         </>
       ) : (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3 px-4 py-12 text-center text-sm text-muted">
+        <div
+          className={cn(
+            "flex flex-1 flex-col items-center justify-center gap-3 px-4 py-12",
+            "text-center text-sm text-muted",
+          )}
+        >
           <SquareDashed size={22} />
           <p>Select a layer to edit its motion.</p>
         </div>
@@ -340,8 +398,6 @@ export function Inspector({
     </Card>
   );
 }
-
-const disabledMotions = ["clip", "transform", "translate3d"];
 
 function ListBoxItem({
   mode,
@@ -354,28 +410,41 @@ function ListBoxItem({
 }) {
   const [trigger, setTrigger] = useState(true);
 
-  const showFallback = disabledMotions.includes(mode.toLowerCase());
+  const handleMouseEnter = () => setTrigger(true);
+  const handleMouseLeave = () => setTrigger(false);
 
   return (
     <ListBox.Item
       id={mode}
+      key={mode}
       textValue={label}
       isDisabled={isDisabled}
-      onPressStart={() => setTrigger(true)}
-      onMouseLeave={() => setTrigger(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       className="flex items-center justify-between gap-2"
     >
       <div className="flex items-center gap-2">
         <span aria-hidden="true">
-          {showFallback ? (
-            <BoxIcon className="size-3.5" />
-          ) : (
-            <MotionContainer
-              animation={{ mode, transition: "gentle", duration: 0.8 }}
-              controller={{ trigger }}
-              className="size-3.5 rounded-full bg-accent"
-            />
-          )}
+          <MotionContainer
+            animation={{
+              mode: trigger ? mode : "default",
+              transition: "gentle",
+              duration: 1,
+            }}
+            controller={{ trigger }}
+            className="size-3.5 text-accent-text"
+          >
+            <svg
+              aria-hidden="true"
+              viewBox="0 0 24 24"
+              className="block size-full"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+            >
+              <path d="M12 2.5 23 21.5H1Z M12 8.5 17.8 18.5H6.2Z" />
+            </svg>
+          </MotionContainer>
         </span>
         <span>{label}</span>
       </div>

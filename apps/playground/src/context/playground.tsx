@@ -1,9 +1,9 @@
-import { createContext, type ReactNode, useMemo, useReducer } from "react";
+import { createContext, type ReactNode, useReducer } from "react";
 import { useRequiredContext } from "@/hooks/use-required";
+import { report } from "@/lib/report";
 import { findLayer, type Layer, type LayerId, settingsOf } from "../lib/layers";
 import type { ViewState } from "../schemas/playground";
 import type { Markup, MotionSettings, Project } from "../types/playground";
-import { useReport } from "./notice";
 import {
   createInitialState,
   type Dialog,
@@ -44,49 +44,32 @@ export function PlaygroundProvider({
   initialMarkup,
   children,
 }: PlaygroundProviderProps) {
-  const report = useReport();
-
-  const initial = useMemo<PlaygroundDocument>(
-    () => ({ project: starter, markup: initialMarkup }),
-    [starter, initialMarkup],
-  );
+  const initial = { project: starter, markup: initialMarkup };
   const [state, dispatch] = useReducer(
     playgroundReducer,
     initial,
     createInitialState,
   );
 
-  const actions = useMemo<PlaygroundActions>(
-    () => ({
-      patchView: (patch) => dispatch({ type: "view", patch }),
-      select: (id) => dispatch({ type: "select", id }),
-      openDialog: (dialog) => dispatch({ type: "dialog", dialog }),
-      closeDialog: () => dispatch({ type: "dialog", dialog: undefined }),
-      load: (document) => dispatch({ type: "load", document }),
-      restore: (document, layer) =>
-        dispatch({ type: "restored", document, layer }),
-      patchSettings: (patch) => dispatch({ type: "patchSettings", patch }),
-      removeAnimation: () => {
-        dispatch({ type: "removeAnimation" });
-        report("Animation removed.");
-      },
-    }),
-    [report],
-  );
+  const actions: PlaygroundActions = {
+    patchView: (patch) => dispatch({ type: "view", patch }),
+    select: (id) => dispatch({ type: "select", id }),
+    openDialog: (dialog) => dispatch({ type: "dialog", dialog }),
+    closeDialog: () => dispatch({ type: "dialog", dialog: undefined }),
+    load: (document) => dispatch({ type: "load", document }),
+    restore: (document, layer) =>
+      dispatch({ type: "restored", document, layer }),
+    patchSettings: (patch) => dispatch({ type: "patchSettings", patch }),
+    removeAnimation: () => {
+      dispatch({ type: "removeAnimation" });
+      report("Animation removed.");
+    },
+  };
 
-  const layer = useMemo(
-    () => findLayer(state.markup, state.selected),
-    [state.markup, state.selected],
-  );
-  const settings = useMemo(
-    () => settingsOf(layer, state.project),
-    [layer, state.project],
-  );
+  const layer = findLayer(state.markup, state.selected);
+  const settings = settingsOf(layer, state.project);
 
-  const value = useMemo(
-    () => ({ state, initial, layer, settings, actions }),
-    [state, initial, layer, settings, actions],
-  );
+  const value = { state, initial, layer, settings, actions };
 
   return (
     <PlaygroundContext.Provider value={value}>

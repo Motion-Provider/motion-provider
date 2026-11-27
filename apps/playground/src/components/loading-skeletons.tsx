@@ -1,4 +1,4 @@
-import { Skeleton } from "@heroui/react";
+import { cn, Skeleton } from "@heroui/react";
 import { TEMPLATES } from "../constants/templates.data";
 
 export function PresetsSkeleton() {
@@ -12,7 +12,7 @@ export function PresetsSkeleton() {
         {TEMPLATES.map(({ id }) => (
           <div key={id} className="mp-glass overflow-hidden rounded-2xl border">
             <div className="motion-safe:animate-pulse">
-              <div className="grid h-24 place-items-center border-b border-(--stroke) bg-(--canvas)">
+              <div className="grid h-24 place-items-center border-b border-stroke bg-canvas">
                 <Skeleton animationType="none" className="size-12 rounded-xl" />
               </div>
               <div className="grid gap-2 p-4">
@@ -38,7 +38,7 @@ export function CodePaneSkeleton() {
   return (
     <div
       role="status"
-      className="min-h-48 overflow-hidden rounded-3xl border border-(--stroke) bg-(--inset) px-4 py-3"
+      className="min-h-48 overflow-hidden rounded-3xl border border-stroke bg-inset px-4 py-3"
     >
       <span className="sr-only">Loading code viewer…</span>
       <div aria-hidden="true" className="motion-safe:animate-pulse">
@@ -46,7 +46,7 @@ export function CodePaneSkeleton() {
           (width) => (
             <div key={width} className="flex h-6 items-center gap-4">
               <Skeleton animationType="none" className="h-3 w-5 shrink-0" />
-              <Skeleton animationType="none" className={`h-3 ${width}`} />
+              <Skeleton animationType="none" className={cn("h-3", width)} />
             </div>
           ),
         )}

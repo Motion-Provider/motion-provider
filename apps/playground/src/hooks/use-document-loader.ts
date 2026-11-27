@@ -1,11 +1,11 @@
 import { useCallback, useRef } from "react";
+import { report } from "@/lib/report";
 import {
   STARTER,
   type Template,
   templateHtml,
   templateProject,
 } from "../constants/templates.data";
-import { useReport } from "../context/notice";
 import { usePlayground } from "../context/playground";
 import { importMarkup } from "../lib/import-markup";
 import { readProject } from "../lib/motion";
@@ -17,7 +17,6 @@ export function useDocumentLoader() {
     initial,
     actions,
   } = usePlayground();
-  const report = useReport();
   const loadingTemplate = useRef(false);
 
   const loadHtml = useCallback(
@@ -42,7 +41,7 @@ export function useDocumentLoader() {
           : `Imported ${count} ${count === 1 ? "layer" : "layers"}.`,
       );
     },
-    [project, markup, actions, report],
+    [project, markup, actions],
   );
 
   const loadTemplate = useCallback(
@@ -70,7 +69,7 @@ export function useDocumentLoader() {
         loadingTemplate.current = false;
       }
     },
-    [project.template, initial.markup, actions, report],
+    [project.template, initial.markup, actions],
   );
 
   const loadDraft = useCallback(
@@ -83,7 +82,7 @@ export function useDocumentLoader() {
       actions.load({ project: nextProject, markup: nextMarkup });
       report("Saved project opened.");
     },
-    [actions, report],
+    [actions],
   );
 
   return { loadHtml, loadTemplate, loadDraft };

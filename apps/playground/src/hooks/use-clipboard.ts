@@ -1,33 +1,26 @@
-import { useCallback } from "react";
-import { useReport } from "../context/notice";
+import { report } from "@/lib/report";
 import { usePlayground } from "../context/playground";
 import { copyText, pack } from "../lib/transfer";
 
 const MAX_SHARE_TOKEN_LENGTH = 12_000;
 
 export function useCopy(): (value: string, message?: string) => Promise<void> {
-  const report = useReport();
-
-  return useCallback(
-    async (value, message = "Code copied.") => {
-      try {
-        await copyText(value);
-        report(message);
-      } catch {
-        report("Clipboard access failed.", true);
-      }
-    },
-    [report],
-  );
+  return async (value, message = "Code copied.") => {
+    try {
+      await copyText(value);
+      report(message);
+    } catch {
+      report("Clipboard access failed.", true);
+    }
+  };
 }
 
 export function useShareLink(): () => Promise<void> {
   const {
     state: { project },
   } = usePlayground();
-  const report = useReport();
 
-  return useCallback(async () => {
+  return async () => {
     const token = await pack(JSON.stringify(project));
 
     if (token.length > MAX_SHARE_TOKEN_LENGTH)
@@ -39,5 +32,5 @@ export function useShareLink(): () => Promise<void> {
     url.searchParams.set("project", token);
     await copyText(url.href);
     report("Project link copied.");
-  }, [project, report]);
+  };
 }

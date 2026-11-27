@@ -2,6 +2,7 @@
 
 import {
   Button,
+  cn,
   Label,
   ListBox,
   Select,
@@ -30,7 +31,10 @@ export function IconButton({
         size="sm"
         variant={variant}
         aria-label={label}
-        className={`${variant === "primary" ? "" : "text-muted hover:text-foreground"} ${className}`}
+        className={cn(
+          variant !== "primary" && "text-muted hover:text-foreground",
+          className,
+        )}
         {...props}
       >
         <Icon size={16} strokeWidth={1.65} />
@@ -70,7 +74,11 @@ export function Segmented<Value extends string>({
 
         if (item) onChange(item.id);
       }}
-      className="mp-segments inline-flex max-w-full shrink-0 items-center gap-0.5 rounded-full border border-(--stroke) bg-(--inset) p-0.75"
+      className={cn(
+        "mp-segments inline-flex max-w-full shrink-0 items-center gap-0.5",
+        "rounded-full border border-stroke bg-inset",
+        "p-0.75",
+      )}
     >
       {items.map(({ id, label: itemLabel, icon: Icon, iconOnly }) => (
         <ToggleButton
@@ -99,7 +107,7 @@ export function SectionTitle({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex min-h-14 items-center justify-between gap-2 border-b border-(--stroke) px-4">
+    <div className="flex min-h-14 items-center justify-between gap-2 border-b border-stroke px-4">
       <h2 className="flex min-w-0 items-center gap-2.5 text-sm font-semibold">
         <Icon size={17} strokeWidth={1.7} className="shrink-0 text-muted" />
         {children}
@@ -131,13 +139,13 @@ export function OptionSelect<Value extends string>({
       }}
       className="grid w-full gap-2"
     >
-      <Label className="text-sm font-medium text-(--secondary-text)">
+      <Label className="text-sm font-medium text-secondary-text">
         {label}
       </Label>
 
-      <Select.Trigger className="min-h-9 gap-2 rounded-md border border-(--stroke) bg-(--inset) px-2.5 text-sm shadow-none">
+      <Select.Trigger className="min-h-9 gap-2 rounded-md border border-stroke bg-inset px-2.5 text-sm shadow-none">
         {Icon && (
-          <Icon size={15} aria-hidden className="shrink-0 text-accent" />
+          <Icon size={15} aria-hidden className="shrink-0 text-accent-text" />
         )}
         <Select.Value className="min-w-0 flex-1 truncate" />
         <Select.Indicator className="size-3.5 shrink-0 text-muted" />
@@ -183,8 +191,13 @@ export function Range({
       }}
       className="mp-slider gap-x-1 gap-y-2"
     >
-      <Label className="text-[13px] text-(--secondary-text)">{label}</Label>
-      <Slider.Output className="w-max rounded border border-(--stroke) bg-(--inset) px-1 py-0.5 font-mono text-[12px] whitespace-nowrap text-foreground">
+      <Label className="text-[13px] text-secondary-text">{label}</Label>
+      <Slider.Output
+        className={cn(
+          "w-max rounded border border-stroke bg-inset",
+          "px-1 py-0.5 font-mono text-[12px] whitespace-nowrap text-foreground",
+        )}
+      >
         {() => `${value.toFixed(2)} s`}
       </Slider.Output>
 

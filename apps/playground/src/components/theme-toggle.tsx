@@ -9,6 +9,7 @@ export function ThemeToggle() {
     <IconButton
       icon={theme === "dark" ? Sun : Moon}
       label={theme === "dark" ? "Use light theme" : "Use dark theme"}
+      className="size-9 rounded-full"
       onPress={toggle}
     />
   );

@@ -15,6 +15,20 @@
       "skillPath": "skills/emil-design-eng/SKILL.md",
       "computedHash": "e1b377ccde1d32743d1d3f7d8626629deb8055c9114d180c184697928cc66cc6"
     },
+    "heroui-react": {
+      "source": "heroui-inc/heroui",
+      "commit": "9adb9c89305ed814ff160a7368b7e8575a50f790",
+      "sourceType": "github",
+      "skillPath": "skills/heroui-react/SKILL.md",
+      "computedHash": "92d0ba29cb5e866f9174f780a452d874ed8ec890c594772664ba38ce1e61c505"
+    },
+    "heroui-theming": {
+      "source": "heroui-inc/heroui",
+      "commit": "9adb9c89305ed814ff160a7368b7e8575a50f790",
+      "sourceType": "github",
+      "skillPath": "skills/heroui-theming/SKILL.md",
+      "computedHash": "2ba07cb1a6fd7096c84c7b19c8c6f3b32cfe5cefa27bd8a97be1af6f3f93184e"
+    },
     "learn-taste": {
       "source": "emilkowalski/skills",
       "commit": "64eb3deb9a5fbfa041faf783e0bc3fd635872e9c",

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { THEME_KEY } from "../lib/storage";
 import { type Theme, themeSchema } from "../schemas/playground";
 
@@ -22,10 +22,8 @@ export function useTheme(): { theme: Theme; toggle: () => void } {
     } catch {}
   }, [hydrated, theme]);
 
-  const toggle = useCallback(
-    () => setTheme((current) => (current === "dark" ? "light" : "dark")),
-    [],
-  );
+  const toggle = () =>
+    setTheme((current) => (current === "dark" ? "light" : "dark"));
 
   return { theme, toggle };
 }

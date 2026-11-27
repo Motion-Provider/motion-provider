@@ -1,5 +1,5 @@
 import { useCallback, useState } from "react";
-import { useReport } from "../context/notice";
+import { report } from "@/lib/report";
 import { usePlayground } from "../context/playground";
 import { saveProject } from "../lib/storage";
 
@@ -10,7 +10,6 @@ export function useSaveProject(): {
   const {
     state: { project },
   } = usePlayground();
-  const report = useReport();
   const [saving, setSaving] = useState(false);
 
   const save = useCallback(async () => {
@@ -24,7 +23,7 @@ export function useSaveProject(): {
     } finally {
       setSaving(false);
     }
-  }, [project, report]);
+  }, [project]);
 
   return { saving, save };
 }

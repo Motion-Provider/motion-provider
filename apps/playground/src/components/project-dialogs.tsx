@@ -2,6 +2,7 @@
 
 import {
   Button,
+  cn,
   Input,
   Label,
   Modal,
@@ -51,7 +52,7 @@ export function Dialog({
         className="bg-(--scrim)"
       >
         <Modal.Container className="p-3">
-          <Modal.Dialog className="w-full max-w-160 rounded-4xl border mp-glass mp-glass-raised p-5 sm:p-6">
+          <Modal.Dialog className="max-w-160 rounded-4xl p-5 sm:p-6">
             <Modal.CloseTrigger isDisabled={pending} />
 
             <Modal.Header className="gap-2 pr-7">
@@ -149,7 +150,10 @@ export function ImportDialog({
           placeholder={
             '<section class="p-8">\n  <h1>Your component</h1>\n</section>'
           }
-          className="min-h-52 resize-y rounded-lg border border-(--stroke) bg-(--inset) font-mono text-sm leading-6"
+          className={cn(
+            "min-h-52 resize-y rounded-lg border border-stroke bg-inset",
+            "font-mono text-sm leading-6",
+          )}
           maxLength={80_001}
         />
       </div>
@@ -312,7 +316,12 @@ export function ExportDialog({
 
       {mode === "file" ? (
         <div className="grid gap-3">
-          <code className="overflow-hidden rounded-lg border border-(--stroke) bg-(--inset) p-3 font-mono text-sm text-ellipsis">
+          <code
+            className={cn(
+              "overflow-hidden rounded-lg border border-stroke bg-inset",
+              "p-3 font-mono text-sm text-ellipsis",
+            )}
+          >
             {name}
           </code>
 
@@ -340,7 +349,10 @@ export function ExportDialog({
                 aria-label="CLI command"
                 readOnly
                 value={ready.command}
-                className="min-h-28 resize-y break-all rounded-lg border border-(--stroke) bg-(--inset) font-mono text-[13px]"
+                className={cn(
+                  "min-h-28 resize-y break-all rounded-lg border border-stroke bg-inset",
+                  "font-mono text-[13px]",
+                )}
               />
 
               <p className="min-w-0 truncate text-[12px] text-muted">
@@ -365,7 +377,7 @@ export function ExportDialog({
         </div>
       )}
 
-      <div className="grid gap-2 border-t border-(--stroke) pt-4">
+      <div className="grid gap-2 border-t border-stroke pt-4">
         <Button
           variant="outline"
           className="w-fit"
@@ -441,9 +453,9 @@ export function SavedDialog({
                   }
                 }}
                 isDisabled={pending}
-                className="w-full min-w-0 justify-start gap-3 rounded-lg border-(--stroke)"
+                className="w-full min-w-0 justify-start gap-3 rounded-lg border-stroke"
               >
-                <FolderOpen size={17} className="shrink-0 text-accent" />
+                <FolderOpen size={17} className="shrink-0 text-accent-text" />
                 <span className="min-w-0 flex-1 truncate text-left">
                   {draft.name}
                 </span>

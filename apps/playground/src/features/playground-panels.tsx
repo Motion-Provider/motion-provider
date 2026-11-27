@@ -1,8 +1,8 @@
+import { report } from "@/lib/report";
 import { Inspector } from "@/sections/inspector";
 import { Preview } from "@/sections/preview";
 import { Workspace } from "@/sections/workspace";
 import { settingsFor } from "../constants/motion.config";
-import { useReport } from "../context/notice";
 import { usePlayground } from "../context/playground";
 import { usePlaygroundRuntime } from "../context/playground-runtime";
 import { useCopy } from "../hooks/use-clipboard";
@@ -13,7 +13,6 @@ export function PreviewPanel() {
   const { state, actions } = usePlayground();
   const { active, total, playback, utilities, code } = usePlaygroundRuntime();
   const copy = useCopy();
-  const report = useReport();
 
   return (
     <Preview
@@ -51,6 +50,7 @@ export function WorkspacePanel() {
       onSelect={actions.select}
       onImport={() => actions.openDialog("import")}
       onSave={save}
+      onExport={() => actions.openDialog("export")}
       onOpen={() => actions.openDialog("saved")}
     />
   );

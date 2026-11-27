@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card } from "@heroui/react";
+import { Button, Card, cn } from "@heroui/react";
 import {
   Activity,
   GalleryHorizontalEnd,
@@ -48,8 +48,20 @@ export function Presets({
             key={template.id}
             className="flex min-w-0 flex-col gap-0 rounded-2xl border mp-glass p-0"
           >
-            <div className="relative grid h-24 place-items-center overflow-hidden rounded-t-2xl border-b border-(--stroke) bg-(--canvas) bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-size-[15px_15px]">
-              <div className="grid size-12 place-items-center rounded-xl border border-(--accent-stroke) bg-(--tint) text-accent">
+            <div
+              className={cn(
+                "relative grid h-24 place-items-center overflow-hidden",
+                "rounded-t-2xl border-b border-stroke bg-canvas",
+                "bg-[radial-gradient(var(--grid)_1px,transparent_1px)] bg-size-[15px_15px]",
+              )}
+            >
+              <div
+                className={cn(
+                  "grid size-12 place-items-center",
+                  "rounded-xl border border-accent-stroke bg-tint",
+                  "text-accent-text",
+                )}
+              >
                 <Icon size={23} strokeWidth={1.6} />
               </div>
             </div>
@@ -65,7 +77,7 @@ export function Presets({
               <Button
                 variant={current === template.id ? "secondary" : "outline"}
                 size="sm"
-                className="rounded-md border-(--stroke)"
+                className="rounded-md border-stroke"
                 onPress={() => onPick(template)}
               >
                 {current === template.id ? (

@@ -1,4 +1,4 @@
-import { createContext, type ReactNode, useMemo } from "react";
+import { createContext, type ReactNode } from "react";
 import { useOnline } from "@/hooks/use-online";
 import { useOrigin } from "@/hooks/use-origin";
 import { usePlayback } from "@/hooks/use-playback";
@@ -29,38 +29,22 @@ export function PlaygroundRuntimeProvider({
   const online = useOnline();
   const origin = useOrigin();
 
-  const active = useMemo(
-    () => activeLayerIds(project.assignments, selected, scope),
-    [project.assignments, selected, scope],
-  );
-  const total = useMemo(
-    () => totalDuration(markup, project.assignments, active),
-    [markup, project.assignments, active],
-  );
-  const resetKey = useMemo(
-    () =>
-      JSON.stringify([
-        Object.entries(project.assignments),
-        selected,
-        scope,
-        before,
-        view,
-      ]),
-    [project.assignments, selected, scope, before, view],
-  );
+  const active = activeLayerIds(project.assignments, selected, scope);
+  const total = totalDuration(markup, project.assignments, active);
+  const resetKey = JSON.stringify([
+    Object.entries(project.assignments),
+    selected,
+    scope,
+    before,
+    view,
+  ]);
   const playback = usePlayback(total, resetKey);
 
   const needsCode = view === "code" || dialog === "export";
-  const code = useMemo(
-    () => (needsCode ? exportComponent(project, markup, origin) : ""),
-    [needsCode, project, markup, origin],
-  );
+  const code = needsCode ? exportComponent(project, markup, origin) : "";
   const utilities = useUtilities(markup.classes, !project.template, online);
 
-  const value = useMemo(
-    () => ({ active, total, playback, utilities, code, online }),
-    [active, total, playback, utilities, code, online],
-  );
+  const value = { active, total, playback, utilities, code, online };
 
   return (
     <RuntimeContext.Provider value={value}>{children}</RuntimeContext.Provider>

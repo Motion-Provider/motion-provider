@@ -19,16 +19,17 @@ export function PresetsModal() {
 
   return (
     <Modal>
-      <Button size="sm" variant="outline">
-        <LayoutTemplate size={16} /> Presets
+      <Button size="sm" variant="outline" className="h-9 rounded-full">
+        <LayoutTemplate size={16} className="hidden min-[360px]:block" />
+        Presets
       </Button>
-      <Modal.Backdrop
-        className={
-          "backdrop-blur-(--glass-blur) backdrop-saturate-(--glass-saturation)"
-        }
-      >
-        <Modal.Container placement="center" scroll="inside" className="p-3">
-          <Modal.Dialog className="w-full max-w-5xl border border-glass-border bg-glass-surface backdrop-blur-[var(--glass-blur)]backdrop-saturate-[var(--glass-saturation)]shadow-[0_16px_48px_var(--glass-shadow)]">
+      <Modal.Backdrop>
+        <Modal.Container
+          placement="center"
+          scroll="inside"
+          className="p-3 md:max-h-11/12"
+        >
+          <Modal.Dialog>
             {({ close }) => (
               <>
                 <Modal.CloseTrigger />

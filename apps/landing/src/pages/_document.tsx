@@ -5,15 +5,14 @@ export default function Document() {
   return (
     <Html lang="en" data-theme="dark">
       <Head>
-        <Head>
-          <meta name="application-name" content={SEO.siteName} />
-          <meta name="apple-mobile-web-app-title" content={SEO.siteName} />
-          <meta name="theme-color" content={SEO.themeColor} />
-          <link rel="icon" href="/favicon.ico" sizes="48x48" />
-          <link rel="icon" href="/icon.svg" type="image/svg+xml" />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-          <link rel="manifest" href="/site.webmanifest" />
-        </Head>
+        <meta name="application-name" content={SEO.siteName} />
+        <meta name="apple-mobile-web-app-title" content={SEO.siteName} />
+        <meta name="theme-color" content={SEO.themeColor} />
+        <link rel="icon" href="/favicon/favicon.ico" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
       </Head>
       <body className="antialiased">
         <Main />

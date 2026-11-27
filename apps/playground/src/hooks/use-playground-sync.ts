@@ -1,6 +1,6 @@
 import { useEffect } from "react";
+import { report } from "@/lib/report";
 import { restoreDocument } from "@/lib/restore-document";
-import { useReport } from "../context/notice";
 import { usePlayground } from "../context/playground";
 import { DRAFT_KEY } from "../lib/storage";
 import { setParam, writeViewState } from "../lib/url-state";
@@ -8,7 +8,6 @@ import { readViewState } from "../schemas/playground";
 
 export function useRestore(): void {
   const { initial, actions } = usePlayground();
-  const report = useReport();
 
   useEffect(() => {
     let current = true;
@@ -37,7 +36,7 @@ export function useRestore(): void {
     return () => {
       current = false;
     };
-  }, [initial, actions, report]);
+  }, [initial, actions]);
 }
 
 export function useDraftAutosave(): void {
