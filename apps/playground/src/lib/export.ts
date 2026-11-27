@@ -1,6 +1,7 @@
 import type { Markup, MarkupNode, Project } from "../types/playground";
 import {
   animationFor,
+  animationKindFor,
   chainChild,
   imageStyle,
   isElement,
@@ -80,7 +81,7 @@ export function exportComponent(project: Project, markup: Markup, origin = "") {
     if (!layer || !settings)
       return element(tag, attributes(props), node.children, depth);
 
-    const kind = layer.kind;
+    const kind = animationKindFor(layer, settings);
     imports.add(kind);
     const id = `layer_${node.id.replaceAll(".", "_")}`;
     const config: Record<string, unknown> = {

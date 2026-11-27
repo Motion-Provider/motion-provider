@@ -3,7 +3,12 @@ import { useRequiredContext } from "@/hooks/use-required";
 import { report } from "@/lib/report";
 import { findLayer, type Layer, type LayerId, settingsOf } from "../lib/layers";
 import type { ViewState } from "../schemas/playground";
-import type { Markup, MotionSettings, Project } from "../types/playground";
+import type {
+  Assignments,
+  Markup,
+  MotionSettings,
+  Project,
+} from "../types/playground";
 import {
   createInitialState,
   type Dialog,
@@ -20,7 +25,9 @@ export interface PlaygroundActions {
   load: (document: PlaygroundDocument) => void;
   restore: (document?: PlaygroundDocument, layer?: string | null) => void;
   patchSettings: (patch: Partial<MotionSettings>) => void;
+  randomizeAll: (assignments: Assignments) => void;
   cancelReplay: () => void;
+  resetAnimations: () => void;
   removeAnimation: () => void;
 }
 
@@ -61,7 +68,10 @@ export function PlaygroundProvider({
     restore: (document, layer) =>
       dispatch({ type: "restored", document, layer }),
     patchSettings: (patch) => dispatch({ type: "patchSettings", patch }),
+    randomizeAll: (assignments) =>
+      dispatch({ type: "randomizeAll", assignments }),
     cancelReplay: () => dispatch({ type: "cancelReplay" }),
+    resetAnimations: () => dispatch({ type: "resetAnimations" }),
     removeAnimation: () => {
       dispatch({ type: "removeAnimation" });
       report("Animation removed.");

@@ -5,9 +5,20 @@ import {
   settingsOf,
 } from "../lib/layers";
 import { DEFAULT_VIEW_STATE, type ViewState } from "../schemas/playground";
-import type { Markup, MotionSettings, Project } from "../types/playground";
+import type {
+  Assignments,
+  Markup,
+  MotionSettings,
+  Project,
+} from "../types/playground";
 
-export type Dialog = "import" | "export" | "saved" | "presets" | "shortcuts";
+export type Dialog =
+  | "import"
+  | "export"
+  | "saved"
+  | "presets"
+  | "shortcuts"
+  | "resetAnimations";
 
 export interface PlaygroundDocument {
   project: Project;
@@ -32,7 +43,9 @@ export type PlaygroundAction =
       layer?: string | null;
     }
   | { type: "patchSettings"; patch: Partial<MotionSettings> }
+  | { type: "randomizeAll"; assignments: Assignments }
   | { type: "cancelReplay" }
+  | { type: "resetAnimations" }
   | { type: "removeAnimation" };
 
 export function createInitialState(
@@ -113,8 +126,28 @@ export function playgroundReducer(
       };
     }
 
+    case "randomizeAll":
+      if (state.scope !== "batch") return state;
+
+      return {
+        ...state,
+        replay:
+          !state.before && state.view === "preview"
+            ? state.replay + 1
+            : state.replay,
+        project: { ...state.project, assignments: action.assignments },
+      };
+
     case "cancelReplay":
       return state.replay ? { ...state, replay: 0 } : state;
+
+    case "resetAnimations":
+      return {
+        ...state,
+        dialog: undefined,
+        replay: 0,
+        project: { ...state.project, assignments: {} },
+      };
 
     case "removeAnimation": {
       const layer = findLayer(state.markup, state.selected);

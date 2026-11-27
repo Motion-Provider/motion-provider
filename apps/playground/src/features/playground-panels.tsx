@@ -8,7 +8,12 @@ import { usePlayground } from "../context/playground";
 import { usePlaygroundRuntime } from "../context/playground-runtime";
 import { useCopy } from "../hooks/use-clipboard";
 import { useSaveProject } from "../hooks/use-save-project";
-import { randomized } from "../lib/motion";
+import {
+  animationKindFor,
+  isBulkAnimationLayer,
+  randomized,
+  randomizedLayers,
+} from "../lib/motion";
 
 export function PreviewPanel() {
   const { state, actions } = usePlayground();
@@ -54,6 +59,7 @@ export function WorkspacePanel() {
       onSave={save}
       onExport={() => actions.openDialog("export")}
       onOpen={() => actions.openDialog("saved")}
+      onResetAnimations={() => actions.openDialog("resetAnimations")}
     />
   );
 }
@@ -65,7 +71,11 @@ export function InspectorPanel() {
     <Inspector
       scope={state.scope}
       onScopeChange={(scope) => actions.patchView({ scope })}
-      layer={layer}
+      layer={
+        layer && settings
+          ? { ...layer, kind: animationKindFor(layer, settings) }
+          : layer
+      }
       settings={settings}
       assigned={!!(layer && state.project.assignments[layer.id])}
       onChange={actions.patchSettings}
@@ -76,6 +86,12 @@ export function InspectorPanel() {
       onRandomize={() => {
         if (settings) actions.patchSettings(randomized(settings));
       }}
+      onRandomizeAll={() =>
+        actions.randomizeAll(
+          randomizedLayers(state.markup.layers, state.project.assignments),
+        )
+      }
+      canRandomizeAll={state.markup.layers.some(isBulkAnimationLayer)}
     />
   );
 }

@@ -111,6 +111,8 @@ export function Inspector({
   onRemove,
   onReset,
   onRandomize,
+  onRandomizeAll,
+  canRandomizeAll,
 }: {
   scope: Scope;
   onScopeChange: (scope: Scope) => void;
@@ -121,6 +123,8 @@ export function Inspector({
   onReset: () => void;
   onRemove: () => void;
   onRandomize: () => void;
+  onRandomizeAll: () => void;
+  canRandomizeAll: boolean;
 }) {
   return (
     <Card
@@ -154,6 +158,17 @@ export function Inspector({
           value={scope}
           onChange={onScopeChange}
         />
+        {scope === "batch" && (
+          <Button
+            size="sm"
+            variant="outline"
+            className="h-9 w-full rounded-md"
+            isDisabled={!canRandomizeAll}
+            onPress={onRandomizeAll}
+          >
+            <Layers size={16} className="text-accent-text" /> Randomize all
+          </Button>
+        )}
       </div>
 
       {layer && settings ? (
@@ -413,35 +428,6 @@ export function Inspector({
               </Disclosure.Content>
             </Disclosure>
           </div>
-          <div className="mt-auto grid gap-2 border-t border-stroke p-4">
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                className="min-h-9 flex-1 rounded-md border-stroke text-sm"
-                onPress={onRandomize}
-              >
-                <Dices size={16} className="text-accent-text" /> Randomize
-              </Button>
-              {assigned && (
-                <IconButton
-                  icon={Trash2}
-                  label="Remove animation"
-                  variant="outline"
-                  className="min-h-9 rounded-md border-stroke"
-                  onPress={onRemove}
-                />
-              )}
-            </div>
-            {!assigned && (
-              <Button
-                size="sm"
-                className="rounded-md"
-                onPress={() => onChange({})}
-              >
-                Apply animation
-              </Button>
-            )}
-          </div>
         </>
       ) : (
         <div
@@ -452,6 +438,41 @@ export function Inspector({
         >
           <SquareDashed size={22} />
           <p>Select a layer to edit its motion.</p>
+        </div>
+      )}
+      {(scope === "individual" || settings) && (
+        <div className="mt-auto grid shrink-0 gap-2 border-t border-stroke p-4">
+          {scope === "individual" && (
+            <Button
+              size="sm"
+              className="h-9 rounded-md"
+              isDisabled={!settings}
+              onPress={() => onChange({})}
+            >
+              Apply animation
+            </Button>
+          )}
+          {layer && settings && (
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="outline"
+                className="h-9 flex-1 rounded-md text-sm"
+                onPress={onRandomize}
+              >
+                <Dices size={16} className="text-accent-text" /> Randomize layer
+              </Button>
+              {assigned && (
+                <IconButton
+                  icon={Trash2}
+                  label="Remove animation"
+                  variant="outline"
+                  className="h-9 rounded-md"
+                  onPress={onRemove}
+                />
+              )}
+            </div>
+          )}
         </div>
       )}
     </Card>

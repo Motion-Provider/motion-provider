@@ -48,6 +48,7 @@ export const MAX_LAYER_DELAY = 2;
 export function settingsFor(kind: ComponentKind): MotionSettings {
   return {
     modes: [kind === "MotionImage" ? "filterBlurIn" : "fadeUp"],
+    chainTarget: undefined,
     transition: "custom",
     duration: 0.6,
     delay: 0,

@@ -47,6 +47,7 @@ export type Preset = Exclude<AnimationKeys, "default">;
 export type Stagger = Exclude<DelayLogic, "custom">;
 export type MotionSettings = {
   modes: Preset[];
+  chainTarget?: "element";
   transition: TransitionKeys | "custom";
   duration: number;
   delay: number;

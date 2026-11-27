@@ -1,17 +1,18 @@
 "use client";
 
 import {
+  type AnimationController,
   MotionChain,
   MotionContainer,
-  MotionImage,
-  MotionText,
-  type AnimationController,
   type MotionElementType,
+  MotionImage,
   type MotionImageProps,
+  MotionText,
 } from "motion-provider";
-import { createElement, Fragment, useState, type ReactNode } from "react";
+import { createElement, Fragment, type ReactNode, useState } from "react";
 import {
   animationFor,
+  animationKindFor,
   chainChild,
   imageStyle,
   isElement,
@@ -84,13 +85,14 @@ export function MotionTree({
     if (!layer || !settings)
       return createElement(tag, { ...props, ...marker, key: id }, children);
 
+    const kind = animationKindFor(layer, settings);
     const animation = animationFor(settings);
     const timing = staggerFor(settings);
     const playback = active.has(id) ? controller : passive;
     const elementType = tag as MotionElementType;
     const common = { animation, controller: playback, onMotionError };
 
-    if (layer.kind === "MotionText") {
+    if (kind === "MotionText") {
       const { className, ...rest } = props;
 
       return (
@@ -110,7 +112,7 @@ export function MotionTree({
       );
     }
 
-    if (layer.kind === "MotionImage" && typeof props.src === "string") {
+    if (kind === "MotionImage" && typeof props.src === "string") {
       const {
         src,
         className,
@@ -148,7 +150,7 @@ export function MotionTree({
       );
     }
 
-    if (layer.kind === "MotionChain") {
+    if (kind === "MotionChain") {
       const items = node.children.filter(isElement);
       const layout = chainChild(
         node,

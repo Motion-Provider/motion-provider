@@ -14,6 +14,7 @@ import {
   TRANSITIONS,
 } from "../constants/motion.config";
 import type {
+  Assignments,
   Attribute,
   ElementNode,
   Layer,
@@ -54,6 +55,12 @@ export function staggerFor(settings: MotionSettings): MotionChainConfigProps {
     seed: settings.seed,
     maxDelay: settings.maxDelay,
   };
+}
+
+export function animationKindFor(layer: Layer, settings: MotionSettings) {
+  return layer.kind === "MotionChain" && settings.chainTarget === "element"
+    ? "MotionContainer"
+    : layer.kind;
 }
 
 export function imageStyle(node: ElementNode) {
@@ -119,14 +126,15 @@ export function animationTime(
   settings: MotionSettings,
   markup: Markup,
 ) {
+  const kind = animationKindFor(layer, settings);
   let count = layer.itemCount;
 
-  if (layer.kind === "MotionImage") {
+  if (kind === "MotionImage") {
     if (settings.interaction !== "auto") return 0;
     count = settings.pieces;
   }
 
-  if (layer.kind === "MotionText") {
+  if (kind === "MotionText") {
     const find = (nodes: Markup["nodes"]): ElementNode | undefined => {
       for (const node of nodes) {
         if (!isElement(node)) continue;
@@ -145,7 +153,7 @@ export function animationTime(
   }
 
   const offsets =
-    layer.kind === "MotionContainer"
+    kind === "MotionContainer"
       ? []
       : calculateDelays(count, {
           ...staggerFor(settings),
@@ -160,8 +168,11 @@ export function animationTime(
   );
 }
 
-export function randomized(settings: MotionSettings): MotionSettings {
-  const candidates = PRESETS.filter(
+export function randomized(
+  settings: MotionSettings,
+  presets = PRESETS,
+): MotionSettings {
+  const candidates = presets.filter(
     (preset) => !settings.modes.includes(preset.id),
   );
   const modes = settings.modes.map(() => {
@@ -175,6 +186,44 @@ export function randomized(settings: MotionSettings): MotionSettings {
     duration: (3 + Math.floor(Math.random() * 9)) / 10,
     delay: Math.floor(Math.random() * 4) / 20,
     stagger: (3 + Math.floor(Math.random() * 13)) / 100,
+  };
+}
+
+const bulkPresets = PRESETS.filter(
+  ({ id }) =>
+    !/out/i.test(id) &&
+    (/^(clip|fade|rotat|slide)/.test(id) ||
+      ["filterBlurIn", "heartbeat", "hover", "scaleZoomIn"].includes(id)),
+);
+
+export function isBulkAnimationLayer({ depth }: Layer): boolean {
+  return depth === 1 || depth === 2;
+}
+
+export function randomizedLayers(
+  layers: readonly Layer[],
+  assignments: Assignments,
+): Assignments {
+  const eligible = layers.filter(isBulkAnimationLayer);
+  const step = Math.min(
+    0.08,
+    MAX_LAYER_DELAY / Math.max(1, eligible.length - 1),
+  );
+
+  return {
+    ...assignments,
+    ...Object.fromEntries(
+      eligible.map(({ id, kind }, index) => [
+        id,
+        {
+          ...randomized(assignments[id] ?? settingsFor(kind), bulkPresets),
+          // Bulk delay belongs to the chain element. Its children have their own layer eligibility.
+          chainTarget: kind === "MotionChain" ? "element" : undefined,
+          delay: Math.round(index * step * 1000) / 1000,
+          interaction: "auto",
+        },
+      ]),
+    ),
   };
 }
 
@@ -224,6 +273,10 @@ export function readProject(input: unknown, markup: Markup): Project | null {
           TRANSITIONS.find(({ id }) => id === saved.transition)?.id ?? "custom";
         const settings: MotionSettings = {
           modes: modes.length ? modes : defaults.modes,
+          chainTarget:
+            layer.kind === "MotionChain" && saved.chainTarget === "element"
+              ? "element"
+              : undefined,
           transition,
           duration: numberBetween(saved.duration, 0.1, 3, defaults.duration),
           delay: numberBetween(saved.delay, 0, MAX_LAYER_DELAY, defaults.delay),

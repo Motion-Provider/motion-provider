@@ -37,6 +37,7 @@ export function Workspace({
   onSave,
   onExport,
   onOpen,
+  onResetAnimations,
 }: {
   project: Project;
   layers: Layer[];
@@ -48,6 +49,7 @@ export function Workspace({
   onSave: () => void;
   onExport: () => void;
   onOpen: () => void;
+  onResetAnimations: () => void;
 }) {
   const [limit, setLimit] = useState(50);
   const assignments: Assignments = project.assignments;
@@ -205,6 +207,15 @@ export function Workspace({
         >
           <CodeXml size={17} strokeWidth={2.1} />
           Export code
+        </Button>
+        <Button
+          size="sm"
+          variant="outline"
+          className="h-9 w-full rounded-md px-1.5"
+          onPress={onResetAnimations}
+          isDisabled={Object.keys(assignments).length === 0}
+        >
+          Reset all animations
         </Button>
       </div>
     </Card>
